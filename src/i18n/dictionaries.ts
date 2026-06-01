@@ -112,10 +112,10 @@ export const es: Dict = {
     noVat: "no incluye IVA",
   },
   home: {
-    eyebrow: "Programa de liderazgo experiencial",
+    eyebrow: "Liderazgo experiencial · Reconexión con los cuatro elementos",
     title: "Lidera desde los cuatro elementos.",
     subtitle:
-      "Un método para reconectar tu liderazgo con la naturaleza. Coaching ejecutivo, inmersiones y retiros para personas y equipos que buscan claridad, foco y movimiento real.",
+      "Un método para devolver tu liderazgo al ritmo de la naturaleza. Agua, fuego, aire y tierra como territorios entrenables: cascada al amanecer, breathwork, hoguera, caminata silenciosa, ceremonia y silencio. Para quienes ya no se conforman con teoría.",
     primaryCta: "Explorar los caminos",
     secondaryCta: "Próximos retiros",
     elementsEyebrow: "El método",
@@ -264,10 +264,10 @@ export const en: Dict = {
     noVat: "VAT not included",
   },
   home: {
-    eyebrow: "Experiential leadership program",
+    eyebrow: "Experiential leadership · Reconnection with the four elements",
     title: "Lead from the four elements.",
     subtitle:
-      "A method to reconnect your leadership with nature. Executive coaching, immersions and retreats for individuals and teams that want clarity, focus, and real movement.",
+      "A method to return your leadership to the rhythm of nature. Water, fire, air and earth as trainable terrains: waterfall at dawn, breathwork, bonfire, silent hike, ceremony and silence. For those no longer satisfied with theory.",
     primaryCta: "Explore the paths",
     secondaryCta: "Upcoming retreats",
     elementsEyebrow: "The method",

@@ -1,21 +1,22 @@
 # Software Design Document (SDD) · v3
+
 ## Plataforma Web Elements Method
 
-| Campo | Valor |
-|---|---|
-| **Proyecto** | Plataforma web Elements Method |
-| **Versión del documento** | 3.0 |
-| **Fecha** | 1 de junio de 2026 |
-| **Autor** | Santiago Serrano |
-| **Documento padre** | SRS Elements Method v3.0 |
+| Campo                            | Valor                          |
+| -------------------------------- | ------------------------------ |
+| **Proyecto**               | Plataforma web Elements Method |
+| **Versión del documento** | 2.0                            |
+| **Fecha**                  | 1 de junio de 2026             |
+| **Autor**                  | Santiago Serrano               |
+| **Documento padre**        | SRS Elements Method v2.0       |
 
-> **Cambios respecto a v2:** integra todas las decisiones del cuestionario de discovery del 01/06/2026. Cambios principales: arquitectura multi-idioma (next-intl), repositorio de documentos con motor de plantillas y personalización dinámica, flujo de aceptación pre-checkout, motor de formularios con tokens privados firmados, manejo explícito de IVA y descuentos por combinación, eliminación del módulo de validador QR, motor de comentarios con pre-moderación y UX fantasma, infraestructura de pixeles múltiples bajo consentimiento de cookies.
+> **Cambios respecto a v1:** Cambios principales: arquitectura multi-idioma (next-intl), repositorio de documentos con motor de plantillas y personalización dinámica, flujo de aceptación pre-checkout, motor de formularios con tokens privados firmados, manejo explícito de IVA y descuentos por combinación, eliminación del módulo de validador QR, motor de comentarios con pre-moderación y UX fantasma, infraestructura de pixeles múltiples bajo consentimiento de cookies.
 
 ---
 
 ## 1. Resumen ejecutivo
 
-Sistema construido como **monolito modular Next.js 15 bilingüe (ES/EN)** desplegado en Vercel, con PostgreSQL en Neon como persistencia primaria. Integra siete servicios externos (Stripe, ManyChat, MailChimp, Cal.com, Resend, Google Analytics, Vercel Blob) y soporta múltiples pixeles de tracking (GA4, Google Ads, TikTok, Meta, LinkedIn) bajo consentimiento granular de cookies.
+Sistema construido como **monolito modular Next.js 15 bilingüe (ES/EN)** desplegado en Vercel, con PostgreSQL en Neon como persistencia primaria. Integra siete servicios externos (Stripe, ManyChat, MailChimp, Cal.com, Resend, Google Analytics, Vercel Blob) y soporta pixeles de tracking (GA4, Google Ads, LinkedIn) bajo consentimiento granular de cookies.
 
 Las decisiones de diseño priorizan: velocidad de entrega en 4 semanas, costos operativos mínimos durante el primer año, mantenibilidad por un solo desarrollador, y extensibilidad hacia fase 2 sin refactor estructural.
 
@@ -49,10 +50,10 @@ Las decisiones de diseño priorizan: velocidad de entrega en 4 semanas, costos o
 │  GA4 +   │◀──Tracking────┤                       │               └──────────┘
 │ Google   │  (post-       │                      │
 │  Ads +   │  consent)     │                      │               ┌──────────┐
-│ TikTok + │                │                      │──Uploads────▶│ Vercel   │
-│  Meta +  │                └──────────┬───────────┘               │  Blob    │
-│LinkedIn  │                           │                           │(media+   │
-└──────────┘                           │ SQL                       │ PDFs)    │
+│LinkedIn  │                │                      │──Uploads────▶│ Vercel   │
+└──────────┘                └──────────┬───────────┘               │  Blob    │
+                                       │                           │(media+   │
+                                       │ SQL                       │ PDFs)    │
                                        ▼                           └──────────┘
                             ┌──────────────────────┐
                             │   Neon Postgres      │
@@ -67,52 +68,52 @@ Las decisiones de diseño priorizan: velocidad de entrega en 4 semanas, costos o
 
 ### 2.2 Cambios arquitectónicos respecto a v2
 
-| Aspecto | v2 | v3 |
-|---|---|---|
-| Idioma | Solo español | Bilingüe ES/EN con next-intl, rutas prefijadas |
-| Aceptación documentos | Post-pago | Pre-pago (bloquea checkout) |
-| Documentos legales | 4 fijos | Repositorio CRUD ilimitado con plantillas + placeholders |
-| Generación de docs | Estáticos | Dinámicos con datos del comprador (persona o empresa) |
-| Formularios | Públicos por URL | Privados con tokens JWT en URL |
-| Cálculo de precios | Solo subtotal | Subtotal + descuentos + IVA |
-| Sistema de descuentos | Sin | Reglas por combinación de productos |
-| Validador QR | Incluido | Eliminado |
-| Pixeles tracking | Solo GA4 | GA4 + Google Ads + TikTok + Meta + LinkedIn |
-| Comentarios blog | Sin contemplar | Pre-moderación con UX fantasma |
-| Cal.com | Embed simple | Embed + API para gestión de horarios + múltiples event types |
-| Videos testimoniales | YouTube embed | Self-hosted en Vercel Blob, cortos |
-| Storage de PDFs legales | Estáticos | Plantillas + generación on-demand + snapshots inmutables |
+| Aspecto                 | v2                | v3                                                             |
+| ----------------------- | ----------------- | -------------------------------------------------------------- |
+| Idioma                  | Solo español     | Bilingüe ES/EN con next-intl, rutas prefijadas                |
+| Aceptación documentos  | Post-pago         | Pre-pago (bloquea checkout)                                    |
+| Documentos legales      | 4 fijos           | Repositorio CRUD ilimitado con plantillas + placeholders       |
+| Generación de docs     | Estáticos        | Dinámicos con datos del comprador (persona o empresa)         |
+| Formularios             | Públicos por URL | Privados con tokens JWT en URL                                 |
+| Cálculo de precios     | Solo subtotal     | Subtotal + descuentos + IVA                                    |
+| Sistema de descuentos   | Sin               | Reglas por combinación de productos                           |
+| Validador QR            | Incluido          | Eliminado                                                      |
+| Pixeles tracking        | Solo GA4          | GA4 + Google Ads + LinkedIn                                    |
+| Comentarios blog        | Sin contemplar    | Pre-moderación con UX fantasma                                |
+| Cal.com                 | Embed simple      | Embed + API para gestión de horarios + múltiples event types |
+| Videos testimoniales    | YouTube embed     | Self-hosted en Vercel Blob, cortos                             |
+| Storage de PDFs legales | Estáticos        | Plantillas + generación on-demand + snapshots inmutables      |
 
 ---
 
 ## 3. Stack tecnológico
 
-| Capa | Tecnología | Versión | Justificación |
-|---|---|---|---|
-| Framework | Next.js | 15.x | App Router, RSC, Server Actions, deploy Vercel |
-| Lenguaje | TypeScript | 5.x | Tipado estricto |
-| Estilos | Tailwind CSS | 4.x | Velocidad |
-| Componentes | shadcn/ui | latest | Accesibles, sin lock-in |
-| **i18n** | **next-intl** | **3.x** | **Soporte nativo App Router, rutas prefijadas, tipos seguros** |
-| ORM | Drizzle ORM | latest | Liviano, type-safe |
-| Base de datos | PostgreSQL (Neon) | 16 | Tier gratuito 0.5 GB |
-| Auth | Auth.js | 5.x | Magic links |
-| Pagos | Stripe Checkout | latest | MXN/USD/OXXO/SPEI |
-| Email transaccional | Resend | latest | Magic links, comprobantes |
-| Email marketing | MailChimp | API v3 | Newsletter, automations |
-| **Templating PDF** | **@react-pdf/renderer + plantillas con vars** | **4.x** | **Generación dinámica de documentos personalizados** |
-| Animaciones | Framer Motion | latest | Animaciones modernas (cuatro elementos, hover-expand de retiros) |
-| Rich text | TipTap | 2.x | Editor del blog |
-| Validación | Zod | 3.x | Schema sharing |
-| XLSX | exceljs | 4.x | Export de respuestas |
-| JWT | jose | 5.x | Firma de tokens de formulario |
-| Storage | Vercel Blob | latest | Imágenes, videos cortos, PDFs |
-| Citas | Cal.com Cloud | API + embed | Bidireccional |
-| Conversaciones | ManyChat Pro | webhooks | Embed + sincronización |
-| **Cookie consent** | **Custom** | **propio** | **Banner LFPDPPP, granular, sin proveedor externo** |
-| Analytics | Google Analytics 4 | gtag.js | Bajo consentimiento |
-| Tracking ads | Google Ads + Meta + TikTok + LinkedIn | scripts | Bajo consentimiento |
-| Hosting | Vercel Hobby | latest | Tier gratuito al inicio |
+| Capa                     | Tecnología                                         | Versión         | Justificación                                                       |
+| ------------------------ | --------------------------------------------------- | ---------------- | -------------------------------------------------------------------- |
+| Framework                | Next.js                                             | 15.x             | App Router, RSC, Server Actions, deploy Vercel                       |
+| Lenguaje                 | TypeScript                                          | 5.x              | Tipado estricto                                                      |
+| Estilos                  | Tailwind CSS                                        | 4.x              | Velocidad                                                            |
+| Componentes              | shadcn/ui                                           | latest           | Accesibles, sin lock-in                                              |
+| **i18n**           | **next-intl**                                 | **3.x**    | **Soporte nativo App Router, rutas prefijadas, tipos seguros** |
+| ORM                      | Drizzle ORM                                         | latest           | Liviano, type-safe                                                   |
+| Base de datos            | PostgreSQL (Neon)                                   | 16               | Tier gratuito 0.5 GB                                                 |
+| Auth                     | Auth.js                                             | 5.x              | Magic links                                                          |
+| Pagos                    | Stripe Checkout                                     | latest           | MXN/USD/OXXO/SPEI                                                    |
+| Email transaccional      | Resend                                              | latest           | Magic links, comprobantes                                            |
+| Email marketing          | MailChimp                                           | API v3           | Newsletter, automations                                              |
+| **Templating PDF** | **@react-pdf/renderer + plantillas con vars** | **4.x**    | **Generación dinámica de documentos personalizados**         |
+| Animaciones              | Framer Motion                                       | latest           | Animaciones modernas (cuatro elementos, hover-expand de retiros)     |
+| Rich text                | TipTap                                              | 2.x              | Editor del blog                                                      |
+| Validación              | Zod                                                 | 3.x              | Schema sharing                                                       |
+| XLSX                     | exceljs                                             | 4.x              | Export de respuestas                                                 |
+| JWT                      | jose                                                | 5.x              | Firma de tokens de formulario                                        |
+| Storage                  | Vercel Blob                                         | latest           | Imágenes, videos cortos, PDFs                                       |
+| Citas                    | Cal.com Cloud                                       | API + embed      | Bidireccional                                                        |
+| Conversaciones           | ManyChat Pro                                        | webhooks         | Embed + sincronización                                              |
+| **Cookie consent** | **Custom**                                    | **propio** | **Banner LFPDPPP, granular, sin proveedor externo**            |
+| Analytics                | Google Analytics 4                                  | gtag.js          | Bajo consentimiento                                                  |
+| Tracking ads             | Google Ads + LinkedIn                               | scripts          | Bajo consentimiento                                                  |
+| Hosting                  | Vercel Hobby                                        | latest           | Tier gratuito al inicio                                              |
 
 ---
 
@@ -162,6 +163,7 @@ translations (key-value por idioma para UI)
 ### 4.2 Esquema Drizzle (resumen de tablas críticas nuevas)
 
 #### products
+
 ```ts
 export const products = pgTable('products', {
   id: serial('id').primaryKey(),
@@ -187,6 +189,7 @@ export const products = pgTable('products', {
 ```
 
 #### product_combinations (descuentos)
+
 ```ts
 export const productCombinations = pgTable('product_combinations', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -199,6 +202,7 @@ export const productCombinations = pgTable('product_combinations', {
 ```
 
 #### orders
+
 ```ts
 export const orders = pgTable('orders', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -230,6 +234,7 @@ export const orders = pgTable('orders', {
 ```
 
 **Estados de orden:**
+
 - `pending_documents` — cliente debe aceptar documentos
 - `pending_payment` — documentos OK, esperando pago
 - `pending_transfer_validation` — pagó por transferencia, esperando validación admin
@@ -238,6 +243,7 @@ export const orders = pgTable('orders', {
 - `cancelled` — abandonado o cancelado
 
 #### document_templates
+
 ```ts
 export const documentTemplates = pgTable('document_templates', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -266,6 +272,7 @@ export const documentVersions = pgTable('document_versions', {
 ```
 
 #### order_documents (snapshot inmutable de aceptación)
+
 ```ts
 export const orderDocuments = pgTable('order_documents', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -284,6 +291,7 @@ export const orderDocuments = pgTable('order_documents', {
 ```
 
 #### forms
+
 ```ts
 export const forms = pgTable('forms', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -301,6 +309,7 @@ export const forms = pgTable('forms', {
 ```
 
 #### form_tokens
+
 ```ts
 export const formTokens = pgTable('form_tokens', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -317,6 +326,7 @@ export const formTokens = pgTable('form_tokens', {
 ```
 
 #### blog_posts (bilingüe)
+
 ```ts
 export const blogPosts = pgTable('blog_posts', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -339,6 +349,7 @@ export const blogPosts = pgTable('blog_posts', {
 ```
 
 #### blog_comments (moderación)
+
 ```ts
 export const blogComments = pgTable('blog_comments', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -357,6 +368,7 @@ export const blogComments = pgTable('blog_comments', {
 ```
 
 #### retreats
+
 ```ts
 export const retreats = pgTable('retreats', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -380,6 +392,7 @@ export const retreats = pgTable('retreats', {
 ```
 
 #### testimonials
+
 ```ts
 export const testimonials = pgTable('testimonials', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -414,18 +427,18 @@ export const testimonials = pgTable('testimonials', {
 
 ### 4.4 Índices clave
 
-| Tabla | Índice | Razón |
-|---|---|---|
-| `orders` | `(buyer_email)` | Búsqueda y vinculación |
-| `orders` | `(folio)` unique | Lookup desde URL pública |
-| `orders` | `(status, payment_method)` | Filtrar transferencias pendientes |
-| `retreats` | `(start_date, active)` | Listado de próximos retiros |
-| `form_tokens` | `(token)` unique | Validación de acceso |
-| `form_tokens` | `(recipient_email, form_id)` | Evitar duplicados |
-| `order_documents` | `(order_id)` | Ver qué firmó un comprador |
-| `blog_comments` | `(post_id, status)` | Listado por artículo y cola de moderación |
-| `blog_comments` | `(session_id)` | UX fantasma de comentarios propios |
-| `testimonials` | `(published, display_locations)` | Vista pública |
+| Tabla               | Índice                            | Razón                                      |
+| ------------------- | ---------------------------------- | ------------------------------------------- |
+| `orders`          | `(buyer_email)`                  | Búsqueda y vinculación                    |
+| `orders`          | `(folio)` unique                 | Lookup desde URL pública                   |
+| `orders`          | `(status, payment_method)`       | Filtrar transferencias pendientes           |
+| `retreats`        | `(start_date, active)`           | Listado de próximos retiros                |
+| `form_tokens`     | `(token)` unique                 | Validación de acceso                       |
+| `form_tokens`     | `(recipient_email, form_id)`     | Evitar duplicados                           |
+| `order_documents` | `(order_id)`                     | Ver qué firmó un comprador                |
+| `blog_comments`   | `(post_id, status)`              | Listado por artículo y cola de moderación |
+| `blog_comments`   | `(session_id)`                   | UX fantasma de comentarios propios          |
+| `testimonials`    | `(published, display_locations)` | Vista pública                              |
 
 ---
 
@@ -769,25 +782,25 @@ export const defaultLocale = 'es';
 
 ### 7.1 Endpoints internos (nuevos en v3)
 
-| Endpoint | Método | Propósito |
-|---|---|---|
-| `/api/i18n/switch` | POST | Cambia cookie de idioma |
-| `/api/checkout/[orderId]/documents/generate` | POST | Genera PDFs personalizados pre-checkout |
-| `/api/checkout/[orderId]/documents/accept` | POST | Registra aceptación |
-| `/api/checkout/[orderId]/documents/upload-signed` | POST | Sube firmado |
-| `/api/pricing/calculate` | POST | Calcula desglose con descuentos + IVA |
-| `/api/transfers/upload-proof` | POST | Comprobante de transferencia |
-| `/api/admin/transfers/[id]/validate` | POST | Admin valida transferencia |
-| `/api/admin/document-templates` | CRUD | Repositorio de plantillas |
-| `/api/admin/discounts` | CRUD | Combinaciones de productos |
-| `/api/admin/form-tokens/generate` | POST | Generación masiva de tokens |
-| `/api/forms/[token]/submit` | POST | Submit con validación de token |
-| `/api/admin/cal/event-types` | CRUD | Tipos de cita en Cal.com |
-| `/api/admin/cal/availability` | PUT | Actualizar horarios disponibles |
-| `/api/blog/[postId]/comments` | GET/POST | Listar/crear comentario |
-| `/api/admin/comments/[id]/moderate` | POST | Aprobar/rechazar/spam |
-| `/api/admin/testimonials/from-response/[id]` | POST | Promocionar respuesta a testimonial |
-| `/api/cookies/consent` | POST | Guardar preferencia de cookies |
+| Endpoint                                            | Método  | Propósito                              |
+| --------------------------------------------------- | -------- | --------------------------------------- |
+| `/api/i18n/switch`                                | POST     | Cambia cookie de idioma                 |
+| `/api/checkout/[orderId]/documents/generate`      | POST     | Genera PDFs personalizados pre-checkout |
+| `/api/checkout/[orderId]/documents/accept`        | POST     | Registra aceptación                    |
+| `/api/checkout/[orderId]/documents/upload-signed` | POST     | Sube firmado                            |
+| `/api/pricing/calculate`                          | POST     | Calcula desglose con descuentos + IVA   |
+| `/api/transfers/upload-proof`                     | POST     | Comprobante de transferencia            |
+| `/api/admin/transfers/[id]/validate`              | POST     | Admin valida transferencia              |
+| `/api/admin/document-templates`                   | CRUD     | Repositorio de plantillas               |
+| `/api/admin/discounts`                            | CRUD     | Combinaciones de productos              |
+| `/api/admin/form-tokens/generate`                 | POST     | Generación masiva de tokens            |
+| `/api/forms/[token]/submit`                       | POST     | Submit con validación de token         |
+| `/api/admin/cal/event-types`                      | CRUD     | Tipos de cita en Cal.com                |
+| `/api/admin/cal/availability`                     | PUT      | Actualizar horarios disponibles         |
+| `/api/blog/[postId]/comments`                     | GET/POST | Listar/crear comentario                 |
+| `/api/admin/comments/[id]/moderate`               | POST     | Aprobar/rechazar/spam                   |
+| `/api/admin/testimonials/from-response/[id]`      | POST     | Promocionar respuesta a testimonial     |
+| `/api/cookies/consent`                            | POST     | Guardar preferencia de cookies          |
 
 ### 7.2 Webhooks externos
 
@@ -803,32 +816,38 @@ export const defaultLocale = 'es';
 ### 8.1 Cambios y refuerzos respecto a v2
 
 **Tokens de formulario:**
+
 - JWT firmados con HS256 y `FORM_SIGNING_SECRET`
 - Payload: `{ formId, recipientEmail, jti, exp }`
 - Verificación antes de cualquier lookup
 - Single-use: `used_at` en BD invalida tokens
 
 **Upload de comprobantes y firmados:**
+
 - Validación de magic bytes (no solo extensión)
 - Límite 5 MB
 - Antivirus en Vercel Blob (built-in)
 
 **Generación dinámica de PDFs:**
+
 - Plantillas validadas para evitar inyección (escape de placeholders)
 - Sin ejecución de scripts en plantillas HTML
 
 **Comentarios del blog:**
+
 - Rate limiting (1 comentario por sesión cada 30 segundos)
 - Validación de email
 - Honeypot anti-bots
 - Detección básica de spam (links múltiples, palabras clave)
 
 **Pixeles bajo consentimiento:**
+
 - Sin cookie de consent: pixeles no se cargan
 - Categorías granulares: analytics vs marketing
 - Re-prompt anual
 
 **Cal.com API:**
+
 - API key en variable de entorno server-only
 - Sincronización idempotente
 
@@ -838,27 +857,27 @@ export const defaultLocale = 'es';
 
 ### 9.1 Estrategias
 
-| Aspecto | Estrategia |
-|---|---|
-| **i18n** | Carga incremental: solo mensajes de la página actual |
-| **Pixeles** | Carga diferida solo tras consentimiento |
-| **Videos testimoniales** | Lazy load, póster estático, autoplay sin audio |
-| **Imágenes** | `next/image` con AVIF/WebP automático |
-| **Cálculo de precios** | Memoizado por combinación de productos |
-| **PDFs de documentos** | Cacheados 24h en Vercel Blob por (template_version + buyer_hash) |
-| **Listado de retiros** | `revalidate: 60` |
-| **DB queries** | Connection pooling de Neon, índices apropiados |
+| Aspecto                        | Estrategia                                                       |
+| ------------------------------ | ---------------------------------------------------------------- |
+| **i18n**                 | Carga incremental: solo mensajes de la página actual            |
+| **Pixeles**              | Carga diferida solo tras consentimiento                          |
+| **Videos testimoniales** | Lazy load, póster estático, autoplay sin audio                 |
+| **Imágenes**            | `next/image` con AVIF/WebP automático                         |
+| **Cálculo de precios**  | Memoizado por combinación de productos                          |
+| **PDFs de documentos**   | Cacheados 24h en Vercel Blob por (template_version + buyer_hash) |
+| **Listado de retiros**   | `revalidate: 60`                                               |
+| **DB queries**           | Connection pooling de Neon, índices apropiados                  |
 
 ### 9.2 Umbrales de upgrade
 
-| Servicio | Tier free hasta | Siguiente plan |
-|---|---|---|
-| Vercel Hobby | 100 GB transferencia/mes | Pro $20/mes |
-| Neon Free | 0.5 GB DB | Launch $19/mes |
-| Resend Free | 3,000 emails/mes | Pro $20/mes |
-| Vercel Blob | 1 GB storage | Cobro por GB |
-| MailChimp Essentials | 500 contactos | Standard $20/mes |
-| Cal.com | Free 1 user | Pro $15/mes/user |
+| Servicio             | Tier free hasta          | Siguiente plan   |
+| -------------------- | ------------------------ | ---------------- |
+| Vercel Hobby         | 100 GB transferencia/mes | Pro $20/mes      |
+| Neon Free            | 0.5 GB DB                | Launch $19/mes   |
+| Resend Free          | 3,000 emails/mes         | Pro $20/mes      |
+| Vercel Blob          | 1 GB storage             | Cobro por GB     |
+| MailChimp Essentials | 500 contactos            | Standard $20/mes |
+| Cal.com              | Free 1 user              | Pro $15/mes/user |
 
 ---
 
@@ -866,17 +885,17 @@ export const defaultLocale = 'es';
 
 La arquitectura v3 deja explícitamente preparados los siguientes hooks para fase 2:
 
-| Feature fase 2 | Hook arquitectónico en v1 |
-|---|---|
-| **Cuentas de usuario** | `orders.buyer_email` indexado; al crear cuentas, se vinculan automáticamente compras pasadas por email |
-| **Área de miembros** | Carpeta `src/app/(members)/` reservada; middleware preparado para múltiples roles |
-| **Tracking de progreso** | Tabla `orders` con `product_ids` permite reconstruir qué elementos tomó cada email |
-| **Conocer participantes** | Tabla `retreats` ya vinculada a `orders`; agregar `participant_visibility` boolean por orden (opt-in) |
-| **Suscripción recurrente** | Stripe soporta nativo; agregar `products.recurrence` field y webhook handler de subscriptions |
-| **Comunidad** | Idealmente externa (Circle, Discord); botón "Unirse" como CTA, sin construir foro propio |
-| **Programa de lealtad** | Tabla `loyalty_points` con triggers por evento; UI opcional |
-| **Firma electrónica NOM-151** | Módulo `documents` ya soporta `signature_upload`; cambiar a integración con DocuSign/Mifiel |
-| **Cursos en video integrados** | Vercel Blob/Vimeo + tabla `member_resources` con FK a orders |
+| Feature fase 2                       | Hook arquitectónico en v1                                                                                  |
+| ------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| **Cuentas de usuario**         | `orders.buyer_email` indexado; al crear cuentas, se vinculan automáticamente compras pasadas por email   |
+| **Área de miembros**          | Carpeta `src/app/(members)/` reservada; middleware preparado para múltiples roles                        |
+| **Tracking de progreso**       | Tabla `orders` con `product_ids` permite reconstruir qué elementos tomó cada email                    |
+| **Conocer participantes**      | Tabla `retreats` ya vinculada a `orders`; agregar `participant_visibility` boolean por orden (opt-in) |
+| **Suscripción recurrente**    | Stripe soporta nativo; agregar `products.recurrence` field y webhook handler de subscriptions             |
+| **Comunidad**                  | Idealmente externa (Circle, Discord); botón "Unirse" como CTA, sin construir foro propio                   |
+| **Programa de lealtad**        | Tabla `loyalty_points` con triggers por evento; UI opcional                                               |
+| **Firma electrónica NOM-151** | Módulo `documents` ya soporta `signature_upload`; cambiar a integración con DocuSign/Mifiel           |
+| **Cursos en video integrados** | Vercel Blob/Vimeo + tabla `member_resources` con FK a orders                                              |
 
 ---
 
@@ -889,6 +908,7 @@ next-intl tiene soporte nativo de App Router de Next 15, mientras next-i18next s
 ### 11.2 Documentos como plantillas con placeholders
 
 Las plantillas viven como HTML con `{{placeholders}}`, no como PDFs estáticos. Esto permite:
+
 - Personalización por persona/empresa con un solo motor
 - Versionado limpio (cambiar texto sin re-subir PDF)
 - Generación dinámica solo cuando se necesita
@@ -982,8 +1002,6 @@ BANK_ACCOUNT_NUMBER=
 # Pixeles tracking
 NEXT_PUBLIC_GA_MEASUREMENT_ID=
 NEXT_PUBLIC_GOOGLE_ADS_ID=
-NEXT_PUBLIC_TIKTOK_PIXEL_ID=
-NEXT_PUBLIC_META_PIXEL_ID=
 NEXT_PUBLIC_LINKEDIN_PARTNER_ID=
 
 # Admin
@@ -999,22 +1017,22 @@ IVA_RATE=0.16
 
 ### A. Mapeo SRS → SDD
 
-| Requerimiento SRS | Módulo SDD |
-|---|---|
-| RF-I18N-* | `src/i18n/`, todos los componentes UI bilingües |
-| RF-PUB-* | `modules/products`, `modules/retreats`, `modules/testimonials` |
-| RF-RTR-* | `modules/retreats` |
-| RF-PRD-* | `modules/products`, `shared/pricing` |
-| RF-CMP-* | `modules/checkout`, `shared/pricing` |
-| RF-DOC-* | `modules/documents` |
-| RF-FRM-* | `modules/forms` |
-| RF-EMP-* | `modules/enterprise` |
-| RF-ADM-* | `modules/admin` |
-| RF-CHT-* | `modules/conversations` |
-| RF-CAL-* | `modules/calendar` |
-| RF-NWS-* | `modules/newsletter` |
-| RF-BLG-* | `modules/blog` |
-| RF-ANL-* | `modules/analytics` |
+| Requerimiento SRS | Módulo SDD                                                          |
+| ----------------- | -------------------------------------------------------------------- |
+| RF-I18N-*         | `src/i18n/`, todos los componentes UI bilingües                   |
+| RF-PUB-*          | `modules/products`, `modules/retreats`, `modules/testimonials` |
+| RF-RTR-*          | `modules/retreats`                                                 |
+| RF-PRD-*          | `modules/products`, `shared/pricing`                             |
+| RF-CMP-*          | `modules/checkout`, `shared/pricing`                             |
+| RF-DOC-*          | `modules/documents`                                                |
+| RF-FRM-*          | `modules/forms`                                                    |
+| RF-EMP-*          | `modules/enterprise`                                               |
+| RF-ADM-*          | `modules/admin`                                                    |
+| RF-CHT-*          | `modules/conversations`                                            |
+| RF-CAL-*          | `modules/calendar`                                                 |
+| RF-NWS-*          | `modules/newsletter`                                               |
+| RF-BLG-*          | `modules/blog`                                                     |
+| RF-ANL-*          | `modules/analytics`                                                |
 
 ### B. Decisiones técnicas pendientes de confirmar
 

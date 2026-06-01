@@ -446,6 +446,297 @@ export const processSteps = [
   },
 ];
 
+export interface LocationInfo {
+  slug: string;
+  nameEs: string;
+  nameEn: string;
+  regionEs: string;
+  regionEn: string;
+  elementEs: string;
+  elementEn: string;
+  narrativeEs: string;
+  narrativeEn: string;
+  image: string;
+  coordinatesLabel: string;
+  altitude: string;
+  primaryElement: ElementKey;
+}
+
+export const locations: LocationInfo[] = [
+  {
+    slug: "tepoztlan",
+    nameEs: "Tepoztlán",
+    nameEn: "Tepoztlán",
+    regionEs: "Morelos · México",
+    regionEn: "Morelos · Mexico",
+    elementEs: "Tierra que mira al cielo",
+    elementEn: "Earth that looks at the sky",
+    narrativeEs:
+      "Un pueblo enclavado entre paredes de roca volcánica que se elevan hasta el Tepozteco. Aquí la tierra no es plana: es presencia que obliga a mirar hacia arriba. Ceremonias de temazcal, caminatas al amanecer, fuego en círculo.",
+    narrativeEn:
+      "A town nested between volcanic rock walls that rise to the Tepozteco. Here the earth isn't flat — it's a presence that forces you to look up. Temazcal ceremonies, dawn hikes, fire in a circle.",
+    image:
+      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1600&q=85&auto=format&fit=crop",
+    coordinatesLabel: "18.98°N · 99.10°W",
+    altitude: "1,701 m",
+    primaryElement: "tierra",
+  },
+  {
+    slug: "valle-de-bravo",
+    nameEs: "Valle de Bravo",
+    nameEn: "Valle de Bravo",
+    regionEs: "Estado de México",
+    regionEn: "State of Mexico",
+    elementEs: "Lago y viento",
+    elementEn: "Lake and wind",
+    narrativeEs:
+      "Un valle alto donde el lago refleja el cielo y el viento entra por todas las ventanas. Trabajamos agua y aire: inmersión en el lago al amanecer, breathwork al atardecer, sesiones bajo cielo abierto.",
+    narrativeEn:
+      "A high valley where the lake mirrors the sky and the wind enters through every window. We work water and air: lake immersion at dawn, breathwork at sunset, sessions under open sky.",
+    image:
+      "https://images.unsplash.com/photo-1499346030926-9a72daac6c63?w=1600&q=85&auto=format&fit=crop",
+    coordinatesLabel: "19.19°N · 100.13°W",
+    altitude: "1,830 m",
+    primaryElement: "aire",
+  },
+  {
+    slug: "huasteca",
+    nameEs: "Huasteca Potosina",
+    nameEn: "Huasteca Potosina",
+    regionEs: "San Luis Potosí",
+    regionEn: "San Luis Potosí",
+    elementEs: "Agua viva y fuego",
+    elementEn: "Living water and fire",
+    narrativeEs:
+      "Selva, cascadas turquesa y noches con hoguera bajo cielos sin contaminación lumínica. Trabajamos agua y fuego con la intensidad que solo permite la naturaleza salvaje. No para los tibios.",
+    narrativeEn:
+      "Jungle, turquoise waterfalls and bonfire nights under light-pollution-free skies. We work water and fire with the intensity only wild nature allows. Not for the tepid.",
+    image:
+      "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=1600&q=85&auto=format&fit=crop",
+    coordinatesLabel: "21.36°N · 98.94°W",
+    altitude: "120 m",
+    primaryElement: "agua",
+  },
+];
+
+export interface PracticeInfo {
+  iconName:
+    | "Waves"
+    | "Flame"
+    | "Wind"
+    | "Mountain"
+    | "Sun"
+    | "Moon"
+    | "Footprints"
+    | "Leaf"
+    | "Snowflake"
+    | "Sparkles";
+  titleEs: string;
+  titleEn: string;
+  bodyEs: string;
+  bodyEn: string;
+  durationEs: string;
+  durationEn: string;
+  element: ElementKey;
+}
+
+export const practices: PracticeInfo[] = [
+  {
+    iconName: "Snowflake",
+    titleEs: "Inmersión fría",
+    titleEn: "Cold immersion",
+    bodyEs:
+      "Plunge en agua a 6–10°C. El cuerpo aprende a no huir de la incomodidad y la mente baja revoluciones. Disciplina de un líder que decide.",
+    bodyEn:
+      "Plunge in 6–10°C water. The body learns to stop fleeing discomfort and the mind quiets. Discipline of a leader who decides.",
+    durationEs: "3–5 min",
+    durationEn: "3–5 min",
+    element: "agua",
+  },
+  {
+    iconName: "Flame",
+    titleEs: "Ceremonia de fuego",
+    titleEn: "Fire ceremony",
+    bodyEs:
+      "Círculo nocturno con brasas. Lo que ya no sostiene se nombra, se escribe, se quema. Sin discurso espiritual barato — sí con peso real.",
+    bodyEn:
+      "Nightly circle with embers. What no longer holds is named, written, burned. No cheap spiritual rhetoric — real weight.",
+    durationEs: "90 min",
+    durationEn: "90 min",
+    element: "fuego",
+  },
+  {
+    iconName: "Wind",
+    titleEs: "Breathwork guiado",
+    titleEn: "Guided breathwork",
+    bodyEs:
+      "Respiración consciente con protocolos derivados de pranayama y Wim Hof. Acceso directo al sistema nervioso autónomo.",
+    bodyEn:
+      "Conscious breathing with pranayama and Wim Hof protocols. Direct access to the autonomic nervous system.",
+    durationEs: "45 min",
+    durationEn: "45 min",
+    element: "aire",
+  },
+  {
+    iconName: "Footprints",
+    titleEs: "Caminata silenciosa",
+    titleEn: "Silent hike",
+    bodyEs:
+      "Tres horas sin palabra, sin celular, sin reloj. El cuerpo recupera su tempo y la conversación interna se sincroniza con el paso.",
+    bodyEn:
+      "Three hours without words, phones, or watches. The body recovers its tempo and inner dialogue syncs with each step.",
+    durationEs: "3 h",
+    durationEn: "3 h",
+    element: "tierra",
+  },
+  {
+    iconName: "Sun",
+    titleEs: "Sauna ceremonial",
+    titleEn: "Ceremonial sauna",
+    bodyEs:
+      "Sauna a 90°C con aufguss y aceites esenciales. Calor que limpia, contraste con frío que despierta. Práctica nórdica adaptada.",
+    bodyEn:
+      "90°C sauna with aufguss and essential oils. Heat that cleans, cold contrast that awakens. Adapted Nordic practice.",
+    durationEs: "60 min",
+    durationEn: "60 min",
+    element: "fuego",
+  },
+  {
+    iconName: "Waves",
+    titleEs: "Inmersión en cascada",
+    titleEn: "Waterfall immersion",
+    bodyEs:
+      "Cuando hay cascada, hay cascada. Bajo el flujo se trabaja escucha, presencia y la capacidad de sostenerse en lo intenso.",
+    bodyEn:
+      "When there's a waterfall, there's a waterfall. Under the flow we work listening, presence, and the capacity to stand in intensity.",
+    durationEs: "20 min",
+    durationEn: "20 min",
+    element: "agua",
+  },
+  {
+    iconName: "Moon",
+    titleEs: "Círculo de luna",
+    titleEn: "Moon circle",
+    bodyEs:
+      "Reunión nocturna sin agenda, con preguntas que sí importan. Honestidad sin terapia, dirección sin coaching, presencia sin retórica.",
+    bodyEn:
+      "Nightly gathering with no agenda and questions that matter. Honesty without therapy, direction without coaching, presence without rhetoric.",
+    durationEs: "2 h",
+    durationEn: "2 h",
+    element: "aire",
+  },
+  {
+    iconName: "Leaf",
+    titleEs: "Contacto con tierra",
+    titleEn: "Earthing",
+    bodyEs:
+      "Pies descalzos sobre tierra húmeda al amanecer. Veinte minutos. La fisiología cambia — la postura ejecutiva también.",
+    bodyEn:
+      "Bare feet on damp earth at dawn. Twenty minutes. Physiology changes — so does executive posture.",
+    durationEs: "20 min",
+    durationEn: "20 min",
+    element: "tierra",
+  },
+];
+
+export const lexiconEs = [
+  "Respirar",
+  "Arraigar",
+  "Fluir",
+  "Encender",
+  "Escuchar",
+  "Sostener",
+  "Soltar",
+  "Activar",
+  "Habitar",
+  "Decidir",
+  "Pausar",
+  "Quemar lo que sobra",
+  "Volver al cuerpo",
+  "Mirar el cielo",
+  "Pisar firme",
+];
+
+export const lexiconEn = [
+  "Breathe",
+  "Root",
+  "Flow",
+  "Ignite",
+  "Listen",
+  "Hold",
+  "Release",
+  "Activate",
+  "Inhabit",
+  "Decide",
+  "Pause",
+  "Burn what's excess",
+  "Return to the body",
+  "Look at the sky",
+  "Stand firm",
+];
+
+export interface SeasonInfo {
+  monthsEs: string;
+  monthsEn: string;
+  elementKey: ElementKey;
+  titleEs: string;
+  titleEn: string;
+  bodyEs: string;
+  bodyEn: string;
+}
+
+export const seasons: SeasonInfo[] = [
+  {
+    monthsEs: "Diciembre – Febrero",
+    monthsEn: "December – February",
+    elementKey: "tierra",
+    titleEs: "Invierno · Raíz",
+    titleEn: "Winter · Root",
+    bodyEs:
+      "El año aprieta hacia adentro. Tiempo de mirar qué se sostiene y qué no. Sesiones largas, fuego, sopa caliente, sueños largos.",
+    bodyEn:
+      "The year tightens inward. Time to look at what holds and what doesn't. Long sessions, fire, hot soup, long dreams.",
+  },
+  {
+    monthsEs: "Marzo – Mayo",
+    monthsEn: "March – May",
+    elementKey: "aire",
+    titleEs: "Primavera · Brote",
+    titleEn: "Spring · Sprout",
+    bodyEs:
+      "Comienza el movimiento que estuvo esperando. Es el momento del aire: comunicar, abrir conversaciones, soltar viejos pactos.",
+    bodyEn:
+      "The movement that was waiting begins. Time for air: communicating, opening conversations, releasing old pacts.",
+  },
+  {
+    monthsEs: "Junio – Agosto",
+    monthsEn: "June – August",
+    elementKey: "fuego",
+    titleEs: "Verano · Fuego",
+    titleEn: "Summer · Fire",
+    bodyEs:
+      "Activación pura. Ejecutar lo que se decidió, sin reservas. Quemar la duda con la acción que la duda misma estaba pidiendo.",
+    bodyEn:
+      "Pure activation. Executing what was decided, no reserves. Burning doubt with the action doubt itself was asking for.",
+  },
+  {
+    monthsEs: "Septiembre – Noviembre",
+    monthsEn: "September – November",
+    elementKey: "agua",
+    titleEs: "Otoño · Cauce",
+    titleEn: "Autumn · Stream",
+    bodyEs:
+      "La fuerza se canaliza. Lo que floreció ahora se ordena, se filtra, se prepara para el descanso. Trabajo de agua: cauce y forma.",
+    bodyEn:
+      "Strength is channeled. What bloomed is now organized, filtered, prepared for rest. Water work: channel and form.",
+  },
+];
+
+export const mantraEs =
+  "El liderazgo se entrena como se entrena un cuerpo. La naturaleza no enseña con palabras — enseña con presencia.";
+export const mantraEn =
+  "Leadership is trained like a body is trained. Nature doesn't teach with words — it teaches with presence.";
+
 export const faqs = [
   {
     qEs: "¿En qué se diferencia de un coaching tradicional?",

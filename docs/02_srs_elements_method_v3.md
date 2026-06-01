@@ -1,17 +1,18 @@
 # Software Requirements Specification (SRS) · v3
+
 ## Plataforma Web Elements Method
 
-| Campo | Valor |
-|---|---|
-| **Proyecto** | Plataforma web Elements Method |
-| **Versión del documento** | 3.0 |
-| **Fecha** | 1 de junio de 2026 |
-| **Autor** | Santiago Serrano |
-| **Cliente** | Andrés Flores Pedroza y Ana Michelle |
-| **Inversión total** | **$17,000 MXN** |
-| **Duración estimada** | Hasta 4 semanas de desarrollo desde entrega de contenidos |
+| Campo                            | Valor                                                     |
+| -------------------------------- | --------------------------------------------------------- |
+| **Proyecto**               | Plataforma web Elements Method                            |
+| **Versión del documento** | 2.0                                                       |
+| **Fecha**                  | 1 de junio de 2026                                        |
+| **Autor**                  | Santiago Serrano                                          |
+| **Cliente**                | Andrés Flores Pedroza y Ana Michelle                     |
+| **Inversión total**       | **$16,000 MXN**                                     |
+| **Duración estimada**     | Hasta 4 semanas de desarrollo desde entrega de contenidos |
 
-> **Cambios respecto a v2:** integra todas las respuestas del cuestionario de discovery del 1 de junio de 2026. Cambios principales: aceptación de documentos antes del checkout, repositorio de documentos con personalización dinámica, formularios privados con tokens únicos, manejo de IVA, sistema de descuentos por combinación, multi-idioma español/inglés, comentarios con pre-moderación, eliminación del validador QR, retiros con estados open/X cupos/closed.
+> **Cambios respecto a v1:** integra todas las respuestas del cuestionario de discovery del 1 de junio de 2026. Cambios principales: aceptación de documentos antes del checkout, repositorio de documentos con personalización dinámica, formularios privados con tokens únicos, manejo de IVA, sistema de descuentos por combinación, multi-idioma español/inglés, comentarios con pre-moderación, eliminación del validador QR, retiros con estados open/X cupos/closed.
 
 ---
 
@@ -50,33 +51,29 @@ Plataforma web bilingüe (español e inglés) para Elements Method, programa de 
 - Motor de formularios privados con tokens únicos por participante
 - Calculadora de cotización empresarial con generación de PDF
 - Blog con comentarios pre-moderados y suscripción por email
-- Integraciones con ManyChat, Cal.com, MailChimp, Resend, Google Analytics, Google Ads, TikTok Pixel, Meta Pixel
-- Banner de cookies y aviso de privacidad LFPDPPP
+- Integraciones con ManyChat, Cal.com, MailChimp, Resend, Google Analytics, Google Ads, Banner de cookies y aviso de privacidad LFPDPPP
 
 ### 1.3 Definiciones y acrónimos
 
-| Término | Definición |
-|---|---|
-| **Camino** | Paquete contratable (Raíces, Corriente, Fuente) |
-| **Elemento** | Unidad temática (Agua, Fuego, Aire, Tierra) |
-| **Retiro inmersivo** | Sesión presencial multi-día que cubre los cuatro elementos |
-| **Comprobante** | PDF de confirmación de compra |
-| **Folio** | Identificador legible único de cada orden, formato `EM-MMAA-XXXX` |
-| **Responsiva** | Documento de liberación de responsabilidad personal |
-| **NDA** | Acuerdo de confidencialidad |
-| **Token de formulario** | Hash firmado en URL que identifica univocamente la asignación de un formulario a un participante |
-| **Snapshot de documento** | Captura inmutable del PDF y su contenido al momento de aceptación |
-| **i18n** | Internacionalización (soporte multi-idioma) |
-| **LFPDPPP** | Ley Federal de Protección de Datos Personales en Posesión de los Particulares |
-| **IVA** | Impuesto al Valor Agregado (16% en México) |
+| Término                        | Definición                                                                                       |
+| ------------------------------- | ------------------------------------------------------------------------------------------------- |
+| **Camino**                | Paquete contratable (Raíces, Corriente, Fuente)                                                  |
+| **Elemento**              | Unidad temática (Agua, Fuego, Aire, Tierra)                                                      |
+| **Retiro inmersivo**      | Sesión presencial multi-día que cubre los cuatro elementos                                      |
+| **Comprobante**           | PDF de confirmación de compra                                                                    |
+| **Folio**                 | Identificador legible único de cada orden, formato `EM-MMAA-XXXX`                              |
+| **Responsiva**            | Documento de liberación de responsabilidad personal                                              |
+| **NDA**                   | Acuerdo de confidencialidad                                                                       |
+| **Token de formulario**   | Hash firmado en URL que identifica univocamente la asignación de un formulario a un participante |
+| **Snapshot de documento** | Captura inmutable del PDF y su contenido al momento de aceptación                                |
+| **i18n**                  | Internacionalización (soporte multi-idioma)                                                      |
+| **LFPDPPP**               | Ley Federal de Protección de Datos Personales en Posesión de los Particulares                   |
+| **IVA**                   | Impuesto al Valor Agregado (16% en México)                                                       |
 
 ### 1.4 Referencias
 
 - Validación de Concepto entregada 11/05/2026
 - Cotización entregada 12/05/2026
-- Transcripción de videollamada del 29/05/2026
-- Respuestas al cuestionario de discovery del 01/06/2026
-- SRS v2 (este documento lo supera)
 - SDD v3 (documento técnico hermano)
 
 ---
@@ -89,12 +86,12 @@ Aplicación web monolítica modular construida sobre Next.js 15, hospedada en Ve
 
 ### 2.2 Usuarios del sistema
 
-| Tipo | Descripción | Permisos |
-|---|---|---|
-| **Visitante** | Sin autenticación | Navegar, conversar por chat, agendar citas, suscribirse a newsletter, llenar calculadora de empresas |
-| **Comprador individual** | Persona que adquiere un producto | Aceptar documentos, completar compra, recibir comprobante, recibir formularios privados |
-| **Comprador empresa** | Organización que adquiere cotización | Recibir cotización PDF, aceptar documentos con datos de empresa, completar pago (Stripe o transferencia) |
-| **Administrador** | Andrés y Ana Michelle | Acceso total al panel admin vía magic link |
+| Tipo                           | Descripción                           | Permisos                                                                                                  |
+| ------------------------------ | -------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| **Visitante**            | Sin autenticación                     | Navegar, conversar por chat, agendar citas, suscribirse a newsletter, llenar calculadora de empresas      |
+| **Comprador individual** | Persona que adquiere un producto       | Aceptar documentos, completar compra, recibir comprobante, recibir formularios privados                   |
+| **Comprador empresa**    | Organización que adquiere cotización | Recibir cotización PDF, aceptar documentos con datos de empresa, completar pago (Stripe o transferencia) |
+| **Administrador**        | Andrés y Ana Michelle                 | Acceso total al panel admin vía magic link                                                               |
 
 ### 2.3 Funciones principales
 
@@ -110,10 +107,10 @@ A nivel macro:
 
 ### 2.4 Idiomas soportados
 
-| Idioma | Código | Default | Cobertura |
-|---|---|---|---|
-| Español (México) | `es` | Sí | Total |
-| Inglés (Internacional) | `en` | No | Total, con contenido provisto por el cliente |
+| Idioma                  | Código | Default | Cobertura                                    |
+| ----------------------- | ------- | ------- | -------------------------------------------- |
+| Español (México)      | `es`  | Sí     | Total                                        |
+| Inglés (Internacional) | `en`  | No      | Total, con contenido provisto por el cliente |
 
 El sistema renderiza español por defecto. El cambio a inglés es manual mediante un selector visible. La URL refleja el idioma activo (`/es/...` y `/en/...`).
 
@@ -156,6 +153,7 @@ Convención: **RF-[módulo]-[número]**.
 **RF-PUB-03.** El sistema debe presentar una página **Los Caminos** con detalle de los tres caminos principales (Raíces, Corriente, Fuente). Cada uno: nombre, descripción larga, qué incluye, modalidad, duración, precio MXN y USD (con leyenda "no incluye IVA"), botón de compra.
 
 **RF-PUB-04.** El sistema debe presentar una página **El Método** con los cuatro elementos en detalle. Por cada elemento, cuatro secciones de contenido **estático**:
+
 1. El elemento en la naturaleza
 2. El elemento en la persona
 3. Metodología de liderazgo
@@ -186,6 +184,7 @@ Convención: **RF-[módulo]-[número]**.
 **RF-RTR-01.** El admin puede crear, editar, archivar retiros con campos: nombre, fecha de inicio, fecha de fin, ubicación, modalidad, elementos cubiertos, descripción, imagen, precio MXN, precio USD, cupo total.
 
 **RF-RTR-02.** El sistema debe mostrar tres estados de un retiro en el sitio público:
+
 - **Abierto** (al inicio de venta, sin mostrar cupos)
 - **X cupos disponibles** (cuando se cruza un umbral configurable, ej. quedan 10 o menos)
 - **Cerrado** (cuando se alcanza el cupo total)
@@ -203,6 +202,7 @@ Convención: **RF-[módulo]-[número]**.
 ### 3.4 RF-PRD · Productos y descuentos
 
 **RF-PRD-01.** El sistema soporta los siguientes tipos de productos:
+
 - 3 caminos: Raíces, Corriente, Fuente
 - 4 elementos individuales: Agua, Fuego, Aire, Tierra
 - Retiros inmersivos (de la tabla `retreats`)
@@ -237,6 +237,7 @@ Convención: **RF-[módulo]-[número]**.
 **RF-CMP-06.** Para transferencias, el sistema debe permitir al comprador **subir el comprobante** de pago. La orden queda en estado `pendiente_transferencia` hasta validación manual por admin.
 
 **RF-CMP-07.** Al confirmarse un pago (Stripe webhook o validación manual de transferencia), el sistema debe:
+
 - Generar folio único legible formato `EM-MMAA-XXXX`
 - Generar comprobante PDF (sin QR)
 - Enviar email transaccional con PDF adjunto
@@ -260,6 +261,7 @@ Convención: **RF-[módulo]-[número]**.
 **RF-DOC-01.** El sistema debe ofrecer un **repositorio de documentos legales** en el panel admin, donde Andrés y Ana Michelle pueden crear, editar, archivar y versionar cualquier número de documentos (no limitado a 4).
 
 **RF-DOC-02.** Cada documento tiene:
+
 - Slug único (ej. `contrato-servicios`, `responsiva`, `nda`, `autorizacion-imagen`)
 - Nombre público
 - Versión actual y historial
@@ -276,6 +278,7 @@ Convención: **RF-[módulo]-[número]**.
 **RF-DOC-05.** El flujo de aceptación clip-a-clip sucede **antes del checkout**: tras seleccionar producto, el sistema presenta uno a uno todos los documentos `requerido_para_compra` aplicables al tipo de comprador.
 
 **RF-DOC-06.** Para cada documento mostrado:
+
 - Vista previa o descarga del PDF generado con los datos del comprador
 - Checkbox "He leído y acepto este documento"
 - Si tipo es `firma_subida`: campo de upload obligatorio para el PDF firmado
@@ -443,6 +446,7 @@ Convención: **RF-[módulo]-[número]**.
 **RF-BLG-09.** Formulario de suscripción al blog: cuando se publica nuevo artículo, MailChimp envía broadcast a la lista.
 
 **RF-BLG-10.** **Comentarios con pre-moderación + UX fantasma**:
+
 - Cualquier visitante (con nombre y email) puede comentar
 - El comentario entra a cola de moderación
 - **El propio autor del comentario lo ve como "publicado"** (persistido por cookie/sesión)
@@ -458,10 +462,6 @@ Convención: **RF-[módulo]-[número]**.
 **RF-ANL-01.** Integración Google Analytics 4: páginas vistas, eventos de conversión (compras), origen de tráfico.
 
 **RF-ANL-02.** Integración Google Ads para tracking de conversiones de campañas.
-
-**RF-ANL-03.** Integración TikTok Pixel (incluido en v1).
-
-**RF-ANL-04.** Soporte para Meta Pixel (Facebook/Instagram): infraestructura lista, ID provisto por Andrés cuando esté listo.
 
 **RF-ANL-05.** Soporte opcional para LinkedIn Insight Tag.
 
@@ -597,39 +597,39 @@ Convención: **RF-[módulo]-[número]**.
 
 ### 5.1 Interfaces de usuario
 
-| Interfaz | Descripción |
-|---|---|
-| **Sitio público bilingüe** | Páginas accesibles sin autenticación, en español e inglés |
-| **Checkout Stripe** | Pasarela hosted |
-| **Panel admin** | Interfaz autenticada para socios |
-| **Formularios privados** | `/formulario/[token]` accesible con token válido |
-| **Comprobantes** | `/comprobante/[folio]` con verificación por email |
-| **Documentos personalizados** | Generados en tiempo real con datos del comprador |
-| **Chat ManyChat** | Widget embebido global |
-| **Calendario Cal.com** | Widget embebido en páginas relevantes |
+| Interfaz                            | Descripción                                                  |
+| ----------------------------------- | ------------------------------------------------------------- |
+| **Sitio público bilingüe**  | Páginas accesibles sin autenticación, en español e inglés |
+| **Checkout Stripe**           | Pasarela hosted                                               |
+| **Panel admin**               | Interfaz autenticada para socios                              |
+| **Formularios privados**      | `/formulario/[token]` accesible con token válido           |
+| **Comprobantes**              | `/comprobante/[folio]` con verificación por email          |
+| **Documentos personalizados** | Generados en tiempo real con datos del comprador              |
+| **Chat ManyChat**             | Widget embebido global                                        |
+| **Calendario Cal.com**        | Widget embebido en páginas relevantes                        |
 
 ### 5.2 Interfaces con sistemas externos
 
-| Sistema | Tipo | Dirección |
-|---|---|---|
-| **Stripe** | SDK + webhooks | Bidireccional |
-| **ManyChat** | API + webhooks | Bidireccional |
-| **MailChimp** | API REST | Saliente principal, webhook entrante para unsubscribes |
-| **Cal.com** | API REST + embed | Bidireccional |
-| **Resend** | API REST | Saliente |
-| **Google Analytics 4** | gtag.js | Saliente |
-| **Google Ads** | gtag conversion | Saliente |
-| **Meta Pixel** | fbq.js (opcional) | Saliente |
-| **TikTok Pixel** | ttq.js | Saliente |
-| **LinkedIn Insight Tag** | _linkedin_partner_id (opcional) | Saliente |
-| **Vercel Blob** | SDK | Bidireccional |
+| Sistema                      | Tipo             | Dirección                                             |
+| ---------------------------- | ---------------- | ------------------------------------------------------ |
+| **Stripe**             | SDK + webhooks   | Bidireccional                                          |
+| **ManyChat**           | API + webhooks   | Bidireccional                                          |
+| **MailChimp**          | API REST         | Saliente principal, webhook entrante para unsubscribes |
+| **Cal.com**            | API REST + embed | Bidireccional                                          |
+| **Resend**             | API REST         | Saliente                                               |
+| **Google Analytics 4** | gtag.js          | Saliente                                               |
+| **Google Ads**         | gtag conversion  | Saliente                                               |
+|                              |                  |                                                        |
+|                              |                  |                                                        |
+|                              |                  |                                                        |
+| **Vercel Blob**        | SDK              | Bidireccional                                          |
 
 ### 5.3 Bases de datos y almacenamiento
 
-| Sistema | Función |
-|---|---|
-| **PostgreSQL (Neon)** | Persistencia primaria, gestionada con Drizzle ORM |
-| **Vercel Blob** | Imágenes de blog, retiros, testimoniales (fotos + videos cortos), logos, PDFs subidos (comprobantes de transferencia, documentos firmados) |
+| Sistema                     | Función                                                                                                                                    |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| **PostgreSQL (Neon)** | Persistencia primaria, gestionada con Drizzle ORM                                                                                           |
+| **Vercel Blob**       | Imágenes de blog, retiros, testimoniales (fotos + videos cortos), logos, PDFs subidos (comprobantes de transferencia, documentos firmados) |
 
 ---
 
@@ -649,7 +649,7 @@ Convención: **RF-[módulo]-[número]**.
 
 ### 6.3 De presupuesto
 
-- Inversión total: $17,000 MXN.
+- Inversión total: $16,000 MXN.
 - Cliente cubre directamente: dominio, ManyChat Pro, MailChimp Essentials, comisiones Stripe, suscripción a Cal.com si aplica.
 
 ### 6.4 Legales
@@ -677,21 +677,21 @@ Convención: **RF-[módulo]-[número]**.
 
 Items que el cliente debe resolver antes o durante el desarrollo. Su retraso bloquea fases específicas:
 
-| ID | Pendiente | Bloquea |
-|---|---|---|
+| ID   | Pendiente                                                                   | Bloquea                         |
+| ---- | --------------------------------------------------------------------------- | ------------------------------- |
 | P-01 | Dónde van las reservas de Cal.com (Google Calendar empresarial o personal) | Semana 4 (integración Cal.com) |
-| P-02 | Fórmula exacta de la calculadora de empresas | Semana 3 (módulo Empresas) |
-| P-03 | Mínimos de personas y sesiones para cotización | Semana 3 |
-| P-04 | Documentos legales redactados y revisados por abogado | Semana 3 (módulo Documentos) |
-| P-05 | Fechas, precios y ubicaciones de retiros 2026-2027 | Semana 2 (calendario) |
-| P-06 | Precio del retiro inmersivo de 3 días | Semana 2 |
-| P-07 | Cantidad y especificaciones de logos de empresa al lanzamiento | Semana 4 |
-| P-08 | Handles oficiales de Instagram, TikTok, LinkedIn | Semana 2 |
-| P-09 | FAQs para configuración de ManyChat | Semana 4 |
-| P-10 | Temas y línea editorial del blog | Post-launch |
-| P-11 | Formato preferido de capacitación final | Cierre |
-| P-12 | Confirmación de Meta Pixel ID si se usará | Semana 4 |
-| P-13 | Lista completa de redacciones para versión en inglés | Antes de lanzar EN |
+| P-02 | Fórmula exacta de la calculadora de empresas                               | Semana 3 (módulo Empresas)     |
+| P-03 | Mínimos de personas y sesiones para cotización                            | Semana 3                        |
+| P-04 | Documentos legales redactados y revisados por abogado                       | Semana 3 (módulo Documentos)   |
+| P-05 | Fechas, precios y ubicaciones de retiros 2026-2027                          | Semana 2 (calendario)           |
+| P-06 | Precio del retiro inmersivo de 3 días                                      | Semana 2                        |
+| P-07 | Cantidad y especificaciones de logos de empresa al lanzamiento              | Semana 4                        |
+| P-08 | Handles oficiales de Instagram, TikTok, LinkedIn                            | Semana 2                        |
+| P-09 | FAQs para configuración de ManyChat                                        | Semana 4                        |
+| P-10 | Temas y línea editorial del blog                                           | Post-launch                     |
+| P-11 | Formato preferido de capacitación final                                    | Cierre                          |
+| P-12 | Confirmación de Meta Pixel ID si se usará                                 | Semana 4                        |
+| P-13 | Lista completa de redacciones para versión en inglés                      | Antes de lanzar EN              |
 
 ---
 
