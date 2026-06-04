@@ -52,24 +52,24 @@ export function FinalCta({ locale }: { locale: Locale }) {
           >
             <div className="eyebrow text-[var(--color-paper)]/70 mb-6 flex items-center gap-3">
               <span aria-hidden className="h-px w-12 bg-[var(--color-paper)]/40" />
-              {locale === "es" ? "Comienza" : "Begin"}
+              {locale === "es" ? "Aplica ahora" : "Apply now"}
             </div>
             <h2 className="display-1 text-balance text-[var(--color-paper)] max-w-3xl">
               {locale === "es" ? (
                 <>
-                  El primer paso es{" "}
+                  El liderazgo comienza{" "}
                   <span className="italic font-light text-[var(--color-paper-warm)]">
-                    una conversación
+                    en la mente
                   </span>{" "}
-                  de treinta minutos.
+                  que decide.
                 </>
               ) : (
                 <>
-                  The first step is{" "}
+                  Leadership begins in{" "}
                   <span className="italic font-light text-[var(--color-paper-warm)]">
-                    a thirty-minute
+                    the mind that
                   </span>{" "}
-                  conversation.
+                  decides.
                 </>
               )}
             </h2>
@@ -84,8 +84,8 @@ export function FinalCta({ locale }: { locale: Locale }) {
           >
             <p className="text-[var(--color-paper)]/75 leading-relaxed">
               {locale === "es"
-                ? "Sin agenda comercial. Si tiene sentido, lo construimos. Si no, te lo decimos."
-                : "No sales agenda. If it makes sense, we build it. If not, we tell you."}
+                ? "Cupo limitado a 15 líderes por módulo. Aplica para revisar tu perfil y agendar una conversación de discovery."
+                : "Capacity capped at 15 leaders per module. Apply to review your profile and schedule a discovery conversation."}
             </p>
             <div className="flex flex-wrap gap-3">
               <Button
@@ -94,14 +94,14 @@ export function FinalCta({ locale }: { locale: Locale }) {
                 trailingArrow
                 className="bg-[var(--color-paper)] text-[var(--color-ink)] hover:bg-[var(--color-paper-warm)]"
               >
-                {locale === "es" ? "Agendar conversación" : "Schedule a call"}
+                {locale === "es" ? "Aplicar ahora" : "Apply now"}
               </Button>
               <Button
                 href={`/${locale}/${locale === "es" ? "los-caminos" : "paths"}`}
                 size="lg"
                 variant="outlineLight"
               >
-                {locale === "es" ? "Ver caminos" : "See paths"}
+                {locale === "es" ? "Ver programas" : "See programs"}
               </Button>
             </div>
           </motion.div>
@@ -117,8 +117,8 @@ export function FinalCta({ locale }: { locale: Locale }) {
         >
           <ContactPill
             icon={Calendar}
-            label={locale === "es" ? "Agenda" : "Calendar"}
-            value={locale === "es" ? "Próx. retiro · Feb 2026" : "Next retreat · Feb 2026"}
+            label={locale === "es" ? "Próximo módulo" : "Next module"}
+            value={locale === "es" ? "Tierra · 21 Feb 2026" : "Earth · Feb 21, 2026"}
           />
           <ContactPill
             icon={MessageSquare}

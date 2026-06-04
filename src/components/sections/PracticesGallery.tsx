@@ -12,6 +12,11 @@ import {
   Leaf,
   Snowflake,
   Sparkles,
+  Eye,
+  MessageCircle,
+  PenLine,
+  Trees,
+  Cloud,
   Clock,
 } from "lucide-react";
 import type { Locale } from "@/i18n/config";
@@ -20,7 +25,23 @@ import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Section";
 import { cn } from "@/lib/utils";
 
-const ICONS = { Waves, Flame, Wind, Mountain, Sun, Moon, Footprints, Leaf, Snowflake, Sparkles };
+const ICONS = {
+  Waves,
+  Flame,
+  Wind,
+  Mountain,
+  Sun,
+  Moon,
+  Footprints,
+  Leaf,
+  Snowflake,
+  Sparkles,
+  Eye,
+  MessageCircle,
+  PenLine,
+  Trees,
+  Cloud,
+};
 
 const ELEMENT_COLORS: Record<ElementKey, string> = {
   agua: "var(--color-water)",
@@ -56,19 +77,19 @@ export function PracticesGallery({ locale }: { locale: Locale }) {
           <div className="lg:col-span-7">
             <Eyebrow className="mb-6 flex items-center gap-3">
               <Sparkles className="h-3.5 w-3.5" strokeWidth={1.5} />
-              {locale === "es" ? "Prácticas y rituales" : "Practices & rituals"}
+              {locale === "es" ? "Ejercicios del método" : "Method exercises"}
             </Eyebrow>
             <h2 className="display-2 text-balance">
               {locale === "es"
-                ? "Lo que sucede entre amaneceres."
-                : "What happens between sunrises."}
+                ? "Ocho prácticas. Dos por elemento."
+                : "Eight practices. Two per element."}
             </h2>
           </div>
           <div className="lg:col-span-5">
             <p className="lead text-pretty">
               {locale === "es"
-                ? "Ocho prácticas que viven dentro de cada inmersión. Probadas, secuenciadas, dosificadas por elemento."
-                : "Eight practices that live within each immersion. Tested, sequenced, dosed by element."}
+                ? "Estos son ejercicios reales del programa — no metáforas. Cada uno tiene una secuencia, un protocolo y un por qué basado en neurociencia o psicología aplicada."
+                : "These are real program exercises — not metaphors. Each has a sequence, a protocol and a why grounded in neuroscience or applied psychology."}
             </p>
           </div>
         </div>

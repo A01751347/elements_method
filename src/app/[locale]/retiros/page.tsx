@@ -1,24 +1,22 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import {
-  Sunrise,
-  Coffee,
-  Footprints,
-  Utensils,
+  Wind,
+  Eye,
+  PenLine,
+  MessageCircle,
   Flame,
-  Moon,
-  Bed,
-  Backpack,
-  Soup,
-  Car,
-  ShieldCheck,
-  Camera,
+  Sparkles,
+  Compass,
 } from "lucide-react";
 import { isLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { Section, Eyebrow } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
+import { Button } from "@/components/ui/Button";
 import { RetreatsShowcase } from "@/components/sections/RetreatsShowcase";
+import { singleModulePricing } from "@/data/content";
+import { formatPriceMXN } from "@/lib/utils";
 
 export async function generateMetadata({
   params,
@@ -26,7 +24,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  return { title: locale === "en" ? "Retreats" : "Retiros" };
+  return { title: locale === "en" ? "Modules" : "Módulos" };
 }
 
 export default async function RetreatsPage({
@@ -69,28 +67,73 @@ export default async function RetreatsPage({
         </Container>
       </section>
 
-      {/* GRID OF RETREATS */}
+      {/* FORMAT — verbatim from proyecto.md */}
+      <Section spacing="default">
+        <div className="grid lg:grid-cols-12 gap-12 items-start mb-16">
+          <div className="lg:col-span-5">
+            <Eyebrow className="mb-6">
+              {locale === "es" ? "Formato" : "Format"}
+            </Eyebrow>
+            <h2 className="display-2 text-balance">
+              {locale === "es"
+                ? "Cuatro módulos. Un día al mes cada uno."
+                : "Four modules. One day per month each."}
+            </h2>
+          </div>
+          <div className="lg:col-span-7 grid sm:grid-cols-2 gap-px bg-[var(--color-line)] border border-[var(--color-line)]">
+            {[
+              {
+                k: locale === "es" ? "Módulos independientes" : "Independent modules",
+                v: "4",
+              },
+              {
+                k: locale === "es" ? "Frecuencia" : "Frequency",
+                v: locale === "es" ? "1 día al mes" : "1 day per month",
+              },
+              {
+                k: locale === "es" ? "Cupo por módulo" : "Per-module capacity",
+                v: locale === "es" ? "15 participantes" : "15 participants",
+              },
+              {
+                k: locale === "es" ? "Tipo" : "Type",
+                v: locale === "es" ? "Formato intensivo" : "Intensive format",
+              },
+            ].map((row) => (
+              <div key={row.k} className="bg-[var(--color-paper)] p-6">
+                <div className="eyebrow text-[var(--color-muted)] mb-2">
+                  {row.k}
+                </div>
+                <div className="font-[family-name:var(--font-display)] text-3xl">
+                  {row.v}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Section>
+
+      {/* GRID OF MODULES */}
       <RetreatsShowcase locale={locale} dict={dict} hideHeader />
 
-      {/* DAY ANATOMY */}
+      {/* DISCONNECTION PROTOCOL — verbatim from presentation page 8 */}
       <Section spacing="default" tone="warm" className="paper-grain">
         <div className="grid lg:grid-cols-12 gap-12 mb-16">
           <div className="lg:col-span-6">
             <Eyebrow className="mb-6 flex items-center gap-3">
-              <Sunrise className="h-3.5 w-3.5" strokeWidth={1.5} />
-              {locale === "es" ? "Anatomía de un día" : "Anatomy of a day"}
+              <Wind className="h-3.5 w-3.5" strokeWidth={1.5} />
+              Disconnection Protocol
             </Eyebrow>
             <h2 className="display-2 text-balance">
               {locale === "es"
-                ? "De amanecer a fuego nocturno."
-                : "From dawn to nightly fire."}
+                ? "Cinco fases por módulo."
+                : "Five phases per module."}
             </h2>
           </div>
           <div className="lg:col-span-6 lg:pt-4">
             <p className="lead text-pretty">
               {locale === "es"
-                ? "Doce horas estructuradas con propósito. Sin tiempo muerto — y sin sobrecarga. Cada bloque tiene su elemento y su intención."
-                : "Twelve structured hours with purpose. No dead time — and no overload. Each block has its element and intention."}
+                ? "Cada inmersión de Elements Method está diseñada alrededor de un arco cuidadosamente secuenciado de desconexión-reconexión."
+                : "Every Elements Method immersion is designed around a carefully sequenced disconnection-reconnection arc."}
             </p>
           </div>
         </div>
@@ -98,204 +141,258 @@ export default async function RetreatsPage({
         <div className="border border-[var(--color-line)] divide-y divide-[var(--color-line)] bg-[var(--color-paper)]">
           {(locale === "es"
             ? [
-                { time: "05:30", icon: Sunrise, label: "Amanecer", body: "Breathwork en silencio. Cuerpo lento, cabeza abierta." },
-                { time: "07:00", icon: Coffee, label: "Desayuno", body: "Comida ligera. Conversación con quien aparezca." },
-                { time: "08:30", icon: Footprints, label: "Caminata", body: "Tres horas en silencio. Sin teléfonos, sin reloj." },
-                { time: "12:30", icon: Utensils, label: "Comida", body: "Local, vegetariana, sin prisa. Un descanso real." },
-                { time: "14:30", icon: Camera, label: "Sesión del día", body: "Trabajo del elemento de hoy. Práctica + integración." },
-                { time: "17:30", icon: Flame, label: "Práctica de fuego", body: "Sauna, ceremonia o ejercicio de activación según día." },
-                { time: "19:30", icon: Soup, label: "Cena", body: "Más lenta. Empezamos a bajar el ritmo." },
-                { time: "21:00", icon: Moon, label: "Círculo nocturno", body: "Hoguera, preguntas, lectura. Cerramos el día." },
-                { time: "22:30", icon: Bed, label: "Descanso", body: "Apagón colectivo. Sueño temprano, día largo mañana." },
-              ]
-            : [
-                { time: "05:30", icon: Sunrise, label: "Dawn", body: "Silent breathwork. Slow body, open head." },
-                { time: "07:00", icon: Coffee, label: "Breakfast", body: "Light food. Conversation with whoever appears." },
-                { time: "08:30", icon: Footprints, label: "Hike", body: "Three hours in silence. No phones, no watch." },
-                { time: "12:30", icon: Utensils, label: "Lunch", body: "Local, vegetarian, no rush. Real rest." },
-                { time: "14:30", icon: Camera, label: "Day session", body: "Work on today's element. Practice + integration." },
-                { time: "17:30", icon: Flame, label: "Fire practice", body: "Sauna, ceremony or activation exercise depending on the day." },
-                { time: "19:30", icon: Soup, label: "Dinner", body: "Slower. We start winding down." },
-                { time: "21:00", icon: Moon, label: "Nightly circle", body: "Bonfire, questions, reading. We close the day." },
-                { time: "22:30", icon: Bed, label: "Rest", body: "Collective lights-out. Early sleep, long day tomorrow." },
-              ]
-          ).map((row) => {
-            const Icon = row.icon;
-            return (
-              <div
-                key={row.time}
-                className="grid grid-cols-[80px_60px_1fr_2fr] md:grid-cols-[100px_80px_1fr_3fr] gap-4 md:gap-6 p-5 md:p-6 items-center hover:bg-[var(--color-paper-warm)] transition-colors"
-              >
-                <span className="font-[family-name:var(--font-display)] text-xl md:text-2xl text-[var(--color-moss-700)] tabular-nums">
-                  {row.time}
-                </span>
-                <Icon className="h-5 w-5 text-[var(--color-muted)]" strokeWidth={1.5} />
-                <span className="text-[var(--color-ink)] font-medium">{row.label}</span>
-                <span className="text-sm text-[var(--color-ink-soft)]">{row.body}</span>
-              </div>
-            );
-          })}
-        </div>
-      </Section>
-
-      {/* WHAT'S INCLUDED */}
-      <Section spacing="default">
-        <div className="grid lg:grid-cols-12 gap-12 mb-16">
-          <div className="lg:col-span-6">
-            <Eyebrow className="mb-6 flex items-center gap-3">
-              <Backpack className="h-3.5 w-3.5" strokeWidth={1.5} />
-              {locale === "es" ? "Qué incluye" : "What's included"}
-            </Eyebrow>
-            <h2 className="display-2 text-balance">
-              {locale === "es"
-                ? "Llegas con poco. Te ocupas de estar."
-                : "You arrive with little. You take care of being."}
-            </h2>
-          </div>
-          <div className="lg:col-span-6 lg:pt-4">
-            <p className="lead text-pretty">
-              {locale === "es"
-                ? "El precio del retiro cubre alojamiento, todas las comidas, materiales, facilitación y traslados desde el punto de encuentro."
-                : "The retreat price covers lodging, all meals, materials, facilitation and transport from the meeting point."}
-            </p>
-          </div>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-px bg-[var(--color-line)] border border-[var(--color-line)]">
-          <div className="bg-[var(--color-paper)] p-8 md:p-10">
-            <div className="eyebrow text-[var(--color-moss-700)] mb-6">
-              {locale === "es" ? "Sí incluye" : "Included"}
-            </div>
-            <ul className="space-y-4">
-              {[
-                { icon: Bed, t: locale === "es" ? "Alojamiento en cabaña compartida" : "Shared cabin lodging" },
-                { icon: Soup, t: locale === "es" ? "Tres comidas locales y meriendas" : "Three local meals and snacks" },
-                { icon: Car, t: locale === "es" ? "Transporte desde CDMX (ida y vuelta)" : "Transport from CDMX (round trip)" },
-                { icon: Camera, t: locale === "es" ? "Toda la facilitación y materiales" : "All facilitation and materials" },
-                { icon: ShieldCheck, t: locale === "es" ? "Seguro médico durante el retiro" : "Medical insurance during retreat" },
-              ].map((row) => {
-                const Icon = row.icon;
-                return (
-                  <li key={row.t} className="flex items-start gap-3">
-                    <Icon className="h-5 w-5 text-[var(--color-moss-700)] mt-0.5 shrink-0" strokeWidth={1.5} />
-                    <span className="text-[var(--color-ink-soft)]">{row.t}</span>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-
-          <div className="bg-[var(--color-paper-warm)] p-8 md:p-10">
-            <div className="eyebrow text-[var(--color-muted)] mb-6">
-              {locale === "es" ? "Qué traer" : "What to bring"}
-            </div>
-            <ul className="space-y-3.5 text-[var(--color-ink-soft)]">
-              {(locale === "es"
-                ? [
-                    "Ropa cómoda para clima cambiante",
-                    "Tenis de trekking o caminata",
-                    "Traje de baño o ropa para inmersión",
-                    "Cuaderno y pluma",
-                    "Botella de agua reutilizable",
-                    "Lámpara de cabeza (linterna frontal)",
-                    "Disposición a no usar el celular tres días",
-                  ]
-                : [
-                    "Comfortable clothing for changing weather",
-                    "Trekking or hiking shoes",
-                    "Swimsuit or immersion clothing",
-                    "Notebook and pen",
-                    "Reusable water bottle",
-                    "Headlamp",
-                    "Willingness to not use your phone for three days",
-                  ]
-              ).map((row) => (
-                <li key={row} className="flex items-start gap-3">
-                  <span className="h-1 w-3 bg-[var(--color-earth)] mt-3 shrink-0" />
-                  <span>{row}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </Section>
-
-      {/* HOW TO CHOOSE */}
-      <Section spacing="default" tone="ink">
-        <div className="grid lg:grid-cols-12 gap-12 mb-16">
-          <div className="lg:col-span-7">
-            <Eyebrow inverted className="mb-6">
-              {locale === "es" ? "Cómo elegir" : "How to choose"}
-            </Eyebrow>
-            <h2 className="display-2 text-[var(--color-paper)] text-balance">
-              {locale === "es"
-                ? "Tres preguntas que te aclaran cuál retiro."
-                : "Three questions that clarify which retreat."}
-            </h2>
-          </div>
-          <div className="lg:col-span-5 lg:pt-3">
-            <p className="text-lg text-[var(--color-paper)]/75 leading-relaxed text-pretty">
-              {locale === "es"
-                ? "Cada retiro pesa distinto. No es lo mismo cuatro elementos en tres días que dos elementos en cuatro días."
-                : "Each retreat weighs differently. Four elements in three days isn't the same as two elements in four days."}
-            </p>
-          </div>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-px bg-[var(--color-paper)]/15">
-          {(locale === "es"
-            ? [
                 {
                   n: "01",
-                  q: "¿Cuánto tiempo tienes?",
-                  a: "Tres noches alcanzan para una inmersión completa con los cuatro elementos. Cuatro noches permiten profundizar en dos elementos.",
+                  phase: "Release · Liberar",
+                  duration: "0–60 min",
+                  body: "Llegar físicamente. Soltar los dispositivos. Dejar que el sistema nervioso comience a aterrizar. El silencio es bienvenido.",
                 },
                 {
                   n: "02",
-                  q: "¿Qué intensidad buscas?",
-                  a: "Tepoztlán es contemplativo. Huasteca es físico. Valle de Bravo es reflexivo. Elige según el estado en que llegas, no en el que quieres llegar.",
+                  phase: "Encounter · Encontrar",
+                  duration: "1–3 hrs",
+                  body: "Encuentro con el elemento — a través de experiencia sensorial directa, observación facilitada y presencia somática.",
                 },
                 {
                   n: "03",
-                  q: "¿Es tu primera vez?",
-                  a: "Recomendamos empezar con un retiro de los cuatro elementos. Da contexto. Después, las inmersiones por elemento tienen más sentido.",
+                  phase: "Reflection · Reflejar",
+                  duration: "30–60 min",
+                  body: "Journaling individual y reflexión en silencio. El elemento como espejo. ¿Qué me muestra sobre mi liderazgo?",
+                },
+                {
+                  n: "04",
+                  phase: "Dialogue · Dialogar",
+                  duration: "60–90 min",
+                  body: "Conversación grupal facilitada. ¿Qué emergió? ¿Qué sorprendió? ¿Cuál es el filo que este elemento revela?",
+                },
+                {
+                  n: "05",
+                  phase: "Integration · Integrar",
+                  duration: "30–60 min",
+                  body: "Ritual de cierre ligado al elemento. Un compromiso. Una intención. El puente de regreso a la vida organizacional.",
                 },
               ]
             : [
                 {
                   n: "01",
-                  q: "How much time do you have?",
-                  a: "Three nights are enough for a full four-element immersion. Four nights let you go deeper into two elements.",
+                  phase: "Release",
+                  duration: "0–60 min",
+                  body: "Physically arrive. Put down devices. Let the nervous system begin to settle. Silence is welcome.",
                 },
                 {
                   n: "02",
-                  q: "What intensity?",
-                  a: "Tepoztlán is contemplative. Huasteca is physical. Valle de Bravo is reflective. Choose by the state you arrive in, not where you want to.",
+                  phase: "Encounter",
+                  duration: "1–3 hrs",
+                  body: "Meet the element — through direct sensory experience, facilitated observation, and somatic presence.",
                 },
                 {
                   n: "03",
-                  q: "Is it your first time?",
-                  a: "We recommend starting with a four-element retreat. It gives context. Afterward, single-element immersions make more sense.",
+                  phase: "Reflection",
+                  duration: "30–60 min",
+                  body: "Individual journaling and silent reflection. The element as mirror. What is it showing me about my leadership?",
+                },
+                {
+                  n: "04",
+                  phase: "Dialogue",
+                  duration: "60–90 min",
+                  body: "Facilitated group conversation. What emerged? What surprised? What is the edge this element reveals?",
+                },
+                {
+                  n: "05",
+                  phase: "Integration",
+                  duration: "30–60 min",
+                  body: "Closing ritual tied to the element. One commitment. One intention. The bridge back to organizational life.",
                 },
               ]
           ).map((row) => (
             <div
               key={row.n}
-              className="bg-[var(--color-ink)] p-8 md:p-10 min-h-[300px] flex flex-col"
+              className="grid grid-cols-[60px_1fr] md:grid-cols-[80px_220px_120px_1fr] gap-4 md:gap-6 p-5 md:p-7 items-start hover:bg-[var(--color-paper-warm)] transition-colors"
             >
-              <span className="font-[family-name:var(--font-display)] text-4xl text-[var(--color-paper)]/30 mb-6">
+              <span className="font-[family-name:var(--font-display)] text-2xl md:text-3xl text-[var(--color-moss-700)]">
                 {row.n}
               </span>
-              <h3 className="font-[family-name:var(--font-display)] text-xl tracking-tight text-[var(--color-paper)] mb-3">
-                {row.q}
-              </h3>
-              <p className="text-sm text-[var(--color-paper)]/70 leading-relaxed flex-1">
-                {row.a}
+              <span className="font-[family-name:var(--font-display)] text-lg md:text-xl tracking-tight col-span-1">
+                {row.phase}
+              </span>
+              <span className="text-xs uppercase tracking-wide text-[var(--color-muted)] md:text-right tabular-nums col-span-1">
+                {row.duration}
+              </span>
+              <p className="text-sm text-[var(--color-ink-soft)] leading-relaxed col-span-2 md:col-span-1">
+                {row.body}
               </p>
             </div>
           ))}
         </div>
       </Section>
+
+      {/* SAMPLE EXERCISES — verbatim from presentation */}
+      <Section spacing="default">
+        <div className="grid lg:grid-cols-12 gap-12 mb-16">
+          <div className="lg:col-span-6">
+            <Eyebrow className="mb-6 flex items-center gap-3">
+              <Sparkles className="h-3.5 w-3.5" strokeWidth={1.5} />
+              {locale === "es" ? "Ejercicios del campo" : "Field exercises"}
+            </Eyebrow>
+            <h2 className="display-2 text-balance">
+              {locale === "es"
+                ? "Un ejercicio destacado por elemento."
+                : "One featured exercise per element."}
+            </h2>
+          </div>
+          <div className="lg:col-span-6 lg:pt-4">
+            <p className="lead text-pretty">
+              {locale === "es"
+                ? "Estos son ejercicios documentados del programa — cada uno con su entorno, su duración y su por qué."
+                : "These are documented program exercises — each with its environment, duration and rationale."}
+            </p>
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-px bg-[var(--color-line)] border border-[var(--color-line)]">
+          {(locale === "es"
+            ? [
+                {
+                  icon: Compass,
+                  el: "Tierra · ROOTS",
+                  t: "The Root Contact",
+                  b: "Descalzo sobre tierra de bosque, 30 minutos en silencio. Una instrucción: notar dónde sí y dónde no sientes el suelo en tu cuerpo. Earthing documentado reduce inflamación y regula cortisol.",
+                },
+                {
+                  icon: Flame,
+                  el: "Fuego · IGNITE",
+                  t: "The Fire Council",
+                  b: "Círculo alrededor del fuego sin agenda los primeros 60 minutos. Dos preguntas: ¿cuál es la visión que cargas y no has hablado? ¿Cuál es el fuego que has mantenido demasiado pequeño?",
+                },
+                {
+                  icon: Eye,
+                  el: "Agua · FLOW",
+                  t: "The River Witness",
+                  b: "Solo, junto a agua en movimiento, mínimo 20 minutos en silencio. Activa el Default Mode Network. Tres preguntas para integrar lo que el río mostró.",
+                },
+                {
+                  icon: PenLine,
+                  el: "Aire · CLEAR",
+                  t: "The 100-Word Truth",
+                  b: "Escribe exactamente 100 palabras sobre tu desafío más importante. Luego 10. Luego 1. La compresión revela la palabra brújula de los meses siguientes.",
+                },
+              ]
+            : [
+                {
+                  icon: Compass,
+                  el: "Earth · ROOTS",
+                  t: "The Root Contact",
+                  b: "Barefoot on forest soil, 30 minutes in silence. One instruction: notice where in your body you feel the ground — and where you don't. Documented earthing reduces inflammation and regulates cortisol.",
+                },
+                {
+                  icon: Flame,
+                  el: "Fire · IGNITE",
+                  t: "The Fire Council",
+                  b: "Circle around fire with no agenda for the first 60 minutes. Two questions: what's the vision you carry and haven't spoken? What's the fire you've kept too small?",
+                },
+                {
+                  icon: Eye,
+                  el: "Water · FLOW",
+                  t: "The River Witness",
+                  b: "Alone, beside moving water, minimum 20 minutes in silence. Activates the Default Mode Network. Three questions to integrate what the river showed.",
+                },
+                {
+                  icon: PenLine,
+                  el: "Air · CLEAR",
+                  t: "The 100-Word Truth",
+                  b: "Write exactly 100 words about your most important challenge. Then 10. Then 1. Compression reveals the compass word of the months ahead.",
+                },
+              ]
+          ).map((row) => {
+            const Icon = row.icon;
+            return (
+              <article
+                key={row.t}
+                className="bg-[var(--color-paper)] p-7 md:p-8 hover:bg-[var(--color-paper-warm)] transition-colors min-h-[320px] flex flex-col"
+              >
+                <div className="flex items-start justify-between mb-6">
+                  <Icon className="h-5 w-5 text-[var(--color-moss-700)]" strokeWidth={1.5} />
+                  <span className="text-[0.65rem] tracking-[0.22em] uppercase text-[var(--color-muted)]">
+                    {row.el}
+                  </span>
+                </div>
+                <h3 className="font-[family-name:var(--font-display)] text-xl tracking-tight mb-3">
+                  {row.t}
+                </h3>
+                <p className="text-sm text-[var(--color-ink-soft)] leading-relaxed flex-1">
+                  {row.b}
+                </p>
+              </article>
+            );
+          })}
+        </div>
+      </Section>
+
+      {/* PRICING */}
+      <Section spacing="default" tone="ink">
+        <div className="grid lg:grid-cols-12 gap-12 items-center">
+          <div className="lg:col-span-7">
+            <Eyebrow inverted className="mb-6">
+              {locale === "es" ? "Inversión por módulo" : "Per-module investment"}
+            </Eyebrow>
+            <h2 className="display-2 text-[var(--color-paper)] text-balance">
+              {locale === "es"
+                ? "Tres precios. Aplicabilidad clara."
+                : "Three prices. Clear applicability."}
+            </h2>
+          </div>
+          <div className="lg:col-span-5">
+            <div className="space-y-4">
+              <PricingDark
+                label={locale === "es" ? "Precio estándar" : "Standard price"}
+                value={formatPriceMXN(singleModulePricing.standardMxn)}
+                emphasis
+              />
+              <PricingDark
+                label="Early Bird"
+                value={formatPriceMXN(singleModulePricing.earlyBirdMxn)}
+              />
+              <PricingDark
+                label={locale === "es" ? "Grupos (3 o más)" : "Groups (3 or more)"}
+                value={formatPriceMXN(singleModulePricing.groupMxn)}
+              />
+            </div>
+            <div className="mt-8">
+              <Button
+                href="mailto:hello@elementsmethod.com"
+                size="lg"
+                trailingArrow
+                className="bg-[var(--color-paper)] text-[var(--color-ink)] hover:bg-[var(--color-paper-warm)]"
+              >
+                {locale === "es" ? "Aplicar a un módulo" : "Apply to a module"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </Section>
     </>
+  );
+}
+
+function PricingDark({
+  label,
+  value,
+  emphasis,
+}: {
+  label: string;
+  value: string;
+  emphasis?: boolean;
+}) {
+  return (
+    <div className="flex items-end justify-between gap-4 py-3 border-b border-[var(--color-paper)]/15 last:border-0">
+      <span className="text-[var(--color-paper)]/75">{label}</span>
+      <span
+        className={`font-[family-name:var(--font-display)] tabular-nums text-[var(--color-paper)] ${
+          emphasis ? "text-3xl" : "text-xl text-[var(--color-paper)]/75"
+        }`}
+      >
+        {value}
+      </span>
+    </div>
   );
 }

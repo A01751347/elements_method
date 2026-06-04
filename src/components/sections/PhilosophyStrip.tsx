@@ -14,8 +14,8 @@ export function PhilosophyStrip({ locale }: { locale: Locale }) {
 
   const phrase =
     locale === "es"
-      ? "No enseñamos liderazgo. Lo entrenamos como se entrena un cuerpo: con prácticas concretas, con disciplina sostenible, con honestidad."
-      : "We don't teach leadership. We train it like a body: with concrete practices, with sustainable discipline, with honesty.";
+      ? "La mayoría intenta cambiar sus resultados sin transformar el sistema interno desde donde los produce. Elements interviene ese sistema — y desde ahí, todo lo demás se reorganiza."
+      : "Most try to change their results without transforming the inner system that produces them. Elements intervenes that system — and from there, everything else reorganizes.";
 
   const words = phrase.split(" ");
 
@@ -59,14 +59,14 @@ export function PhilosophyStrip({ locale }: { locale: Locale }) {
           <div className="mt-16 grid sm:grid-cols-3 gap-8 max-w-3xl">
             {(locale === "es"
               ? [
-                  { k: "Cuerpo", v: "El nervioso decide antes que la palabra." },
-                  { k: "Tiempo", v: "Cuatro meses mínimo. No hay atajos honestos." },
-                  { k: "Práctica", v: "Lo simbólico organiza. Lo concreto cambia." },
+                  { k: "Insight", v: "La calidad de tus decisiones determina la calidad de tus resultados." },
+                  { k: "Intervención", v: "No agregamos herramientas. Trabajamos el estado interno desde donde decides." },
+                  { k: "Método", v: "NLP, neurociencia, coaching internacional, frameworks y prácticas somáticas." },
                 ]
               : [
-                  { k: "Body", v: "The nervous system decides before the word." },
-                  { k: "Time", v: "Four months minimum. No honest shortcuts." },
-                  { k: "Practice", v: "Symbol organizes. The concrete changes." },
+                  { k: "Insight", v: "Quality of decisions determines quality of results." },
+                  { k: "Intervention", v: "We don't add tools. We work the inner state you decide from." },
+                  { k: "Method", v: "NLP, neuroscience, international coaching, frameworks and somatic practice." },
                 ]
             ).map((row, i) => (
               <motion.div

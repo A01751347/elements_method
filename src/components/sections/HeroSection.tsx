@@ -85,7 +85,7 @@ export function HeroSection({
         className="absolute top-28 right-6 hidden md:flex items-center gap-3 text-[0.7rem] tracking-[0.22em] uppercase text-[var(--color-paper)]/70 rotate-90 origin-right translate-x-8"
       >
         <span aria-hidden className="h-px w-10 bg-[var(--color-paper)]/40" />
-        Est. 2019 · CDMX → Mundo
+        Water · Fire · Air · Earth
       </motion.div>
 
       <Container className="relative pb-16 md:pb-24 z-10">
@@ -104,11 +104,11 @@ export function HeroSection({
             <WordReveal
               words={
                 locale === "es"
-                  ? ["Lidera", "desde", "los", "cuatro", "elementos."]
-                  : ["Lead", "from", "the", "four", "elements."]
+                  ? ["Mejor", "pensamiento.", "Mejores", "decisiones.", "Mejor", "liderazgo."]
+                  : ["Better", "thinking.", "Better", "decisions.", "Better", "leadership."]
               }
-              italicIndices={locale === "es" ? [3] : [2]}
-              accentIndices={locale === "es" ? [3] : [2]}
+              italicIndices={[2, 3]}
+              accentIndices={[2, 3]}
             />
           </h1>
 

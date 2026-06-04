@@ -17,6 +17,7 @@ export function JournalPreview({
   locale: Locale;
   dict: Dict;
 }) {
+  if (blogPosts.length === 0) return null;
   return (
     <section className="py-24 md:py-36 bg-[var(--color-paper)]">
       <Container>

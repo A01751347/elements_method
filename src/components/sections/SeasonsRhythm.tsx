@@ -3,58 +3,44 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import {
-  Sunrise,
-  Sun,
-  Sunset,
-  TreePine,
-  Droplets,
-  Flame,
-  Wind,
-  Mountain,
-  type LucideIcon,
+  Atom,
+  Users,
+  Building,
+  Globe2,
+  HeartHandshake,
 } from "lucide-react";
 import type { Locale } from "@/i18n/config";
-import { seasons, type ElementKey } from "@/data/content";
+import { impactCircles } from "@/data/content";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Section";
 import { cn } from "@/lib/utils";
 
-const SEASON_ICONS = [TreePine, Sunrise, Sun, Sunset];
+const LEVEL_ICONS = [Atom, HeartHandshake, Users, Building, Globe2];
 
-const ELEMENT_ICONS: Record<ElementKey, LucideIcon> = {
-  agua: Droplets,
-  fuego: Flame,
-  aire: Wind,
-  tierra: Mountain,
-};
-
-const ELEMENT_COLORS: Record<ElementKey, string> = {
-  agua: "var(--color-water)",
-  fuego: "var(--color-fire)",
-  aire: "var(--color-air)",
-  tierra: "var(--color-earth)",
-};
-
+/**
+ * Five Circles of Impact — the Nucleus model from the presentation (p.6).
+ * Filename kept as SeasonsRhythm for backwards compat.
+ */
 export function SeasonsRhythm({ locale }: { locale: Locale }) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
   });
-  const rotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
+  const rotate = useTransform(scrollYProgress, [0, 1], [0, 180]);
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.95, 1.05, 0.95]);
 
   return (
     <section
       ref={ref}
       className="py-24 md:py-36 bg-[var(--color-ink)] text-[var(--color-paper)] relative overflow-hidden"
     >
-      {/* Atmospheric glow */}
       <div
         aria-hidden
-        className="absolute inset-0 opacity-30 pointer-events-none"
+        className="absolute inset-0 opacity-25 pointer-events-none"
         style={{
           background:
-            "radial-gradient(50% 40% at 20% 30%, rgba(184,196,168,0.3) 0%, transparent 70%), radial-gradient(40% 40% at 80% 70%, rgba(180,71,31,0.15) 0%, transparent 70%)",
+            "radial-gradient(50% 40% at 50% 50%, rgba(184,196,168,0.4) 0%, transparent 70%)",
         }}
       />
 
@@ -62,84 +48,92 @@ export function SeasonsRhythm({ locale }: { locale: Locale }) {
         <div className="grid lg:grid-cols-12 gap-12 items-end mb-16 md:mb-24">
           <div className="lg:col-span-7">
             <Eyebrow inverted className="mb-6 flex items-center gap-3">
-              <TreePine className="h-3.5 w-3.5" strokeWidth={1.5} />
-              {locale === "es" ? "Ritmo del año" : "Year's rhythm"}
+              <Atom className="h-3.5 w-3.5" strokeWidth={1.5} />
+              {locale === "es" ? "Los cinco círculos de impacto" : "The five circles of impact"}
             </Eyebrow>
             <h2 className="display-2 text-[var(--color-paper)] text-balance">
               {locale === "es"
-                ? "El liderazgo también tiene estaciones."
-                : "Leadership also has seasons."}
+                ? "Cambia el núcleo y todo lo demás se reorganiza."
+                : "Change the nucleus and everything else reorganizes."}
             </h2>
           </div>
           <div className="lg:col-span-5">
             <p className="text-lg text-[var(--color-paper)]/75 leading-relaxed text-pretty">
               {locale === "es"
-                ? "El método se mueve con el año. Cada estación pesa distinto: lo que se cultiva en invierno no se fuerza en primavera."
-                : "The method moves with the year. Each season weighs differently: what's cultivated in winter isn't forced in spring."}
+                ? "La mayoría de los programas de liderazgo trabajan de afuera hacia adentro. Elements trabaja de adentro hacia afuera: cuando el núcleo está saludable, los círculos siguientes se reorganizan solos."
+                : "Most leadership programs work from the outside in. Elements works from the inside out: when the nucleus is healthy, the surrounding circles reorganize on their own."}
             </p>
           </div>
         </div>
 
-        {/* Rotating compass background */}
         <div className="relative">
+          {/* Rotating circles background */}
           <motion.div
             aria-hidden
-            style={{ rotate }}
+            style={{ rotate, scale }}
             className="absolute -top-20 -right-20 md:-top-32 md:-right-32 pointer-events-none"
           >
             <svg
-              width="500"
-              height="500"
-              viewBox="0 0 500 500"
+              width="600"
+              height="600"
+              viewBox="0 0 600 600"
               fill="none"
-              className="opacity-[0.06]"
+              className="opacity-[0.07]"
             >
-              <circle cx="250" cy="250" r="240" stroke="var(--color-paper)" strokeWidth="1" />
-              <circle cx="250" cy="250" r="180" stroke="var(--color-paper)" strokeWidth="1" strokeDasharray="2 6" />
-              <circle cx="250" cy="250" r="120" stroke="var(--color-paper)" strokeWidth="1" />
-              <line x1="10" y1="250" x2="490" y2="250" stroke="var(--color-paper)" strokeWidth="0.5" />
-              <line x1="250" y1="10" x2="250" y2="490" stroke="var(--color-paper)" strokeWidth="0.5" />
-              <line x1="80" y1="80" x2="420" y2="420" stroke="var(--color-paper)" strokeWidth="0.5" />
-              <line x1="420" y1="80" x2="80" y2="420" stroke="var(--color-paper)" strokeWidth="0.5" />
+              <circle cx="300" cy="300" r="280" stroke="var(--color-paper)" strokeWidth="1" />
+              <circle cx="300" cy="300" r="220" stroke="var(--color-paper)" strokeWidth="1" strokeDasharray="3 8" />
+              <circle cx="300" cy="300" r="160" stroke="var(--color-paper)" strokeWidth="1" />
+              <circle cx="300" cy="300" r="100" stroke="var(--color-paper)" strokeWidth="1" strokeDasharray="3 8" />
+              <circle cx="300" cy="300" r="40" stroke="var(--color-paper)" strokeWidth="1.5" fill="var(--color-paper)" fillOpacity="0.05" />
             </svg>
           </motion.div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-[var(--color-paper)]/10 relative">
-            {seasons.map((s, idx) => {
-              const SIcon = SEASON_ICONS[idx];
-              const EIcon = ELEMENT_ICONS[s.elementKey];
-              const color = ELEMENT_COLORS[s.elementKey];
+          <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-px bg-[var(--color-paper)]/10 relative">
+            {impactCircles.map((circle, idx) => {
+              const Icon = LEVEL_ICONS[idx];
+              const isNucleus = idx === 0;
               return (
                 <motion.div
-                  key={s.titleEs}
+                  key={circle.level}
                   initial={{ opacity: 0, y: 24 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-60px" }}
-                  transition={{ duration: 0.7, delay: idx * 0.1 }}
-                  className="group bg-[var(--color-ink)] p-8 md:p-10 min-h-[340px] flex flex-col justify-between hover:bg-[var(--color-moss-900)] transition-colors duration-500"
+                  transition={{ duration: 0.7, delay: idx * 0.08 }}
+                  className={cn(
+                    "group bg-[var(--color-ink)] p-7 md:p-8 min-h-[340px] flex flex-col justify-between hover:bg-[var(--color-moss-900)] transition-colors duration-500",
+                    isNucleus && "lg:bg-[var(--color-moss-900)]",
+                  )}
                 >
                   <div>
-                    <div className="flex items-center justify-between mb-8">
-                      <SIcon className="h-6 w-6 text-[var(--color-paper)]/70" strokeWidth={1.5} />
-                      <EIcon className="h-5 w-5" strokeWidth={1.5} style={{ color }} />
+                    <div className="flex items-center justify-between mb-6">
+                      <Icon
+                        className={cn(
+                          "h-5 w-5",
+                          isNucleus ? "text-[var(--color-paper)]" : "text-[var(--color-paper)]/70",
+                        )}
+                        strokeWidth={1.5}
+                      />
+                      <span className="font-[family-name:var(--font-display)] text-2xl text-[var(--color-paper)]/30">
+                        {circle.level}
+                      </span>
                     </div>
-                    <div className="text-[0.65rem] tracking-[0.22em] uppercase text-[var(--color-paper)]/50 mb-3">
-                      {locale === "es" ? s.monthsEs : s.monthsEn}
+                    <div className="text-[0.65rem] tracking-[0.22em] uppercase text-[var(--color-paper)]/55 mb-3">
+                      {locale === "es" ? circle.whoEs : circle.whoEn}
                     </div>
-                    <h3 className="font-[family-name:var(--font-display)] text-2xl md:text-3xl tracking-tight text-[var(--color-paper)] mb-4 leading-tight">
-                      {locale === "es" ? s.titleEs : s.titleEn}
+                    <h3 className="font-[family-name:var(--font-display)] text-2xl tracking-tight text-[var(--color-paper)] mb-4 leading-tight">
+                      {locale === "es" ? circle.titleEs : circle.titleEn}
                     </h3>
                   </div>
 
-                  <p className="text-sm text-[var(--color-paper)]/70 leading-relaxed text-pretty">
-                    {locale === "es" ? s.bodyEs : s.bodyEn}
+                  <p className="text-sm text-[var(--color-paper)]/75 leading-relaxed text-pretty">
+                    {locale === "es" ? circle.bodyEs : circle.bodyEn}
                   </p>
 
                   <div
                     className={cn(
-                      "mt-6 h-px origin-left scale-x-50 group-hover:scale-x-100 transition-transform duration-700",
+                      "mt-6 h-px origin-left transition-transform duration-700",
+                      isNucleus ? "scale-x-100 bg-[var(--color-paper)]" : "scale-x-50 bg-[var(--color-paper)]/40 group-hover:scale-x-100",
                     )}
-                    style={{ background: color }}
                   />
                 </motion.div>
               );

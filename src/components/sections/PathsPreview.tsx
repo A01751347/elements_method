@@ -140,17 +140,23 @@ export function PathsPreview({
                     >
                       {duration}
                     </div>
-                    <div className="font-[family-name:var(--font-display)] text-2xl tabular-nums">
-                      {formatPriceMXN(p.priceMxn)}
+                    <div className="font-[family-name:var(--font-display)] text-xl italic">
+                      {p.priceMxn !== null
+                        ? formatPriceMXN(p.priceMxn)
+                        : locale === "es"
+                          ? "Inversión por confirmar"
+                          : "Investment TBD"}
                     </div>
-                    <div
-                      className={cn(
-                        "text-[0.65rem] uppercase tracking-wide mt-0.5",
-                        isHovered ? "text-[var(--color-paper)]/60" : "text-[var(--color-muted)]",
-                      )}
-                    >
-                      / {formatPriceUSD(p.priceUsd)} · {dict.common.noVat}
-                    </div>
+                    {p.priceMxn !== null && p.priceUsd !== null && (
+                      <div
+                        className={cn(
+                          "text-[0.65rem] uppercase tracking-wide mt-0.5",
+                          isHovered ? "text-[var(--color-paper)]/60" : "text-[var(--color-muted)]",
+                        )}
+                      >
+                        / {formatPriceUSD(p.priceUsd)} · {dict.common.noVat}
+                      </div>
+                    )}
                   </div>
 
                   <Link

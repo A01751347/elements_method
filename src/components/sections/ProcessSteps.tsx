@@ -3,17 +3,19 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import {
+  Wind,
+  Eye,
+  PenLine,
   MessageCircle,
-  ScanSearch,
-  Map,
-  Repeat,
+  Sparkles,
 } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import { processSteps } from "@/data/content";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Section";
 
-const ICONS = [MessageCircle, ScanSearch, Map, Repeat];
+// Disconnection Protocol icons: Release · Encounter · Reflection · Dialogue · Integration
+const ICONS = [Wind, Eye, PenLine, MessageCircle, Sparkles];
 
 export function ProcessSteps({ locale }: { locale: Locale }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -29,24 +31,24 @@ export function ProcessSteps({ locale }: { locale: Locale }) {
         <div className="grid lg:grid-cols-12 gap-12 mb-16 md:mb-24">
           <div className="lg:col-span-6">
             <Eyebrow className="mb-6">
-              {locale === "es" ? "Cómo trabajamos" : "How we work"}
+              {locale === "es" ? "Disconnection Protocol" : "Disconnection Protocol"}
             </Eyebrow>
             <h2 className="display-2 text-balance">
               {locale === "es"
-                ? "De primera conversación a práctica sostenida."
-                : "From first conversation to sustained practice."}
+                ? "Cinco fases. La arquitectura del módulo."
+                : "Five phases. The module's architecture."}
             </h2>
           </div>
           <div className="lg:col-span-6 lg:pt-4">
             <p className="lead text-pretty">
               {locale === "es"
-                ? "Cuatro pasos antes de que tu liderazgo cambie. Nada salta — porque la práctica real no acepta atajos."
-                : "Four steps before your leadership shifts. Nothing skips — because real practice doesn't accept shortcuts."}
+                ? "Cada inmersión sigue el mismo arco: separar, encontrar, reflejar, dialogar, integrar. La secuencia no es decorativa — está diseñada con neurociencia."
+                : "Each immersion follows the same arc: release, encounter, reflect, dialogue, integrate. The sequence isn't decorative — it's designed with neuroscience."}
             </p>
           </div>
         </div>
 
-        <div ref={ref} className="relative grid md:grid-cols-2 lg:grid-cols-4 gap-px bg-[var(--color-line)] border border-[var(--color-line)]">
+        <div ref={ref} className="relative grid md:grid-cols-2 lg:grid-cols-5 gap-px bg-[var(--color-line)] border border-[var(--color-line)]">
           {/* Animated progress line */}
           <motion.div
             style={{ scaleX: lineScale }}

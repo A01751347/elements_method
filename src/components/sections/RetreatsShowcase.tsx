@@ -145,7 +145,11 @@ function RetreatCard({
         {/* Bottom title */}
         <div className="absolute bottom-5 left-5 right-5 text-[var(--color-paper)]">
           <div className="text-[0.7rem] tracking-[0.22em] uppercase opacity-80 mb-2">
-            {formatDate(r.startDate, locale)} — {formatDate(r.endDate, locale).split(" ").slice(0, 2).join(" ")}
+            {r.startDate
+              ? `${formatDate(r.startDate, locale)} — ${formatDate(r.endDate ?? r.startDate, locale).split(" ").slice(0, 2).join(" ")}`
+              : locale === "es"
+                ? "Fecha por confirmar"
+                : "Date TBD"}
           </div>
           <h3 className={cn("font-[family-name:var(--font-display)] leading-tight", featured ? "text-3xl md:text-4xl" : "text-2xl")}>
             {name}
@@ -176,9 +180,24 @@ function RetreatCard({
         </div>
 
         <div className="space-y-3 mb-6">
-          <Row icon={MapPin} text={r.location} />
-          <Row icon={Users} text={`${r.sold}/${r.capacity} ${locale === "es" ? "participantes" : "participants"}`} />
-          <Row icon={Calendar} text={`${formatDate(r.startDate, locale)} — ${formatDate(r.endDate, locale)}`} />
+          <Row
+            icon={MapPin}
+            text={r.location ?? (locale === "es" ? "Ubicación por confirmar" : "Location TBD")}
+          />
+          <Row
+            icon={Users}
+            text={`${locale === "es" ? "Cupo" : "Capacity"} ${r.capacity}`}
+          />
+          <Row
+            icon={Calendar}
+            text={
+              r.startDate
+                ? `${formatDate(r.startDate, locale)} — ${formatDate(r.endDate ?? r.startDate, locale)}`
+                : locale === "es"
+                  ? "Fecha por confirmar"
+                  : "Date TBD"
+            }
+          />
         </div>
 
         <div className="flex items-end justify-between gap-4 pt-5 border-t border-[var(--color-line)]">

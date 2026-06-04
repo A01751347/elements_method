@@ -93,18 +93,18 @@ export const es: Dict = {
   nav: {
     home: "Inicio",
     about: "Quiénes Somos",
-    paths: "Los Caminos",
+    paths: "Programas",
     method: "El Método",
-    companies: "Empresas",
-    retreats: "Retiros",
-    blog: "Blog",
-    cta: "Cotizar para tu equipo",
+    companies: "Organizaciones",
+    retreats: "Módulos",
+    blog: "Diario",
+    cta: "Cotizar para mi organización",
   },
   common: {
     learnMore: "Conocer más",
-    book: "Comprar",
+    book: "Aplicar",
     request: "Solicitar cotización",
-    book_short: "Comprar",
+    book_short: "Aplicar",
     subscribe: "Suscribirme",
     enterEmail: "Tu correo",
     seeAll: "Ver todos",
@@ -112,91 +112,91 @@ export const es: Dict = {
     noVat: "no incluye IVA",
   },
   home: {
-    eyebrow: "Liderazgo experiencial · Reconexión con los cuatro elementos",
-    title: "Lidera desde los cuatro elementos.",
+    eyebrow: "Leadership Immersion Programs · Water · Fire · Air · Earth",
+    title: "Mejor pensamiento. Mejores decisiones. Mejor liderazgo.",
     subtitle:
-      "Un método para devolver tu liderazgo al ritmo de la naturaleza. Agua, fuego, aire y tierra como territorios entrenables: cascada al amanecer, breathwork, hoguera, caminata silenciosa, ceremonia y silencio. Para quienes ya no se conforman con teoría.",
-    primaryCta: "Explorar los caminos",
-    secondaryCta: "Próximos retiros",
+      "Elements Method es una intervención estratégica diseñada para fortalecer la calidad de pensamiento, la regulación emocional y la capacidad de decisión del líder moderno. Trabajamos sobre el sistema interno desde donde se decide — no sobre la empresa.",
+    primaryCta: "Conocer los programas",
+    secondaryCta: "Próximos módulos",
     elementsEyebrow: "El método",
-    elementsTitle: "Cuatro fuerzas, una práctica integrada.",
+    elementsTitle: "Cuatro elementos. Cuatro dimensiones del liderazgo.",
     elementsLead:
-      "Cada elemento se entrena con un marco propio, prácticas corporales y herramientas de liderazgo. No es metáfora; es operación.",
+      "Tierra, fuego, agua y aire como marco para entrenar identidad, acción, regulación y perspectiva. Cada elemento integra coaching internacional, neurociencia, PNL, prácticas somáticas y frameworks estratégicos.",
     retreatsEyebrow: "Calendario 2026",
-    retreatsTitle: "Inmersiones presenciales.",
+    retreatsTitle: "Módulos de un día por elemento.",
     retreatsLead:
-      "Retiros guiados en locaciones diseñadas para integrar el método. Cupos limitados.",
+      "Inmersiones intensivas de día completo en naturaleza. Un elemento por sesión. Cupo limitado a 15 líderes — porque el método requiere intimidad para funcionar.",
     testimonialsEyebrow: "Voces del programa",
-    testimonialsTitle: "Lo que cuenta quien ya lo vivió.",
+    testimonialsTitle: "Lo que dicen quienes ya pasaron.",
     companiesEyebrow: "Para tu organización",
-    companiesTitle: "Cuando el equipo necesita liderazgo de verdad.",
+    companiesTitle: "El nivel de tu organización no excede el nivel de claridad mental de quien la dirige.",
     companiesLead:
-      "Diseñamos programas para equipos directivos y mandos medios. Calculadora con desglose, contrato y cotización en minutos.",
+      "Diseñamos programas corporativos a la medida para equipos directivos. Diagnóstico con dirección y RH, propuesta personalizada, cotización con desglose. Indicadores claros desde el inicio.",
     companiesCta: "Construir una cotización",
-    logosEyebrow: "Confían en el método",
+    logosEyebrow: "Han trabajado con nosotros",
   },
   about: {
     eyebrow: "Quiénes somos",
-    title: "Dos prácticas, una misma raíz.",
+    title: "Lorem ipsum dolor sit amet.",
     lead:
-      "Andrés y Ana Michelle crearon Elements Method para ofrecer un camino exigente, simbólico y profundamente práctico al liderazgo contemporáneo.",
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. (Bio de los cofundadores pendiente.)",
     andres: {
-      role: "Coach ejecutivo · Cofundador",
+      role: "Cofundador · [rol pendiente]",
       bio:
-        "Diez años acompañando equipos directivos en transición. Andrés trabaja desde la activación —fuego y tierra— para que la decisión se traduzca en movimiento.",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.",
     },
     michelle: {
-      role: "Facilitadora · Cofundadora",
+      role: "Cofundadora · [rol pendiente]",
       bio:
-        "Especialista en cuerpo, voz y presencia. Michelle abre el agua y el aire: lo que se escucha y lo que se respira antes de decidir.",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.",
     },
   },
   paths: {
-    eyebrow: "Los caminos",
-    title: "Tres formas de entrar.",
+    eyebrow: "Programas",
+    title: "Tres rutas. Tres profundidades.",
     lead:
-      "Cada camino tiene una geometría distinta. Elige según tu calendario, tu intensidad y la conversación que tu liderazgo necesita ahora.",
+      "Roots, Current y Source comparten metodología y framework. Lo que cambia es la cadencia, el formato y el nivel de personalización. Eliges según el momento de tu liderazgo.",
   },
   method: {
     eyebrow: "El método",
-    title: "Cuatro elementos. Una práctica.",
+    title: "Cuatro elementos. Una intervención en el estado interno.",
     lead:
-      "Cada elemento se trabaja en cuatro capas: la naturaleza, la persona, la metodología y la fisiología. Lo simbólico no sustituye lo concreto; lo organiza.",
+      "La mayoría de las personas intenta cambiar sus resultados sin transformar el sistema interno desde el que los producen. Elements interviene ese sistema — usando los cuatro elementos como gramática y la naturaleza como metodología.",
   },
   companies: {
-    eyebrow: "Empresas",
-    title: "Liderazgo medible para equipos exigentes.",
+    eyebrow: "Organizaciones",
+    title: "El nivel de resultados de una empresa no excede el nivel de claridad mental de quien la dirige.",
     lead:
-      "Diseñamos programas para mandos medios y dirección. Combinamos sesiones, inmersiones y seguimiento individual. Cotización transparente, fórmula visible.",
+      "Elements Method ofrece programas corporativos a la medida diseñados alrededor de inmersiones de equipo, desarrollo de cultura de liderazgo y transformación organizacional. Un programa puede llevar a un equipo directivo completo a través del marco de los Cuatro Elementos, creando lenguaje compartido, confianza y cultura alineada.",
     benefits: [
       {
-        title: "Diagnóstico previo",
+        title: "Mejora medible en confianza de equipo y seguridad psicológica",
         body:
-          "Conversamos con dirección y un muestreo del equipo antes de proponer.",
+          "Indicadores documentados en organizaciones que invierten en desarrollo de liderazgo basado en naturaleza.",
       },
       {
-        title: "Modalidad híbrida",
+        title: "Mayor calidad de comunicación y conflicto constructivo",
         body:
-          "Presencial donde se requiere intensidad, virtual donde se requiere continuidad.",
+          "Equipos reportan mejor capacidad de sostener conversaciones difíciles tras los procesos elementales.",
       },
       {
-        title: "Indicadores claros",
+        title: "Mayor retención de líderes desarrollados",
         body:
-          "Comunicación, decisión, sostenimiento. Lo que se mide se sostiene.",
+          "Reducción de riesgo de salida en los líderes que pasan por el proceso completo.",
       },
       {
-        title: "Documentación formal",
+        title: "Respuestas más adaptativas e innovadoras a desafíos",
         body:
-          "Contrato, NDA y comprobante fiscal. Operamos como proveedor serio.",
+          "Culturas de liderazgo que atraen talento y sostienen alto desempeño.",
       },
     ],
-    cta: "Ir a la calculadora",
+    cta: "Solicitar conversación",
   },
   retreats: {
-    eyebrow: "Retiros",
-    title: "Calendario de inmersiones.",
+    eyebrow: "Módulos",
+    title: "Calendario de inmersiones por elemento.",
     lead:
-      "Sesiones presenciales multi-día que cubren los cuatro elementos en una sola experiencia.",
+      "Cada módulo es una inmersión intensiva de un día completo enfocada en un solo elemento. Diseño basado en el Disconnection Protocol: Release, Encounter, Reflection, Dialogue, Integration.",
     status: {
       open: "Abierto",
       lowSeats: "{n} cupos disponibles",
@@ -206,17 +206,17 @@ export const es: Dict = {
   },
   blog: {
     eyebrow: "Diario",
-    title: "Notas desde el método.",
+    title: "Notas sobre pensamiento, decisión y liderazgo.",
     lead:
-      "Lecturas breves sobre liderazgo, atención, cuerpo y decisiones difíciles. Sin frecuencia obligatoria.",
+      "Lecturas breves sobre lo que vemos en sesiones, inmersiones y conversaciones de discovery. Sin coaching genérico, sin tips reciclados.",
     readMore: "Leer artículo",
   },
   footer: {
     tagline:
-      "Programa de liderazgo experiencial articulado en los cuatro elementos.",
+      "Leadership Immersion Programs. Una intervención estratégica para la calidad de pensamiento del líder moderno.",
     newsletterTitle: "Boletín mensual",
     newsletterCopy:
-      "Una nota breve cada mes. Lectura, fecha de próximo retiro, una pregunta abierta.",
+      "Una nota corta cada mes. Lectura, fecha del próximo módulo, una pregunta abierta. Sin venta.",
     nav: {
       explore: "Explorar",
       services: "Programas",
@@ -245,18 +245,18 @@ export const en: Dict = {
   nav: {
     home: "Home",
     about: "Who We Are",
-    paths: "The Paths",
+    paths: "Programs",
     method: "The Method",
-    companies: "Companies",
-    retreats: "Retreats",
+    companies: "Organizations",
+    retreats: "Modules",
     blog: "Journal",
-    cta: "Quote for your team",
+    cta: "Quote for my organization",
   },
   common: {
     learnMore: "Learn more",
-    book: "Book",
+    book: "Apply",
     request: "Request a quote",
-    book_short: "Book",
+    book_short: "Apply",
     subscribe: "Subscribe",
     enterEmail: "Your email",
     seeAll: "See all",
@@ -264,89 +264,91 @@ export const en: Dict = {
     noVat: "VAT not included",
   },
   home: {
-    eyebrow: "Experiential leadership · Reconnection with the four elements",
-    title: "Lead from the four elements.",
+    eyebrow: "Leadership Immersion Programs · Water · Fire · Air · Earth",
+    title: "Better thinking. Better decisions. Better leadership.",
     subtitle:
-      "A method to return your leadership to the rhythm of nature. Water, fire, air and earth as trainable terrains: waterfall at dawn, breathwork, bonfire, silent hike, ceremony and silence. For those no longer satisfied with theory.",
-    primaryCta: "Explore the paths",
-    secondaryCta: "Upcoming retreats",
+      "Elements Method is a strategic intervention designed to strengthen the quality of thinking, emotional regulation and decision-making capacity of the modern leader. We work on the inner system you decide from — not on the company.",
+    primaryCta: "See the programs",
+    secondaryCta: "Upcoming modules",
     elementsEyebrow: "The method",
-    elementsTitle: "Four forces, one integrated practice.",
+    elementsTitle: "Four elements. Four leadership dimensions.",
     elementsLead:
-      "Each element is trained with its own framework, embodied practices and leadership tools. Not metaphor — operation.",
+      "Earth, fire, water and air as a framework to train identity, action, regulation and perspective. Each element integrates international coaching, neuroscience, NLP, somatic practices and strategic frameworks.",
     retreatsEyebrow: "2026 calendar",
-    retreatsTitle: "In-person immersions.",
+    retreatsTitle: "One-day modules by element.",
     retreatsLead:
-      "Guided retreats in locations chosen to integrate the method. Limited seats.",
-    testimonialsEyebrow: "Voices",
-    testimonialsTitle: "From those who already walked it.",
+      "Full-day intensive nature immersions. One element per session. Capacity capped at 15 leaders — because the method requires intimacy to work.",
+    testimonialsEyebrow: "Program voices",
+    testimonialsTitle: "What those who walked through say.",
     companiesEyebrow: "For your organization",
-    companiesTitle: "When the team needs real leadership.",
+    companiesTitle: "Your organization doesn't exceed the mental clarity of those who lead it.",
     companiesLead:
-      "We design programs for executive teams and middle management. Quote with full breakdown in minutes.",
+      "We design custom corporate programs for executive teams. Discovery with leadership and HR, personalized proposal, itemized quote. Clear indicators from the start.",
     companiesCta: "Build a quote",
-    logosEyebrow: "Trusted by",
+    logosEyebrow: "Have worked with us",
   },
   about: {
     eyebrow: "Who we are",
-    title: "Two practices, one root.",
+    title: "Lorem ipsum dolor sit amet.",
     lead:
-      "Andrés and Ana Michelle created Elements Method to offer a demanding, symbolic and deeply practical path to contemporary leadership.",
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. (Founders' bios pending.)",
     andres: {
-      role: "Executive coach · Cofounder",
+      role: "Cofounder · [role TBD]",
       bio:
-        "Ten years guiding leadership teams through transition. Andrés works from activation — fire and earth — so decisions become movement.",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.",
     },
     michelle: {
-      role: "Facilitator · Cofounder",
+      role: "Cofounder · [role TBD]",
       bio:
-        "Specialist in body, voice and presence. Michelle opens water and air: what is heard and what is breathed before deciding.",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.",
     },
   },
   paths: {
-    eyebrow: "The paths",
-    title: "Three ways to enter.",
+    eyebrow: "Programs",
+    title: "Three routes. Three depths.",
     lead:
-      "Each path has its own geometry. Choose by calendar, intensity, and the conversation your leadership needs now.",
+      "Roots, Current and Source share methodology and framework. What changes is cadence, format and level of personalization. You choose based on your leadership moment.",
   },
   method: {
     eyebrow: "The method",
-    title: "Four elements. One practice.",
+    title: "Four elements. An intervention in the inner state.",
     lead:
-      "Each element is worked across four layers: nature, person, methodology, physiology. The symbolic doesn't replace the concrete; it organizes it.",
+      "Most people try to change their results without transforming the inner system that produces them. Elements intervenes that system — using the four elements as grammar and nature as methodology.",
   },
   companies: {
-    eyebrow: "Companies",
-    title: "Measurable leadership for demanding teams.",
+    eyebrow: "Organizations",
+    title: "An organization's results do not exceed the mental clarity of those who lead it.",
     lead:
-      "Programs for management teams. Sessions, immersions and individual follow-up. Transparent quote, visible formula.",
+      "Elements Method offers bespoke organizational programs designed around team immersions, leadership culture development, and organizational transformation. A single corporate program can bring an entire leadership team through the Four Elements framework, creating shared language, deepened trust, and aligned organizational culture.",
     benefits: [
       {
-        title: "Prior diagnosis",
-        body: "We talk with leadership and a sample of the team before proposing.",
-      },
-      {
-        title: "Hybrid format",
+        title: "Measurable improvement in team trust and psychological safety",
         body:
-          "In-person where intensity is required, virtual where continuity is required.",
+          "Documented indicators in organizations investing in nature-based leadership development.",
       },
       {
-        title: "Clear indicators",
+        title: "Stronger quality of communication and constructive conflict",
         body:
-          "Communication, decision, sustainment. What gets measured gets sustained.",
+          "Teams report better capacity to sustain difficult conversations after elemental processes.",
       },
       {
-        title: "Formal documentation",
-        body: "Contract, NDA and tax invoice. We operate as a serious vendor.",
+        title: "Higher retention of developed leaders",
+        body:
+          "Reduced flight risk in leaders who complete the full process.",
+      },
+      {
+        title: "More adaptive, innovative responses to organizational challenges",
+        body:
+          "Leadership cultures that attract talent and sustain high performance.",
       },
     ],
-    cta: "Go to the calculator",
+    cta: "Request a conversation",
   },
   retreats: {
-    eyebrow: "Retreats",
-    title: "Immersion calendar.",
+    eyebrow: "Modules",
+    title: "Element-based immersion calendar.",
     lead:
-      "Multi-day in-person sessions that cover the four elements in a single experience.",
+      "Each module is a full-day intensive immersion focused on a single element. Design based on the Disconnection Protocol: Release, Encounter, Reflection, Dialogue, Integration.",
     status: {
       open: "Open",
       lowSeats: "{n} seats left",
@@ -356,17 +358,17 @@ export const en: Dict = {
   },
   blog: {
     eyebrow: "Journal",
-    title: "Notes from the method.",
+    title: "Notes on thinking, decision and leadership.",
     lead:
-      "Short reads on leadership, attention, body and hard decisions. No mandatory cadence.",
+      "Short reads on what we see in sessions, immersions and discovery conversations. No generic coaching, no recycled tips.",
     readMore: "Read article",
   },
   footer: {
     tagline:
-      "Experiential leadership program articulated around the four elements.",
+      "Leadership Immersion Programs. A strategic intervention for the modern leader's quality of thinking.",
     newsletterTitle: "Monthly journal",
     newsletterCopy:
-      "A short note each month. A reading, the next retreat date, an open question.",
+      "A short note each month. Reading, next module date, an open question. No selling.",
     nav: {
       explore: "Explore",
       services: "Programs",

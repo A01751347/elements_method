@@ -26,8 +26,8 @@ export function NatureLexicon({ locale }: { locale: Locale }) {
           </div>
           <p className="text-[var(--color-paper)]/60 text-sm max-w-md text-pretty">
             {locale === "es"
-              ? "Quince verbos que la naturaleza usa antes que nosotros. Los recuperamos para el liderazgo cotidiano."
-              : "Fifteen verbs nature uses before we do. We recover them for everyday leadership."}
+              ? "Quince verbos que un líder bien entrenado distingue. Pensar no es lo mismo que decidir. Sostener no es lo mismo que controlar."
+              : "Fifteen verbs a well-trained leader distinguishes. Thinking isn't deciding. Holding isn't controlling."}
           </p>
         </div>
       </Container>

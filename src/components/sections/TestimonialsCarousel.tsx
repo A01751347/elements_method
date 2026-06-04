@@ -20,20 +20,23 @@ export function TestimonialsCarousel({
   const [index, setIndex] = React.useState(0);
   const [direction, setDirection] = React.useState(1);
   const [paused, setPaused] = React.useState(false);
+  const hasTestimonials = testimonials.length > 0;
 
   React.useEffect(() => {
-    if (paused) return;
+    if (paused || !hasTestimonials) return;
     const t = window.setInterval(() => {
       setDirection(1);
       setIndex((i) => (i + 1) % testimonials.length);
     }, 7000);
     return () => window.clearInterval(t);
-  }, [paused]);
+  }, [paused, hasTestimonials]);
 
   function go(delta: number) {
     setDirection(delta);
     setIndex((i) => (i + delta + testimonials.length) % testimonials.length);
   }
+
+  if (!hasTestimonials) return null;
 
   const current = testimonials[index];
 
