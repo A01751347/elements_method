@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import { isLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { HeroSection } from "@/components/sections/HeroSection";
-import { LogosMarquee } from "@/components/sections/LogosMarquee";
 import { NatureLexicon } from "@/components/sections/NatureLexicon";
 import { PhilosophyStrip } from "@/components/sections/PhilosophyStrip";
 import { ElementsShowcase } from "@/components/sections/ElementsShowcase";
@@ -32,7 +31,6 @@ export default async function HomePage({
   return (
     <>
       <HeroSection locale={locale} dict={dict} />
-      <LogosMarquee locale={locale} dict={dict} />
       <NatureLexicon locale={locale} />
       <PhilosophyStrip locale={locale} />
       <ElementsShowcase locale={locale} dict={dict} />

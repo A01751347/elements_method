@@ -2,24 +2,16 @@
 
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
-import {
-  Atom,
-  Users,
-  Building,
-  Globe2,
-  HeartHandshake,
-} from "lucide-react";
+import { Atom } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import { impactCircles } from "@/data/content";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Section";
-import { cn } from "@/lib/utils";
-
-const LEVEL_ICONS = [Atom, HeartHandshake, Users, Building, Globe2];
 
 /**
- * Five Circles of Impact — the Nucleus model from the presentation (p.6).
- * Filename kept as SeasonsRhythm for backwards compat.
+ * Five Circles of Impact — concentric layout.
+ * Each level rendered as an expanding row that visually grows outward from
+ * the nucleus, distinct from grid-of-cards used elsewhere on the home.
  */
 export function SeasonsRhythm({ locale }: { locale: Locale }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -27,8 +19,7 @@ export function SeasonsRhythm({ locale }: { locale: Locale }) {
     target: ref,
     offset: ["start end", "end start"],
   });
-  const rotate = useTransform(scrollYProgress, [0, 1], [0, 180]);
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.95, 1.05, 0.95]);
+  const lineGrowth = useTransform(scrollYProgress, [0.15, 0.8], [0, 1]);
 
   return (
     <section
@@ -40,12 +31,12 @@ export function SeasonsRhythm({ locale }: { locale: Locale }) {
         className="absolute inset-0 opacity-25 pointer-events-none"
         style={{
           background:
-            "radial-gradient(50% 40% at 50% 50%, rgba(184,196,168,0.4) 0%, transparent 70%)",
+            "radial-gradient(40% 50% at 0% 50%, rgba(184,196,168,0.45) 0%, transparent 70%)",
         }}
       />
 
       <Container className="relative">
-        <div className="grid lg:grid-cols-12 gap-12 items-end mb-16 md:mb-24">
+        <div className="grid lg:grid-cols-12 gap-12 items-end mb-16 md:mb-20">
           <div className="lg:col-span-7">
             <Eyebrow inverted className="mb-6 flex items-center gap-3">
               <Atom className="h-3.5 w-3.5" strokeWidth={1.5} />
@@ -53,92 +44,107 @@ export function SeasonsRhythm({ locale }: { locale: Locale }) {
             </Eyebrow>
             <h2 className="display-2 text-[var(--color-paper)] text-balance">
               {locale === "es"
-                ? "Cambia el núcleo y todo lo demás se reorganiza."
-                : "Change the nucleus and everything else reorganizes."}
+                ? "Del núcleo radía todo lo demás."
+                : "From the nucleus, everything else radiates."}
             </h2>
           </div>
           <div className="lg:col-span-5">
             <p className="text-lg text-[var(--color-paper)]/75 leading-relaxed text-pretty">
               {locale === "es"
-                ? "La mayoría de los programas de liderazgo trabajan de afuera hacia adentro. Elements trabaja de adentro hacia afuera: cuando el núcleo está saludable, los círculos siguientes se reorganizan solos."
-                : "Most leadership programs work from the outside in. Elements works from the inside out: when the nucleus is healthy, the surrounding circles reorganize on their own."}
+                ? "Cuando el núcleo está saludable, todo lo demás se reorganiza naturalmente. Elements trabaja siempre desde el centro."
+                : "When the nucleus is healthy, everything else reorganizes naturally. Elements always works from the center."}
             </p>
           </div>
         </div>
 
+        {/* Concentric expanding stack */}
         <div className="relative">
-          {/* Rotating circles background */}
+          {/* Vertical guide line (left) */}
           <motion.div
             aria-hidden
-            style={{ rotate, scale }}
-            className="absolute -top-20 -right-20 md:-top-32 md:-right-32 pointer-events-none"
-          >
-            <svg
-              width="600"
-              height="600"
-              viewBox="0 0 600 600"
-              fill="none"
-              className="opacity-[0.07]"
-            >
-              <circle cx="300" cy="300" r="280" stroke="var(--color-paper)" strokeWidth="1" />
-              <circle cx="300" cy="300" r="220" stroke="var(--color-paper)" strokeWidth="1" strokeDasharray="3 8" />
-              <circle cx="300" cy="300" r="160" stroke="var(--color-paper)" strokeWidth="1" />
-              <circle cx="300" cy="300" r="100" stroke="var(--color-paper)" strokeWidth="1" strokeDasharray="3 8" />
-              <circle cx="300" cy="300" r="40" stroke="var(--color-paper)" strokeWidth="1.5" fill="var(--color-paper)" fillOpacity="0.05" />
-            </svg>
-          </motion.div>
+            style={{ scaleY: lineGrowth }}
+            className="absolute left-0 top-0 bottom-0 w-px bg-[var(--color-paper)]/30 origin-top hidden md:block"
+          />
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-px bg-[var(--color-paper)]/10 relative">
+          <ol className="space-y-px">
             {impactCircles.map((circle, idx) => {
-              const Icon = LEVEL_ICONS[idx];
+              // Each successive level extends visually wider: 60% → 100%
+              const widthPct = 60 + idx * 10;
               const isNucleus = idx === 0;
+
               return (
-                <motion.div
+                <motion.li
                   key={circle.level}
-                  initial={{ opacity: 0, y: 24 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-60px" }}
-                  transition={{ duration: 0.7, delay: idx * 0.08 }}
-                  className={cn(
-                    "group bg-[var(--color-ink)] p-7 md:p-8 min-h-[340px] flex flex-col justify-between hover:bg-[var(--color-moss-900)] transition-colors duration-500",
-                    isNucleus && "lg:bg-[var(--color-moss-900)]",
-                  )}
+                  initial={{ opacity: 0, x: -40 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: "-80px" }}
+                  transition={{
+                    duration: 0.8,
+                    delay: idx * 0.12,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                  className="relative group"
+                  style={{ width: `min(100%, ${widthPct}%)` }}
                 >
-                  <div>
-                    <div className="flex items-center justify-between mb-6">
-                      <Icon
-                        className={cn(
-                          "h-5 w-5",
-                          isNucleus ? "text-[var(--color-paper)]" : "text-[var(--color-paper)]/70",
-                        )}
-                        strokeWidth={1.5}
-                      />
-                      <span className="font-[family-name:var(--font-display)] text-2xl text-[var(--color-paper)]/30">
-                        {circle.level}
-                      </span>
+                  <div
+                    className={`
+                      relative bg-[var(--color-ink)] border-t border-[var(--color-paper)]/15
+                      ${isNucleus ? "border-l-2 border-l-[var(--color-paper)]" : ""}
+                      transition-colors duration-500 hover:bg-[var(--color-moss-900)]
+                      pl-6 md:pl-10 pr-6 py-7 md:py-9
+                      grid grid-cols-1 md:grid-cols-[80px_220px_1fr] gap-x-8 gap-y-3 items-baseline
+                    `}
+                  >
+                    <span
+                      className={`font-[family-name:var(--font-display)] text-3xl md:text-4xl tabular-nums ${
+                        isNucleus ? "text-[var(--color-paper)]" : "text-[var(--color-paper)]/40"
+                      }`}
+                    >
+                      {circle.level}
+                    </span>
+
+                    <div>
+                      <div className="text-[0.62rem] tracking-[0.22em] uppercase text-[var(--color-paper)]/55 mb-1.5">
+                        {locale === "es" ? circle.whoEs : circle.whoEn}
+                      </div>
+                      <h3
+                        className={`font-[family-name:var(--font-display)] text-xl md:text-2xl tracking-tight ${
+                          isNucleus
+                            ? "text-[var(--color-paper)]"
+                            : "text-[var(--color-paper)]/90"
+                        }`}
+                      >
+                        {locale === "es" ? circle.titleEs : circle.titleEn}
+                      </h3>
                     </div>
-                    <div className="text-[0.65rem] tracking-[0.22em] uppercase text-[var(--color-paper)]/55 mb-3">
-                      {locale === "es" ? circle.whoEs : circle.whoEn}
-                    </div>
-                    <h3 className="font-[family-name:var(--font-display)] text-2xl tracking-tight text-[var(--color-paper)] mb-4 leading-tight">
-                      {locale === "es" ? circle.titleEs : circle.titleEn}
-                    </h3>
+
+                    <p className="text-sm text-[var(--color-paper)]/70 leading-relaxed max-w-2xl">
+                      {locale === "es" ? circle.bodyEs : circle.bodyEn}
+                    </p>
                   </div>
 
-                  <p className="text-sm text-[var(--color-paper)]/75 leading-relaxed text-pretty">
-                    {locale === "es" ? circle.bodyEs : circle.bodyEn}
-                  </p>
-
-                  <div
-                    className={cn(
-                      "mt-6 h-px origin-left transition-transform duration-700",
-                      isNucleus ? "scale-x-100 bg-[var(--color-paper)]" : "scale-x-50 bg-[var(--color-paper)]/40 group-hover:scale-x-100",
-                    )}
+                  {/* Right-edge tick mark showing expansion */}
+                  <span
+                    aria-hidden
+                    className="absolute right-0 top-1/2 -translate-y-1/2 h-6 w-px bg-[var(--color-paper)]/30"
                   />
-                </motion.div>
+                </motion.li>
               );
             })}
-          </div>
+          </ol>
+
+          {/* Footer caption */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="mt-10 text-sm italic text-[var(--color-paper)]/55 max-w-md pl-6 md:pl-10"
+          >
+            {locale === "es"
+              ? "Cada nivel se extiende un grado más allá del anterior. El alcance del líder se mide por la salud de su núcleo."
+              : "Each level extends one degree beyond the previous. A leader's reach is measured by the health of their nucleus."}
+          </motion.p>
         </div>
       </Container>
     </section>
