@@ -33,7 +33,7 @@ export default async function PathsPage({
       <section className="relative min-h-[70vh] flex items-end overflow-hidden -mt-20 pt-20 text-[var(--color-paper)]">
         <div className="absolute inset-0 -z-20">
           <Image
-            src="https://images.unsplash.com/photo-1448375240586-882707db888b?w=2400&q=85&auto=format&fit=crop"
+            src="/images/heroes/caminos.jpg"
             alt=""
             fill
             priority

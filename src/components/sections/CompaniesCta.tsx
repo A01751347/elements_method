@@ -5,8 +5,8 @@ import { ArrowUpRight } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import type { Dict } from "@/i18n/dictionaries";
 import { Container } from "@/components/ui/Container";
-import { Eyebrow } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
+import { calLink, CAL_EVENT_TYPES } from "@/shared/integrations/cal";
 
 /**
  * Companies CTA — narrative band, no imagery.
@@ -60,7 +60,7 @@ export function CompaniesCta({
             className="lg:col-span-3 lg:pt-2"
           >
             <Button
-              href={`${base}/${locale === "es" ? "empresas" : "companies"}`}
+              href={calLink(CAL_EVENT_TYPES.discoveryEnterprise)}
               size="lg"
               trailingArrow
               className="w-full"

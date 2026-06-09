@@ -7,9 +7,9 @@ import { ArrowUpRight, Calendar, MessageSquare } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
+import { calLink, CAL_EVENT_TYPES } from "@/shared/integrations/cal";
 
-const CTA_IMAGE =
-  "https://images.unsplash.com/photo-1551632811-561732d1e306?w=2400&q=85&auto=format&fit=crop";
+const CTA_IMAGE = "/images/heroes/final-cta.jpg";
 
 export function FinalCta({ locale }: { locale: Locale }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -89,7 +89,7 @@ export function FinalCta({ locale }: { locale: Locale }) {
             </p>
             <div className="flex flex-wrap gap-3">
               <Button
-                href={`/${locale}/${locale === "es" ? "empresas/cotizar" : "companies/quote"}`}
+                href={calLink(CAL_EVENT_TYPES.discoveryIndividual)}
                 size="lg"
                 trailingArrow
                 className="bg-[var(--color-paper)] text-[var(--color-ink)] hover:bg-[var(--color-paper-warm)]"

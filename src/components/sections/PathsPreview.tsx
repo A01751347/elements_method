@@ -6,7 +6,7 @@ import { motion } from "motion/react";
 import { ArrowUpRight, Check, Sparkles, Clock, Compass } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import type { Dict } from "@/i18n/dictionaries";
-import { paths } from "@/data/content";
+import { paths as staticPaths, type PathInfo } from "@/data/content";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
@@ -17,10 +17,13 @@ const PATH_ICONS = [Compass, Sparkles, Clock];
 export function PathsPreview({
   locale,
   dict,
+  paths: pathsProp,
 }: {
   locale: Locale;
   dict: Dict;
+  paths?: PathInfo[];
 }) {
+  const paths = pathsProp && pathsProp.length > 0 ? pathsProp : staticPaths;
   const [hovered, setHovered] = React.useState<number | null>(null);
 
   return (

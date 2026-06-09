@@ -1,0 +1,218 @@
+import "dotenv/config";
+import { sql } from "drizzle-orm";
+import { db } from "./client";
+import {
+  calculatorConfig,
+  documentTemplates,
+  forms,
+  productCombinations,
+  products,
+  retreats,
+} from "./schema";
+
+import { productSeeds } from "./seeds/products";
+import { discountSeeds } from "./seeds/discounts";
+import { documentSeeds } from "./seeds/documents";
+import { formSeeds } from "./seeds/forms";
+import { calculatorConfigSeeds } from "./seeds/calculator";
+import { retreatSeeds } from "./seeds/retreats";
+
+async function seedProducts() {
+  console.log("→ products");
+  for (const p of productSeeds) {
+    await db
+      .insert(products)
+      .values(p)
+      .onConflictDoUpdate({
+        target: products.slug,
+        set: {
+          type: p.type,
+          element: p.element ?? null,
+          nameEs: p.nameEs,
+          nameEn: p.nameEn ?? null,
+          descriptionEs: p.descriptionEs,
+          descriptionEn: p.descriptionEn ?? null,
+          includesEs: p.includesEs ?? null,
+          includesEn: p.includesEn ?? null,
+          duration: p.duration ?? null,
+          modality: p.modality ?? null,
+          priceMxn: p.priceMxn,
+          priceUsd: p.priceUsd ?? null,
+          sortOrder: p.sortOrder ?? 0,
+          updatedAt: new Date(),
+        },
+      });
+  }
+  console.log(`  ✓ ${productSeeds.length} products upserted`);
+}
+
+async function seedDiscounts() {
+  console.log("→ product_combinations");
+  const all = await db.select({ id: products.id, slug: products.slug }).from(products);
+  const idBySlug = new Map(all.map((p) => [p.slug, p.id]));
+
+  // Wipe existing seeded ones (idempotent re-runs)
+  for (const d of discountSeeds) {
+    const ids = d.requiredSlugs.map((s) => {
+      const id = idBySlug.get(s);
+      if (!id) throw new Error(`Discount "${d.name}" references unknown product slug "${s}"`);
+      return id;
+    });
+    // Find by name (unique enough for our seeds)
+    const existing = await db
+      .select({ id: productCombinations.id })
+      .from(productCombinations)
+      .where(sql`${productCombinations.name} = ${d.name}`)
+      .limit(1);
+    if (existing.length > 0) {
+      await db
+        .update(productCombinations)
+        .set({
+          requiredProductIds: ids,
+          discountType: d.discountType,
+          discountValue: d.discountValue,
+          active: d.active,
+        })
+        .where(sql`${productCombinations.id} = ${existing[0].id}`);
+    } else {
+      await db.insert(productCombinations).values({
+        name: d.name,
+        requiredProductIds: ids,
+        discountType: d.discountType,
+        discountValue: d.discountValue,
+        active: d.active,
+      });
+    }
+  }
+  console.log(`  ✓ ${discountSeeds.length} discount rules upserted`);
+}
+
+async function seedDocuments() {
+  console.log("→ document_templates");
+  for (const d of documentSeeds) {
+    await db
+      .insert(documentTemplates)
+      .values(d)
+      .onConflictDoUpdate({
+        target: documentTemplates.slug,
+        set: {
+          nameEs: d.nameEs,
+          nameEn: d.nameEn ?? null,
+          templateHtmlEs: d.templateHtmlEs,
+          templateHtmlEn: d.templateHtmlEn ?? null,
+          requiredForPurchase: d.requiredForPurchase,
+          acceptanceType: d.acceptanceType,
+          appliesTo: d.appliesTo,
+          updatedAt: new Date(),
+        },
+      });
+  }
+  console.log(`  ✓ ${documentSeeds.length} document templates upserted`);
+}
+
+async function seedForms() {
+  console.log("→ forms");
+  for (const f of formSeeds) {
+    await db
+      .insert(forms)
+      .values({
+        slug: f.slug,
+        titleEs: f.titleEs,
+        titleEn: f.titleEn,
+        descriptionEs: f.descriptionEs,
+        descriptionEn: f.descriptionEn,
+        category: f.category,
+        isAnonymous: f.isAnonymous,
+        fields: f.fields,
+      })
+      .onConflictDoUpdate({
+        target: forms.slug,
+        set: {
+          titleEs: f.titleEs,
+          titleEn: f.titleEn,
+          descriptionEs: f.descriptionEs,
+          descriptionEn: f.descriptionEn,
+          category: f.category,
+          isAnonymous: f.isAnonymous,
+          fields: f.fields,
+          updatedAt: new Date(),
+        },
+      });
+  }
+  console.log(`  ✓ ${formSeeds.length} forms upserted`);
+}
+
+async function seedCalculator() {
+  console.log("→ calculator_config");
+  for (const c of calculatorConfigSeeds) {
+    await db
+      .insert(calculatorConfig)
+      .values({ key: c.key, value: c.value as never })
+      .onConflictDoUpdate({
+        target: calculatorConfig.key,
+        set: { value: c.value as never, updatedAt: new Date() },
+      });
+  }
+  console.log(`  ✓ ${calculatorConfigSeeds.length} calculator config entries upserted`);
+}
+
+async function seedRetreats() {
+  console.log("→ retreats (demo data)");
+  // Link each retreat to its single-element product when possible
+  const elementProducts = await db
+    .select({ id: products.id, slug: products.slug })
+    .from(products);
+  const productBySlug = new Map(elementProducts.map((p) => [p.slug, p.id]));
+
+  for (const r of retreatSeeds) {
+    const elementSlug = r.elementsCovered[0];
+    const productId = elementSlug ? productBySlug.get(elementSlug) ?? null : null;
+    // Don't have a natural unique key here. Match by (nameEs, startDate).
+    const existing = await db
+      .select({ id: retreats.id })
+      .from(retreats)
+      .where(sql`${retreats.nameEs} = ${r.nameEs} AND ${retreats.startDate} = ${r.startDate}`)
+      .limit(1);
+    if (existing.length > 0) {
+      await db
+        .update(retreats)
+        .set({
+          nameEn: r.nameEn,
+          endDate: r.endDate,
+          location: r.location,
+          modality: r.modality,
+          elementsCovered: r.elementsCovered,
+          descriptionEs: r.descriptionEs ?? null,
+          descriptionEn: r.descriptionEn ?? null,
+          imageUrl: r.imageUrl ?? null,
+          priceMxn: r.priceMxn,
+          priceUsd: r.priceUsd ?? null,
+          capacity: r.capacity,
+          lowSeatsThreshold: r.lowSeatsThreshold ?? 10,
+          active: r.active ?? true,
+          productId,
+          updatedAt: new Date(),
+        })
+        .where(sql`${retreats.id} = ${existing[0].id}`);
+    } else {
+      await db.insert(retreats).values({ ...r, productId });
+    }
+  }
+  console.log(`  ✓ ${retreatSeeds.length} retreats upserted`);
+}
+
+async function main() {
+  console.log("Seeding Elements Method DB…\n");
+  await seedProducts();
+  await seedDiscounts();
+  await seedDocuments();
+  await seedForms();
+  await seedCalculator();
+  await seedRetreats();
+  console.log("\n✓ done.");
+}
+
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

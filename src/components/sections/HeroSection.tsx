@@ -23,8 +23,7 @@ import type { Dict } from "@/i18n/dictionaries";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 
-const HERO_IMAGE =
-  "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=2400&q=85&auto=format&fit=crop";
+const HERO_IMAGE = "/images/heroes/home.jpg";
 
 export function HeroSection({
   locale,

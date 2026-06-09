@@ -63,7 +63,7 @@ export default function MethodPage({
           className="absolute inset-0 -z-20 will-change-transform"
         >
           <Image
-            src="https://images.unsplash.com/photo-1465056836041-7f43ac27dcb5?w=2400&q=85&auto=format&fit=crop"
+            src="/images/heroes/metodo.jpg"
             alt=""
             fill
             priority

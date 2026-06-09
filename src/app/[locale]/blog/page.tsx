@@ -31,7 +31,7 @@ export default async function BlogPage({
       <section className="relative min-h-[60vh] flex items-end overflow-hidden -mt-20 pt-20 text-[var(--color-paper)]">
         <div className="absolute inset-0 -z-20">
           <Image
-            src="https://images.unsplash.com/photo-1500380804539-4e1e8c1e7118?w=2400&q=85&auto=format&fit=crop"
+            src="/images/heroes/blog.jpg"
             alt=""
             fill
             priority

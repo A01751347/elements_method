@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import { isLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
+import { getPaths } from "@/modules/products/queries";
+import { getUpcomingRetreats } from "@/modules/retreats/queries";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { NatureLexicon } from "@/components/sections/NatureLexicon";
 import { PhilosophyStrip } from "@/components/sections/PhilosophyStrip";
@@ -28,6 +30,11 @@ export default async function HomePage({
   if (!isLocale(locale)) notFound();
   const dict = getDictionary(locale);
 
+  const [paths, retreats] = await Promise.all([
+    getPaths().catch(() => []),
+    getUpcomingRetreats({ limit: 4 }).catch(() => []),
+  ]);
+
   return (
     <>
       <HeroSection locale={locale} dict={dict} />
@@ -38,10 +45,10 @@ export default async function HomePage({
       <LocationsSection locale={locale} />
       <MantraDivider locale={locale} />
       <ProcessSteps locale={locale} />
-      <PathsPreview locale={locale} dict={dict} />
+      <PathsPreview locale={locale} dict={dict} paths={paths} />
       <SeasonsRhythm locale={locale} />
       <StatsBand locale={locale} />
-      <RetreatsShowcase locale={locale} dict={dict} />
+      <RetreatsShowcase locale={locale} dict={dict} retreats={retreats} />
       <TestimonialsCarousel locale={locale} dict={dict} />
       <CompaniesCta locale={locale} dict={dict} />
       <JournalPreview locale={locale} dict={dict} />

@@ -43,10 +43,10 @@ export interface ElementInfo {
 }
 
 export const elementImages: Record<ElementKey, string> = {
-  agua: "https://images.unsplash.com/photo-1505144808419-1957a94ca61e?w=1200&q=80&auto=format&fit=crop",
-  fuego: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&q=80&auto=format&fit=crop",
-  aire: "https://images.unsplash.com/photo-1499346030926-9a72daac6c63?w=1200&q=80&auto=format&fit=crop",
-  tierra: "https://images.unsplash.com/photo-1448375240586-882707db888b?w=1200&q=80&auto=format&fit=crop",
+  agua: "/images/elements/agua.jpg",
+  fuego: "/images/elements/fuego.jpg",
+  aire: "/images/elements/aire.jpg",
+  tierra: "/images/elements/tierra.jpg",
 };
 
 export const elements: ElementInfo[] = [
@@ -342,8 +342,7 @@ export const retreats: RetreatInfo[] = [
     capacity: 15,
     sold: 0,
     imageHue: "var(--color-earth-soft)",
-    image:
-      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1600&q=85&auto=format&fit=crop",
+    image: "/images/modules/roots.jpg",
   },
   {
     id: "water-module",
@@ -360,8 +359,7 @@ export const retreats: RetreatInfo[] = [
     capacity: 15,
     sold: 0,
     imageHue: "var(--color-water-soft)",
-    image:
-      "https://images.unsplash.com/photo-1499346030926-9a72daac6c63?w=1600&q=85&auto=format&fit=crop",
+    image: "/images/modules/flow.jpg",
   },
   {
     id: "fire-module",
@@ -378,8 +376,7 @@ export const retreats: RetreatInfo[] = [
     capacity: 15,
     sold: 0,
     imageHue: "var(--color-fire-soft)",
-    image:
-      "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1600&q=85&auto=format&fit=crop",
+    image: "/images/modules/ignite.jpg",
   },
   {
     id: "air-module",
@@ -396,8 +393,7 @@ export const retreats: RetreatInfo[] = [
     capacity: 15,
     sold: 0,
     imageHue: "var(--color-air-soft)",
-    image:
-      "https://images.unsplash.com/photo-1465056836041-7f43ac27dcb5?w=1600&q=85&auto=format&fit=crop",
+    image: "/images/modules/clear.jpg",
   },
 ];
 
@@ -628,8 +624,7 @@ export const modalityAxes: ModalityAxis[] = [
       "Co-Active Coaching · Ontological Coaching",
       "Executive Presence Coaching · Systemic Coaching",
     ],
-    image:
-      "https://images.unsplash.com/photo-1465056836041-7f43ac27dcb5?w=1600&q=85&auto=format&fit=crop",
+    image: "/images/elements/aire.jpg",
     primaryElement: "aire",
   },
   {
@@ -660,8 +655,7 @@ export const modalityAxes: ModalityAxis[] = [
       "Polyvagal Theory (Porges) · Default Mode Network",
       "Dopamine systems · Amygdala regulation · PFC activation",
     ],
-    image:
-      "https://images.unsplash.com/photo-1499346030926-9a72daac6c63?w=1600&q=85&auto=format&fit=crop",
+    image: "/images/elements/agua.jpg",
     primaryElement: "agua",
   },
   {
@@ -694,8 +688,7 @@ export const modalityAxes: ModalityAxis[] = [
       "Watsu · Somatic Experiencing · TRE",
       "Forest Bathing · Grounding · Sound Healing · Qigong",
     ],
-    image:
-      "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1600&q=85&auto=format&fit=crop",
+    image: "/images/elements/fuego.jpg",
     primaryElement: "fuego",
   },
 ];

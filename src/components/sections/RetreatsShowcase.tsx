@@ -17,7 +17,7 @@ import {
 import type { Locale } from "@/i18n/config";
 import type { Dict } from "@/i18n/dictionaries";
 import {
-  retreats,
+  retreats as staticRetreats,
   retreatStatus,
   type RetreatInfo,
   type ElementKey,
@@ -39,13 +39,17 @@ export function RetreatsShowcase({
   dict,
   limit,
   hideHeader,
+  retreats: retreatsProp,
 }: {
   locale: Locale;
   dict: Dict;
   limit?: number;
   hideHeader?: boolean;
+  retreats?: RetreatInfo[];
 }) {
-  const list = limit ? retreats.slice(0, limit) : retreats;
+  const source =
+    retreatsProp && retreatsProp.length > 0 ? retreatsProp : staticRetreats;
+  const list = limit ? source.slice(0, limit) : source;
 
   return (
     <section className="py-24 md:py-36 bg-[var(--color-paper)] overflow-hidden">

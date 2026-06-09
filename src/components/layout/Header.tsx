@@ -10,6 +10,7 @@ import type { Dict } from "@/i18n/dictionaries";
 import { LangSwitcher } from "./LangSwitcher";
 import { Logo } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/Button";
+import { calLink, CAL_EVENT_TYPES } from "@/shared/integrations/cal";
 import { cn } from "@/lib/utils";
 
 interface NavLink {
@@ -120,7 +121,7 @@ export function Header({
             <div className="hidden lg:flex items-center gap-5">
               <LangSwitcher currentLocale={locale} inverted={inverted} />
               <Button
-                href={`${base}/${locale === "es" ? "empresas/cotizar" : "companies/quote"}`}
+                href={calLink(CAL_EVENT_TYPES.discoveryEnterprise)}
                 size="sm"
                 variant={inverted ? "outlineLight" : "primary"}
                 trailingArrow
@@ -179,7 +180,7 @@ export function Header({
               <div className="mt-10 flex flex-col gap-6">
                 <LangSwitcher currentLocale={locale} />
                 <Button
-                  href={`${base}/${locale === "es" ? "empresas/cotizar" : "companies/quote"}`}
+                  href={calLink(CAL_EVENT_TYPES.discoveryEnterprise)}
                   variant="primary"
                   trailingArrow
                   className="self-start"

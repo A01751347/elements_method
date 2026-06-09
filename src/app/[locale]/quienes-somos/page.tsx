@@ -31,7 +31,7 @@ export default async function AboutPage({
       <section className="relative min-h-[70vh] flex items-end overflow-hidden -mt-20 pt-20 text-[var(--color-paper)]">
         <div className="absolute inset-0 -z-20">
           <Image
-            src="https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?w=2400&q=85&auto=format&fit=crop"
+            src="/images/heroes/quienes-somos.jpg"
             alt=""
             fill
             priority

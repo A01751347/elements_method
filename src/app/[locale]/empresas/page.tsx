@@ -43,7 +43,7 @@ export default async function CompaniesPage({
       <section className="relative min-h-[70vh] flex items-end overflow-hidden -mt-20 pt-20 text-[var(--color-paper)]">
         <div className="absolute inset-0 -z-20">
           <Image
-            src="https://images.unsplash.com/photo-1573164574572-cb89e39749b4?w=2400&q=85&auto=format&fit=crop"
+            src="/images/heroes/empresas.jpg"
             alt=""
             fill
             priority

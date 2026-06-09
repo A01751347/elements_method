@@ -42,7 +42,7 @@ export default async function RetreatsPage({
       <section className="relative min-h-[70vh] flex items-end overflow-hidden -mt-20 pt-20 text-[var(--color-paper)]">
         <div className="absolute inset-0 -z-20">
           <Image
-            src="https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=2400&q=85&auto=format&fit=crop"
+            src="/images/heroes/retiros.jpg"
             alt=""
             fill
             priority
