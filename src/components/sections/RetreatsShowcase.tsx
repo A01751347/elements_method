@@ -13,6 +13,8 @@ import {
   Flame,
   Wind,
   Mountain,
+  Sparkles,
+  type LucideIcon,
 } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import type { Dict } from "@/i18n/dictionaries";
@@ -25,13 +27,14 @@ import {
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
-import { formatPriceMXN, formatDate, cn } from "@/lib/utils";
+import { formatDate, cn } from "@/lib/utils";
 
-const ELEMENT_ICONS: Record<ElementKey, React.ComponentType<{ className?: string; strokeWidth?: number }>> = {
+const ELEMENT_ICONS: Record<ElementKey, LucideIcon> = {
   agua: Droplets,
   fuego: Flame,
   aire: Wind,
   tierra: Mountain,
+  eter: Sparkles,
 };
 
 export function RetreatsShowcase({
@@ -136,7 +139,8 @@ function RetreatCard({
           sizes={featured ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, 50vw"}
           className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-ink)]/60 via-[var(--color-ink)]/10 to-transparent" />
+        {/* AAA text-protection scrim — guarantees ≥7:1 for the title below */}
+        <div className="absolute inset-x-0 bottom-0 h-2/3 scrim-bottom pointer-events-none" />
 
         {/* Top metadata */}
         <div className="absolute top-5 left-5 right-5 flex items-start justify-between">
@@ -207,29 +211,23 @@ function RetreatCard({
         <div className="flex items-end justify-between gap-4 pt-5 border-t border-[var(--color-line)]">
           <div>
             <div className="text-[0.65rem] uppercase tracking-wide text-[var(--color-muted)]">
-              {locale === "es" ? "Desde" : "From"}
+              {locale === "es" ? "Experiencia" : "Experience"}
             </div>
-            <div className="font-[family-name:var(--font-display)] text-2xl mt-0.5">
-              {formatPriceMXN(r.priceMxn)}
+            <div className="font-[family-name:var(--font-display)] text-lg italic mt-0.5">
+              {locale === "es" ? r.experienceEs : r.experienceEn}
             </div>
             <div className="text-[0.65rem] uppercase tracking-wide text-[var(--color-muted)] mt-0.5">
-              {dict.common.noVat}
+              {locale === "es" ? "Inversión a confirmar" : "Investment TBD"}
             </div>
           </div>
 
           <Button
-            href={`/${locale}/${locale === "es" ? "retiros" : "retreats"}/${r.id}`}
+            href={`/${locale}/${locale === "es" ? "los-caminos" : "paths"}`}
             size="sm"
             trailingArrow
-            variant={status.kind === "closed" ? "secondary" : "primary"}
+            variant="primary"
           >
-            {status.kind === "closed"
-              ? locale === "es"
-                ? "Lista de espera"
-                : "Waitlist"
-              : locale === "es"
-                ? "Reservar"
-                : "Book"}
+            {locale === "es" ? "Ver programas" : "See programs"}
           </Button>
         </div>
       </div>

@@ -1,13 +1,10 @@
 import type { NewProduct } from "../schema/products";
 
 /**
- * Pricing source: docs/proyecto.md ("INVERSIÓN")
- *   Precio por módulo (elemento individual): 25,000 MXN
- *   Early Bird: 22,000 MXN  (handled as a discount rule, not a separate product)
- *   Grupos 3+: 20,000 MXN  (handled as a discount rule)
- *
- * USD prices are placeholder estimates pending client confirmation
- * (~ MXN / 18). Will be replaced once Andrés/Ana Michelle define them.
+ * LEGACY pricing model — kept in seed for backwards compatibility with the
+ * Stripe/orders schema. The current public site no longer publishes per-module
+ * prices: programs (Roots / Current / Source / Origin) are sold as integrated
+ * journeys with pricing TBD pending founder confirmation. See content.ts.
  */
 const MXN_PER_USD = 18;
 const usd = (mxn: number) => Math.round(mxn / MXN_PER_USD) * 1; // round to nearest dollar

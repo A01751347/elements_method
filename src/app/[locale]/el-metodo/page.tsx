@@ -10,9 +10,11 @@ import {
   useTransform,
 } from "motion/react";
 import {
-  Activity,
   Brain,
   HeartPulse,
+  Activity,
+  Shield,
+  TestTube,
   BookMarked,
   Atom,
   Sparkles,
@@ -22,6 +24,7 @@ import { isLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import {
   elements,
+  shadowProfile,
   audienceEs,
   audienceEn,
   resultsEs,
@@ -63,7 +66,7 @@ export default function MethodPage({
           className="absolute inset-0 -z-20 will-change-transform"
         >
           <Image
-            src="/images/heroes/metodo.jpg"
+            src="https://images.unsplash.com/photo-1465056836041-7f43ac27dcb5?w=2400&q=85&auto=format&fit=crop"
             alt=""
             fill
             priority
@@ -103,7 +106,7 @@ export default function MethodPage({
         </Container>
       </section>
 
-      {/* CORE INSIGHT — verbatim from golden_circle.md + proyecto.md */}
+      {/* CORE INSIGHT — golden_circle.md + master doc */}
       <Section spacing="default">
         <div className="grid lg:grid-cols-12 gap-12 items-start">
           <div className="lg:col-span-4">
@@ -112,56 +115,56 @@ export default function MethodPage({
             </Eyebrow>
             <h2 className="display-3 text-balance">
               {locale === "es"
-                ? "La mayoría de las personas intenta cambiar sus resultados sin transformar el sistema interno desde el que los producen."
-                : "Most people try to change their results without transforming the inner system that produces them."}
+                ? "Trasforma y eleva el núcleo, y todo lo que orbita a su alrededor cambiará."
+                : "Transform and elevate the nucleus, and everything that orbits around it will change."}
             </h2>
           </div>
           <div className="lg:col-span-8 space-y-6 text-lg leading-relaxed text-[var(--color-ink-soft)] max-w-2xl">
             <p>
               {locale === "es"
-                ? "Las decisiones importantes no se toman solo con información. Se toman desde un estado mental específico. La presión, la velocidad y la responsabilidad constante afectan la claridad estratégica del líder moderno."
-                : "Important decisions are not made with information alone. They are made from a specific mental state. Pressure, speed and constant responsibility affect the modern leader's strategic clarity."}
-            </p>
-            <p className="italic text-[var(--color-ink)]">
-              {locale === "es"
-                ? "Elements interviene ese sistema."
-                : "Elements intervenes that system."}
+                ? "Antes de los cuatro elementos existe el Núcleo: el líder mismo. En su estado interior, el líder debe conocer, entender y alinear los ejes mentales, emocionales, físicos y espirituales."
+                : "Before the four elements there is the Nucleus: the leader themselves. In their inner state, the leader must know, understand and align the mental, emotional, physical and spiritual axes."}
             </p>
             <p>
               {locale === "es"
-                ? "Mejor pensamiento. Mejores decisiones. Mejor liderazgo."
-                : "Better thinking. Better decisions. Better leadership."}
+                ? "En la física, el núcleo es la masa densa y energética desde la que todo lo demás se organiza. En liderazgo, la persona, expresándose desde su autenticidad y naturaleza, es el núcleo desde el que radían todas las dinámicas del equipo, la cultura y los resultados organizacionales."
+                : "In physics, the nucleus is the dense, energetic mass from which everything else is organized. In leadership, the person, expressing themselves from their authenticity and nature, is the nucleus from which all team dynamics, culture and organizational results radiate."}
+            </p>
+            <p className="italic text-[var(--color-ink)]">
+              {locale === "es"
+                ? "La naturaleza no gestiona. La naturaleza lidera. Esto no es un retiro — es un regreso."
+                : "Nature does not manage. Nature leads. This is not a retreat — it is a return."}
             </p>
           </div>
         </div>
       </Section>
 
-      {/* THE NUCLEUS — from presentation page 6 */}
+      {/* THE NUCLEUS + ETER */}
       <Section spacing="default" tone="warm" className="paper-grain">
         <div className="grid lg:grid-cols-12 gap-12 items-end mb-16">
           <div className="lg:col-span-6">
             <Eyebrow className="mb-6 flex items-center gap-3">
               <Atom className="h-3.5 w-3.5" strokeWidth={1.5} />
-              The Nucleus
+              {locale === "es" ? "El Núcleo + Éter" : "The Nucleus + Éter"}
             </Eyebrow>
             <h2 className="display-2 text-balance">
               {locale === "es"
-                ? "Cambia el núcleo y todo lo demás cambia."
-                : "Change the nucleus, and everything around it changes."}
+                ? "El quinto elemento es la energía del Núcleo."
+                : "The fifth element is the energy of the Nucleus."}
             </h2>
           </div>
           <div className="lg:col-span-6 lg:pt-4">
             <p className="lead text-pretty">
               {locale === "es"
-                ? "En física, el núcleo es el centro denso y energético desde el que todo lo demás se organiza. En liderazgo, la persona — sus valores, su presencia, su estado interno — es el núcleo desde el que radían las dinámicas de equipo, la cultura y los resultados organizacionales."
-                : "In physics, the nucleus is the dense, energetic center from which everything else is organized. In leadership, the person — their values, their presence, their inner state — is the nucleus from which all team dynamics, culture, and organizational results radiate."}
+                ? "Tierra, Fuego, Agua y Aire impactan directamente el núcleo, que es el líder. Y el núcleo del líder tiene como energía principal el Éter — Espíritu — donde se concentra el autoconocimiento, el propósito trascendental, la sabiduría, la intención, la plenitud, la conexión humana, la gratitud, el servicio y el legado."
+                : "Earth, Fire, Water and Air directly impact the nucleus, which is the leader. And the leader's nucleus has Éter — Spirit — as its principal energy, where self-knowledge, transcendent purpose, wisdom, intention, plenitude, human connection, gratitude, service and legacy concentrate."}
             </p>
           </div>
         </div>
 
         <div className="grid md:grid-cols-2 gap-px bg-[var(--color-line)] border border-[var(--color-line)]">
           <div className="bg-[var(--color-paper)] p-8 md:p-12">
-            <div className="eyebrow text-[var(--color-fire)] mb-6">
+            <div className="eyebrow text-[var(--color-fire-ink)] mb-6">
               {locale === "es" ? "De afuera hacia adentro" : "Outside-in"}
             </div>
             <p className="text-[var(--color-ink-soft)] leading-relaxed">
@@ -171,13 +174,13 @@ export default function MethodPage({
             </p>
           </div>
           <div className="bg-[var(--color-paper-warm)] p-8 md:p-12">
-            <div className="eyebrow text-[var(--color-moss-700)] mb-6">
+            <div className="eyebrow text-[var(--color-gold-deep)] mb-6">
               {locale === "es" ? "De adentro hacia afuera" : "Inside-out"}
             </div>
             <p className="text-[var(--color-ink-soft)] leading-relaxed">
               {locale === "es"
-                ? "Elements Method trabaja de adentro hacia afuera: cuando el núcleo está saludable, todo lo demás se reorganiza naturalmente a su alrededor."
-                : "Elements Method works from the inside out: when the nucleus is healthy, everything else reorganizes around it naturally."}
+                ? "Elements Method trabaja de adentro hacia afuera: cuando el Núcleo está saludable y el Éter integra los cuatro elementos, todo lo demás se reorganiza naturalmente."
+                : "Elements Method works from the inside out: when the Nucleus is healthy and Éter integrates the four elements, everything else reorganizes naturally."}
             </p>
           </div>
         </div>
@@ -204,8 +207,9 @@ export default function MethodPage({
             </div>
           </div>
 
+          {/* Only show the 4 trainable elements (Éter handled separately) */}
           <div className="grid grid-cols-4 gap-2 mb-16 border border-[var(--color-line)]">
-            {elements.map((el, idx) => {
+            {elements.slice(0, 4).map((el, idx) => {
               const isActive = activeIdx === idx;
               const name = locale === "es" ? el.nameEs : el.nameEn;
               return (
@@ -266,57 +270,149 @@ export default function MethodPage({
         </Container>
       </Section>
 
-      {/* THE SCIENCE OF RECONNECTION — verbatim from presentation page 5 */}
+      {/* SHADOW PROFILE — from master doc */}
       <Section spacing="default">
+        <div className="grid lg:grid-cols-12 gap-12 mb-12">
+          <div className="lg:col-span-6">
+            <Eyebrow className="mb-6 flex items-center gap-3">
+              <Shield className="h-3.5 w-3.5" strokeWidth={1.5} />
+              {locale === "es" ? "Perfil de Sombra Elemental" : "Elemental Shadow Profile"}
+            </Eyebrow>
+            <h2 className="display-2 text-balance">
+              {locale === "es"
+                ? "Todo líder tiene un perfil elemental."
+                : "Every leader has an elemental profile."}
+            </h2>
+          </div>
+          <div className="lg:col-span-6 lg:pt-3">
+            <p className="lead text-pretty">
+              {locale === "es"
+                ? "Un elemento primario (su hogar natural), un secundario (su rango accesible), uno subdesarrollado (su borde de crecimiento) y uno de sombra (el que aparece distorsionado bajo estrés). El método empieza por mapearlo."
+                : "A primary element (their natural home), a secondary (their accessible range), an underdeveloped one (their growth edge) and a shadow element (the one that appears distorted under stress). The method begins by mapping it."}
+            </p>
+          </div>
+        </div>
+
+        <div className="overflow-x-auto -mx-5 sm:-mx-8 px-5 sm:px-8">
+          <table className="w-full border border-[var(--color-line)] bg-[var(--color-paper)] text-sm min-w-[860px]">
+            <thead>
+              <tr className="border-b border-[var(--color-line)] bg-[var(--color-paper-warm)]">
+                <th className="text-left p-5 font-normal eyebrow text-[var(--color-muted)] w-[120px]">
+                  {locale === "es" ? "Elemento" : "Element"}
+                </th>
+                <th className="text-left p-5 font-normal eyebrow text-[var(--color-muted)]">
+                  {locale === "es" ? "En su mejor versión" : "At its best"}
+                </th>
+                <th className="text-left p-5 font-normal eyebrow text-[var(--color-muted)]">
+                  {locale === "es" ? "Bajo estrés" : "Under stress"}
+                </th>
+                <th className="text-left p-5 font-normal eyebrow text-[var(--color-muted)]">
+                  {locale === "es" ? "Don" : "Gift"}
+                </th>
+                <th className="text-left p-5 font-normal eyebrow text-[var(--color-muted)]">
+                  {locale === "es" ? "Sombra" : "Shadow"}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {shadowProfile.map((row) => {
+                const el = elements.find((e) => e.key === row.element)!;
+                return (
+                  <tr
+                    key={row.element}
+                    className="border-b border-[var(--color-line)] last:border-0"
+                  >
+                    <td className="p-5 align-top">
+                      <div
+                        className="font-[family-name:var(--font-display)] text-xl"
+                        style={{ color: el.accentInk }}
+                      >
+                        {locale === "es" ? el.nameEs : el.nameEn}
+                      </div>
+                      <div className="text-xs uppercase tracking-wide text-[var(--color-muted)] mt-0.5">
+                        {el.framework}
+                      </div>
+                    </td>
+                    <td className="p-5 align-top text-[var(--color-ink-soft)]">
+                      {locale === "es" ? row.bestEs : row.bestEn}
+                    </td>
+                    <td className="p-5 align-top text-[var(--color-fire-ink)]">
+                      {locale === "es" ? row.stressEs : row.stressEn}
+                    </td>
+                    <td className="p-5 align-top text-[var(--color-ink-soft)]">
+                      {locale === "es" ? row.giftEs : row.giftEn}
+                    </td>
+                    <td className="p-5 align-top text-[var(--color-ink-soft)] italic">
+                      {locale === "es" ? row.shadowEs : row.shadowEn}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </Section>
+
+      {/* THE SCIENCE OF RECONNECTION — expanded */}
+      <Section spacing="default" tone="warm">
         <div className="grid lg:grid-cols-12 gap-12 mb-16">
           <div className="lg:col-span-6">
             <Eyebrow className="mb-6 flex items-center gap-3">
               <HeartPulse className="h-3.5 w-3.5" strokeWidth={1.5} />
-              {locale === "es" ? "La ciencia de la reconexión" : "The science of reconnection"}
+              {locale === "es" ? "La ciencia de la desconexión" : "The science of disconnection"}
             </Eyebrow>
             <h2 className="display-2 text-balance">
               {locale === "es"
-                ? "Líderes regulados, arraigados y auto-conscientes producen resultados medibles."
-                : "Regulated, grounded, self-aware leaders produce measurably better outcomes."}
+                ? "La naturaleza no es escenario. Es la metodología."
+                : "Nature isn't a backdrop. It is the methodology."}
             </h2>
           </div>
           <div className="lg:col-span-6 lg:pt-4 text-lg leading-relaxed text-[var(--color-ink-soft)]">
             <p>
               {locale === "es"
-                ? "La investigación en neurociencia, psicología y comportamiento organizacional apunta consistentemente en la misma dirección."
-                : "Research from neuroscience, psychology, and organizational behavior consistently points in the same direction."}
+                ? "Los entornos naturales producen efectos fisiológicos y psicológicos documentados que ningún espacio artificial puede replicar: restauración de la atención, reducción del cortisol, activación del sistema nervioso parasimpático, acceso a estados cerebrales de insight creativo y reflexión profunda."
+                : "Natural environments produce documented physiological and psychological effects no artificial space can replicate: attention restoration, cortisol reduction, parasympathetic activation, access to brain states of creative insight and deep reflection."}
             </p>
           </div>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-px bg-[var(--color-line)] border border-[var(--color-line)]">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-px bg-[var(--color-line)] border border-[var(--color-line)]">
           {[
             {
               icon: Brain,
-              k: locale === "es" ? "Sistema nervioso regulado" : "Regulated nervous system",
-              v:
-                locale === "es"
-                  ? "Los sistemas nerviosos regulados toman decisiones más rápidas y precisas."
-                  : "Regulated nervous systems make faster, more accurate decisions.",
-              ref: "van der Kolk, 2014",
+              k: locale === "es" ? "20 min en naturaleza" : "20 min in nature",
+              v: locale === "es" ? "Reduce cortisol 21%" : "Reduces cortisol by 21%",
+              ref: "Hunter et al. · 2019",
             },
             {
-              icon: HeartPulse,
-              k: locale === "es" ? "20 minutos en naturaleza" : "20 minutes in nature",
-              v:
-                locale === "es"
-                  ? "Reducen cortisol 21% y mejoran memoria de trabajo 20%."
-                  : "Reduce cortisol by 21% and improve working memory by 20%.",
-              ref: "Univ. of Michigan · Hunter et al. 2019",
+              icon: TestTube,
+              k: locale === "es" ? "2h Shinrin-yoku" : "2h Shinrin-yoku",
+              v: locale === "es" ? "Aumenta células NK del sistema inmune 50% (efecto 30 días)" : "Increases NK immune cells 50% (30-day effect)",
+              ref: "Li · 2008",
             },
             {
               icon: Activity,
+              k: locale === "es" ? "Líderes auto-conscientes" : "Self-aware leaders",
+              v: locale === "es" ? "3× mayor engagement del equipo" : "3× higher team engagement",
+              ref: "Eurich · Harvard Business Review",
+            },
+            {
+              icon: HeartPulse,
+              k: locale === "es" ? "Sistema nervioso regulado" : "Regulated nervous system",
+              v: locale === "es" ? "Decisiones más rápidas y precisas" : "Faster, more accurate decisions",
+              ref: "van der Kolk · 2014",
+            },
+            {
+              icon: Shield,
               k: locale === "es" ? "Seguridad psicológica" : "Psychological safety",
-              v:
-                locale === "es"
-                  ? "Líderes con culturas de seguridad psicológica generan 27% más crecimiento en revenue."
-                  : "Leaders with strong psychological safety cultures generate 27% higher revenue growth.",
+              v: locale === "es" ? "27% más crecimiento de ingresos" : "27% higher revenue growth",
               ref: "Google · Project Aristotle",
+            },
+            {
+              icon: Brain,
+              k: locale === "es" ? "8 semanas de MBSR" : "8 weeks MBSR",
+              v: locale === "es" ? "Cambios medibles en materia gris del córtex prefrontal" : "Measurable changes in prefrontal cortex gray matter",
+              ref: "Holzel et al. · 2011",
             },
           ].map((row, idx) => {
             const Icon = row.icon;
@@ -326,11 +422,11 @@ export default function MethodPage({
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.6, delay: idx * 0.08 }}
-                className="group bg-[var(--color-paper)] p-8 md:p-10 hover:bg-[var(--color-paper-warm)] transition-colors duration-500 min-h-[340px] flex flex-col"
+                transition={{ duration: 0.6, delay: idx * 0.06 }}
+                className="group bg-[var(--color-paper)] p-8 md:p-10 hover:bg-[var(--color-paper-warm)] transition-colors duration-500 min-h-[260px] flex flex-col"
               >
-                <Icon className="h-6 w-6 text-[var(--color-moss-700)] mb-6" strokeWidth={1.5} />
-                <h3 className="font-[family-name:var(--font-display)] text-2xl tracking-tight mb-4">
+                <Icon className="h-6 w-6 text-[var(--color-gold-deep)] mb-6" strokeWidth={1.5} />
+                <h3 className="font-[family-name:var(--font-display)] text-xl tracking-tight mb-3">
                   {row.k}
                 </h3>
                 <p className="text-[var(--color-ink-soft)] leading-relaxed text-sm flex-1">
@@ -345,8 +441,8 @@ export default function MethodPage({
         </div>
       </Section>
 
-      {/* WHO THIS IS FOR — from proyecto.md "PARA QUIÉN ES" */}
-      <Section spacing="default" tone="warm">
+      {/* WHO IT'S FOR */}
+      <Section spacing="default">
         <div className="grid lg:grid-cols-12 gap-12 items-start mb-16">
           <div className="lg:col-span-5">
             <Eyebrow className="mb-6 flex items-center gap-3">
@@ -355,8 +451,8 @@ export default function MethodPage({
             </Eyebrow>
             <h2 className="display-2 text-balance">
               {locale === "es"
-                ? "Personas que entienden que evolucionar su liderazgo es una ventaja competitiva."
-                : "People who understand that evolving their leadership is a competitive advantage."}
+                ? "Cinco perfiles que llegan a Elements Method."
+                : "Five profiles that come to Elements Method."}
             </h2>
           </div>
           <div className="lg:col-span-7">
@@ -364,12 +460,12 @@ export default function MethodPage({
               {(locale === "es" ? audienceEs : audienceEn).map((row, idx) => (
                 <li
                   key={row}
-                  className="py-6 grid grid-cols-[80px_1fr] gap-6 items-center"
+                  className="py-6 grid grid-cols-[80px_1fr] gap-6 items-baseline"
                 >
-                  <span className="font-[family-name:var(--font-display)] text-3xl text-[var(--color-moss-700)]/60">
+                  <span className="font-[family-name:var(--font-display)] text-3xl text-[var(--color-gold-deep)] tabular-nums">
                     0{idx + 1}
                   </span>
-                  <span className="text-xl font-[family-name:var(--font-display)] tracking-tight">
+                  <span className="text-[var(--color-ink-soft)] leading-relaxed text-lg">
                     {row}
                   </span>
                 </li>
@@ -379,18 +475,18 @@ export default function MethodPage({
         </div>
       </Section>
 
-      {/* RESULTS — verbatim from proyecto.md "RESULTADOS" */}
-      <Section spacing="default">
+      {/* RESULTS */}
+      <Section spacing="default" tone="ink">
         <div className="grid lg:grid-cols-12 gap-12 mb-16">
           <div className="lg:col-span-5">
-            <Eyebrow className="mb-6 flex items-center gap-3">
+            <Eyebrow inverted className="mb-6 flex items-center gap-3">
               <Sparkles className="h-3.5 w-3.5" strokeWidth={1.5} />
-              {locale === "es" ? "Resultados" : "Results"}
+              {locale === "es" ? "Resultados esperados" : "Expected results"}
             </Eyebrow>
-            <h2 className="display-2 text-balance">
+            <h2 className="display-2 text-[var(--color-paper)] text-balance">
               {locale === "es"
-                ? "Nueve indicadores que esperar."
-                : "Nine indicators to expect."}
+                ? "Cuatro indicadores que verás aparecer."
+                : "Four indicators you'll see emerge."}
             </h2>
           </div>
           <div className="lg:col-span-7">
@@ -398,9 +494,9 @@ export default function MethodPage({
               {(locale === "es" ? resultsEs : resultsEn).map((r) => (
                 <li
                   key={r}
-                  className="flex items-start gap-3 text-[var(--color-ink)] py-2 border-b border-[var(--color-line)]"
+                  className="flex items-start gap-3 text-[var(--color-paper)] py-2 border-b border-[var(--color-paper)]/15"
                 >
-                  <span className="h-1 w-3 bg-[var(--color-moss-500)] mt-3 shrink-0" />
+                  <span className="h-1 w-3 bg-[var(--color-gold)] mt-3 shrink-0" />
                   <span className="leading-relaxed">{r}</span>
                 </li>
               ))}
@@ -409,14 +505,15 @@ export default function MethodPage({
               <Button
                 href={`/${locale}/${locale === "es" ? "los-caminos" : "paths"}`}
                 trailingArrow
+                className="bg-[var(--color-paper)] text-[var(--color-ink)] hover:bg-[var(--color-paper-warm)]"
               >
                 {locale === "es" ? "Ver programas" : "See programs"}
               </Button>
               <Button
                 href={`/${locale}/${locale === "es" ? "retiros" : "retreats"}`}
-                variant="secondary"
+                variant="outlineLight"
               >
-                {locale === "es" ? "Ver módulos" : "See modules"}
+                {locale === "es" ? "Ver experiencia" : "See experience"}
               </Button>
             </div>
           </div>
@@ -440,7 +537,7 @@ function ElementDetail({
     },
     {
       label: locale === "es" ? "En el líder" : "In the leader",
-      body: locale === "es" ? el.personEs : el.personEn,
+      body: locale === "es" ? el.cultivaEs : el.cultivaEn,
     },
     {
       label: `Framework · ${el.framework}`,
@@ -474,7 +571,11 @@ function ElementDetail({
           </div>
         </div>
 
-        <p className="mt-6 text-sm uppercase tracking-[0.2em] text-[var(--color-muted)]">
+        <p className="mt-6 italic font-[family-name:var(--font-display)] text-xl text-[var(--color-ink)] max-w-md">
+          “{locale === "es" ? el.quoteEs : el.quoteEn}”
+        </p>
+
+        <p className="mt-4 text-sm uppercase tracking-[0.2em] text-[var(--color-muted)]">
           {locale === "es" ? el.qualityEs : el.qualityEn}
         </p>
       </div>
@@ -488,7 +589,7 @@ function ElementDetail({
             <div className="flex items-center gap-3 mb-4">
               <span
                 className="font-[family-name:var(--font-display)] text-2xl"
-                style={{ color: el.accent }}
+                style={{ color: el.accentInk }}
               >
                 {String(i + 1).padStart(2, "0")}
               </span>

@@ -38,7 +38,9 @@ export function FinalCta({ locale }: { locale: Locale }) {
         />
       </motion.div>
 
-      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[var(--color-ink)]/40 via-[var(--color-ink)]/65 to-[var(--color-ink)]/85" />
+      {/* Bottom-weighted scrim — keeps the sky visible up top while reaching
+       * ink@92% where the heading + body sit, so all text clears AAA. */}
+      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[var(--color-ink)]/45 via-[var(--color-ink)]/80 to-[var(--color-ink)]/92" />
       <div className="absolute inset-0 -z-10 film-grain pointer-events-none" />
 
       <Container className="relative py-24 md:py-32">
@@ -50,7 +52,7 @@ export function FinalCta({ locale }: { locale: Locale }) {
             transition={{ duration: 0.8 }}
             className="lg:col-span-8"
           >
-            <div className="eyebrow text-[var(--color-paper)]/70 mb-6 flex items-center gap-3">
+            <div className="eyebrow text-[var(--color-paper)]/85 mb-6 flex items-center gap-3">
               <span aria-hidden className="h-px w-12 bg-[var(--color-paper)]/40" />
               {locale === "es" ? "Aplica ahora" : "Apply now"}
             </div>
@@ -82,7 +84,7 @@ export function FinalCta({ locale }: { locale: Locale }) {
             transition={{ duration: 0.8, delay: 0.15 }}
             className="lg:col-span-4 lg:pb-4 space-y-5"
           >
-            <p className="text-[var(--color-paper)]/75 leading-relaxed">
+            <p className="text-[var(--color-paper)]/90 leading-relaxed">
               {locale === "es"
                 ? "Cupo limitado a 15 líderes por módulo. Aplica para revisar tu perfil y agendar una conversación de discovery."
                 : "Capacity capped at 15 leaders per module. Apply to review your profile and schedule a discovery conversation."}
@@ -91,8 +93,8 @@ export function FinalCta({ locale }: { locale: Locale }) {
               <Button
                 href={calLink(CAL_EVENT_TYPES.discoveryIndividual)}
                 size="lg"
+                variant="solidLight"
                 trailingArrow
-                className="bg-[var(--color-paper)] text-[var(--color-ink)] hover:bg-[var(--color-paper-warm)]"
               >
                 {locale === "es" ? "Aplicar ahora" : "Apply now"}
               </Button>
@@ -117,20 +119,20 @@ export function FinalCta({ locale }: { locale: Locale }) {
         >
           <ContactPill
             icon={Calendar}
-            label={locale === "es" ? "Próximo módulo" : "Next module"}
-            value={locale === "es" ? "Tierra · 21 Feb 2026" : "Earth · Feb 21, 2026"}
+            label={locale === "es" ? "Próximas inmersiones" : "Upcoming immersions"}
+            value={locale === "es" ? "Calendario por confirmar" : "Calendar TBD"}
           />
           <ContactPill
             icon={MessageSquare}
-            label={locale === "es" ? "Conversación" : "Conversation"}
-            value="hola@elementsmethod.com"
-            href="mailto:hola@elementsmethod.com"
+            label={locale === "es" ? "Contacto directo" : "Direct contact"}
+            value="hello@elementsmethod.com"
+            href="mailto:hello@elementsmethod.com"
           />
           <ContactPill
             icon={ArrowUpRight}
-            label="WhatsApp"
-            value={locale === "es" ? "Chat directo" : "Direct chat"}
-            href="https://wa.me/525500000000"
+            label="Web"
+            value="www.elementsmethod.com"
+            href="https://www.elementsmethod.com"
             external
           />
         </motion.div>

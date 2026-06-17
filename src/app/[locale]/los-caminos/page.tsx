@@ -1,13 +1,20 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { Check } from "lucide-react";
+import {
+  Check,
+  Droplets,
+  Flame,
+  Wind,
+  Mountain,
+  Sparkles,
+  type LucideIcon,
+} from "lucide-react";
 import { isLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
-import { paths, singleModulePricing } from "@/data/content";
+import { paths, originProgram, rootsArc } from "@/data/content";
 import { Section, Eyebrow } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
-import { formatPriceMXN } from "@/lib/utils";
 
 export async function generateMetadata({
   params,
@@ -17,6 +24,22 @@ export async function generateMetadata({
   const { locale } = await params;
   return { title: locale === "en" ? "Programs" : "Programas" };
 }
+
+const ELEMENT_ICONS: Record<string, LucideIcon> = {
+  agua: Droplets,
+  fuego: Flame,
+  aire: Wind,
+  tierra: Mountain,
+  eter: Sparkles,
+};
+
+const ELEMENT_COLORS: Record<string, string> = {
+  agua: "#2B6B8A",
+  fuego: "#C4622D",
+  aire: "#7A9BAD",
+  tierra: "#3D5A3E",
+  eter: "#C9A96E",
+};
 
 export default async function PathsPage({
   params,
@@ -58,17 +81,19 @@ export default async function PathsPage({
         </Container>
       </section>
 
-      {/* PROGRAM DETAILS — Roots / Current / Source from presentation page 28 */}
+      {/* PROGRAM DETAILS */}
       <Section spacing="default" contained={false}>
         <div className="border-t border-[var(--color-line)]">
           {paths.map((p, idx) => {
             const name = locale === "es" ? p.nameEs : p.nameEn;
             const tag = locale === "es" ? p.tagEs : p.tagEn;
+            const headline = locale === "es" ? p.headlineEs : p.headlineEn;
             const short = locale === "es" ? p.shortEs : p.shortEn;
             const long = locale === "es" ? p.longEs : p.longEn;
             const includes = locale === "es" ? p.includesEs : p.includesEn;
             const modality = locale === "es" ? p.modalityEs : p.modalityEn;
             const duration = locale === "es" ? p.durationEs : p.durationEn;
+            const cta = locale === "es" ? p.ctaEs : p.ctaEn;
 
             return (
               <div
@@ -77,7 +102,7 @@ export default async function PathsPage({
               >
                 <div className="max-w-7xl mx-auto px-5 sm:px-8 py-16 md:py-20 grid lg:grid-cols-12 gap-10">
                   <div className="lg:col-span-2 flex lg:flex-col items-start gap-4">
-                    <span className="font-[family-name:var(--font-display)] text-5xl lg:text-6xl text-[var(--color-ink)]/15 group-hover:text-[var(--color-moss-500)]/60 transition-colors">
+                    <span className="font-[family-name:var(--font-display)] text-5xl lg:text-6xl text-[var(--color-ink)]/15 group-hover:text-[var(--color-gold-deep)]/60 transition-colors">
                       0{idx + 1}
                     </span>
                   </div>
@@ -87,7 +112,10 @@ export default async function PathsPage({
                       {tag}
                     </div>
                     <h2 className="display-2 mb-3">{name}</h2>
-                    <p className="text-[var(--color-ink-soft)] text-lg italic mb-6">
+                    <p className="text-[var(--color-ink-soft)] text-lg italic mb-4">
+                      {headline}
+                    </p>
+                    <p className="text-[var(--color-ink-soft)] leading-relaxed max-w-xl mb-6">
                       {short}
                     </p>
                     <p className="text-[var(--color-ink-soft)] leading-relaxed max-w-xl">
@@ -117,7 +145,7 @@ export default async function PathsPage({
                             key={item}
                             className="flex items-start gap-2.5 text-sm text-[var(--color-ink-soft)]"
                           >
-                            <Check className="h-4 w-4 mt-0.5 text-[var(--color-moss-500)] shrink-0" />
+                            <Check className="h-4 w-4 mt-0.5 text-[var(--color-gold-deep)] shrink-0" />
                             <span>{item}</span>
                           </li>
                         ))}
@@ -142,7 +170,7 @@ export default async function PathsPage({
                           trailingArrow
                           className="w-full"
                         >
-                          {locale === "es" ? "Solicitar información" : "Request information"}
+                          {cta}
                         </Button>
                       </div>
                     </div>
@@ -154,82 +182,115 @@ export default async function PathsPage({
         </div>
       </Section>
 
-      {/* SINGLE MODULES — pricing from proyecto.md */}
+      {/* ROOTS ARC — the 5-month journey breakdown */}
       <Section spacing="default" tone="warm" className="paper-grain">
-        <div className="grid lg:grid-cols-12 gap-12 items-end">
-          <div className="lg:col-span-7">
-            <Eyebrow className="mb-4">
-              {locale === "es" ? "Módulos sueltos" : "Single modules"}
+        <div className="grid lg:grid-cols-12 gap-12 mb-12">
+          <div className="lg:col-span-6">
+            <Eyebrow className="mb-6">
+              {locale === "es" ? "El arco de Raíces" : "The Roots Arc"}
             </Eyebrow>
             <h2 className="display-2 text-balance">
               {locale === "es"
-                ? "Cuatro módulos independientes. Un día al mes cada uno."
-                : "Four independent modules. One day per month each."}
+                ? "Cinco meses. Cinco elementos."
+                : "Five months. Five elements."}
             </h2>
-            <p className="lead mt-6 text-pretty max-w-2xl">
+          </div>
+          <div className="lg:col-span-6 lg:pt-3">
+            <p className="lead text-pretty">
               {locale === "es"
-                ? "Formato intensivo. Cupo limitado a 15 participantes por módulo."
-                : "Intensive format. Capacity capped at 15 participants per module."}
+                ? "El recorrido completo de Raíces atraviesa los cuatro elementos en orden secuenciado — Tierra primero por arraigo, Fuego por activación, Agua por claridad, Aire por perspectiva — y cierra en el Éter del Núcleo."
+                : "The full Roots journey traverses the four elements in sequenced order — Earth first for grounding, Fire for activation, Water for clarity, Air for perspective — and closes in the Éter of the Nucleus."}
             </p>
           </div>
+        </div>
 
-          <div className="lg:col-span-5">
-            <div className="bg-[var(--color-paper)] border border-[var(--color-line)] p-7">
-              <div className="eyebrow text-[var(--color-muted)] mb-4">
-                {locale === "es" ? "Inversión por módulo" : "Per-module investment"}
-              </div>
-              <div className="space-y-3 mb-6">
-                <PriceRow
-                  label={locale === "es" ? "Precio estándar" : "Standard price"}
-                  value={formatPriceMXN(singleModulePricing.standardMxn)}
-                  emphasis
-                />
-                <PriceRow
-                  label="Early Bird"
-                  value={formatPriceMXN(singleModulePricing.earlyBirdMxn)}
-                />
-                <PriceRow
-                  label={locale === "es" ? "Grupos (3 o más)" : "Groups (3 or more)"}
-                  value={formatPriceMXN(singleModulePricing.groupMxn)}
-                />
-              </div>
-              <Button
-                href={`/${locale}/${locale === "es" ? "retiros" : "retreats"}`}
-                variant="primary"
-                trailingArrow
-                className="w-full"
+        <div className="border border-[var(--color-line)] divide-y divide-[var(--color-line)] bg-[var(--color-paper)]">
+          {rootsArc.map((row) => {
+            const Icon = ELEMENT_ICONS[row.elementKey];
+            const color = ELEMENT_COLORS[row.elementKey];
+            return (
+              <div
+                key={row.month}
+                className="grid grid-cols-[60px_60px_140px_1fr] md:grid-cols-[80px_80px_220px_1fr] gap-4 md:gap-6 p-5 md:p-7 items-baseline hover:bg-[var(--color-paper-warm)] transition-colors"
               >
-                {locale === "es" ? "Ver módulos" : "See modules"}
-              </Button>
-            </div>
-          </div>
+                <span className="font-[family-name:var(--font-display)] text-3xl text-[var(--color-muted)]/60 tabular-nums">
+                  {String(row.month).padStart(2, "0")}
+                </span>
+                <Icon className="h-5 w-5 mt-1" strokeWidth={1.5} style={{ color }} />
+                <span className="font-[family-name:var(--font-display)] text-xl tracking-tight">
+                  {locale === "es"
+                    ? `Mes ${row.month} · ${
+                        row.elementKey === "eter"
+                          ? "Éter"
+                          : row.elementKey === "tierra"
+                            ? "Tierra"
+                            : row.elementKey === "fuego"
+                              ? "Fuego"
+                              : row.elementKey === "agua"
+                                ? "Agua"
+                                : "Aire"
+                      }`
+                    : `Month ${row.month} · ${
+                        row.elementKey === "eter"
+                          ? "Éter"
+                          : row.elementKey === "tierra"
+                            ? "Earth"
+                            : row.elementKey === "fuego"
+                              ? "Fire"
+                              : row.elementKey === "agua"
+                                ? "Water"
+                                : "Air"
+                      }`}
+                </span>
+                <p className="text-[var(--color-ink-soft)] leading-relaxed">
+                  {locale === "es" ? row.titleEs : row.titleEn}
+                </p>
+              </div>
+            );
+          })}
         </div>
       </Section>
 
-      {/* CTA */}
+      {/* ORIGIN — corporate program */}
       <Section spacing="default" tone="ink">
-        <div className="grid lg:grid-cols-12 gap-12">
+        <div className="grid lg:grid-cols-12 gap-12 items-end">
           <div className="lg:col-span-7">
-            <h2 className="display-2 text-[var(--color-paper)] text-balance">
-              {locale === "es"
-                ? "El liderazgo comienza en la mente que decide."
-                : "Leadership begins in the mind that decides."}
+            <Eyebrow inverted className="mb-6">
+              {locale === "es" ? "Para organizaciones" : "For organizations"}
+            </Eyebrow>
+            <h2 className="display-2 text-[var(--color-paper)] text-balance mb-3">
+              {locale === "es" ? originProgram.nameEs : originProgram.nameEn}
             </h2>
+            <p className="text-lg text-[var(--color-gold-soft)] italic mb-6">
+              {locale === "es" ? originProgram.tagEs : originProgram.tagEn}
+            </p>
+            <p className="text-lg text-[var(--color-paper)]/75 leading-relaxed text-pretty max-w-2xl">
+              {locale === "es" ? originProgram.bodyEs : originProgram.bodyEn}
+            </p>
           </div>
-          <div className="lg:col-span-5 flex lg:items-end">
-            <div className="space-y-4">
-              <p className="text-[var(--color-paper)]/75 leading-relaxed">
-                {locale === "es"
-                  ? "Aplica ahora — cupo limitado a 15 participantes por módulo."
-                  : "Apply now — capacity capped at 15 participants per module."}
-              </p>
+          <div className="lg:col-span-5">
+            <div className="space-y-3">
+              <a
+                href="mailto:hello@elementsmethod.com"
+                className="block text-[var(--color-paper)] hover:text-[var(--color-gold-soft)] transition-colors text-lg"
+              >
+                hello@elementsmethod.com
+              </a>
+              <a
+                href="https://www.elementsmethod.com"
+                className="block text-[var(--color-paper)]/70 hover:text-[var(--color-paper)] transition-colors text-sm"
+              >
+                www.elementsmethod.com
+              </a>
+            </div>
+            <div className="mt-8">
               <Button
                 href="mailto:hello@elementsmethod.com"
                 size="lg"
                 trailingArrow
-                className="bg-[var(--color-paper)] text-[var(--color-ink)] hover:bg-[var(--color-paper-warm)]"
+                className="bg-[var(--color-paper)] text-[var(--color-ink)] hover:bg-[var(--color-paper-warm)] w-full"
               >
-                {locale === "es" ? "Aplicar ahora" : "Apply now"}
+                {locale === "es" ? originProgram.ctaEs : originProgram.ctaEn}
               </Button>
             </div>
           </div>
@@ -246,21 +307,6 @@ function Meta({ label, value }: { label: string; value: string }) {
         {label}
       </div>
       <div className="mt-1 text-[var(--color-ink)]">{value}</div>
-    </div>
-  );
-}
-
-function PriceRow({ label, value, emphasis }: { label: string; value: string; emphasis?: boolean }) {
-  return (
-    <div className="flex items-end justify-between gap-4 py-2 border-b border-[var(--color-line)] last:border-0">
-      <span className="text-sm text-[var(--color-ink-soft)]">{label}</span>
-      <span
-        className={`font-[family-name:var(--font-display)] tabular-nums ${
-          emphasis ? "text-2xl" : "text-lg text-[var(--color-muted)]"
-        }`}
-      >
-        {value}
-      </span>
     </div>
   );
 }

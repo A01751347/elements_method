@@ -5,23 +5,27 @@ import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 font-medium transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed select-none whitespace-nowrap",
+  "inline-flex items-center justify-center gap-2.5 font-normal uppercase tracking-[0.16em] leading-none transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed select-none whitespace-nowrap",
   {
     variants: {
       variant: {
+        // ink fill → gold on hover (the leader's gold core)
         primary:
-          "bg-[var(--color-ink)] text-[var(--color-paper)] hover:bg-[var(--color-moss-700)] active:translate-y-px",
+          "bg-[var(--color-ink)] text-[var(--color-paper)] hover:bg-[var(--color-gold)] hover:text-[var(--color-ink)] active:translate-y-px",
         secondary:
-          "border border-[var(--color-ink)]/20 text-[var(--color-ink)] hover:border-[var(--color-ink)] hover:bg-[var(--color-ink)] hover:text-[var(--color-paper)]",
+          "border border-[var(--color-ink)]/25 text-[var(--color-ink)] hover:border-[var(--color-ink)] hover:bg-[var(--color-ink)] hover:text-[var(--color-paper)]",
         ghost:
-          "text-[var(--color-ink)] hover:text-[var(--color-moss-700)] underline-offset-[6px] hover:underline",
+          "text-[var(--color-ink)] hover:text-[var(--color-gold-deep)] underline-offset-[6px] hover:underline",
+        // paper fill on dark imagery (hero CTAs) → gold on hover
+        solidLight:
+          "bg-[var(--color-paper)] text-[var(--color-ink)] hover:bg-[var(--color-gold)] hover:text-[var(--color-ink)] active:translate-y-px",
         outlineLight:
-          "border border-[var(--color-paper)]/30 text-[var(--color-paper)] hover:bg-[var(--color-paper)] hover:text-[var(--color-ink)]",
+          "border border-[var(--color-paper)]/45 text-[var(--color-paper)] hover:bg-[var(--color-paper)] hover:text-[var(--color-ink)]",
       },
       size: {
-        sm: "h-9 px-4 text-[0.8125rem]",
-        md: "h-11 px-5 text-[0.875rem]",
-        lg: "h-12 px-6 text-[0.9375rem]",
+        sm: "h-10 px-5 text-[0.65rem]",
+        md: "h-12 px-7 text-[0.7rem]",
+        lg: "h-14 px-9 text-[0.74rem]",
       },
       shape: {
         pill: "rounded-full",
@@ -31,7 +35,7 @@ const buttonVariants = cva(
     defaultVariants: {
       variant: "primary",
       size: "md",
-      shape: "pill",
+      shape: "square",
     },
   },
 );
@@ -59,7 +63,7 @@ export function Button(props: ButtonProps) {
     <>
       <span>{children}</span>
       {trailingArrow && (
-        <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+        <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
       )}
     </>
   );

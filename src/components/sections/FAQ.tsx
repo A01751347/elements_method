@@ -32,10 +32,10 @@ export function FAQ({ locale }: { locale: Locale }) {
                   : "If your question isn't here, write to us. We reply quickly and without a script."}
               </p>
               <a
-                href="mailto:help@elementsmethod.com"
+                href="mailto:hello@elementsmethod.com"
                 className="mt-6 inline-block text-sm text-[var(--color-ink)] border-b border-[var(--color-ink)]/30 pb-1 hover:border-[var(--color-ink)] transition-colors"
               >
-                help@elementsmethod.com
+                hello@elementsmethod.com
               </a>
             </div>
           </div>

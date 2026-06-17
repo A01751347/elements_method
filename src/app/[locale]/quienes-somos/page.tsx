@@ -6,6 +6,7 @@ import { getDictionary } from "@/i18n/dictionaries";
 import { Section, Eyebrow } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
+import { founder, differentiatorsEs, differentiatorsEn } from "@/data/content";
 
 export async function generateMetadata({
   params,
@@ -31,7 +32,7 @@ export default async function AboutPage({
       <section className="relative min-h-[70vh] flex items-end overflow-hidden -mt-20 pt-20 text-[var(--color-paper)]">
         <div className="absolute inset-0 -z-20">
           <Image
-            src="/images/heroes/quienes-somos.jpg"
+            src="https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?w=2400&q=85&auto=format&fit=crop"
             alt=""
             fill
             priority
@@ -56,69 +57,110 @@ export default async function AboutPage({
         </Container>
       </section>
 
-      {/* FOUNDERS — lorem ipsum placeholders */}
+      {/* FOUNDER */}
       <Section spacing="default" tone="warm" className="paper-grain">
-        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
-          <FounderCard
-            name="Andrés Flores Pedroza"
-            role={dict.about.andres.role}
-            bio={dict.about.andres.bio}
-            accent="var(--color-fire)"
-            accentSoft="var(--color-fire-soft)"
-            elementSymbol="fire"
-            socials={[
-              { kind: "linkedin", href: "https://linkedin.com" },
-              { kind: "instagram", href: "https://instagram.com" },
-            ]}
-          />
-          <FounderCard
-            name="Ana Michelle"
-            role={dict.about.michelle.role}
-            bio={dict.about.michelle.bio}
-            accent="var(--color-water)"
-            accentSoft="var(--color-water-soft)"
-            elementSymbol="water"
-            socials={[
-              { kind: "linkedin", href: "https://linkedin.com" },
-              { kind: "instagram", href: "https://instagram.com" },
-            ]}
-          />
+        <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          <div className="lg:col-span-5">
+            <FounderPortrait />
+          </div>
+
+          <div className="lg:col-span-7">
+            <div className="eyebrow text-[var(--color-muted)] mb-4">
+              {locale === "es" ? founder.roleEs : founder.roleEn}
+            </div>
+            <h2 className="display-2 mb-8 text-balance">
+              {locale === "es" ? founder.nameEs : founder.nameEn}
+            </h2>
+            <p className="text-lg text-[var(--color-ink-soft)] leading-relaxed max-w-2xl mb-8">
+              {locale === "es" ? founder.bioEs : founder.bioEn}
+            </p>
+            <div className="flex items-center gap-5">
+              <a
+                href="https://linkedin.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[var(--color-muted)] hover:text-[var(--color-ink)] transition-colors"
+                aria-label="LinkedIn"
+              >
+                <Linkedin className="h-5 w-5" strokeWidth={1.5} />
+              </a>
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[var(--color-muted)] hover:text-[var(--color-ink)] transition-colors"
+                aria-label="Instagram"
+              >
+                <Instagram className="h-5 w-5" strokeWidth={1.5} />
+              </a>
+            </div>
+          </div>
         </div>
       </Section>
 
-      {/* MANIFIESTO — verbatim from proyecto.md */}
+      {/* DIFFERENTIATORS — verbatim from master doc */}
+      <Section spacing="default">
+        <div className="grid lg:grid-cols-12 gap-12 items-start mb-16">
+          <div className="lg:col-span-5">
+            <Eyebrow className="mb-6">
+              {locale === "es" ? "Lo que nos distingue" : "What sets us apart"}
+            </Eyebrow>
+            <h2 className="display-2 text-balance">
+              {locale === "es"
+                ? "Siete decisiones que hacen Elements Method irrepetible."
+                : "Seven decisions that make Elements Method unrepeatable."}
+            </h2>
+          </div>
+          <div className="lg:col-span-7">
+            <ol className="border-y border-[var(--color-line)] divide-y divide-[var(--color-line)]">
+              {(locale === "es" ? differentiatorsEs : differentiatorsEn).map(
+                (line, idx) => (
+                  <li
+                    key={line}
+                    className="py-6 grid grid-cols-[60px_1fr] gap-6 items-baseline"
+                  >
+                    <span className="font-[family-name:var(--font-display)] text-3xl text-[var(--color-gold-deep)] tabular-nums">
+                      {String(idx + 1).padStart(2, "0")}
+                    </span>
+                    <span className="text-[var(--color-ink-soft)] leading-relaxed">
+                      {line}
+                    </span>
+                  </li>
+                ),
+              )}
+            </ol>
+          </div>
+        </div>
+      </Section>
+
+      {/* MANIFESTO — verbatim from master doc opening line */}
       <Section spacing="default" tone="ink">
         <div className="grid lg:grid-cols-12 gap-12">
           <div className="lg:col-span-5">
             <Eyebrow inverted className="mb-6">
-              {locale === "es" ? "Manifiesto" : "Manifesto"}
+              {locale === "es" ? "El diagnóstico" : "The diagnosis"}
             </Eyebrow>
             <h2 className="display-2 text-[var(--color-paper)] text-balance">
               {locale === "es"
-                ? "Pensar mejor no es un talento. Es una práctica."
-                : "Better thinking is not a talent. It is a practice."}
+                ? "La naturaleza no tiene una crisis de liderazgo. Nosotros sí. Quizá porque dejamos de aprender de ella."
+                : "Nature does not have a leadership crisis. We do. Perhaps because we stopped learning from it."}
             </h2>
           </div>
           <div className="lg:col-span-7 lg:pt-4 space-y-6 text-lg leading-relaxed text-[var(--color-paper)]/80 max-w-2xl">
             <p>
               {locale === "es"
-                ? "Las decisiones importantes no se toman solo con información. Se toman desde un estado mental específico."
-                : "Important decisions are not made with information alone. They are made from a specific mental state."}
+                ? "Elements Method es un programa de desarrollo de liderazgo basado en inmersiones en la naturaleza, diseñado para devolver a los líderes a su fuente esencial de poder — y en ese proceso, transformar no solo a los individuos, sino las organizaciones que lideran."
+                : "Elements Method is a nature-based leadership development program, designed to return leaders to their essential source of power — and in that process, transform not only individuals, but the organizations they lead."}
             </p>
             <p>
               {locale === "es"
-                ? "Presión, velocidad y responsabilidad constante afectan la claridad estratégica del líder moderno."
-                : "Pressure, speed and constant responsibility affect the modern leader's strategic clarity."}
+                ? "Cuando un líder se reconecta con su propia naturaleza — cuando encuentra su Agua, su Fuego, su Aire y su Tierra — no necesita más herramientas. Se reconecta con su ser completo."
+                : "When a leader reconnects with their own nature — when they find their Water, their Fire, their Air and their Earth — they don't need more tools. They reconnect with their complete being."}
             </p>
-            <p>
+            <p className="italic text-[var(--color-gold-soft)]">
               {locale === "es"
-                ? "Elements es un espacio diseñado para entrenar la calidad de pensamiento desde donde se toman decisiones críticas. Integra herramientas de neurociencia, programación neurolingüística y frameworks estratégicos para mejorar enfoque, perspectiva y precisión."
-                : "Elements is a space designed to train the quality of thinking decisions come from. It integrates neuroscience, neuro-linguistic programming and strategic frameworks to improve focus, perspective and precision."}
-            </p>
-            <p className="italic text-[var(--color-paper-warm)]">
-              {locale === "es"
-                ? "Porque el liderazgo no solo se mide por resultados. También por la calidad del criterio de quien los produce."
-                : "Because leadership is not measured only by results. Also by the quality of judgment of who produces them."}
+                ? "Y ese líder completo produce resultados organizacionales que ningún entrenamiento de habilidades puede generar desde la superficie."
+                : "And that complete leader produces organizational results no skill training can generate from the surface."}
             </p>
 
             <div className="pt-8 flex flex-wrap gap-3">
@@ -143,84 +185,38 @@ export default async function AboutPage({
   );
 }
 
-function FounderCard({
-  name,
-  role,
-  bio,
-  accent,
-  accentSoft,
-  elementSymbol,
-  socials,
-}: {
-  name: string;
-  role: string;
-  bio: string;
-  accent: string;
-  accentSoft: string;
-  elementSymbol: "fire" | "water";
-  socials: { kind: "linkedin" | "instagram"; href: string }[];
-}) {
+/**
+ * Decorative portrait placeholder until a real photo is provided.
+ * Uses the gold "Núcleo" glow to honor the brand language.
+ */
+function FounderPortrait() {
   return (
-    <article className="group">
-      <div
-        className="relative aspect-[4/5] mb-8 overflow-hidden"
-        style={{
-          background: `linear-gradient(140deg, ${accentSoft} 0%, var(--color-paper-warm) 100%)`,
-        }}
+    <div className="relative aspect-[4/5] overflow-hidden bg-[var(--color-paper-warm)] nucleus-glow">
+      <svg
+        className="absolute inset-0 w-full h-full mix-blend-multiply opacity-50"
+        viewBox="0 0 100 125"
+        fill="none"
+        preserveAspectRatio="xMidYMid slice"
+        aria-hidden
       >
-        <svg
-          className="absolute inset-0 w-full h-full mix-blend-multiply opacity-50"
-          viewBox="0 0 100 125"
-          fill="none"
-          preserveAspectRatio="xMidYMid slice"
-          aria-hidden
-        >
-          {elementSymbol === "fire" ? (
-            <path
-              d="M50 20 C 40 35, 65 45, 50 60 C 35 50, 40 75, 50 95 C 65 80, 80 60, 75 40 C 70 30, 60 28, 50 20 Z"
-              fill={accent}
-              opacity="0.55"
-            />
-          ) : (
-            <path
-              d="M50 18 C 70 40, 78 60, 50 100 C 22 60, 30 40, 50 18 Z"
-              fill={accent}
-              opacity="0.55"
-            />
-          )}
-        </svg>
-
-        <div className="absolute bottom-5 left-5 text-[var(--color-ink)]">
-          <div className="font-[family-name:var(--font-display)] text-2xl tracking-tight">
-            {name.split(" ")[0]}
-          </div>
+        {/* Compass-like mark — N/E/S/O cardinal arcs around a gold core */}
+        <circle cx="50" cy="62" r="28" stroke="#C9A96E" strokeWidth="0.4" fill="none" opacity="0.6" />
+        <circle cx="50" cy="62" r="20" stroke="#2C2C2A" strokeWidth="0.3" fill="none" opacity="0.4" strokeDasharray="1 2" />
+        <circle cx="50" cy="62" r="3" fill="#C9A96E" />
+        {/* Cardinal arcs */}
+        <path d="M50 38 A 24 24 0 0 1 74 62" stroke="#2B6B8A" strokeWidth="1.2" fill="none" opacity="0.7" />
+        <path d="M74 62 A 24 24 0 0 1 50 86" stroke="#C4622D" strokeWidth="1.2" fill="none" opacity="0.7" />
+        <path d="M50 86 A 24 24 0 0 1 26 62" stroke="#3D5A3E" strokeWidth="1.2" fill="none" opacity="0.7" />
+        <path d="M26 62 A 24 24 0 0 1 50 38" stroke="#7A9BAD" strokeWidth="1.2" fill="none" opacity="0.7" />
+      </svg>
+      <div className="absolute bottom-6 left-6 right-6 text-[var(--color-ink)]">
+        <div className="eyebrow text-[var(--color-muted)] mb-1">
+          Founder · 2025
+        </div>
+        <div className="font-[family-name:var(--font-display)] text-2xl tracking-tight">
+          Ana Michelle Concepción
         </div>
       </div>
-
-      <div className="eyebrow text-[var(--color-muted)] mb-3">{role}</div>
-      <h3 className="display-3 mb-5">{name}</h3>
-      <p className="text-[var(--color-ink-soft)] leading-relaxed max-w-md italic">
-        {bio}
-      </p>
-
-      <div className="mt-6 flex items-center gap-4">
-        {socials.map((s) => (
-          <a
-            key={s.kind}
-            href={s.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[var(--color-muted)] hover:text-[var(--color-ink)] transition-colors"
-            aria-label={s.kind}
-          >
-            {s.kind === "linkedin" ? (
-              <Linkedin className="h-4 w-4" />
-            ) : (
-              <Instagram className="h-4 w-4" />
-            )}
-          </a>
-        ))}
-      </div>
-    </article>
+    </div>
   );
 }

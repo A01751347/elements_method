@@ -37,11 +37,11 @@ export function Footer({
   ];
 
   const programLinks = [
-    { href: `${base}/${locale === "es" ? "los-caminos" : "paths"}/raices`, label: "Raíces" },
-    { href: `${base}/${locale === "es" ? "los-caminos" : "paths"}/corriente`, label: "Corriente" },
-    { href: `${base}/${locale === "es" ? "los-caminos" : "paths"}/fuente`, label: "Fuente" },
+    { href: `${base}/${locale === "es" ? "los-caminos" : "paths"}`, label: locale === "es" ? "Raíces" : "Roots" },
+    { href: `${base}/${locale === "es" ? "los-caminos" : "paths"}`, label: locale === "es" ? "Corriente" : "Current" },
+    { href: `${base}/${locale === "es" ? "los-caminos" : "paths"}`, label: locale === "es" ? "Fuente" : "Source" },
+    { href: `${base}/${locale === "es" ? "empresas" : "companies"}`, label: "Origin" },
     { href: `${base}/${locale === "es" ? "retiros" : "retreats"}`, label: dict.nav.retreats },
-    { href: `${base}/${locale === "es" ? "empresas" : "companies"}`, label: dict.nav.companies },
   ];
 
   return (
@@ -175,10 +175,10 @@ export function Footer({
               </li>
               <li>
                 <a
-                  href="mailto:help@elementsmethod.com"
+                  href="mailto:hello@elementsmethod.com"
                   className="text-[var(--color-paper)]/70 hover:text-[var(--color-paper)] transition-colors"
                 >
-                  help@elementsmethod.com
+                  hello@elementsmethod.com
                 </a>
               </li>
             </ul>

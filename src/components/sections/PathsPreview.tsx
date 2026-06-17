@@ -10,7 +10,7 @@ import { paths as staticPaths, type PathInfo } from "@/data/content";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
-import { formatPriceMXN, formatPriceUSD, cn } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 const PATH_ICONS = [Compass, Sparkles, Clock];
 
@@ -32,11 +32,7 @@ export function PathsPreview({
         <div className="grid lg:grid-cols-12 gap-12 items-end mb-16 md:mb-20">
           <div className="lg:col-span-7">
             <Eyebrow className="mb-6">{dict.paths.eyebrow}</Eyebrow>
-            <h2 className="display-2 text-balance">
-              {locale === "es"
-                ? "Tres formas de entrar al método."
-                : "Three ways to enter the method."}
-            </h2>
+            <h2 className="display-2 text-balance">{dict.paths.title}</h2>
           </div>
           <div className="lg:col-span-5">
             <p className="lead text-pretty">{dict.paths.lead}</p>
@@ -143,23 +139,9 @@ export function PathsPreview({
                     >
                       {duration}
                     </div>
-                    <div className="font-[family-name:var(--font-display)] text-xl italic">
-                      {p.priceMxn !== null
-                        ? formatPriceMXN(p.priceMxn)
-                        : locale === "es"
-                          ? "Inversión por confirmar"
-                          : "Investment TBD"}
+                    <div className="font-[family-name:var(--font-display)] text-xl italic text-[var(--color-muted)]">
+                      {locale === "es" ? "Inversión a confirmar" : "Investment TBD"}
                     </div>
-                    {p.priceMxn !== null && p.priceUsd !== null && (
-                      <div
-                        className={cn(
-                          "text-[0.65rem] uppercase tracking-wide mt-0.5",
-                          isHovered ? "text-[var(--color-paper)]/60" : "text-[var(--color-muted)]",
-                        )}
-                      >
-                        / {formatPriceUSD(p.priceUsd)} · {dict.common.noVat}
-                      </div>
-                    )}
                   </div>
 
                   <Link

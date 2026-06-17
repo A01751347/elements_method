@@ -9,13 +9,14 @@ import {
   Building,
   GraduationCap,
   Sparkles,
+  Quote,
 } from "lucide-react";
 import { isLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { Container } from "@/components/ui/Container";
 import { Section, Eyebrow } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
-import { LogosMarquee } from "@/components/sections/LogosMarquee";
+import { testimonials } from "@/data/content";
 
 const BENEFIT_ICONS = [ClipboardList, Layers, Target, ShieldCheck];
 
@@ -36,6 +37,7 @@ export default async function CompaniesPage({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const dict = getDictionary(locale);
+  const testimonial = testimonials[0];
 
   return (
     <>
@@ -43,7 +45,7 @@ export default async function CompaniesPage({
       <section className="relative min-h-[70vh] flex items-end overflow-hidden -mt-20 pt-20 text-[var(--color-paper)]">
         <div className="absolute inset-0 -z-20">
           <Image
-            src="/images/heroes/empresas.jpg"
+            src="https://images.unsplash.com/photo-1573164574572-cb89e39749b4?w=2400&q=85&auto=format&fit=crop"
             alt=""
             fill
             priority
@@ -69,7 +71,7 @@ export default async function CompaniesPage({
               <p className="lead text-[var(--color-paper)]/85">{dict.companies.lead}</p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Button
-                  href={`mailto:hello@elementsmethod.com`}
+                  href="mailto:hello@elementsmethod.com"
                   size="lg"
                   trailingArrow
                   className="bg-[var(--color-paper)] text-[var(--color-ink)] hover:bg-[var(--color-paper-warm)]"
@@ -82,89 +84,59 @@ export default async function CompaniesPage({
         </Container>
       </section>
 
-      {/* WHO THIS IS FOR — from presentation page 2 */}
+      {/* WHO THIS IS FOR */}
       <Section spacing="default" tone="warm" className="paper-grain">
         <div className="grid lg:grid-cols-12 gap-12 mb-16">
           <div className="lg:col-span-6">
             <Eyebrow className="mb-6 flex items-center gap-3">
               <Users className="h-3.5 w-3.5" strokeWidth={1.5} />
-              {locale === "es" ? "Para quién" : "Who this is for"}
+              {locale === "es" ? "Para qué organizaciones" : "For which organizations"}
             </Eyebrow>
             <h2 className="display-2 text-balance">
               {locale === "es"
-                ? "Cuatro perfiles que llegan a Elements Method."
-                : "Four profiles that come to Elements Method."}
+                ? "Cinco perfiles organizacionales que llegan a Origin."
+                : "Five organizational profiles that come to Origin."}
             </h2>
           </div>
           <div className="lg:col-span-6 lg:pt-4">
             <p className="lead text-pretty">
               {locale === "es"
-                ? "Elements Method está diseñado para quienes ya entienden que evolucionar su liderazgo es una ventaja competitiva."
-                : "Elements Method is designed for those who already understand that evolving their leadership is a competitive advantage."}
+                ? "Diseñamos Origin para organizaciones donde el liderazgo es palanca, no solo gestión."
+                : "We design Origin for organizations where leadership is leverage, not just management."}
             </p>
           </div>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-[var(--color-line)] border border-[var(--color-line)]">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-px bg-[var(--color-line)] border border-[var(--color-line)]">
           {(locale === "es"
             ? [
-                {
-                  icon: Building,
-                  t: "Ejecutivos senior",
-                  b: "Navegando complejidad, transición o crecimiento.",
-                },
-                {
-                  icon: Users,
-                  t: "Equipos de liderazgo",
-                  b: "Buscando mayor cohesión y cultura compartida.",
-                },
-                {
-                  icon: Target,
-                  t: "Organizaciones",
-                  b: "Invirtiendo en el desarrollo de largo plazo de su pipeline de liderazgo.",
-                },
-                {
-                  icon: GraduationCap,
-                  t: "HR y L&D",
-                  b: "Buscando un programa diferenciado y de alto impacto.",
-                },
+                { icon: Building, t: "Empresas invirtiendo en liderazgo", b: "Que entienden el desarrollo de líderes como prioridad estratégica." },
+                { icon: GraduationCap, t: "RRHH / L&D", b: "Buscando experiencias y programas diferenciados, de alto impacto." },
+                { icon: Users, t: "Equipos directivos", b: "Que necesitan mayor cohesión, conexión y alineación." },
+                { icon: Target, t: "Culturas en reset", b: "Que requieren un nuevo significado o un reset cultural." },
+                { icon: Sparkles, t: "Cambio o crecimiento", b: "Empresas en procesos de transformación, crecimiento acelerado o un inicio poderoso." },
               ]
             : [
-                {
-                  icon: Building,
-                  t: "Senior executives",
-                  b: "Navigating complexity, transition or growth.",
-                },
-                {
-                  icon: Users,
-                  t: "Leadership teams",
-                  b: "Seeking deeper cohesion and shared culture.",
-                },
-                {
-                  icon: Target,
-                  t: "Organizations",
-                  b: "Investing in the long-term development of their leadership pipeline.",
-                },
-                {
-                  icon: GraduationCap,
-                  t: "HR and L&D",
-                  b: "Looking for a differentiated, high-impact program.",
-                },
+                { icon: Building, t: "Companies investing in leadership", b: "That understand leader development as strategic priority." },
+                { icon: GraduationCap, t: "HR / L&D", b: "Looking for differentiated, high-impact experiences and programs." },
+                { icon: Users, t: "Executive teams", b: "That need greater cohesion, connection and alignment." },
+                { icon: Target, t: "Cultures in reset", b: "That require new meaning or a cultural reset." },
+                { icon: Sparkles, t: "Change or growth", b: "Companies in transformation, accelerated growth or a powerful beginning." },
               ]
           ).map((row, idx) => {
             const Icon = row.icon;
             return (
               <div
                 key={row.t}
-                className="bg-[var(--color-paper-warm)] p-8 md:p-10 hover:bg-[var(--color-paper)] transition-colors min-h-[260px] flex flex-col"
+                className="bg-[var(--color-paper-warm)] p-7 md:p-8 hover:bg-[var(--color-paper)] transition-colors min-h-[240px] flex flex-col"
               >
                 <div className="flex items-center gap-3 mb-6">
-                  <Icon className="h-5 w-5 text-[var(--color-moss-700)]" strokeWidth={1.5} />
+                  <Icon className="h-5 w-5 text-[var(--color-gold-deep)]" strokeWidth={1.5} />
                   <span className="eyebrow text-[var(--color-muted)]">
                     0{idx + 1}
                   </span>
                 </div>
-                <h3 className="font-[family-name:var(--font-display)] text-xl tracking-tight mb-3">
+                <h3 className="font-[family-name:var(--font-display)] text-lg tracking-tight mb-3">
                   {row.t}
                 </h3>
                 <p className="text-sm text-[var(--color-ink-soft)] leading-relaxed flex-1">
@@ -185,47 +157,30 @@ export default async function CompaniesPage({
             </Eyebrow>
             <h2 className="display-2 text-balance">
               {locale === "es"
-                ? "Lo que las organizaciones producen. Lo que los líderes realmente necesitan."
-                : "What organizations produce. What leaders actually need."}
+                ? "Lo que las organizaciones producen. Lo que los líderes necesitan."
+                : "What organizations produce. What leaders need."}
             </h2>
           </div>
           <div className="lg:col-span-5 lg:pt-3">
             <p className="lead text-pretty">
               {locale === "es"
                 ? "La vida organizacional moderna desconecta sistemáticamente a los líderes de las cualidades que hacen posible el liderazgo."
-                : "Modern organizational life systematically disconnects leaders from the very qualities that make leadership possible."}
+                : "Modern organizational life systematically disconnects leaders from the qualities that make leadership possible."}
             </p>
           </div>
         </div>
 
         <div className="grid md:grid-cols-2 gap-px bg-[var(--color-line)] border border-[var(--color-line)]">
           <div className="bg-[var(--color-paper)] p-8 md:p-12">
-            <div className="eyebrow text-[var(--color-fire)] mb-8">
+            <div className="eyebrow text-[var(--color-fire-ink)] mb-8">
               {locale === "es" ? "Lo que producen" : "What they produce"}
             </div>
             <ul className="space-y-5">
               {(locale === "es"
-                ? [
-                    "Sobrecarga cognitiva",
-                    "Toma de decisión reactiva",
-                    "Presión crónica de desempeño",
-                    "Pérdida de motivación intrínseca",
-                    "Desconexión del cuerpo",
-                    "Sentido de sí mismo encogido",
-                  ]
-                : [
-                    "Cognitive overload",
-                    "Reactive decision-making",
-                    "Chronic performance pressure",
-                    "Loss of intrinsic motivation",
-                    "Disconnection from the body",
-                    "Shrinking sense of self",
-                  ]
+                ? ["Sobrecarga cognitiva", "Toma de decisión reactiva", "Presión crónica de desempeño", "Pérdida de motivación intrínseca", "Desconexión del cuerpo", "Sentido de sí mismo encogido"]
+                : ["Cognitive overload", "Reactive decision-making", "Chronic performance pressure", "Loss of intrinsic motivation", "Disconnection from the body", "Shrinking sense of self"]
               ).map((line) => (
-                <li
-                  key={line}
-                  className="flex items-start gap-3 text-[var(--color-ink-soft)]"
-                >
+                <li key={line} className="flex items-start gap-3 text-[var(--color-ink-soft)]">
                   <span className="h-1 w-3 bg-[var(--color-fire)] mt-3 shrink-0" />
                   <span className="leading-relaxed">{line}</span>
                 </li>
@@ -234,33 +189,16 @@ export default async function CompaniesPage({
           </div>
 
           <div className="bg-[var(--color-paper-warm)] p-8 md:p-12">
-            <div className="eyebrow text-[var(--color-moss-700)] mb-8">
+            <div className="eyebrow text-[var(--color-gold-deep)] mb-8">
               {locale === "es" ? "Lo que necesitan" : "What they need"}
             </div>
             <ul className="space-y-5">
               {(locale === "es"
-                ? [
-                    "Claridad y quietud interna",
-                    "Decisiones ancladas en valores",
-                    "Energía y presencia sostenibles",
-                    "Sentido auténtico de propósito",
-                    "Auto-conciencia encarnada",
-                    "Identidad fuerte y estable",
-                  ]
-                : [
-                    "Clarity and inner quiet",
-                    "Grounded, values-led choices",
-                    "Sustainable energy and presence",
-                    "Authentic sense of purpose",
-                    "Embodied self-awareness",
-                    "Strong, stable identity",
-                  ]
+                ? ["Claridad y quietud interna", "Decisiones ancladas en valores", "Energía y presencia sostenibles", "Sentido auténtico de propósito", "Auto-conciencia encarnada", "Identidad fuerte y estable"]
+                : ["Clarity and inner quiet", "Grounded, values-led choices", "Sustainable energy and presence", "Authentic sense of purpose", "Embodied self-awareness", "Strong, stable identity"]
               ).map((line) => (
-                <li
-                  key={line}
-                  className="flex items-start gap-3 text-[var(--color-ink-soft)]"
-                >
-                  <span className="h-1 w-3 bg-[var(--color-moss-500)] mt-3 shrink-0" />
+                <li key={line} className="flex items-start gap-3 text-[var(--color-ink-soft)]">
+                  <span className="h-1 w-3 bg-[var(--color-gold)] mt-3 shrink-0" />
                   <span className="leading-relaxed">{line}</span>
                 </li>
               ))}
@@ -269,82 +207,68 @@ export default async function CompaniesPage({
         </div>
       </Section>
 
-      {/* ROI / OUTCOMES — from presentation page 9 */}
-      <Section spacing="default" tone="warm">
-        <div className="grid lg:grid-cols-12 gap-12 mb-16">
-          <div className="lg:col-span-6">
-            <Eyebrow className="mb-6 flex items-center gap-3">
-              <Sparkles className="h-3.5 w-3.5" strokeWidth={1.5} />
-              {locale === "es" ? "Lo que reportan" : "What they report"}
-            </Eyebrow>
-            <h2 className="display-2 text-balance">
-              {locale === "es"
-                ? "Resultados documentados, individuales y organizacionales."
-                : "Documented outcomes, individual and organizational."}
-            </h2>
-          </div>
-          <div className="lg:col-span-6 lg:pt-4">
-            <p className="lead text-pretty">
-              {locale === "es"
-                ? "Organizaciones que invierten en desarrollo de liderazgo basado en naturaleza reportan retornos medibles."
-                : "Organizations that invest in nature-based leadership development report measurable returns."}
-            </p>
-          </div>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-px bg-[var(--color-line)] border border-[var(--color-line)]">
-          <div className="bg-[var(--color-paper)] p-8 md:p-10">
-            <div className="eyebrow text-[var(--color-muted)] mb-6">
-              {locale === "es" ? "Resultados individuales" : "Individual outcomes"}
+      {/* TESTIMONIAL — Alexandra Reyes verbatim */}
+      {testimonial && (
+        <Section spacing="default" tone="warm">
+          <div className="grid lg:grid-cols-12 gap-12 items-center">
+            <div className="lg:col-span-2 lg:flex lg:justify-end">
+              <Quote
+                className="h-16 w-16 text-[var(--color-gold-deep)]/30"
+                aria-hidden
+              />
             </div>
-            <ul className="space-y-4 text-[var(--color-ink-soft)]">
-              {(locale === "es"
-                ? [
-                    "Regulación emocional y resiliencia frente al estrés significativamente mejoradas",
-                    "Mayor auto-conciencia y autenticidad en el liderazgo",
-                    "Mayor claridad de valores y brújula personal de liderazgo",
-                    "Sentido renovado de propósito y motivación intrínseca",
-                    "Mayor presencia física y reducción de indicadores de burnout",
-                  ]
-                : [
-                    "Significantly improved emotional regulation and stress resilience",
-                    "Increased self-awareness and leadership authenticity",
-                    "Clearer sense of values and personal leadership compass",
-                    "Renewed sense of purpose and intrinsic motivation",
-                    "Greater physical presence and reduced burnout indicators",
-                  ]
-              ).map((line) => (
-                <li key={line} className="flex items-start gap-3">
-                  <span className="h-1 w-3 bg-[var(--color-moss-500)] mt-3 shrink-0" />
-                  <span className="leading-relaxed text-sm">{line}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="bg-[var(--color-paper)] p-8 md:p-10">
-            <div className="eyebrow text-[var(--color-muted)] mb-6">
-              {locale === "es" ? "Resultados organizacionales" : "Organizational outcomes"}
+            <div className="lg:col-span-10">
+              <blockquote className="font-[family-name:var(--font-display)] text-[clamp(1.5rem,3.5vw,2.75rem)] leading-snug text-balance">
+                “{locale === "es" ? testimonial.quoteEs : testimonial.quoteEn}”
+              </blockquote>
+              <div className="mt-8 flex flex-wrap items-center gap-3 text-sm tracking-wide">
+                <span className="text-[var(--color-ink)]">
+                  {testimonial.authorName}
+                </span>
+                <span className="text-[var(--color-muted)]">·</span>
+                <span className="text-[var(--color-muted)]">
+                  {testimonial.authorRole}
+                </span>
+                <span className="text-[var(--color-muted)]">·</span>
+                <span className="text-[var(--color-muted)]">
+                  {testimonial.company}
+                </span>
+              </div>
             </div>
-            <ul className="space-y-4 text-[var(--color-ink-soft)]">
-              {dict.companies.benefits.map((b) => (
-                <li key={b.title} className="flex items-start gap-3">
-                  <span className="h-1 w-3 bg-[var(--color-moss-500)] mt-3 shrink-0" />
-                  <span className="leading-relaxed text-sm">
-                    <span className="text-[var(--color-ink)]">{b.title}.</span>{" "}
-                    <span>{b.body}</span>
+          </div>
+        </Section>
+      )}
+
+      {/* BENEFITS */}
+      <Section spacing="default">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-[var(--color-line)] border border-[var(--color-line)]">
+          {dict.companies.benefits.map((b, idx) => {
+            const Icon = BENEFIT_ICONS[idx] ?? ClipboardList;
+            return (
+              <div
+                key={b.title}
+                className="bg-[var(--color-paper)] p-8 md:p-10 hover:bg-[var(--color-paper-warm)] transition-colors"
+              >
+                <div className="flex items-center gap-3 mb-6">
+                  <Icon className="h-5 w-5 text-[var(--color-gold-deep)]" strokeWidth={1.5} />
+                  <span className="eyebrow text-[var(--color-muted)]">
+                    0{idx + 1}
                   </span>
-                </li>
-              ))}
-            </ul>
-          </div>
+                </div>
+                <h3 className="display-3 mb-3 text-[1.4rem] leading-tight">
+                  {b.title}
+                </h3>
+                <p className="text-[var(--color-ink-soft)] leading-relaxed text-sm">
+                  {b.body}
+                </p>
+              </div>
+            );
+          })}
         </div>
       </Section>
 
-      <LogosMarquee locale={locale} dict={dict} />
-
-      {/* FINAL CTA — from presentation pages 28-30 */}
-      <Section spacing="default" tone="ink">
+      {/* FINAL CTA — discovery process */}
+      <Section id="contact" spacing="default" tone="ink">
         <div className="grid lg:grid-cols-12 gap-12 items-end">
           <div className="lg:col-span-8">
             <Eyebrow inverted className="mb-6">
@@ -362,10 +286,10 @@ export default async function CompaniesPage({
                 ? "Contáctanos para explorar el diseño correcto para tu organización."
                 : "Please contact us to explore the right design for your organization."}
             </p>
-            <div className="space-y-3">
+            <div className="space-y-3 mb-8">
               <a
                 href="mailto:hello@elementsmethod.com"
-                className="block text-[var(--color-paper)] hover:text-[var(--color-paper-warm)] transition-colors"
+                className="block text-[var(--color-paper)] hover:text-[var(--color-gold-soft)] transition-colors"
               >
                 hello@elementsmethod.com
               </a>
@@ -376,16 +300,14 @@ export default async function CompaniesPage({
                 www.elementsmethod.com
               </a>
             </div>
-            <div className="mt-8">
-              <Button
-                href={`mailto:hello@elementsmethod.com`}
-                size="lg"
-                trailingArrow
-                className="bg-[var(--color-paper)] text-[var(--color-ink)] hover:bg-[var(--color-paper-warm)]"
-              >
-                {locale === "es" ? "Iniciar conversación" : "Begin the conversation"}
-              </Button>
-            </div>
+            <Button
+              href="mailto:hello@elementsmethod.com"
+              size="lg"
+              trailingArrow
+              className="bg-[var(--color-paper)] text-[var(--color-ink)] hover:bg-[var(--color-paper-warm)] w-full"
+            >
+              {locale === "es" ? "Iniciar conversación" : "Begin the conversation"}
+            </Button>
           </div>
         </div>
       </Section>

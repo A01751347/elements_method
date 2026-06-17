@@ -40,19 +40,19 @@ export function SeasonsRhythm({ locale }: { locale: Locale }) {
           <div className="lg:col-span-7">
             <Eyebrow inverted className="mb-6 flex items-center gap-3">
               <Atom className="h-3.5 w-3.5" strokeWidth={1.5} />
-              {locale === "es" ? "Los cinco círculos de impacto" : "The five circles of impact"}
+              {locale === "es" ? "Los círculos expansivos de impacto" : "The expanding circles of impact"}
             </Eyebrow>
             <h2 className="display-2 text-[var(--color-paper)] text-balance">
               {locale === "es"
-                ? "Del núcleo radía todo lo demás."
-                : "From the nucleus, everything else radiates."}
+                ? "Trasforma y eleva el núcleo, y todo lo que orbita a su alrededor cambiará."
+                : "Transform and elevate the nucleus, and everything that orbits around it will change."}
             </h2>
           </div>
           <div className="lg:col-span-5">
             <p className="text-lg text-[var(--color-paper)]/75 leading-relaxed text-pretty">
               {locale === "es"
-                ? "Cuando el núcleo está saludable, todo lo demás se reorganiza naturalmente. Elements trabaja siempre desde el centro."
-                : "When the nucleus is healthy, everything else reorganizes naturally. Elements always works from the center."}
+                ? "En la física, el núcleo es la masa densa y energética desde la que todo lo demás se organiza. En liderazgo, la persona es el núcleo desde el que radían todas las dinámicas del equipo, la cultura y los resultados organizacionales."
+                : "In physics, the nucleus is the dense, energetic mass from which everything else is organized. In leadership, the person is the nucleus from which all team dynamics, culture and organizational results radiate."}
             </p>
           </div>
         </div>

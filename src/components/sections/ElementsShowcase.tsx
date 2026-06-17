@@ -9,7 +9,9 @@ import {
   Flame,
   Wind,
   Mountain,
+  Sparkles,
   ArrowUpRight,
+  type LucideIcon,
 } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import type { Dict } from "@/i18n/dictionaries";
@@ -18,11 +20,12 @@ import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Section";
 import { cn } from "@/lib/utils";
 
-const ICONS: Record<ElementKey, React.ComponentType<{ className?: string; strokeWidth?: number }>> = {
+const ICONS: Record<ElementKey, LucideIcon> = {
   agua: Droplets,
   fuego: Flame,
   aire: Wind,
   tierra: Mountain,
+  eter: Sparkles,
 };
 
 export function ElementsShowcase({
@@ -32,8 +35,11 @@ export function ElementsShowcase({
   locale: Locale;
   dict: Dict;
 }) {
+  // Only the 4 trainable elements are shown in the showcase.
+  // Éter is the Nucleus and lives in El Método page, not here.
+  const trainable = elements.filter((e) => e.key !== "eter");
   const [active, setActive] = React.useState<ElementKey>("agua");
-  const current = elements.find((e) => e.key === active) ?? elements[0];
+  const current = trainable.find((e) => e.key === active) ?? trainable[0];
 
   return (
     <section className="bg-[var(--color-paper-warm)] py-24 md:py-36 relative paper-grain overflow-hidden">
@@ -52,7 +58,7 @@ export function ElementsShowcase({
 
         {/* Element tabs */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-[var(--color-line)] mb-px">
-          {elements.map((el, idx) => {
+          {trainable.map((el, idx) => {
             const Icon = ICONS[el.key];
             const isActive = active === el.key;
             const name = locale === "es" ? el.nameEs : el.nameEn;
@@ -138,6 +144,8 @@ export function ElementsShowcase({
                     background: `linear-gradient(135deg, ${current.accent}30 0%, transparent 60%)`,
                   }}
                 />
+                {/* AAA text-protection scrim — guarantees ≥7:1 for the label below */}
+                <div className="absolute inset-x-0 bottom-0 h-1/2 scrim-bottom pointer-events-none" />
                 <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between gap-4">
                   <div>
                     <div className="text-[0.7rem] tracking-[0.22em] uppercase text-[var(--color-paper)]/70 mb-1">
@@ -152,7 +160,7 @@ export function ElementsShowcase({
                   </div>
                   <div
                     className={cn("h-12 w-12 rounded-full flex items-center justify-center", current.animClass)}
-                    style={{ background: current.accent }}
+                    style={{ background: current.accentInk }}
                   >
                     {(() => {
                       const Icon = ICONS[current.key];
@@ -179,8 +187,8 @@ export function ElementsShowcase({
                     body={locale === "es" ? current.natureEs : current.natureEn}
                   />
                   <Row
-                    label={locale === "es" ? "En la persona" : "In the person"}
-                    body={locale === "es" ? current.personEs : current.personEn}
+                    label={locale === "es" ? "En el líder" : "In the leader"}
+                    body={locale === "es" ? current.cultivaEs : current.cultivaEn}
                   />
                   <Row
                     label={locale === "es" ? "Metodología" : "Methodology"}

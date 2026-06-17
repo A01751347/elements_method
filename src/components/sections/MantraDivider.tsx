@@ -85,25 +85,25 @@ export function MantraDivider({ locale }: { locale: Locale }) {
             className="mt-16 flex items-center gap-6 md:gap-10 flex-wrap"
           >
             <div className="flex items-center gap-3">
-              <Mountain className="h-4 w-4 text-[var(--color-earth)] anim-earth" strokeWidth={1.5} />
+              <Mountain className="h-4 w-4 text-[var(--color-earth-ink)] anim-earth" strokeWidth={1.5} />
               <span className="text-[0.72rem] tracking-[0.22em] uppercase text-[var(--color-muted)]">
                 Tierra · ROOTS
               </span>
             </div>
             <div className="flex items-center gap-3">
-              <Flame className="h-4 w-4 text-[var(--color-fire)] anim-fire" strokeWidth={1.5} />
+              <Flame className="h-4 w-4 text-[var(--color-fire-ink)] anim-fire" strokeWidth={1.5} />
               <span className="text-[0.72rem] tracking-[0.22em] uppercase text-[var(--color-muted)]">
                 Fuego · IGNITE
               </span>
             </div>
             <div className="flex items-center gap-3">
-              <Droplets className="h-4 w-4 text-[var(--color-water)] anim-water" strokeWidth={1.5} />
+              <Droplets className="h-4 w-4 text-[var(--color-water-ink)] anim-water" strokeWidth={1.5} />
               <span className="text-[0.72rem] tracking-[0.22em] uppercase text-[var(--color-muted)]">
                 Agua · FLOW
               </span>
             </div>
             <div className="flex items-center gap-3">
-              <Wind className="h-4 w-4 text-[var(--color-air)] anim-air" strokeWidth={1.5} />
+              <Wind className="h-4 w-4 text-[var(--color-air-ink)] anim-air" strokeWidth={1.5} />
               <span className="text-[0.72rem] tracking-[0.22em] uppercase text-[var(--color-muted)]">
                 Aire · CLEAR
               </span>

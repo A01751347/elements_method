@@ -18,6 +18,7 @@ import {
   PenLine,
   Trees,
   Cloud,
+  Map,
 } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import { practices, type PracticeInfo, type ElementKey } from "@/data/content";
@@ -40,6 +41,7 @@ const ICONS = {
   PenLine,
   Trees,
   Cloud,
+  Map,
 };
 
 const ELEMENT_COLOR: Record<ElementKey, string> = {
@@ -47,6 +49,7 @@ const ELEMENT_COLOR: Record<ElementKey, string> = {
   fuego: "var(--color-fire)",
   aire: "var(--color-air)",
   tierra: "var(--color-earth)",
+  eter: "var(--color-eter)",
 };
 
 const ELEMENT_LABEL: Record<ElementKey, { es: string; en: string }> = {
@@ -54,6 +57,7 @@ const ELEMENT_LABEL: Record<ElementKey, { es: string; en: string }> = {
   fuego: { es: "Fuego · IGNITE", en: "Fire · IGNITE" },
   aire: { es: "Aire · CLEAR", en: "Air · CLEAR" },
   tierra: { es: "Tierra · ROOTS", en: "Earth · ROOTS" },
+  eter: { es: "Éter · Núcleo", en: "Éter · Nucleus" },
 };
 
 /**

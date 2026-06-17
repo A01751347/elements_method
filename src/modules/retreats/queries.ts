@@ -5,19 +5,28 @@ import { orders, retreats } from "@/shared/db/schema";
 import { elementImages, type RetreatInfo, type ElementKey } from "@/data/content";
 
 const ELEMENT_HUE: Record<ElementKey, string> = {
-  tierra: "var(--color-earth-soft)",
-  fuego: "var(--color-fire-soft)",
-  agua: "var(--color-water-soft)",
-  aire: "var(--color-air-soft)",
+  tierra: "#C8D4C0",
+  fuego: "#E8C9B0",
+  agua: "#B5D0DE",
+  aire: "#D2DCE4",
+  eter: "#EBDCBE",
+};
+
+const EXPERIENCE_BY_ELEMENT: Record<ElementKey, { es: string; en: string }> = {
+  tierra: { es: "Forest Grounding & Roots Ritual", en: "Forest Grounding & Roots Ritual" },
+  fuego: { es: "Vision Ceremony", en: "Vision Ceremony" },
+  agua: { es: "Riverine Reflection & Deep Listening", en: "Riverine Reflection & Deep Listening" },
+  aire: { es: "Summit Perspective", en: "Summit Perspective" },
+  eter: { es: "Integration & Essence", en: "Integration & Essence" },
 };
 
 function isElementKey(s: string): s is ElementKey {
-  return s === "tierra" || s === "fuego" || s === "agua" || s === "aire";
+  return s === "tierra" || s === "fuego" || s === "agua" || s === "aire" || s === "eter";
 }
 
 /**
- * Returns upcoming, active retreats with their sold-seat counts (sum of paid orders).
- * Output shape is compatible with the static RetreatInfo used by RetreatsShowcase.
+ * Returns upcoming active retreats with sold-seat counts.
+ * Maps DB rows to RetreatInfo for RetreatsShowcase compatibility.
  */
 export async function getUpcomingRetreats(
   options: { limit?: number; includePast?: boolean } = {}
@@ -39,8 +48,6 @@ export async function getUpcomingRetreats(
       location: retreats.location,
       modality: retreats.modality,
       elementsCovered: retreats.elementsCovered,
-      priceMxn: retreats.priceMxn,
-      priceUsd: retreats.priceUsd,
       capacity: retreats.capacity,
       imageUrl: retreats.imageUrl,
       sold: sql<number>`(
@@ -57,7 +64,8 @@ export async function getUpcomingRetreats(
 
   return list.map((r): RetreatInfo => {
     const elements = (r.elementsCovered ?? []).filter(isElementKey);
-    const primary = elements[0];
+    const primary = elements[0] ?? "tierra";
+    const exp = EXPERIENCE_BY_ELEMENT[primary];
     return {
       id: r.id,
       nameEs: r.nameEs,
@@ -68,12 +76,12 @@ export async function getUpcomingRetreats(
       modalityEs: r.modality,
       modalityEn: r.modality,
       elementsCovered: elements,
-      priceMxn: Number(r.priceMxn) || 0,
-      priceUsd: r.priceUsd ? Number(r.priceUsd) : null,
       capacity: r.capacity,
       sold: Number(r.sold ?? 0),
-      imageHue: primary ? ELEMENT_HUE[primary] : "var(--color-paper-warm)",
-      image: r.imageUrl ?? (primary ? elementImages[primary] : elementImages.tierra),
+      imageHue: ELEMENT_HUE[primary],
+      image: r.imageUrl ?? elementImages[primary],
+      experienceEs: exp.es,
+      experienceEn: exp.en,
     };
   });
 }

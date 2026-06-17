@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from "motion/react";
 import {
   Wind,
   Eye,
+  Compass,
   PenLine,
   MessageCircle,
   Sparkles,
@@ -14,8 +15,9 @@ import { processSteps } from "@/data/content";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Section";
 
-// Disconnection Protocol icons: Release · Encounter · Reflection · Dialogue · Integration
-const ICONS = [Wind, Eye, PenLine, MessageCircle, Sparkles];
+// Disconnection Protocol icons:
+// Release · Encounter · Methodology · Reflection · Dialogue · Integration
+const ICONS = [Wind, Eye, Compass, PenLine, MessageCircle, Sparkles];
 
 export function ProcessSteps({ locale }: { locale: Locale }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -35,20 +37,20 @@ export function ProcessSteps({ locale }: { locale: Locale }) {
             </Eyebrow>
             <h2 className="display-2 text-balance">
               {locale === "es"
-                ? "Cinco fases. La arquitectura del módulo."
-                : "Five phases. The module's architecture."}
+                ? "Seis fases. La arquitectura de la inmersión."
+                : "Six phases. The immersion's architecture."}
             </h2>
           </div>
           <div className="lg:col-span-6 lg:pt-4">
             <p className="lead text-pretty">
               {locale === "es"
-                ? "Cada inmersión sigue el mismo arco: separar, encontrar, reflejar, dialogar, integrar. La secuencia no es decorativa — está diseñada con neurociencia."
-                : "Each immersion follows the same arc: release, encounter, reflect, dialogue, integrate. The sequence isn't decorative — it's designed with neuroscience."}
+                ? "Cada inmersión sigue el mismo arco: liberación, encuentro, metodología, reflexión, diálogo, integración. La secuencia no es decorativa — está diseñada con neurociencia."
+                : "Each immersion follows the same arc: release, encounter, methodology, reflection, dialogue, integration. The sequence isn't decorative — it's designed with neuroscience."}
             </p>
           </div>
         </div>
 
-        <div ref={ref} className="relative grid md:grid-cols-2 lg:grid-cols-5 gap-px bg-[var(--color-line)] border border-[var(--color-line)]">
+        <div ref={ref} className="relative grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-px bg-[var(--color-line)] border border-[var(--color-line)]">
           {/* Animated progress line */}
           <motion.div
             style={{ scaleX: lineScale }}

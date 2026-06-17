@@ -1,13 +1,11 @@
 import { notFound } from "next/navigation";
 import { isLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
-import { getPaths } from "@/modules/products/queries";
-import { getUpcomingRetreats } from "@/modules/retreats/queries";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { NatureLexicon } from "@/components/sections/NatureLexicon";
 import { PhilosophyStrip } from "@/components/sections/PhilosophyStrip";
 import { ElementsShowcase } from "@/components/sections/ElementsShowcase";
-import { PracticesGallery } from "@/components/sections/PracticesGallery";
+import { ImmersionExperiences } from "@/components/sections/ImmersionExperiences";
 import { LocationsSection } from "@/components/sections/LocationsSection";
 import { MantraDivider } from "@/components/sections/MantraDivider";
 import { ProcessSteps } from "@/components/sections/ProcessSteps";
@@ -17,7 +15,6 @@ import { StatsBand } from "@/components/sections/StatsBand";
 import { RetreatsShowcase } from "@/components/sections/RetreatsShowcase";
 import { TestimonialsCarousel } from "@/components/sections/TestimonialsCarousel";
 import { CompaniesCta } from "@/components/sections/CompaniesCta";
-import { JournalPreview } from "@/components/sections/JournalPreview";
 import { FAQ } from "@/components/sections/FAQ";
 import { FinalCta } from "@/components/sections/FinalCta";
 
@@ -30,30 +27,33 @@ export default async function HomePage({
   if (!isLocale(locale)) notFound();
   const dict = getDictionary(locale);
 
-  const [paths, retreats] = await Promise.all([
-    getPaths().catch(() => []),
-    getUpcomingRetreats({ limit: 4 }).catch(() => []),
-  ]);
-
   return (
     <>
       <HeroSection locale={locale} dict={dict} />
       <NatureLexicon locale={locale} />
       <PhilosophyStrip locale={locale} />
       <ElementsShowcase locale={locale} dict={dict} />
-      <PracticesGallery locale={locale} />
+      <ImmersionExperiences locale={locale} dict={dict} />
       <LocationsSection locale={locale} />
       <MantraDivider locale={locale} />
       <ProcessSteps locale={locale} />
-      <PathsPreview locale={locale} dict={dict} paths={paths} />
+      <PathsPreview locale={locale} dict={dict} />
       <SeasonsRhythm locale={locale} />
       <StatsBand locale={locale} />
-      <RetreatsShowcase locale={locale} dict={dict} retreats={retreats} />
+      <RetreatsShowcase locale={locale} dict={dict} />
       <TestimonialsCarousel locale={locale} dict={dict} />
       <CompaniesCta locale={locale} dict={dict} />
-      <JournalPreview locale={locale} dict={dict} />
       <FAQ locale={locale} />
       <FinalCta locale={locale} />
+      {/* DISABLED FOR BISECTION:
+      <SeasonsRhythm locale={locale} />
+      <StatsBand locale={locale} />
+      <RetreatsShowcase locale={locale} dict={dict} />
+      <TestimonialsCarousel locale={locale} dict={dict} />
+      <CompaniesCta locale={locale} dict={dict} />
+      <FAQ locale={locale} />
+      <FinalCta locale={locale} />
+      */}
     </>
   );
 }

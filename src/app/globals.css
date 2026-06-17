@@ -1,36 +1,67 @@
 @import "tailwindcss";
 
 @theme {
-  /* Base palette — executive close to nature */
-  --color-paper: #f6f2ea;
-  --color-paper-warm: #efe7d7;
-  --color-paper-deep: #e6dcc5;
-  --color-ink: #181a16;
-  --color-ink-soft: #2f3530;
-  --color-muted: #6b6a62;
-  --color-line: #d8d1bf;
+  /* === OFFICIAL BRAND PALETTE — source: elements-master document.docx ===
+   * "La paleta combina los cuatro colores elementales con tres neutros:
+   *  el Oro/Arena (#C9A96E) como color de acento unificador que representa
+   *  el nucleo dorado del lider, el Lino (#F5F0E8) para fondos calidos,
+   *  y el Piedra (#2C2C2A) para tipografia y fondos oscuros."
+   */
 
-  /* Brand accent — moss / forest */
-  --color-moss-50: #f0efe4;
-  --color-moss-100: #d8d8c0;
-  --color-moss-300: #8a9078;
-  --color-moss-500: #4a5640;
-  --color-moss-700: #2d3526;
-  --color-moss-900: #1a1f15;
+  /* Neutros */
+  --color-paper: #f5f0e8;        /* Lino · fondo cálido */
+  --color-paper-warm: #ebe4d5;   /* Lino más cálido (derivado) */
+  --color-paper-deep: #ddd2bd;   /* Acento neutro para divisores */
+  --color-ink: #2c2c2a;          /* Piedra · tipografía + fondos oscuros */
+  --color-ink-soft: #4a4a47;     /* Piedra suavizado */
+  --color-muted: #7a7670;        /* Neutro medio */
+  --color-line: #d8cfba;         /* Línea sutil */
 
-  /* Element palette */
-  --color-water: #2d6477;
-  --color-water-soft: #b9d2da;
-  --color-fire: #b4471f;
-  --color-fire-soft: #e7c2a8;
-  --color-air: #8aa0a8;
-  --color-air-soft: #d8e0e2;
-  --color-earth: #6e4a26;
-  --color-earth-soft: #d4b794;
+  /* Acento dorado — el Núcleo del líder */
+  --color-gold: #c9a96e;
+  --color-gold-soft: #ebdcbe;
+  --color-gold-deep: #a88a4e;
 
-  /* Fonts */
-  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+  /* Brand legacy (alias) — algunos componentes los usan */
+  --color-moss-50: #f0eee2;
+  --color-moss-100: #d8d4b8;
+  --color-moss-300: #8a8870;
+  --color-moss-500: #5d6149;
+  --color-moss-700: #3D5A3E;     /* Tierra como acento secundario */
+  --color-moss-900: #1d2c1e;
+
+  /* === ELEMENTOS — paleta oficial cardinal ===
+   * Brújula del logo: N=Agua, E=Fuego, S=Tierra, O=Aire
+   */
+  --color-water: #2B6B8A;        /* Agua · Norte */
+  --color-water-soft: #B5D0DE;
+  --color-fire: #C4622D;         /* Fuego · Este */
+  --color-fire-soft: #E8C9B0;
+  --color-earth: #3D5A3E;        /* Tierra · Sur · verde bosque (NO marrón) */
+  --color-earth-soft: #C8D4C0;
+  --color-air: #7A9BAD;          /* Aire · Oeste */
+  --color-air-soft: #D2DCE4;
+  --color-eter: #C9A96E;         /* Éter · centro · oro */
+  --color-eter-soft: #EBDCBE;
+
+  /* === ELEMENTOS · variantes AAA para TEXTO ===
+   * Los colores brillantes de arriba son para rellenos/decoración. Como texto
+   * o ícono pequeño sobre Lino NO cumplen AAA (aire 2.6:1, oro 1.97:1, etc.).
+   * Estas variantes oscuras conservan el matiz y dan ≥7:1 sobre #F5F0E8.
+   *   agua 9.4:1 · fuego 8.3:1 · aire 8.6:1 · tierra 10.2:1 · oro 8.2:1
+   */
+  --color-water-ink: #1A4257;
+  --color-fire-ink: #7A2F0E;
+  --color-air-ink: #2E4754;
+  --color-earth-ink: #2A3E2B;
+  --color-eter-ink: #57441A;
+
+  /* === Tipografía oficial ===
+   * Cormorant Garamond — Títulos · Light (300) + Regular (400)
+   * Jost — Cuerpo · ExtraLight (200) + Light (300)
+   */
+  --font-display: var(--font-cormorant), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-jost), ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", Roboto, sans-serif;
 
   /* Easings */
@@ -51,43 +82,32 @@
     background: var(--color-paper);
     color: var(--color-ink);
     font-family: var(--font-sans);
-    font-feature-settings: "ss01", "cv11";
+    font-weight: 300; /* Jost Light */
     overflow-x: hidden;
   }
 
   ::selection {
-    background: var(--color-moss-700);
-    color: var(--color-paper);
+    background: var(--color-gold);
+    color: var(--color-ink);
   }
 
   h1, h2, h3, h4 {
     font-family: var(--font-display);
-    font-weight: 400;
-    letter-spacing: -0.018em;
+    font-weight: 300; /* Cormorant Light */
+    letter-spacing: -0.012em;
     color: var(--color-ink);
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-moss-500);
+    outline: 2px solid var(--color-gold);
     outline-offset: 3px;
     border-radius: 2px;
   }
 
-  /* Custom scrollbar */
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-  ::-webkit-scrollbar-track {
-    background: var(--color-paper);
-  }
-  ::-webkit-scrollbar-thumb {
-    background: var(--color-line);
-    border-radius: 4px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-moss-300);
-  }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: var(--color-paper); }
+  ::-webkit-scrollbar-thumb { background: var(--color-line); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--color-gold-deep); }
 
   @media (prefers-reduced-motion: reduce) {
     *,
@@ -115,37 +135,38 @@
     letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--color-muted);
-    font-weight: 500;
+    font-weight: 400; /* Jost Regular for label weight */
   }
 
   .display-1 {
     font-family: var(--font-display);
     font-size: clamp(3rem, 8.5vw, 7rem);
     line-height: 0.98;
-    font-weight: 400;
-    letter-spacing: -0.028em;
+    font-weight: 300;
+    letter-spacing: -0.022em;
   }
 
   .display-2 {
     font-family: var(--font-display);
     font-size: clamp(2.25rem, 5.5vw, 4.25rem);
     line-height: 1.05;
-    font-weight: 400;
-    letter-spacing: -0.022em;
+    font-weight: 300;
+    letter-spacing: -0.018em;
   }
 
   .display-3 {
     font-family: var(--font-display);
     font-size: clamp(1.5rem, 3vw, 2.5rem);
     line-height: 1.12;
-    letter-spacing: -0.015em;
+    letter-spacing: -0.012em;
+    font-weight: 400;
   }
 
   .display-mega {
     font-family: var(--font-display);
     font-size: clamp(4rem, 18vw, 14rem);
     line-height: 0.9;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.03em;
     font-weight: 300;
   }
 
@@ -153,6 +174,7 @@
     font-size: clamp(1.05rem, 1.25vw, 1.25rem);
     line-height: 1.55;
     color: var(--color-ink-soft);
+    font-weight: 300;
   }
 
   .rule-fade {
@@ -166,7 +188,7 @@
     );
   }
 
-  /* Soft paper grain */
+  /* Soft paper grain — Lino texture */
   .paper-grain {
     position: relative;
   }
@@ -176,7 +198,7 @@
     inset: 0;
     pointer-events: none;
     background-image: radial-gradient(
-      rgba(28, 31, 26, 0.025) 1px,
+      rgba(44, 44, 42, 0.025) 1px,
       transparent 1px
     );
     background-size: 3px 3px;
@@ -184,7 +206,6 @@
     opacity: 0.6;
   }
 
-  /* Subtle film grain for hero */
   .film-grain::after {
     content: "";
     position: absolute;
@@ -195,13 +216,8 @@
     mix-blend-mode: overlay;
   }
 
-  .text-balance {
-    text-wrap: balance;
-  }
-
-  .text-pretty {
-    text-wrap: pretty;
-  }
+  .text-balance { text-wrap: balance; }
+  .text-pretty { text-wrap: pretty; }
 
   /* Marquee */
   @keyframes marquee-x {
@@ -213,34 +229,53 @@
     width: max-content;
     animation: marquee-x 40s linear infinite;
   }
-  .marquee-track-slow {
-    animation-duration: 60s;
-  }
-  .marquee-track-fast {
-    animation-duration: 25s;
-  }
-  .marquee-pause:hover .marquee-track {
-    animation-play-state: paused;
+  .marquee-track-slow { animation-duration: 60s; }
+  .marquee-track-fast { animation-duration: 25s; }
+  .marquee-pause:hover .marquee-track { animation-play-state: paused; }
+
+  /* Gold inner glow — represents the Núcleo */
+  .nucleus-glow {
+    background:
+      radial-gradient(circle at 50% 50%,
+        color-mix(in srgb, var(--color-gold) 18%, transparent) 0%,
+        transparent 60%);
   }
 
-  /* Smooth reveal */
-  @keyframes reveal-up {
-    from { opacity: 0; transform: translateY(24px); }
-    to { opacity: 1; transform: translateY(0); }
+  /* AAA text-protection scrim — garantiza ≥7:1 para texto Lino sobre fotos.
+   * La banda inferior llega a tinta@94%; sobre la zona más clara posible de
+   * una imagen (casi blanco) eso da ~9:1. Se desvanece hacia el centro para
+   * que la foto siga visible arriba. Colocar el texto dentro del 30% inferior. */
+  .scrim-bottom {
+    background: linear-gradient(
+      to top,
+      color-mix(in srgb, var(--color-ink) 94%, transparent) 0%,
+      color-mix(in srgb, var(--color-ink) 88%, transparent) 30%,
+      color-mix(in srgb, var(--color-ink) 42%, transparent) 62%,
+      transparent 88%
+    );
   }
 
-  /* Cursor trail */
-  .cursor-link {
-    cursor: pointer;
+  /* Hero scrim — full-bleed photo behind text spanning most of the height.
+   * Strong in the lower ~75% (headline large-text AAA + subtitle AAA over a
+   * bright photo), fading near the top so the sky stays visible. */
+  .scrim-hero {
+    background: linear-gradient(
+      to top,
+      color-mix(in srgb, var(--color-ink) 94%, transparent) 0%,
+      color-mix(in srgb, var(--color-ink) 88%, transparent) 45%,
+      color-mix(in srgb, var(--color-ink) 80%, transparent) 62%,
+      color-mix(in srgb, var(--color-ink) 58%, transparent) 78%,
+      color-mix(in srgb, var(--color-ink) 28%, transparent) 90%,
+      color-mix(in srgb, var(--color-ink) 10%, transparent) 100%
+    );
   }
 
-  /* Card hover lift */
   .lift {
     transition: transform 0.6s var(--ease-out-expo), box-shadow 0.6s var(--ease-out-expo);
   }
   .lift:hover {
     transform: translateY(-4px);
-    box-shadow: 0 24px 48px -24px rgba(24, 26, 22, 0.18);
+    box-shadow: 0 24px 48px -24px rgba(44, 44, 42, 0.18);
   }
 }
 
@@ -262,8 +297,13 @@
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-1.5px); }
 }
+@keyframes eter-shimmer {
+  0%, 100% { opacity: 0.85; filter: brightness(1); }
+  50% { opacity: 1; filter: brightness(1.08); }
+}
 
 .anim-water { animation: water-flow 7s ease-in-out infinite; }
 .anim-fire { animation: fire-flicker 4.5s ease-in-out infinite; }
 .anim-air { animation: air-breathe 6s ease-in-out infinite; }
 .anim-earth { animation: earth-settle 9s ease-in-out infinite; }
+.anim-eter { animation: eter-shimmer 8s ease-in-out infinite; }

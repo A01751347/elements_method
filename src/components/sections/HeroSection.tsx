@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { Fragment, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -43,7 +43,6 @@ export function HeroSection({
 
   const imageY = useTransform(scrollYProgress, [0, 1], ["0%", reduce ? "0%" : "30%"]);
   const imageScale = useTransform(scrollYProgress, [0, 1], [1, reduce ? 1 : 1.15]);
-  const overlayOpacity = useTransform(scrollYProgress, [0, 0.7], [0.55, 0.85]);
   const contentY = useTransform(scrollYProgress, [0, 1], ["0%", reduce ? "0%" : "-15%"]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.5, 0.8], [1, 1, 0]);
 
@@ -67,11 +66,9 @@ export function HeroSection({
         />
       </motion.div>
 
-      {/* Dark overlay */}
-      <motion.div
-        style={{ opacity: overlayOpacity }}
-        className="absolute inset-0 -z-10 bg-gradient-to-b from-[var(--color-ink)]/40 via-[var(--color-ink)]/55 to-[var(--color-ink)]"
-      />
+      {/* AAA text-protection scrim — strong in the lower band where the
+          headline + subtitle sit, fading at the top so the sky stays visible */}
+      <div className="absolute inset-0 -z-10 scrim-hero" />
 
       {/* Film grain */}
       <div className="absolute inset-0 -z-10 film-grain pointer-events-none" />
@@ -93,7 +90,7 @@ export function HeroSection({
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="eyebrow flex items-center gap-3 mb-8 text-[var(--color-paper)]/80"
+            className="eyebrow flex items-center gap-3 mb-8 text-[var(--color-paper)]/90"
           >
             <span aria-hidden className="h-px w-12 bg-[var(--color-paper)]/40" />
             {dict.home.eyebrow}
@@ -103,11 +100,11 @@ export function HeroSection({
             <WordReveal
               words={
                 locale === "es"
-                  ? ["Mejor", "pensamiento.", "Mejores", "decisiones.", "Mejor", "liderazgo."]
-                  : ["Better", "thinking.", "Better", "decisions.", "Better", "leadership."]
+                  ? ["Lidera", "desde", "tu", "naturaleza", "profunda"]
+                  : ["Lead", "from", "your", "true", "nature"]
               }
-              italicIndices={[2, 3]}
-              accentIndices={[2, 3]}
+              italicIndices={locale === "es" ? [3, 4] : [3, 4]}
+              accentIndices={locale === "es" ? [3, 4] : [3, 4]}
             />
           </h1>
 
@@ -115,7 +112,7 @@ export function HeroSection({
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.7 }}
-            className="mt-10 max-w-xl text-lg leading-relaxed text-[var(--color-paper)]/80 text-pretty"
+            className="mt-10 max-w-xl text-lg leading-relaxed text-[var(--color-paper)]/95 text-pretty"
           >
             {dict.home.subtitle}
           </motion.p>
@@ -129,8 +126,8 @@ export function HeroSection({
             <Button
               href={`${base}/${locale === "es" ? "los-caminos" : "paths"}`}
               size="lg"
+              variant="solidLight"
               trailingArrow
-              className="bg-[var(--color-paper)] text-[var(--color-ink)] hover:bg-[var(--color-paper-warm)]"
             >
               {dict.home.primaryCta}
             </Button>
@@ -194,7 +191,7 @@ export function HeroSection({
             className="group hidden md:inline-flex items-center gap-2 text-[0.78rem] tracking-[0.2em] uppercase hover:text-[var(--color-paper)] transition-colors"
           >
             <Calendar className="h-3.5 w-3.5" />
-            {locale === "es" ? "Próximo retiro · Feb 2026" : "Next retreat · Feb 2026"}
+            {locale === "es" ? "Ver próximas inmersiones" : "See upcoming immersions"}
             <ArrowUpRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
           </Link>
         </Container>
@@ -215,22 +212,26 @@ function WordReveal({
   return (
     <span className="inline-block">
       {words.map((w, i) => (
-        <span key={i} className="inline-block overflow-hidden align-bottom mr-[0.25em] last:mr-0">
-          <motion.span
-            initial={{ y: "115%" }}
-            animate={{ y: 0 }}
-            transition={{
-              duration: 1,
-              delay: 0.18 + i * 0.08,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-            className={`inline-block ${
-              italicIndices.includes(i) ? "italic font-light" : ""
-            } ${accentIndices.includes(i) ? "text-[var(--color-paper-warm)]" : ""}`}
-          >
-            {w}
-          </motion.span>
-        </span>
+        <Fragment key={i}>
+          <span className="inline-block overflow-hidden align-bottom">
+            <motion.span
+              initial={{ y: "115%" }}
+              animate={{ y: 0 }}
+              transition={{
+                duration: 1,
+                delay: 0.18 + i * 0.08,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              className={`inline-block ${
+                italicIndices.includes(i) ? "italic font-light" : ""
+              } ${accentIndices.includes(i) ? "text-[var(--color-paper-warm)]" : ""}`}
+            >
+              {w}
+            </motion.span>
+          </span>
+          {/* real space so words don't run together (and copy/SEO/a11y work) */}
+          {i < words.length - 1 ? " " : null}
+        </Fragment>
       ))}
     </span>
   );
