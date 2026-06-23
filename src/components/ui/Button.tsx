@@ -57,7 +57,18 @@ type ButtonAsLink = CommonProps & {
 export type ButtonProps = ButtonAsButton | ButtonAsLink;
 
 export function Button(props: ButtonProps) {
-  const { variant, size, shape, className, children, trailingArrow } = props;
+  // Strip ALL non-DOM props (variant/size/shape/trailingArrow/etc.) before
+  // spreading onto the underlying <a> / <Link> / <button>. Forwarding them
+  // raises React's "unknown DOM attribute" warning at runtime.
+  const {
+    variant,
+    size,
+    shape,
+    className,
+    children,
+    trailingArrow,
+    ...domProps
+  } = props as ButtonProps & { trailingArrow?: boolean; variant?: unknown; size?: unknown; shape?: unknown; className?: string; children?: React.ReactNode };
 
   const content = (
     <>
@@ -75,8 +86,7 @@ export function Button(props: ButtonProps) {
   );
 
   if ("href" in props && props.href) {
-    const { href, external, ...rest } = props as ButtonAsLink;
-    const linkRest = rest as Omit<ButtonAsLink, "href" | "external">;
+    const { href, external, ...linkRest } = domProps as ButtonAsLink;
     if (external) {
       return (
         <a
@@ -84,22 +94,25 @@ export function Button(props: ButtonProps) {
           className={cls}
           target="_blank"
           rel="noopener noreferrer"
-          {...linkRest}
+          {...(linkRest as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
         >
           {content}
         </a>
       );
     }
     return (
-      <Link href={href} className={cls} {...linkRest}>
+      <Link
+        href={href}
+        className={cls}
+        {...(linkRest as Omit<React.ComponentProps<typeof Link>, "href" | "className">)}
+      >
         {content}
       </Link>
     );
   }
 
-  const { ...rest } = props as ButtonAsButton;
   return (
-    <button className={cls} {...rest}>
+    <button className={cls} {...(domProps as React.ButtonHTMLAttributes<HTMLButtonElement>)}>
       {content}
     </button>
   );

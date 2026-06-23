@@ -1,4 +1,6 @@
+import Image from "next/image";
 import { signIn } from "@/shared/auth/config";
+import { LOGO_PNG } from "@/components/brand/Logo";
 
 export default function SignInPage({
   searchParams,
@@ -8,8 +10,22 @@ export default function SignInPage({
   return (
     <div className="min-h-screen bg-zinc-50 flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
-        <h1 className="text-xl font-medium tracking-tight">Acceso admin</h1>
-        <p className="mt-2 text-sm text-zinc-600">
+        <div className="flex flex-col items-center mb-10">
+          <Image
+            src={LOGO_PNG}
+            width={64}
+            height={64}
+            alt="Elements Method"
+            priority
+          />
+          <h1 className="mt-5 text-xl font-semibold tracking-tight text-zinc-900">
+            Elements Method
+          </h1>
+          <p className="mt-1 text-xs uppercase tracking-[0.18em] text-zinc-500 font-medium">
+            Admin
+          </p>
+        </div>
+        <p className="text-sm text-zinc-700 leading-relaxed">
           Te enviamos un magic link a tu correo. El enlace expira en 15 minutos.
         </p>
 

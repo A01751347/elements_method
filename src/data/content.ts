@@ -45,6 +45,14 @@ export interface ElementInfo {
   /** Immersion experience headline from pptx slide 5. */
   experienceEs: string;
   experienceEn: string;
+  /** "The X Leadership Paradox" — verbatim from elements-method-presentation.docx. Null for Éter. */
+  paradoxEs: string | null;
+  paradoxEn: string | null;
+  /** "Key Components of X Leadership" — 4 named components verbatim from presentation. Null for Éter. */
+  components: { nameEs: string; nameEn: string; bodyEs: string; bodyEn: string }[] | null;
+  /** Closing invitation question — verbatim from master doc media script for this element. Null for Éter. */
+  invitationEs: string | null;
+  invitationEn: string | null;
   /** Official brand colors from master doc. */
   accent: string;
   accentSoft: string;
@@ -55,11 +63,23 @@ export interface ElementInfo {
 }
 
 export const elementImages: Record<ElementKey, string> = {
-  agua: "https://images.unsplash.com/photo-1505144808419-1957a94ca61e?w=1200&q=80&auto=format&fit=crop",
-  fuego: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&q=80&auto=format&fit=crop",
-  aire: "https://images.unsplash.com/photo-1499346030926-9a72daac6c63?w=1200&q=80&auto=format&fit=crop",
-  tierra: "https://images.unsplash.com/photo-1448375240586-882707db888b?w=1200&q=80&auto=format&fit=crop",
-  eter: "https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=1200&q=80&auto=format&fit=crop",
+  agua: "/images/elements/agua.jpg",
+  fuego: "/images/elements/fuego.jpg",
+  aire: "/images/elements/aire.jpg",
+  tierra: "/images/elements/tierra.jpg",
+  eter: "/images/elements/elements_logo.jpeg",
+};
+
+/**
+ * Framework-specific imagery (ROOTS / IGNITE / FLOW / CLEAR).
+ * Sourced from /public/images/modules/{framework}.jpg
+ */
+export const frameworkImages: Record<ElementKey, string | null> = {
+  tierra: "/images/modules/roots.jpg",
+  fuego: "/images/modules/ignite.jpg",
+  agua: "/images/modules/flow.jpg",
+  aire: "/images/modules/clear.jpg",
+  eter: null,
 };
 
 export const elements: ElementInfo[] = [
@@ -90,6 +110,46 @@ export const elements: ElementInfo[] = [
       "Yin Yoga · Animal Flow · Temazcal · Shinrin-yoku · Grounding/Earthing · Bodywork · Climbing · Equine-Assisted Coaching · Schema Therapy · Attachment Theory · HRV Coherence · Interoception.",
     experienceEs: "Forest Grounding & Roots Ritual",
     experienceEn: "Forest Grounding & Roots Ritual",
+    paradoxEs:
+      "Los líderes que más necesitan Tierra suelen ser los más capaces — y por lo tanto los más demandados. Se mueven constantemente entre exigencias, contextos y relaciones. Están en todas partes, lo que significa que no están en ninguna. La Tierra los invita a descubrir que la presencia — genuina, sin prisa, arraigada — es lo más raro y más poderoso que pueden ofrecer.",
+    paradoxEn:
+      "The leaders who most need Earth are often those who are most capable — and therefore most in demand. They move constantly between demands, contexts, and relationships. They are everywhere, which means they are nowhere. Earth invites them to discover that presence — genuine, unhurried, rooted presence — is the rarest and most powerful thing they can offer.",
+    components: [
+      {
+        nameEs: "Confianza profunda",
+        nameEn: "Deep Trust",
+        bodyEs:
+          "La confianza no se construye en momentos dramáticos. Se construye en la acumulación de diez mil pequeñas decisiones de ser consistente, honesto y confiable. El líder de Tierra entiende que siempre está haciendo un depósito o un retiro en la cuenta de confianza de cada relación — y elige depósitos, diaria y deliberadamente.",
+        bodyEn:
+          "Trust is not built in dramatic moments. It is built in the accumulation of ten thousand small choices to be consistent, honest, and reliable. Earth leaders understand that they are always making a deposit or a withdrawal in the trust account of every relationship — and they choose deposits, daily and deliberately.",
+      },
+      {
+        nameEs: "Presencia encarnada",
+        nameEn: "Embodied Presence",
+        bodyEs:
+          "El liderazgo de Tierra se siente antes de escucharse. El líder verdaderamente arraigado crea un campo de seguridad alrededor simplemente por estar presente — físicamente asentado, emocionalmente regulado, sin prisa. La gente sabe instintivamente si la persona con quien habla está realmente ahí. El líder de Tierra está ahí.",
+        bodyEn:
+          "Earth leadership is felt before it is heard. The leader who is truly grounded creates a field of safety around them simply by being present — physically settled, emotionally regulated, unhurried. People know instinctively whether the person they are speaking to is actually there. Earth leaders are there.",
+      },
+      {
+        nameEs: "La función de sostener",
+        nameEn: "The Holding Function",
+        bodyEs:
+          "En la ecología organizacional, el rol primario del líder durante períodos de cambio, incertidumbre o estrés no es resolver — es sostener. Sostener el espacio para que el equipo piense. Sostener la ansiedad para que otros sean productivos. Sostener la visión cuando otros no pueden verla. Esta es la función de Tierra: el líder como el suelo bajo los pies de otros.",
+        bodyEn:
+          "In organizational ecology, the leader's primary role during periods of change, uncertainty, or stress is not to solve — it is to hold. To hold the space for the team to think. To hold the anxiety so others can be productive. To hold the vision when others cannot see it. This is the Earth function: the leader as the ground beneath others' feet.",
+      },
+      {
+        nameEs: "Honestidad radical con uno mismo",
+        nameEn: "Radical Self-Honesty",
+        bodyEs:
+          "La Tierra no pretende. El suelo es lo que es — el resultado rico en nutrientes de todo lo que se descompuso antes. El líder de Tierra desarrolla la capacidad de honestidad inflexible sobre sus propios patrones, miedos, puntos ciegos y bordes de crecimiento. Esta auto-honestidad se vuelve el fundamento de su integridad — y la integridad es la única fuente verdadera de confianza duradera.",
+        bodyEn:
+          "Earth doesn't pretend. Soil is what it is — the nutrient-rich result of everything that has decomposed before. Earth leaders develop the capacity for unflinching honesty about their own patterns, fears, blindspots, and growing edges. This self-honesty becomes the foundation of their integrity — and integrity is the only true source of lasting trust.",
+      },
+    ],
+    invitationEs: "¿Qué profundizaría tu liderazgo si tus raíces fueran más hondas?",
+    invitationEn: "What would deepen your leadership if your roots were deeper?",
     accent: "#3D5A3E",
     accentSoft: "#C8D4C0",
     accentInk: "#2A3E2B",
@@ -122,6 +182,46 @@ export const elements: ElementInfo[] = [
       "Hot Yoga · Bikram · Martial Arts (Muay Thai, BJJ, Boxing) · Bioenergetics & cathartic release · Finnish sauna · Infrared sauna · HIIT & sprint training · Temazcal · Ritual fire-ice contrast · Logotherapy · Positive Psychology · Narrative Therapy · CBT core beliefs.",
     experienceEs: "Vision Ceremony",
     experienceEn: "Vision Ceremony",
+    paradoxEs:
+      "Los líderes que más temen al Fuego son aquellos que cargan la pasión más reprimida. Han aprendido a gestionar su intensidad — a parecer mesurados, profesionales, contenidos. El Fuego los invita a reclamar lo que han estado gestionando: el calor que, cuando se canaliza con destreza, se convierte en la fuerza más poderosa para la transformación organizacional.",
+    paradoxEn:
+      "The leaders who most fear Fire are those who carry the most suppressed passion. They have learned to manage their intensity — to seem measured, professional, contained. Fire invites them to reclaim what they have been managing: the heat that, when channeled with skill, becomes the most powerful force for organizational transformation.",
+    components: [
+      {
+        nameEs: "Visión — la llama que otros pueden ver",
+        nameEn: "Vision — The Flame That Others Can See",
+        bodyEs:
+          "La visión en la tradición del Fuego no es un plan a cinco años. Es una llama viva — un sentido vívido y sentido de un futuro digno de crearse, que el líder carga en su cuerpo, no solo en su mente. Cuando hay visión genuina en un líder, la gente la siente. Cuando está ausente, también la sienten.",
+        bodyEn:
+          "Vision in the Fire tradition is not a five-year plan. It is a living flame — a vivid, felt sense of a future worth creating that the leader carries in their body, not just their mind. When genuine vision is present in a leader, people can feel it. When it is absent, they can feel that too.",
+      },
+      {
+        nameEs: "Coraje — arder cuando cuesta algo",
+        nameEn: "Courage — Burning When It Costs Something",
+        bodyEs:
+          "El coraje del Fuego no es imprudencia. Es la voluntad de actuar en alineación con los valores incluso cuando esa acción carga un riesgo real. El líder de Fuego dice las cosas difíciles en las reuniones. Hace los cambios que otros han evitado. Permanece en el calor.",
+        bodyEn:
+          "Fire courage is not recklessness. It is the willingness to act in alignment with values even when that action carries real risk. Fire leaders say the difficult things in meetings. They make the changes others have avoided. They stand in the heat.",
+      },
+      {
+        nameEs: "Activación — encender fuegos en otros",
+        nameEn: "Activation — Lighting Fires in Others",
+        bodyEs:
+          "La cualidad más importante del fuego es que es contagioso. Una sola llama puede encender mil otras sin disminuirse. El líder de Fuego entiende que su rol primario no es hacer el trabajo — es encender el fuego en aquellos que lo harán. La activación es el arte de conectar a las personas con su propio sentido de propósito.",
+        bodyEn:
+          "The most important quality of fire is that it is contagious. A single flame can light a thousand others without being diminished. Fire leaders understand that their primary role is not to do the work — it is to ignite the fire in those who will. Activation is the art of connecting people to their own sense of purpose.",
+      },
+      {
+        nameEs: "Transformación — quemar lo que ya no sirve",
+        nameEn: "Transformation — Burning What No Longer Serves",
+        bodyEs:
+          "El fuego es el gran renovador de la naturaleza. Los incendios forestales crean las condiciones para el nuevo crecimiento. El líder de Fuego está dispuesto a arder — a terminar lo que necesita terminar, a soltar lo que ya no sirve, y a confiar en que lo esencial sobrevivirá la transformación.",
+        bodyEn:
+          "Fire is nature's great renewer. Forest fires create the conditions for new growth. Fire leaders are willing to burn — to end what needs ending, to release what no longer serves, and to trust that what is essential will survive the transformation.",
+      },
+    ],
+    invitationEs: "¿Cuál es el fuego que has mantenido demasiado pequeño?",
+    invitationEn: "What is the fire you have been keeping too small?",
     accent: "#C4622D",
     accentSoft: "#E8C9B0",
     accentInk: "#7A2F0E",
@@ -154,6 +254,46 @@ export const elements: ElementInfo[] = [
       "Watsu · Somatic Experiencing · TRE · Cold Plunge · Contrast Therapy · Float Tank · Hydrotherapy · Aquatic Forest Bathing · ACT Defusion · Focusing · EFT · DBT · Polyvagal Theory · Default Mode Network · Clean Language.",
     experienceEs: "Riverine Reflection & Deep Listening",
     experienceEn: "Riverine Reflection & Deep Listening",
+    paradoxEs:
+      "Los líderes que más necesitan Agua suelen ser los que lideran con más fuerza. Confunden la rigidez con la fortaleza, y el control con la competencia. El Agua les enseña la lección más difícil: que el poder real emerge cuando se cede.",
+    paradoxEn:
+      "The leaders who most need Water are often those who lead with the most force. They mistake rigidity for strength, and control for competence. Water teaches them the more difficult lesson: that real power emerges from yielding.",
+    components: [
+      {
+        nameEs: "Escucha profunda",
+        nameEn: "Deep Listening",
+        bodyEs:
+          "La mayoría de los líderes escucha para responder. El líder de Agua escucha para entender — y a menudo, simplemente para recibir. La escucha profunda es la capacidad de estar plenamente presente con la experiencia de otra persona sin la necesidad de arreglar, aconsejar o redirigir.",
+        bodyEn:
+          "Most leaders listen to respond. Water leaders listen to understand — and often, to simply receive. Deep listening is the capacity to be fully present with another person's experience without the need to fix, advise, or redirect.",
+      },
+      {
+        nameEs: "Claridad emocional",
+        nameEn: "Emotional Clarity",
+        bodyEs:
+          "Como el agua, las emociones en movimiento son saludables. Las emociones que se suprimen, se desvían o se represan se vuelven destructivas. El liderazgo de Agua implica desarrollar una relación directa y honesta con la propia experiencia emocional — usándola como información en lugar de gestionándola hacia afuera.",
+        bodyEn:
+          "Like water, emotions in motion are healthy. Emotions that are suppressed, diverted, or dammed up become destructive. Water leadership involves developing a direct, honest relationship with one's emotional experience — using it as information rather than managing it away.",
+      },
+      {
+        nameEs: "Flujo adaptativo",
+        nameEn: "Adaptive Flow",
+        bodyEs:
+          "El agua nunca deja de moverse. Cuando se bloquea, encuentra otro camino. El líder de Agua desarrolla alta tolerancia a la ambigüedad y la flexibilidad creativa para navegar desafíos organizacionales complejos y no lineales sin recurrir al control rígido.",
+        bodyEn:
+          "Water never stops moving. When blocked, it finds another path. Water leaders develop high tolerance for ambiguity and the creative flexibility to navigate complex, non-linear organizational challenges without defaulting to rigid control.",
+      },
+      {
+        nameEs: "Profundidad reflexiva",
+        nameEn: "Reflective Depth",
+        bodyEs:
+          "El agua quieta muestra un reflejo claro. El líder con profundidad reflexiva tiene la capacidad de dar un paso atrás de la urgencia de la vida organizacional y verse a sí mismo, a sus equipos y sus situaciones con claridad y perspectiva.",
+        bodyEn:
+          "Still water shows a clear reflection. Leaders with reflective depth have the capacity to step back from the urgency of organizational life and see themselves, their teams, and their situations with clarity and perspective.",
+      },
+    ],
+    invitationEs: "¿Dónde en tu liderazgo estás luchando contra la corriente?",
+    invitationEn: "Where in your leadership are you fighting the current?",
     accent: "#2B6B8A",
     accentSoft: "#B5D0DE",
     accentInk: "#1A4257",
@@ -186,6 +326,46 @@ export const elements: ElementInfo[] = [
       "Pranayama (Nadi Shodhana, Ujjayi, Kapalabhati, Box Breathing) · Wim Hof Method · Tibetan Singing Bowls · Gong Baths · Voice work · Binaural Beats · Qigong · Tai Chi · Formal meditation · Silent retreat · IFS · Gestalt · MBCT · Meta-Model · Perceptual Positions.",
     experienceEs: "Summit Perspective",
     experienceEn: "Summit Perspective",
+    paradoxEs:
+      "Los líderes que más necesitan Aire son a menudo aquellos con las habilidades de comunicación más sofisticadas en la superficie — y cuya comunicación, sin embargo, crea el menor entendimiento genuino. Son articulados pero no escuchados. Confiados pero sin conectar. El Aire los invita a descubrir que la comunicación real es menos sobre hablar y más sobre crear las condiciones para la verdad.",
+    paradoxEn:
+      "The leaders who most need Air are often those who have the most sophisticated communication skills on the surface — and yet whose communication creates the least genuine understanding. They are articulate but not heard. Confident but not connecting. Air invites them to discover that real communication is less about speaking and more about creating the conditions for truth.",
+    components: [
+      {
+        nameEs: "Perspectiva sistémica",
+        nameEn: "Systemic Perspective",
+        bodyEs:
+          "El líder de Aire sostiene la complejidad sin ser abrumado por ella. Entiende que los desafíos organizacionales raramente son resultado de fallas individuales — son patrones en sistemas. El liderazgo de Aire desarrolla la capacidad de ver sistemas enteros: mapear las dinámicas, entender la historia e intervenir en el punto de máxima palanca.",
+        bodyEn:
+          "Air leaders hold complexity without being overwhelmed by it. They understand that organizational challenges are rarely the result of individual failings — they are patterns in systems. Air leadership develops the capacity to see systems whole: to map the dynamics, understand the history, and intervene at the point of highest leverage.",
+      },
+      {
+        nameEs: "Libertad y no-apego",
+        nameEn: "Freedom & Non-Attachment",
+        bodyEs:
+          "El aire no se puede contener. El líder de Aire carga una cualidad de libertad psicológica — no está capturado por el estatus, por la necesidad de tener razón, ni por el apego a resultados particulares. Esta libertad le permite escuchar verdades difíciles, cambiar de opinión con gracia y liderar sin el peso del ego.",
+        bodyEn:
+          "Air cannot be contained. Air leaders carry a quality of psychological freedom — they are not captured by status, by the need to be right, or by attachment to particular outcomes. This freedom allows them to hear difficult truths, change their minds gracefully, and lead without the weight of ego.",
+      },
+      {
+        nameEs: "El espacio entre las palabras",
+        nameEn: "The Space Between Words",
+        bodyEs:
+          "El líder de Aire más poderoso entiende que lo que no dice es tan importante como lo que dice. Crea espacio — en conversaciones, en reuniones, en la cultura organizacional — para que otras voces sean escuchadas. Entiende que un líder que llena cada silencio es un líder que no tiene idea de lo que realmente sucede en su organización.",
+        bodyEn:
+          "The most powerful Air leaders understand that what they don't say is as important as what they do. They create space — in conversations, in meetings, in organizational culture — for others' voices to be heard. They understand that a leader who fills every silence is a leader who has no idea what is really happening in their organization.",
+      },
+      {
+        nameEs: "Precisión de expresión",
+        nameEn: "Precision of Expression",
+        bodyEs:
+          "El líder de Aire elige las palabras con cuidado. Sabe que el lenguaje da forma a la cultura — que las historias que un líder cuenta sobre las personas, los desafíos y la posibilidad, se vuelven la realidad que los rodea. Es arquitecto de significado.",
+        bodyEn:
+          "Air leaders choose words with care. They know that language shapes culture — that the stories a leader tells about people, about challenges, about possibility, become the reality those around them inhabit. They are architects of meaning.",
+      },
+    ],
+    invitationEs: "¿Qué vería de tu liderazgo desde mayor altura?",
+    invitationEn: "What would I see of your leadership from a greater altitude?",
     accent: "#7A9BAD",
     accentSoft: "#D2DCE4",
     accentInk: "#2E4754",
@@ -202,8 +382,8 @@ export const elements: ElementInfo[] = [
       "El Éter es la energía principal del Núcleo. Es el quinto elemento que integra a los otros cuatro y revela la esencia trascendente del líder.",
     cultivaEn:
       "Éter is the principal energy of the Nucleus. It is the fifth element that integrates the other four and reveals the leader's transcendent essence.",
-    quoteEs: "Quien eres es la herramienta que más usas.",
-    quoteEn: "Who you are is the tool you use most.",
+    quoteEs: "Transforma y eleva el núcleo, y todo lo que orbita a su alrededor cambiará.",
+    quoteEn: "Transform and elevate the nucleus, and everything that orbits around it will change.",
     natureEs:
       "En el Éter se concentra: el autoconocimiento, el propósito trascendental, la sabiduría, la intención, la plenitud, la conexión humana, la gratitud, el servicio, el legado. Es la base de los otros cuatro elementos — energía, movimiento, cambio y transformación.",
     natureEn:
@@ -218,6 +398,11 @@ export const elements: ElementInfo[] = [
       "Integrated contemplative practice · Extended silence · Full presence meditation · Integration ritual · Transcendent purpose journaling · Legacy conversations.",
     experienceEs: "Integration & Essence",
     experienceEn: "Integration & Essence",
+    paradoxEs: null,
+    paradoxEn: null,
+    components: null,
+    invitationEs: null,
+    invitationEn: null,
     accent: "#C9A96E",
     accentSoft: "#EBDCBE",
     accentInk: "#57441A",
@@ -428,6 +613,532 @@ export const rootsArc = [
   },
 ];
 
+/* ────────────────────────────────────────────────────────────────────────
+ * PROGRAM DETAIL DATA — verbatim from elements-website-content.pptx
+ * slides 9-17. Used by /los-caminos/[slug] detail pages.
+ * ──────────────────────────────────────────────────────────────────────── */
+
+export interface ProgramStat {
+  value: string;
+  labelEs: string;
+  labelEn: string;
+}
+
+export interface ProgramDetail {
+  slug: "raices" | "corriente" | "fuente" | "soulfull";
+  url: string;
+  headerKickerEs: string;
+  headerKickerEn: string;
+  nameEs: string;
+  nameEn: string;
+  taglineEs: string;
+  taglineEn: string;
+  stats: ProgramStat[];
+  /** Section heading for the "everything you need" block (slide 11 / 13 / 16). */
+  includesHeadingEs: string;
+  includesHeadingEn: string;
+  includesBlocks: {
+    titleEs: string;
+    titleEn: string;
+    bodyEs: string;
+    bodyEn: string;
+  }[];
+  whoForHeadingEs: string;
+  whoForHeadingEn: string;
+  whoForItems: {
+    titleEs: string;
+    titleEn: string;
+    bodyEs: string;
+    bodyEn: string;
+  }[];
+  /** Optional "typical month/week" cadence block. */
+  cadenceHeadingEs?: string;
+  cadenceHeadingEn?: string;
+  cadence?: {
+    label: string;
+    titleEs: string;
+    titleEn: string;
+    bulletsEs: string[];
+    bulletsEn: string[];
+  }[];
+  /** Optional comparativa (used by Current). */
+  comparativaEs?: { left: string[]; right: string[] };
+  comparativaEn?: { left: string[]; right: string[] };
+  /** Optional closing note (Source). */
+  closingNoteEs?: string;
+  closingNoteEn?: string;
+  closingTitleEs?: string;
+  closingTitleEn?: string;
+  closingBodyEs?: string;
+  closingBodyEn?: string;
+  ctaEs: string;
+  ctaEn: string;
+  /** Slug of element shown in hero image background (visual cue). */
+  primaryElement: ElementKey;
+}
+
+export const programDetails: ProgramDetail[] = [
+  // ─── RAÍCES — slides 9-11 verbatim ────────────────────────────────────
+  {
+    slug: "raices",
+    url: "elementsmethod.com/roots",
+    headerKickerEs: "Programa Grupal · 5 Meses",
+    headerKickerEn: "Group Program · 5 Months",
+    nameEs: "Roots Journey",
+    nameEn: "Roots Journey",
+    taglineEs: "Encuentra tu fundamento. Lidera desde tus profundidades.",
+    taglineEn: "Find your foundation. Lead from your depths.",
+    stats: [
+      { value: "5", labelEs: "Meses", labelEn: "Months" },
+      { value: "5", labelEs: "Inmersiones presenciales", labelEn: "In-Person Immersions" },
+      { value: "4", labelEs: "Leadership Frameworks", labelEn: "Leadership Frameworks" },
+      { value: "12", labelEs: "Sesiones de coaching", labelEn: "Coaching Sessions" },
+    ],
+    includesHeadingEs: "Todo lo que necesitas para ir a profundidad",
+    includesHeadingEn: "Everything You Need to Go Deep",
+    includesBlocks: [
+      {
+        titleEs: "Inmersiones presenciales",
+        titleEn: "In-Person Immersions",
+        bodyEs:
+          "Experiencias de día completo en entornos naturales cuidadosamente seleccionados. Cada locación se elige para encarnar su elemento y crear las condiciones para una transformación genuina.",
+        bodyEn:
+          "Full-day experiences in carefully selected natural environments. Each location is chosen to embody its element and create conditions for genuine transformation.",
+      },
+      {
+        titleEs: "Coaching individual",
+        titleEn: "Individual Coaching",
+        bodyEs:
+          "Dos sesiones privadas al mes con un coach certificado de Elements Method. Enfocadas en integración, informadas por el elemento, y completamente personalizadas al filo de tu liderazgo.",
+        bodyEn:
+          "Two private sessions per month with a certified Elements Method coach. Integration-focused, element-informed, and entirely personalized to your leadership edge.",
+      },
+      {
+        titleEs: "Círculos grupales virtuales",
+        titleEn: "Group Virtual Circles",
+        bodyEs:
+          "Encuentros virtuales mensuales con tu cohorte para integración compartida, accountability entre pares y sabiduría colectiva. Donde los insights se convierten en compromisos.",
+        bodyEn:
+          "Monthly virtual gatherings with your cohort for shared integration, peer accountability, and collective wisdom. Where insights become commitments.",
+      },
+    ],
+    whoForHeadingEs: "Roots es para líderes que...",
+    whoForHeadingEn: "Roots is made for leaders who...",
+    whoForItems: [
+      {
+        titleEs: "Buscan profundidad, no solo herramientas",
+        titleEn: "Seek depth, not just tools",
+        bodyEs:
+          "Ya hiciste los frameworks. Ahora quieres un cambio que sea real, duradero y venga desde adentro.",
+        bodyEn:
+          "You've done the frameworks. Now you want a shift that's real, lasting, and comes from within.",
+      },
+      {
+        titleEs: "Están listos para liderar diferente",
+        titleEn: "Are ready to lead differently",
+        bodyEs:
+          "Sientes que el liderazgo desde el estrés y el control tiene límites. Estás listo para una manera más arraigada y resonante.",
+        bodyEn:
+          "You sense that leadership from stress and control has limits. You're ready for a more grounded, resonant way.",
+      },
+      {
+        titleEs: "Valoran la comunidad tanto como la soledad",
+        titleEn: "Value community as much as solitude",
+        bodyEs:
+          "Creces a través de la conexión. Compartir el camino con pares igualmente comprometidos importa para ti.",
+        bodyEn:
+          "You grow through connection. Sharing the journey with peers who are equally committed matters to you.",
+      },
+    ],
+    ctaEs:
+      "Aplica para Raíces · La próxima cohorte comienza en 60 días. Los lugares son limitados para asegurar profundidad de experiencia.",
+    ctaEn:
+      "Apply for Roots · The next cohort begins in 60 days. Spaces are limited to ensure depth of experience.",
+    primaryElement: "tierra",
+  },
+
+  // ─── CORRIENTE — slides 12-13 verbatim ────────────────────────────────
+  {
+    slug: "corriente",
+    url: "elementsmethod.com/current",
+    headerKickerEs: "Intensivo Grupal · Continuo",
+    headerKickerEn: "Intensive Group · Ongoing",
+    nameEs: "Current Intensive",
+    nameEn: "Current Intensive",
+    taglineEs: "Doble la inmersión. Doble el momentum.",
+    taglineEn: "Double the immersion. Double the momentum.",
+    stats: [
+      { value: "3", labelEs: "Meses", labelEn: "Months" },
+      { value: "12", labelEs: "Sesiones de coaching (continuidad)", labelEn: "Coaching Sessions (continuation)" },
+      { value: "5", labelEs: "Elementos cubiertos", labelEn: "Elements Covered" },
+      { value: "5", labelEs: "Inmersiones", labelEn: "Immersions" },
+      { value: "5", labelEs: "Metodologías", labelEn: "Methodologies" },
+    ],
+    includesHeadingEs: "El doble de tiempo en el campo. El doble de transformación.",
+    includesHeadingEn: "Twice the field time. Twice the transformation.",
+    includesBlocks: [],
+    whoForHeadingEs: "Para quién es Corriente",
+    whoForHeadingEn: "Who Current is for",
+    whoForItems: [
+      {
+        titleEs: "Líderes en momentos críticos de transición",
+        titleEn: "Leaders at critical moments of transition",
+        bodyEs:
+          "Sabes que tienes que tomar una decisión grande pronto. El ritmo intensivo te da el contacto frecuente con los elementos que la decisión requiere.",
+        bodyEn:
+          "You know you need to make a big decision soon. The intensive pace gives you the frequent element contact the decision requires.",
+      },
+      {
+        titleEs: "Ejecutivos que necesitan resultados en 60-90 días",
+        titleEn: "Executives who need results in 60-90 days",
+        bodyEs:
+          "El tiempo importa. Tres meses de cadencia doble producen lo que típicamente toma seis.",
+        bodyEn:
+          "Time matters. Three months at double cadence produces what typically takes six.",
+      },
+      {
+        titleEs: "Líderes que aprenden por experiencia repetida",
+        titleEn: "Leaders who learn through repeated experience",
+        bodyEs:
+          "Sabes que el cambio real necesita reiteración. El ritmo de Corriente te da esa reiteración.",
+        bodyEn:
+          "You know real change needs reiteration. Current's rhythm gives you that reiteration.",
+      },
+      {
+        titleEs: "Quienes valoran la comunidad como aceleradora",
+        titleEn: "Those who value community as accelerator",
+        bodyEs:
+          "Compartir el camino con una cohorte pequeña y comprometida acelera lo que ningún proceso individual logra.",
+        bodyEn:
+          "Sharing the path with a small, committed cohort accelerates what no individual process achieves.",
+      },
+    ],
+    cadenceHeadingEs: "Un mes típico en Corriente",
+    cadenceHeadingEn: "A Typical Month in Current",
+    cadence: [
+      {
+        label: "Sem 1 · Week 1",
+        titleEs: "Inmersión de apertura",
+        titleEn: "Opening Immersion",
+        bulletsEs: [
+          "Día completo en naturaleza",
+          "Activación del elemento",
+          "Experiencia grupal",
+        ],
+        bulletsEn: [
+          "Full-day in nature",
+          "Element activation",
+          "Group experience",
+        ],
+      },
+      {
+        label: "Sem 2 · Week 2",
+        titleEs: "Coaching de integración",
+        titleEn: "Integration Coaching",
+        bulletsEs: [
+          "Sesión de coaching 1:1",
+          "Mapeo de liderazgo",
+          "Desafío personal",
+        ],
+        bulletsEn: [
+          "1:1 coaching session",
+          "Leadership mapping",
+          "Personal challenge",
+        ],
+      },
+      {
+        label: "Sem 3 · Week 3",
+        titleEs: "Inmersión profunda",
+        titleEn: "Deep Immersion",
+        bulletsEs: [
+          "Segunda jornada de campo",
+          "Profundización del elemento",
+          "Práctica de liderazgo",
+        ],
+        bulletsEn: [
+          "Second field day",
+          "Element deepening",
+          "Leadership practice",
+        ],
+      },
+      {
+        label: "Sem 4 · Week 4",
+        titleEs: "Cierre y síntesis",
+        titleEn: "Closing & Synthesis",
+        bulletsEs: [
+          "Sesión de coaching 1:1",
+          "Revisión del mes",
+          "Vista previa del siguiente elemento",
+        ],
+        bulletsEn: [
+          "1:1 coaching session",
+          "Month review",
+          "Next element preview",
+        ],
+      },
+    ],
+    comparativaEs: {
+      left: [
+        "Raíces (Journey) · 5 meses",
+        "1 inmersión / mes",
+        "2 sesiones de coaching",
+        "5 inmersiones totales",
+      ],
+      right: [
+        "Corriente (Intensive) · 3 meses",
+        "2 inmersiones / mes",
+        "2 sesiones de coaching",
+        "Integración acelerada",
+        "5 inmersiones totales",
+      ],
+    },
+    comparativaEn: {
+      left: [
+        "Roots (Journey) · 5 months",
+        "1 immersion / month",
+        "2 coaching sessions",
+        "5 immersions total",
+      ],
+      right: [
+        "Current (Intensive) · 3 months",
+        "2 immersions / month",
+        "2 coaching sessions",
+        "Accelerated integration",
+        "5 immersions total",
+      ],
+    },
+    ctaEs: "Aplica para Corriente · Las cohortes intensivas se mantienen deliberadamente pequeñas.",
+    ctaEn: "Apply for Current · Intensive cohorts are kept deliberately small.",
+    primaryElement: "fuego",
+  },
+
+  // ─── FUENTE — slides 14-17 verbatim ───────────────────────────────────
+  {
+    slug: "fuente",
+    url: "elementsmethod.com/source",
+    headerKickerEs: "Inmersión Total · Retiro de 3 días en naturaleza",
+    headerKickerEn: "Full Immersion · 3-day retreat in nature",
+    nameEs: "Source Full Immersion",
+    nameEn: "Source Full Immersion",
+    taglineEs: "La transformación de liderazgo más intensa e inmersiva disponible.",
+    taglineEn: "The most intense and immersive leadership transformation available.",
+    stats: [
+      { value: "3", labelEs: "Días", labelEn: "Days" },
+      { value: "4", labelEs: "Inmersiones", labelEn: "Immersions" },
+      { value: "5", labelEs: "Elementos", labelEn: "Elements" },
+      { value: "4", labelEs: "Metodologías", labelEn: "Methodologies" },
+      { value: "12", labelEs: "Sesiones de coaching post-retiro", labelEn: "Coaching Sessions post-retreat" },
+    ],
+    includesHeadingEs: "Diseñado para ti, alrededor de ti",
+    includesHeadingEn: "Built for you, around you",
+    includesBlocks: [
+      {
+        titleEs: "Diseño de programa a la medida",
+        titleEn: "Custom Program Design",
+        bodyEs:
+          "Tu camino en Source comienza con un proceso de intake profundo. Mapeamos tu historia de liderazgo, tu contexto actual y tu aspiración más profunda — y diseñamos tu secuencia elemental alrededor de eso.",
+        bodyEn:
+          "Your Source journey begins with a deep intake process. We map your leadership history, your current context, and your deepest aspiration — then design your element sequence around that.",
+      },
+      {
+        titleEs: "Locaciones curadas",
+        titleEn: "Curated Field Locations",
+        bodyEs:
+          "Seleccionamos entornos naturales que hablan a tu filo específico. Tu inmersión de agua puede ser un río diferente al de alguien más — porque tu claridad vive en una corriente diferente.",
+        bodyEn:
+          "We select natural environments that speak to your specific edge. Your water immersion might be a different river than someone else's — because your clarity lives in a different current.",
+      },
+      {
+        titleEs: "Coaching de nivel senior",
+        titleEn: "Senior-Level Coaching",
+        bodyEs:
+          "Los participantes de Source trabajan con nuestros coaches más senior — líderes con profunda experiencia en desarrollo ejecutivo y facilitación elemental. Esto es coaching al nivel más alto.",
+        bodyEn:
+          "Source participants work with our most senior coaches — leaders with deep experience in executive development and elemental facilitation. This is coaching at the highest level.",
+      },
+      {
+        titleEs: "Integración en tiempo real",
+        titleEn: "Real-Time Integration",
+        bodyEs:
+          "Con cuatro inmersiones por mes (en el período de coaching continuo), no esperas a que los insights aterricen. Se integran en tiempo real, entre días de campo, a través del coaching y en tus momentos reales de liderazgo.",
+        bodyEn:
+          "With four immersions per month, you're not waiting for insights to land. They integrate in real time, between field days, through coaching, and in your actual leadership moments.",
+      },
+    ],
+    whoForHeadingEs: "Source es para el líder listo para ir a la raíz",
+    whoForHeadingEn: "Source is for the leader who is ready to go to the root",
+    whoForItems: [
+      {
+        titleEs: "Atraviesas un umbral significativo de liderazgo",
+        titleEn: "You are navigating a significant leadership threshold",
+        bodyEs:
+          "Un nuevo rol, una transición mayor, un capítulo que requiere una versión diferente de ti.",
+        bodyEn:
+          "A new role, a major transition, a chapter that requires a different version of you.",
+      },
+      {
+        titleEs: "Quieres dedicación total de atención",
+        titleEn: "You want total dedication of attention",
+        bodyEs:
+          "La tuya y la nuestra — sin nada compartido ni diluido.",
+        bodyEn:
+          "Yours and ours — with nothing shared or diluted.",
+      },
+      {
+        titleEs: "Crees en el contacto profundo con la naturaleza",
+        titleEn: "You believe in deep nature contact",
+        bodyEs:
+          "Es uno de los espejos más poderosos para el desarrollo del liderazgo.",
+        bodyEn:
+          "It is one of the most powerful mirrors for leadership development.",
+      },
+      {
+        titleEs: "Eres ejecutivo senior, fundador o líder visionario",
+        titleEn: "You are a senior executive, founder, or visionary leader",
+        bodyEs:
+          "Que ha ganado la habilidad de invertir totalmente en sí mismo.",
+        bodyEn:
+          "Who has earned the ability to invest fully in yourself.",
+      },
+    ],
+    cadenceHeadingEs: "Cómo se ve un mes en Source",
+    cadenceHeadingEn: "What a Month in Source Looks Like",
+    cadence: [
+      {
+        label: "Sem 1 · Week 1",
+        titleEs: "Inmersión de apertura",
+        titleEn: "Opening Immersion",
+        bulletsEs: [
+          "Encuentro de día completo con el elemento",
+          "Coaching de apertura para definir intención y contexto",
+        ],
+        bulletsEn: [
+          "Full-day element encounter",
+          "Opening coaching to set intention and context",
+        ],
+      },
+      {
+        label: "Sem 2 · Week 2",
+        titleEs: "Día de campo de profundización",
+        titleEn: "Deepening Field Day",
+        bulletsEs: [
+          "Segunda inmersión que va más profundo en el mismo elemento",
+          "Coaching de integración a mitad de mes",
+        ],
+        bulletsEn: [
+          "Second immersion goes deeper into the same element",
+          "Mid-month integration coaching",
+        ],
+      },
+      {
+        label: "Sem 3 · Week 3",
+        titleEs: "Inmersión de filo",
+        titleEn: "Edge Immersion",
+        bulletsEs: [
+          "Experiencia de desafío diseñada para empujar tu filo de liderazgo",
+          "Tercera sesión de coaching",
+        ],
+        bulletsEn: [
+          "A challenge experience designed to push your leadership edge",
+          "Third coaching session",
+        ],
+      },
+      {
+        label: "Sem 4 · Week 4",
+        titleEs: "Cierre y síntesis",
+        titleEn: "Closing & Synthesis",
+        bulletsEs: [
+          "Inmersión final del mes",
+          "Coaching de síntesis para integrar y hacer puente al siguiente elemento",
+        ],
+        bulletsEn: [
+          "Final immersion of the month",
+          "Synthesis coaching to integrate and bridge to the next element",
+        ],
+      },
+    ],
+    closingTitleEs: "Una nota sobre Source",
+    closingTitleEn: "A note on Source",
+    closingBodyEs:
+      "“Tomamos muy pocos clientes de Source a la vez. Esto nos permite darle a cada engagement la profundidad y presencia que merece.” Source comienza con una conversación de discovery. No hay formulario de aplicación — solo una conversación para ver si somos la pareja correcta.",
+    closingBodyEn:
+      "“We take very few Source clients at a time. This allows us to give each engagement the depth and presence it deserves.” Source engagements begin with a discovery conversation. There is no application form — only a conversation to see if we're the right fit for each other.",
+    closingNoteEs: "Regresa a tu Fuente. Esto no es un formulario. Es una invitación a una conversación. Cuéntanos dónde estás y qué estás buscando — desde ahí lo tomamos.",
+    closingNoteEn:
+      "Return to your Source. This is not a form. It's an invitation to a conversation. Tell us where you are and what you're looking for — we'll take it from there.",
+    ctaEs: "Solicitar conversación de discovery",
+    ctaEn: "Request Discovery Call",
+    primaryElement: "agua",
+  },
+
+  // ─── SOULFULL (Source 1:1 variant) — slide 15 verbatim ────────────────
+  {
+    slug: "soulfull",
+    url: "elementsmethod.com/soulfull",
+    headerKickerEs: "Inmersión Total · Retiro privado de 3 días en naturaleza",
+    headerKickerEn: "Full Immersion · Private 3-day retreat in nature",
+    nameEs: "SoulFull Individual Immersion",
+    nameEn: "SoulFull Individual Immersion",
+    taglineEs:
+      "Para líderes que crecen mejor en un entorno privado. Cada engagement es diseñado a la medida.",
+    taglineEn:
+      "For leaders that feel better growing in a private environment. Each engagement is custom-designed for you.",
+    stats: [
+      { value: "4", labelEs: "Inmersiones / mes", labelEn: "Immersions / month" },
+      { value: "12", labelEs: "Sesiones de coaching", labelEn: "Coaching Sessions" },
+      { value: "1", labelEs: "Líder · tú", labelEn: "Leader · you" },
+      { value: "100%", labelEs: "Personalización", labelEn: "Personalization" },
+    ],
+    includesHeadingEs: "Source en formato 1:1",
+    includesHeadingEn: "Source in 1:1 format",
+    includesBlocks: [
+      {
+        titleEs: "Programa completamente privado",
+        titleEn: "Fully private program",
+        bodyEs:
+          "Ningún componente grupal. Cada inmersión, cada sesión de coaching y cada locación son exclusivamente para ti.",
+        bodyEn:
+          "No group component. Every immersion, coaching session and location is exclusively for you.",
+      },
+      {
+        titleEs: "Cadencia acelerada",
+        titleEn: "Accelerated cadence",
+        bodyEs:
+          "Cuatro inmersiones por mes — no esperas para que los insights aterricen. Se integran entre los días de campo en tiempo real.",
+        bodyEn:
+          "Four immersions per month — you don't wait for insights to land. They integrate between field days in real time.",
+      },
+    ],
+    whoForHeadingEs: "Para quién es SoulFull",
+    whoForHeadingEn: "Who SoulFull is for",
+    whoForItems: [
+      {
+        titleEs: "Líderes que requieren confidencialidad absoluta",
+        titleEn: "Leaders who require absolute confidentiality",
+        bodyEs:
+          "Algunos procesos no pueden compartirse con un grupo. SoulFull es ese contenedor.",
+        bodyEn:
+          "Some processes can't be shared with a group. SoulFull is that container.",
+      },
+      {
+        titleEs: "Quienes prefieren el crecimiento en privado",
+        titleEn: "Those who prefer growing in private",
+        bodyEs:
+          "No por falta de comunidad, sino porque tu proceso pide intimidad sostenida.",
+        bodyEn:
+          "Not for lack of community, but because your process asks for sustained intimacy.",
+      },
+    ],
+    ctaEs: "Solicitar conversación de discovery",
+    ctaEn: "Request Discovery Call",
+    primaryElement: "eter",
+  },
+];
+
+export function findProgram(slug: string): ProgramDetail | null {
+  return programDetails.find((p) => p.slug === slug) ?? null;
+}
+
 /**
  * Retreats / module calendar. Locations not yet published.
  * Pricing is no longer per module — programs are sold as integrated journeys.
@@ -464,8 +1175,7 @@ export const retreats: RetreatInfo[] = [
     capacity: 15,
     sold: 0,
     imageHue: "#C8D4C0",
-    image:
-      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1600&q=85&auto=format&fit=crop",
+    image: "/images/modules/roots.jpg",
     experienceEs: "Forest Grounding & Roots Ritual",
     experienceEn: "Forest Grounding & Roots Ritual",
   },
@@ -482,8 +1192,7 @@ export const retreats: RetreatInfo[] = [
     capacity: 15,
     sold: 0,
     imageHue: "#E8C9B0",
-    image:
-      "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1600&q=85&auto=format&fit=crop",
+    image: "/images/modules/ignite.jpg",
     experienceEs: "Vision Ceremony",
     experienceEn: "Vision Ceremony",
   },
@@ -500,8 +1209,7 @@ export const retreats: RetreatInfo[] = [
     capacity: 15,
     sold: 0,
     imageHue: "#B5D0DE",
-    image:
-      "https://images.unsplash.com/photo-1499346030926-9a72daac6c63?w=1600&q=85&auto=format&fit=crop",
+    image: "/images/modules/flow.jpg",
     experienceEs: "Riverine Reflection & Deep Listening",
     experienceEn: "Riverine Reflection & Deep Listening",
   },
@@ -518,8 +1226,7 @@ export const retreats: RetreatInfo[] = [
     capacity: 15,
     sold: 0,
     imageHue: "#D2DCE4",
-    image:
-      "https://images.unsplash.com/photo-1465056836041-7f43ac27dcb5?w=1600&q=85&auto=format&fit=crop",
+    image: "/images/modules/clear.jpg",
     experienceEs: "Summit Perspective",
     experienceEn: "Summit Perspective",
   },
@@ -1196,14 +1903,148 @@ export const shadowProfile: ShadowProfileRow[] = [
  * Founder profile — only Ana Michelle Concepción appears in the new docs.
  */
 export const founder = {
-  nameEs: "Ana Michelle Concepción",
-  nameEn: "Ana Michelle Concepción",
+  nameEs: "Ana Michelle Concepción Esterrich",
+  nameEn: "Ana Michelle Concepción Esterrich",
+  fullTitleEs:
+    "Fundadora · Elements Method · CEO de The Healing House",
+  fullTitleEn:
+    "Founder · Elements Method · CEO of The Healing House",
   roleEs: "Fundadora · Elements Method",
   roleEn: "Founder · Elements Method",
+  originEs: "San Juan, Puerto Rico",
+  originEn: "San Juan, Puerto Rico",
+  locationEs: "Ciudad de México",
+  locationEn: "Mexico City",
+
+  /** One-line headline — used in hero & social cards */
+  headlineEs:
+    "26 años liderando equipos VP-level en Microsoft, AT&T, América Móvil y Liberty antes de fundar The Healing House y Elements Method.",
+  headlineEn:
+    "26 years leading VP-level teams at Microsoft, AT&T, América Móvil and Liberty before founding The Healing House and Elements Method.",
+
+  /** Short bio — the doc-maestro paragraph, kept verbatim. */
   bioEs:
     "En 25 años de trabajo con líderes en el Caribe, Estados Unidos y América Latina, Ana Michelle Concepción identificó un patrón consistente: los líderes más capaces son aquellos que viven en consciencia, con intención, y quienes priorizan su trabajo interior. Son coherentes con sus valores, tienen claridad de propósito, cuidan su cuerpo, sus emociones, su mente y su espíritu. Conectan con su naturaleza esencial y autenticidad. Elements Method nace como respuesta a ese diagnóstico.",
   bioEn:
     "Across 25 years working with leaders in the Caribbean, the United States, and Latin America, Ana Michelle Concepción identified a consistent pattern: the most capable leaders are those who live with consciousness and intention, and who prioritize their inner work. They are coherent with their values, hold clarity of purpose, and tend to their body, emotions, mind and spirit. They connect with their essential nature and authenticity. Elements Method was born as a response to that diagnosis.",
+
+  /** Long-form story — corporate arc → coach transition (Mundo Ejecutivo). */
+  storyEs: [
+    "Antes de Elements Method, Ana Michelle dedicó más de 26 años al mundo corporativo. A nivel Vicepresidencia dirigió equipos operativos, comerciales, de servicio, técnicos y de manejo de emergencias en Microsoft, Liberty, AT&T y América Móvil en Puerto Rico, las Islas Vírgenes, República Dominicana, el sureste de Estados Unidos y México.",
+    "Dejó la vida corporativa para convertirse en una de las coaches de resultados y bienestar más reconocidas en la Ciudad de México. Su frase clave: «He amado cada uno de los roles de mi carrera. Mi propósito siempre ha sido impactar positivamente a las personas a mi alrededor.»",
+    "Es autora del libro «La valentía de una mujer» — un relato personal y profesional que entrelaza obstáculos como enfermedad, alcoholismo familiar y abuso, con ejercicios prácticos para la lectora.",
+    "Hoy lidera The Healing House en CDMX y diseña Elements Method como su síntesis: 26 años de liderazgo corporativo más coaching multidisciplinario integrados en inmersiones en la naturaleza.",
+  ],
+  storyEn: [
+    "Before Elements Method, Ana Michelle spent more than 26 years in the corporate world. At Vice-President level she led operations, sales, service, technical, and emergency-management teams at Microsoft, Liberty, AT&T, and América Móvil across Puerto Rico, the U.S. Virgin Islands, the Dominican Republic, the southeastern United States, and Mexico.",
+    "She left corporate life to become one of the most recognized results and wellness coaches in Mexico City. Her north star: \"I have loved every single role of my career. My purpose has always been to positively impact the people around me.\"",
+    "She is the author of «La valentía de una mujer» (The Courage of a Woman) — a personal and professional account that weaves through obstacles including illness, family alcoholism, and abuse, paired with practical exercises for the reader.",
+    "Today she leads The Healing House in CDMX and designs Elements Method as her synthesis: 26 years of corporate leadership plus multidisciplinary coaching integrated through nature immersions.",
+  ],
+
+  /** Headline verbatim quotes — usable as pull-quotes anywhere on the site. */
+  quotesEs: [
+    "He amado cada uno de los roles de mi carrera. Mi propósito siempre ha sido impactar positivamente a las personas a mi alrededor.",
+    "Nuestras emociones son la base de todo lo que hacemos; si cuidas tu cuerpo, tu mente y tus emociones, tus acciones te llevan al éxito.",
+  ],
+  quotesEn: [
+    "I have loved every single role of my career. My purpose has always been to positively impact the people around me.",
+    "Our emotions are the foundation of everything we do; if you care for your body, your mind, and your emotions, your actions lead to success.",
+  ],
+
+  /** Corporate roles — VP-level, 25+ year arc. */
+  corporateRoles: [
+    { company: "Microsoft", role: "VP-level leadership", region: "PR · US Virgin Islands · DR · SE United States · Mexico" },
+    { company: "AT&T México", role: "VPGM Enterprise Business Solutions", region: "México" },
+    { company: "AT&T", role: "VP Enterprise Business Solutions", region: "México" },
+    { company: "América Móvil", role: "VP-level leadership", region: "Latin America" },
+    { company: "Liberty", role: "VP-level leadership", region: "Puerto Rico" },
+  ],
+
+  /** Certifications & training — from speaker bio + LinkedIn. */
+  credentialsEs: [
+    "Certified Master Coach in Organizational Leadership · Symbiosis Centre for Distance Learning (2024)",
+    "Results Coaching",
+    "Organizational Development",
+    "Integral Life and Health Coaching",
+    "Programación Neurolingüística (NLP)",
+    "Neurociencia para Negocios",
+    "Yoga Master Certified · Método Iyengar",
+    "Formación con Tony Robbins · mindfulness, mentalidad de resultados, mentalidad ilimitada",
+    "Programas de Franklin Covey · John Maxwell · Dale Carnegie · Harvard Business Review",
+  ],
+  credentialsEn: [
+    "Certified Master Coach in Organizational Leadership · Symbiosis Centre for Distance Learning (2024)",
+    "Results Coaching",
+    "Organizational Development",
+    "Integral Life and Health Coaching",
+    "Neuro-Linguistic Programming (NLP)",
+    "Neuroscience for Business",
+    "Certified Yoga Master · Iyengar Method",
+    "Trained under Tony Robbins · mindfulness, results-oriented mindset, unlimited mindset",
+    "Programs at Franklin Covey · John Maxwell · Dale Carnegie · Harvard Business Review",
+  ],
+
+  /** Speaking topics — selection from her ~20-topic catalog. */
+  speakingTopicsEs: [
+    "Romper creencias limitantes",
+    "Mujeres en la cima",
+    "Bienestar en el trabajo",
+    "OKRs y dirección por propósito",
+    "Comunicación efectiva",
+    "Cultura de confianza",
+    "Manejo del estrés",
+    "Estrategias de éxito basadas en neurociencia",
+  ],
+  speakingTopicsEn: [
+    "Breaking limiting beliefs",
+    "Women at the top",
+    "Workplace wellness",
+    "OKRs and purpose-driven leadership",
+    "Effective communication",
+    "Building trust culture",
+    "Stress management",
+    "Neuroscience-based success strategies",
+  ],
+
+  /** Public appearances + published work. */
+  workEs: {
+    bookTitle: "La valentía de una mujer",
+    bookDescription:
+      "Libro autobiográfico que entrelaza enfermedad, alcoholismo familiar y abuso con ejercicios prácticos para la lectora.",
+    media: ["NMás · Sábados de Foro", "Mundo Ejecutivo · Mujer Ejecutiva"],
+  },
+  workEn: {
+    bookTitle: "The Courage of a Woman (La valentía de una mujer)",
+    bookDescription:
+      "Autobiographical book weaving illness, family alcoholism, and abuse with practical exercises for the reader.",
+    media: ["NMás · Sábados de Foro (Mexican TV)", "Mundo Ejecutivo · Mujer Ejecutiva"],
+  },
+
+  /** Social + contact handles (real, verified Jun 23, 2026). */
+  socials: [
+    {
+      platform: "LinkedIn",
+      handle: "ana-michelle-concepcion-esterrich",
+      url: "https://www.linkedin.com/in/ana-michelle-concepcion-esterrich-51b7017/",
+    },
+    {
+      platform: "Instagram",
+      handle: "@anamichellecoach",
+      url: "https://www.instagram.com/anamichellecoach/",
+    },
+    {
+      platform: "Facebook",
+      handle: "anamichelle.concepcion",
+      url: "https://www.facebook.com/anamichelle.concepcion/",
+    },
+  ],
+
+  /** Other ventures she leads — context for /quienes-somos. */
+  ventures: [
+    { name: "The Healing House", roleEs: "CEO y fundadora", roleEn: "CEO & founder", url: null },
+    { name: "Elements Method", roleEs: "Fundadora", roleEn: "Founder", url: null },
+  ],
 };
 
 /**

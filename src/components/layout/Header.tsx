@@ -54,8 +54,30 @@ export function Header({
   }, [open]);
 
   const base = `/${locale}`;
-  const isHome = pathname === base || pathname === `${base}/`;
-  const inverted = isHome && !scrolled;
+  // Routes whose first viewport is a dark hero image (paper text required).
+  // Keep in sync as new dark-hero pages are added — see the `bg-gradient-to-b
+  // from-[var(--color-ink)]` pattern in each page's HERO section.
+  const DARK_HERO_PATHS = [
+    "",
+    "/el-metodo",
+    "/method",
+    "/los-caminos",
+    "/paths",
+    "/retiros",
+    "/retreats",
+    "/quienes-somos",
+    "/who-we-are",
+    "/empresas",
+    "/companies",
+    "/blog",
+    "/journal",
+  ];
+  const subPath = pathname.replace(/^\/(es|en)/, "") || "";
+  const hasDarkHero = DARK_HERO_PATHS.some((p) => {
+    if (p === "") return subPath === "" || subPath === "/";
+    return subPath === p || subPath.startsWith(`${p}/`);
+  });
+  const inverted = hasDarkHero && !scrolled;
   const links: NavLink[] = [
     { href: `${base}/${locale === "es" ? "el-metodo" : "method"}`, label: dict.nav.method },
     { href: `${base}/${locale === "es" ? "los-caminos" : "paths"}`, label: dict.nav.paths },
@@ -69,13 +91,22 @@ export function Header({
     <>
       <header
         className={cn(
-          "fixed top-0 inset-x-0 z-50 transition-all duration-500",
+          "fixed top-0 inset-x-0 z-50 transition-all duration-500 print:hidden",
           scrolled
-            ? "bg-[var(--color-paper)]/85 backdrop-blur-md border-b border-[var(--color-line)]/60"
+            ? "bg-[var(--color-paper)]/92 backdrop-blur-md border-b border-[var(--color-line)]/60"
             : "bg-transparent border-b border-transparent",
         )}
       >
-        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+        {/* Top-edge scrim — only over dark heroes at top of page. A subtle
+         *  ink→transparent gradient that boosts contrast for nav text against
+         *  bright skies/horizons without darkening the hero image visually. */}
+        {inverted && (
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[var(--color-ink)]/45 via-[var(--color-ink)]/20 to-transparent"
+          />
+        )}
+        <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
           <div
             className={cn(
               "flex items-center justify-between transition-[height] duration-500",
@@ -93,15 +124,20 @@ export function Header({
                     key={l.href}
                     href={l.href}
                     className={cn(
-                      "relative text-[0.8125rem] tracking-wide transition-colors",
+                      "relative text-[0.875rem] tracking-wide font-medium transition-colors drop-shadow-sm",
                       isActive
                         ? inverted
                           ? "text-[var(--color-paper)]"
                           : "text-[var(--color-ink)]"
                         : inverted
-                          ? "text-[var(--color-paper)]/70 hover:text-[var(--color-paper)]"
-                          : "text-[var(--color-muted)] hover:text-[var(--color-ink)]",
+                          ? "text-[var(--color-paper)] hover:text-[var(--color-paper)]"
+                          : "text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]",
                     )}
+                    style={
+                      inverted
+                        ? { textShadow: "0 1px 2px rgba(0,0,0,0.35)" }
+                        : undefined
+                    }
                   >
                     {l.label}
                     {isActive && (

@@ -19,17 +19,27 @@ import {
   Atom,
   Sparkles,
   Users,
+  Droplets,
+  Flame,
+  Wind,
+  Mountain,
+  Compass,
 } from "lucide-react";
 import { isLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import {
   elements,
+  elementImages,
+  frameworkImages,
   shadowProfile,
   audienceEs,
   audienceEn,
   resultsEs,
   resultsEn,
+  dailyScanEs,
+  dailyScanEn,
   type ElementInfo,
+  type ElementKey,
 } from "@/data/content";
 import { Container } from "@/components/ui/Container";
 import { Section, Eyebrow } from "@/components/ui/Section";
@@ -66,7 +76,7 @@ export default function MethodPage({
           className="absolute inset-0 -z-20 will-change-transform"
         >
           <Image
-            src="https://images.unsplash.com/photo-1465056836041-7f43ac27dcb5?w=2400&q=85&auto=format&fit=crop"
+            src="/images/heroes/metodo.jpg"
             alt=""
             fill
             priority
@@ -82,7 +92,7 @@ export default function MethodPage({
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
-            className="eyebrow text-[var(--color-paper)]/80 mb-8 flex items-center gap-3"
+            className="eyebrow text-[var(--color-paper)]/95 mb-8 flex items-center gap-3"
           >
             <span aria-hidden className="h-px w-12 bg-[var(--color-paper)]/40" />
             {dict.method.eyebrow}
@@ -99,7 +109,7 @@ export default function MethodPage({
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.3 }}
-            className="lead mt-8 max-w-2xl text-[var(--color-paper)]/85"
+            className="lead mt-8 max-w-2xl text-[var(--color-paper)]/95"
           >
             {dict.method.lead}
           </motion.p>
@@ -135,6 +145,99 @@ export default function MethodPage({
                 ? "La naturaleza no gestiona. La naturaleza lidera. Esto no es un retiro — es un regreso."
                 : "Nature does not manage. Nature leads. This is not a retreat — it is a return."}
             </p>
+          </div>
+        </div>
+      </Section>
+
+      {/* DISCONNECTION EPIDEMIC — verbatim from elements-method-presentation.docx
+       *  Diagnosis: what modern organizational life produces vs what leaders need.
+       *  Lands before The Nucleus so the reader meets the problem before the answer. */}
+      <Section spacing="default" tone="ink">
+        <div className="grid lg:grid-cols-12 gap-12 mb-14">
+          <div className="lg:col-span-5">
+            <Eyebrow inverted className="mb-6">
+              {locale === "es" ? "La epidemia de desconexión" : "The Disconnection Epidemic"}
+            </Eyebrow>
+            <h2 className="display-2 text-balance text-[var(--color-paper)]">
+              {locale === "es"
+                ? "La vida organizacional moderna desconecta sistemáticamente al líder de las cualidades que hacen el liderazgo posible."
+                : "Modern organizational life systematically disconnects leaders from the very qualities that make leadership possible."}
+            </h2>
+          </div>
+          <div className="lg:col-span-7 lg:pt-3 space-y-5">
+            <p className="text-lg text-[var(--color-paper)]/95 leading-relaxed text-pretty">
+              {locale === "es"
+                ? "No es una crisis de capacidad. Es una crisis de conexión. Los líderes que trabajamos no carecen de habilidades — carecen de algo más fundamental: una conexión viva y encarnada con quienes realmente son."
+                : "It is not a crisis of capability. It is a crisis of connection. The leaders we work with aren't missing skills. They're missing something more fundamental: a living, embodied connection to who they actually are."}
+            </p>
+            <p className="text-lg italic text-[var(--color-gold-soft)] leading-relaxed text-pretty border-l border-[var(--color-gold-soft)]/30 pl-5">
+              {locale === "es"
+                ? "76% de los líderes reportan sentirse quemados o emocionalmente agotados. 65% de los empleados dicen que su jefe es la principal fuente de estrés en sus vidas. Y aún así, las organizaciones siguen invirtiendo en programas de liderazgo que añaden más herramientas a manos ya saturadas."
+                : "76% of leaders report feeling burned out or emotionally depleted. 65% of employees say their manager is the primary source of stress in their lives. And yet, organizations continue to invest in leadership programs that add more tools to already-full hands."}
+            </p>
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-px bg-[var(--color-paper)]/10 border border-[var(--color-paper)]/15">
+          <div className="bg-[var(--color-ink)] p-8 md:p-10">
+            <div className="eyebrow text-[var(--color-paper)]/85 mb-6">
+              {locale === "es" ? "Lo que las organizaciones producen" : "What organizations produce"}
+            </div>
+            <ul className="space-y-3 text-[var(--color-paper)]/90">
+              {(locale === "es"
+                ? [
+                    "Sobrecarga cognitiva",
+                    "Toma de decisiones reactiva",
+                    "Presión de desempeño crónica",
+                    "Pérdida de motivación intrínseca",
+                    "Desconexión del cuerpo",
+                    "Sentido de sí encogido",
+                  ]
+                : [
+                    "Cognitive overload",
+                    "Reactive decision-making",
+                    "Chronic performance pressure",
+                    "Loss of intrinsic motivation",
+                    "Disconnection from the body",
+                    "Shrinking sense of self",
+                  ]
+              ).map((item) => (
+                <li key={item} className="flex items-start gap-3">
+                  <span aria-hidden className="mt-2 h-1 w-1 rounded-full bg-[var(--color-paper)]/40 shrink-0" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="bg-[var(--color-ink)] p-8 md:p-10">
+            <div className="eyebrow text-[var(--color-gold-soft)] mb-6">
+              {locale === "es" ? "Lo que los líderes realmente necesitan" : "What leaders actually need"}
+            </div>
+            <ul className="space-y-3 text-[var(--color-paper)]">
+              {(locale === "es"
+                ? [
+                    "Claridad y quietud interior",
+                    "Decisiones arraigadas en valores",
+                    "Energía y presencia sostenibles",
+                    "Sentido auténtico de propósito",
+                    "Auto-consciencia encarnada",
+                    "Identidad fuerte y estable",
+                  ]
+                : [
+                    "Clarity and inner quiet",
+                    "Grounded, values-led choices",
+                    "Sustainable energy and presence",
+                    "Authentic sense of purpose",
+                    "Embodied self-awareness",
+                    "Strong, stable identity",
+                  ]
+              ).map((item) => (
+                <li key={item} className="flex items-start gap-3">
+                  <span aria-hidden className="mt-2 h-1 w-1 rounded-full bg-[var(--color-gold-soft)] shrink-0" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </Section>
@@ -207,48 +310,90 @@ export default function MethodPage({
             </div>
           </div>
 
-          {/* Only show the 4 trainable elements (Éter handled separately) */}
-          <div className="grid grid-cols-4 gap-2 mb-16 border border-[var(--color-line)]">
+          {/* Only show the 4 trainable elements (Éter handled separately).
+           *  Each card surfaces the framework's hero module image with a
+           *  scrim that intensifies on the active tab. */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-16">
             {elements.slice(0, 4).map((el, idx) => {
               const isActive = activeIdx === idx;
               const name = locale === "es" ? el.nameEs : el.nameEn;
+              const moduleImg = frameworkImages[el.key];
               return (
                 <button
                   key={el.key}
                   type="button"
                   onClick={() => setActiveIdx(idx)}
                   className={cn(
-                    "py-6 px-3 md:py-8 md:px-5 text-left transition-colors duration-300 relative",
-                    isActive
-                      ? "bg-[var(--color-ink)] text-[var(--color-paper)]"
-                      : "bg-[var(--color-paper)] hover:bg-[var(--color-paper-warm)]",
+                    "group relative aspect-[4/5] md:aspect-[3/4] text-left overflow-hidden transition-all duration-500",
+                    isActive ? "ring-2" : "ring-0 hover:ring-1",
                   )}
+                  style={
+                    isActive
+                      ? { boxShadow: `0 0 0 2px ${el.accentInk}` }
+                      : undefined
+                  }
+                  aria-pressed={isActive}
                 >
-                  <div
-                    className={cn(
-                      "eyebrow mb-2",
-                      isActive
-                        ? "text-[var(--color-paper)]/70"
-                        : "text-[var(--color-muted)]",
-                    )}
-                  >
-                    {el.framework}
-                  </div>
-                  <div
-                    className={cn(
-                      "font-[family-name:var(--font-display)] text-xl md:text-3xl tracking-tight",
-                      el.animClass,
-                    )}
-                  >
-                    {name}
-                  </div>
+                  {moduleImg && (
+                    <Image
+                      src={moduleImg}
+                      alt={`${el.framework} · ${name}`}
+                      fill
+                      sizes="(min-width: 768px) 25vw, 50vw"
+                      className={cn(
+                        "object-cover transition-transform duration-700",
+                        isActive ? "scale-105" : "scale-100 group-hover:scale-105",
+                      )}
+                    />
+                  )}
+                  {/* Scrim — stronger when inactive so the active card visually
+                   *  pops via image contrast, not just border. */}
                   <div
                     aria-hidden
-                    className="absolute bottom-0 left-0 right-0 h-1 transition-transform origin-left"
+                    className={cn(
+                      "absolute inset-0 transition-opacity duration-500",
+                      isActive
+                        ? "bg-gradient-to-t from-[var(--color-ink)]/85 via-[var(--color-ink)]/15 to-transparent"
+                        : "bg-gradient-to-t from-[var(--color-ink)]/95 via-[var(--color-ink)]/55 to-[var(--color-ink)]/30",
+                    )}
+                  />
+                  <div
+                    aria-hidden
+                    className="absolute inset-0 mix-blend-multiply opacity-50 transition-opacity duration-500"
+                    style={{
+                      background: isActive
+                        ? `linear-gradient(135deg, ${el.accent}00 30%, ${el.accent}40 100%)`
+                        : "transparent",
+                    }}
+                  />
+                  <div className="absolute inset-0 p-4 md:p-6 flex flex-col justify-end text-[var(--color-paper)]">
+                    <div
+                      className="eyebrow mb-2"
+                      style={{
+                        color: isActive ? el.accentSoft : "var(--color-paper)",
+                      }}
+                    >
+                      {el.framework}
+                    </div>
+                    <div
+                      className={cn(
+                        "font-[family-name:var(--font-display)] text-2xl md:text-3xl tracking-tight",
+                        el.animClass,
+                      )}
+                      style={{
+                        textShadow: "0 1px 3px rgba(0,0,0,0.4)",
+                      }}
+                    >
+                      {name}
+                    </div>
+                  </div>
+                  {/* Bottom accent rail — colored stripe per element */}
+                  <div
+                    aria-hidden
+                    className="absolute bottom-0 left-0 right-0 h-1 transition-transform duration-500 origin-left"
                     style={{
                       background: el.accent,
-                      transform: isActive ? "scaleX(1)" : "scaleX(0)",
-                      transformOrigin: "left",
+                      transform: isActive ? "scaleX(1)" : "scaleX(0.2)",
                     }}
                   />
                 </button>
@@ -353,6 +498,37 @@ export default function MethodPage({
         </div>
       </Section>
 
+      {/* THE INTEGRATED LEADER — verbatim from master doc §18.
+       *  Closes the Shadow Profile: knowing your profile is step one — the
+       *  goal is fluid access to all four, and the wisdom of the fifth. */}
+      <Section spacing="default">
+        <div className="grid lg:grid-cols-12 gap-12 items-end mb-12">
+          <div className="lg:col-span-6">
+            <Eyebrow className="mb-6 flex items-center gap-3">
+              <Compass className="h-3.5 w-3.5" strokeWidth={1.5} />
+              {locale === "es" ? "El líder integrado" : "The Integrated Leader"}
+            </Eyebrow>
+            <h2 className="display-2 text-balance">
+              {locale === "es"
+                ? "El objetivo no es ser un líder de un elemento. Es tener acceso fluido a los cuatro."
+                : "The goal is not to be a leader of one element. It is to have fluid access to all four."}
+            </h2>
+          </div>
+          <div className="lg:col-span-6 lg:pt-3 space-y-5">
+            <p className="lead text-pretty">
+              {locale === "es"
+                ? "El objetivo no es ser un líder de Agua, o de Fuego, o de Tierra. El objetivo es tener acceso fluido a los cuatro — y la sabiduría del quinto para identificar cuál requiere el momento."
+                : "The goal is not to be a Water leader, or a Fire leader, or an Earth leader. The goal is to have fluid access to all four — and the wisdom of the fifth to identify which one the moment requires."}
+            </p>
+            <p className="text-[var(--color-ink-soft)] leading-relaxed text-pretty">
+              {locale === "es"
+                ? "La integración elemental no es la eliminación de la preferencia o fortaleza natural. Es la expansión del rango. El líder de Agua que puede acceder al Fuego cuando la visión es necesaria. El líder de Tierra que puede subir al Aire cuando el equipo necesita perspectiva estratégica. El líder de Fuego que puede encontrar el Agua cuando la situación pide escucha."
+                : "Elemental integration is not the elimination of natural preference or strength. It is the expansion of range. The Water leader who can access Fire when vision is needed. The Earth leader who can rise into Air when the team needs strategic perspective. The Fire leader who can find Water when the situation calls for listening."}
+            </p>
+          </div>
+        </div>
+      </Section>
+
       {/* THE SCIENCE OF RECONNECTION — expanded */}
       <Section spacing="default" tone="warm">
         <div className="grid lg:grid-cols-12 gap-12 mb-16">
@@ -383,6 +559,18 @@ export default function MethodPage({
               k: locale === "es" ? "20 min en naturaleza" : "20 min in nature",
               v: locale === "es" ? "Reduce cortisol 21%" : "Reduces cortisol by 21%",
               ref: "Hunter et al. · 2019",
+            },
+            {
+              icon: Brain,
+              k: locale === "es" ? "20 min en naturaleza" : "20 min in nature",
+              v: locale === "es" ? "Mejora la memoria de trabajo en 20%" : "Improves working memory by 20%",
+              ref: "University of Michigan",
+            },
+            {
+              icon: Sparkles,
+              k: locale === "es" ? "20 min en naturaleza" : "20 min in nature",
+              v: locale === "es" ? "Aumento medible en la resolución creativa de problemas" : "Measurable increase in creative problem-solving",
+              ref: "University of Michigan",
             },
             {
               icon: TestTube,
@@ -475,6 +663,32 @@ export default function MethodPage({
         </div>
       </Section>
 
+      {/* ─── 4-ELEMENT DAILY SCAN — verbatim from master doc ─────────── */}
+      <Section spacing="default" tone="warm" className="paper-grain">
+        <div className="grid lg:grid-cols-12 gap-12 items-start mb-12">
+          <div className="lg:col-span-5">
+            <Eyebrow className="mb-6 flex items-center gap-3">
+              <Compass className="h-3.5 w-3.5" strokeWidth={1.5} />
+              {locale === "es" ? "El Escaneo de los 4 Elementos" : "The 4-Element Scan"}
+            </Eyebrow>
+            <h2 className="display-2 text-balance">
+              {locale === "es"
+                ? "Una práctica portátil para cualquier desafío de liderazgo."
+                : "A portable practice for any leadership challenge."}
+            </h2>
+          </div>
+          <div className="lg:col-span-7 lg:pt-3">
+            <p className="lead text-pretty">
+              {locale === "es"
+                ? "Para cualquier desafío de liderazgo que enfrentas ahora mismo, los cuatro elementos te dan cuatro preguntas concretas. Con el tiempo, acceder a los cuatro se vuelve instintivo: la marca del líder integrado."
+                : "For any leadership challenge you face right now, the four elements give you four concrete questions. Over time, accessing all four becomes instinctive: the mark of the integrated leader."}
+            </p>
+          </div>
+        </div>
+
+        <DailyScanGrid locale={locale} />
+      </Section>
+
       {/* RESULTS */}
       <Section spacing="default" tone="ink">
         <div className="grid lg:grid-cols-12 gap-12 mb-16">
@@ -549,6 +763,7 @@ function ElementDetail({
     },
   ];
 
+  const elImage = elementImages[el.key];
   return (
     <div className="grid lg:grid-cols-12 gap-10">
       <div className="lg:col-span-4">
@@ -557,12 +772,31 @@ function ElementDetail({
             "aspect-square w-full max-w-md mx-auto relative overflow-hidden",
             el.animClass,
           )}
-          style={{
-            background: `radial-gradient(circle at 30% 30%, ${el.accentSoft} 0%, var(--color-paper-warm) 70%)`,
-          }}
         >
-          <div className="absolute bottom-6 left-6">
-            <div className="eyebrow text-[var(--color-ink-soft)]">
+          {elImage && (
+            <Image
+              src={elImage}
+              alt={`${locale === "es" ? el.nameEs : el.nameEn} — ${el.framework}`}
+              fill
+              sizes="(min-width: 1024px) 360px, 90vw"
+              className="object-cover"
+            />
+          )}
+          {/* Color wash to integrate the photo with the brand element palette */}
+          <div
+            aria-hidden
+            className="absolute inset-0 mix-blend-multiply opacity-40"
+            style={{
+              background: `linear-gradient(160deg, ${el.accent}33 0%, ${el.accentInk}66 100%)`,
+            }}
+          />
+          {/* Bottom scrim so the label is always readable */}
+          <div
+            aria-hidden
+            className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-[var(--color-ink)]/85 via-[var(--color-ink)]/30 to-transparent"
+          />
+          <div className="absolute bottom-6 left-6 text-[var(--color-paper)]" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
+            <div className="eyebrow" style={{ color: el.accentSoft }}>
               {el.framework}
             </div>
             <div className="font-[family-name:var(--font-display)] text-3xl mt-1">
@@ -580,29 +814,151 @@ function ElementDetail({
         </p>
       </div>
 
-      <div className="lg:col-span-8 grid sm:grid-cols-2 gap-8">
-        {layers.map((l, i) => (
-          <div
-            key={l.label}
-            className="bg-[var(--color-paper)] border border-[var(--color-line)] p-7"
-          >
-            <div className="flex items-center gap-3 mb-4">
-              <span
-                className="font-[family-name:var(--font-display)] text-2xl"
-                style={{ color: el.accentInk }}
-              >
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <h3 className="text-sm uppercase tracking-[0.18em] text-[var(--color-muted)]">
-                {l.label}
-              </h3>
+      <div className="lg:col-span-8 space-y-8">
+        <div className="grid sm:grid-cols-2 gap-8">
+          {layers.map((l, i) => (
+            <div
+              key={l.label}
+              className="bg-[var(--color-paper)] border border-[var(--color-line)] p-7"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <span
+                  className="font-[family-name:var(--font-display)] text-2xl"
+                  style={{ color: el.accentInk }}
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <h3 className="text-sm uppercase tracking-[0.18em] text-[var(--color-muted)]">
+                  {l.label}
+                </h3>
+              </div>
+              <p className="text-[var(--color-ink-soft)] leading-relaxed">
+                {l.body}
+              </p>
             </div>
-            <p className="text-[var(--color-ink-soft)] leading-relaxed">
-              {l.body}
+          ))}
+        </div>
+
+        {/* PARADOX — verbatim from presentation. Surfaces the central tension
+         *  of each element so the reader meets it before the competencies. */}
+        {el.paradoxEs && el.paradoxEn && (
+          <div
+            className="relative border-l-2 pl-7 py-4"
+            style={{ borderColor: el.accent }}
+          >
+            <div
+              className="eyebrow mb-3"
+              style={{ color: el.accentInk }}
+            >
+              {locale === "es"
+                ? `La paradoja del liderazgo de ${el.nameEs}`
+                : `The ${el.nameEn} Leadership Paradox`}
+            </div>
+            <p className="font-[family-name:var(--font-display)] text-xl md:text-2xl leading-[1.4] text-[var(--color-ink)] text-pretty">
+              {locale === "es" ? el.paradoxEs : el.paradoxEn}
             </p>
           </div>
-        ))}
+        )}
+
+        {/* KEY COMPONENTS — 4 named competencies per element from presentation. */}
+        {el.components && (
+          <div>
+            <div className="eyebrow text-[var(--color-muted)] mb-5">
+              {locale === "es"
+                ? `Componentes clave del liderazgo de ${el.nameEs}`
+                : `Key Components of ${el.nameEn} Leadership`}
+            </div>
+            <div className="border border-[var(--color-line)] divide-y divide-[var(--color-line)] bg-[var(--color-paper)]">
+              {el.components.map((c, i) => (
+                <div
+                  key={c.nameEn}
+                  className="grid grid-cols-[44px_1fr] gap-5 p-5 md:p-6"
+                >
+                  <span
+                    className="font-[family-name:var(--font-display)] text-2xl tabular-nums"
+                    style={{ color: el.accentInk }}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <div>
+                    <h4 className="font-[family-name:var(--font-display)] text-lg mb-1.5 text-[var(--color-ink)]">
+                      {locale === "es" ? c.nameEs : c.nameEn}
+                    </h4>
+                    <p className="text-sm text-[var(--color-ink-soft)] leading-relaxed">
+                      {locale === "es" ? c.bodyEs : c.bodyEn}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* INVITATION — closing question verbatim from master doc media script. */}
+        {el.invitationEs && el.invitationEn && (
+          <div
+            className="text-center py-8 border-t border-b"
+            style={{ borderColor: el.accentSoft }}
+          >
+            <p
+              className="font-[family-name:var(--font-display)] text-2xl md:text-3xl italic leading-snug"
+              style={{ color: el.accentInk }}
+            >
+              {locale === "es" ? el.invitationEs : el.invitationEn}
+            </p>
+          </div>
+        )}
       </div>
+    </div>
+  );
+}
+
+import type { LucideIcon } from "lucide-react";
+
+const DAILY_ICONS: Record<ElementKey, LucideIcon> = {
+  agua: Droplets,
+  fuego: Flame,
+  aire: Wind,
+  tierra: Mountain,
+  eter: Sparkles,
+};
+
+function DailyScanGrid({ locale }: { locale: "es" | "en" }) {
+  const rows = locale === "es" ? dailyScanEs : dailyScanEn;
+  return (
+    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-[var(--color-line)] border border-[var(--color-line)]">
+      {rows.map((row, idx) => {
+        const el = elements.find((e) => e.key === row.element);
+        const Icon = DAILY_ICONS[row.element];
+        const prompt = locale === "es" ? (row as { promptEs: string }).promptEs : (row as { promptEn: string }).promptEn;
+        return (
+          <article
+            key={row.element}
+            className="bg-[var(--color-paper)] p-7 md:p-8 hover:bg-[var(--color-paper-warm)] transition-colors min-h-[280px] flex flex-col"
+          >
+            <div className="flex items-center gap-3 mb-6">
+              <span
+                className="inline-flex items-center justify-center h-10 w-10 rounded-full"
+                style={{ background: el?.accentSoft ?? "#fff" }}
+              >
+                <Icon className="h-5 w-5" strokeWidth={1.5} style={{ color: el?.accent }} />
+              </span>
+              <span
+                className="text-[0.65rem] tracking-[0.22em] uppercase font-medium"
+                style={{ color: el?.accent }}
+              >
+                {locale === "es" ? el?.nameEs : el?.nameEn} · {el?.framework}
+              </span>
+            </div>
+            <p className="font-[family-name:var(--font-display)] text-lg leading-snug text-[var(--color-ink-soft)] flex-1">
+              {prompt}
+            </p>
+            <div className="mt-6 pt-4 border-t border-[var(--color-line)] text-[0.62rem] tracking-[0.22em] uppercase text-[var(--color-muted)]">
+              {String(idx + 1).padStart(2, "0")} / 04
+            </div>
+          </article>
+        );
+      })}
     </div>
   );
 }

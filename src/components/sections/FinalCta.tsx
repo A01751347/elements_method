@@ -3,11 +3,12 @@
 import { useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "motion/react";
-import { ArrowUpRight, Calendar, MessageSquare } from "lucide-react";
+import { ArrowUpRight, Calendar, MessageSquare, Phone } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { calLink, CAL_EVENT_TYPES } from "@/shared/integrations/cal";
+import { contactInfo } from "@/data/launchData";
 
 const CTA_IMAGE = "/images/heroes/final-cta.jpg";
 
@@ -52,26 +53,26 @@ export function FinalCta({ locale }: { locale: Locale }) {
             transition={{ duration: 0.8 }}
             className="lg:col-span-8"
           >
-            <div className="eyebrow text-[var(--color-paper)]/85 mb-6 flex items-center gap-3">
+            <div className="eyebrow text-[var(--color-paper)]/95 mb-6 flex items-center gap-3">
               <span aria-hidden className="h-px w-12 bg-[var(--color-paper)]/40" />
               {locale === "es" ? "Aplica ahora" : "Apply now"}
             </div>
-            <h2 className="display-1 text-balance text-[var(--color-paper)] max-w-3xl">
+            <h2 className="display-1 text-balance text-[var(--color-paper)] max-w-4xl">
               {locale === "es" ? (
                 <>
-                  El liderazgo comienza{" "}
+                  No necesitamos más líderes con mejores frameworks. Necesitamos líderes que se{" "}
                   <span className="italic font-light text-[var(--color-paper-warm)]">
-                    en la mente
+                    hayan encontrado a sí mismos
                   </span>{" "}
-                  que decide.
+                  — y se hayan dado cuenta de que son suficientes.
                 </>
               ) : (
                 <>
-                  Leadership begins in{" "}
+                  We don&apos;t need more leaders with better frameworks. We need leaders who have{" "}
                   <span className="italic font-light text-[var(--color-paper-warm)]">
-                    the mind that
+                    met themselves
                   </span>{" "}
-                  decides.
+                  — and found that they are enough.
                 </>
               )}
             </h2>
@@ -86,8 +87,8 @@ export function FinalCta({ locale }: { locale: Locale }) {
           >
             <p className="text-[var(--color-paper)]/90 leading-relaxed">
               {locale === "es"
-                ? "Cupo limitado a 15 líderes por módulo. Aplica para revisar tu perfil y agendar una conversación de discovery."
-                : "Capacity capped at 15 leaders per module. Apply to review your profile and schedule a discovery conversation."}
+                ? "Hasta 15 participantes por programa. Aplica para revisar tu perfil y agendar una conversación de discovery."
+                : "Up to 15 participants per program. Apply to review your profile and schedule a discovery conversation."}
             </p>
             <div className="flex flex-wrap gap-3">
               <Button
@@ -123,17 +124,17 @@ export function FinalCta({ locale }: { locale: Locale }) {
             value={locale === "es" ? "Calendario por confirmar" : "Calendar TBD"}
           />
           <ContactPill
+            icon={Phone}
+            label="WhatsApp"
+            value={contactInfo.phoneDisplayMx}
+            href={contactInfo.whatsappLink}
+            external
+          />
+          <ContactPill
             icon={MessageSquare}
             label={locale === "es" ? "Contacto directo" : "Direct contact"}
             value="hello@elementsmethod.com"
             href="mailto:hello@elementsmethod.com"
-          />
-          <ContactPill
-            icon={ArrowUpRight}
-            label="Web"
-            value="www.elementsmethod.com"
-            href="https://www.elementsmethod.com"
-            external
           />
         </motion.div>
       </Container>
@@ -156,9 +157,9 @@ function ContactPill({
 }) {
   const content = (
     <div className="flex items-center gap-4 group">
-      <Icon className="h-5 w-5 text-[var(--color-paper)]/60 group-hover:text-[var(--color-paper)] transition-colors" strokeWidth={1.5} />
+      <Icon className="h-5 w-5 text-[var(--color-paper)]/85 group-hover:text-[var(--color-paper)] transition-colors" strokeWidth={1.5} />
       <div>
-        <div className="text-[0.7rem] tracking-[0.22em] uppercase text-[var(--color-paper)]/60">
+        <div className="text-[0.7rem] tracking-[0.22em] uppercase text-[var(--color-paper)]/85">
           {label}
         </div>
         <div className="text-[var(--color-paper)] text-sm group-hover:text-[var(--color-paper-warm)] transition-colors">

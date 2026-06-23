@@ -96,7 +96,7 @@ export function PathsPreview({
                   <p
                     className={cn(
                       "italic mb-8 text-pretty",
-                      isHovered ? "text-[var(--color-paper)]/70" : "text-[var(--color-ink-soft)]",
+                      isHovered ? "text-[var(--color-paper)]/90" : "text-[var(--color-ink-soft)]",
                     )}
                   >
                     {short}
@@ -108,7 +108,7 @@ export function PathsPreview({
                         key={item}
                         className={cn(
                           "flex items-start gap-2 text-sm leading-relaxed transition-colors",
-                          isHovered ? "text-[var(--color-paper)]/85" : "text-[var(--color-ink-soft)]",
+                          isHovered ? "text-[var(--color-paper)]/95" : "text-[var(--color-ink-soft)]",
                         )}
                       >
                         <Check
@@ -134,7 +134,7 @@ export function PathsPreview({
                     <div
                       className={cn(
                         "text-[0.65rem] uppercase tracking-wide mb-1",
-                        isHovered ? "text-[var(--color-paper)]/60" : "text-[var(--color-muted)]",
+                        isHovered ? "text-[var(--color-paper)]/85" : "text-[var(--color-muted)]",
                       )}
                     >
                       {duration}

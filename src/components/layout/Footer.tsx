@@ -2,12 +2,13 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Instagram, Linkedin, Send, Check } from "lucide-react";
+import { Instagram, Linkedin, Send, Check, Phone, MessageCircle, Mail } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import type { Dict } from "@/i18n/dictionaries";
 import { Container } from "@/components/ui/Container";
 import { LangSwitcher } from "./LangSwitcher";
 import { LogoMark } from "@/components/brand/Logo";
+import { contactInfo } from "@/data/launchData";
 
 export function Footer({
   locale,
@@ -18,15 +19,31 @@ export function Footer({
 }) {
   const base = `/${locale}`;
   const [email, setEmail] = React.useState("");
-  const [subscribed, setSubscribed] = React.useState(false);
+  const [state, setState] = React.useState<"idle" | "sending" | "subscribed" | "error">(
+    "idle",
+  );
 
-  function onSubscribe(e: React.FormEvent) {
+  async function onSubscribe(e: React.FormEvent) {
     e.preventDefault();
     if (!email.includes("@")) return;
-    setSubscribed(true);
-    setEmail("");
-    setTimeout(() => setSubscribed(false), 4000);
+    setState("sending");
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, source: "footer", locale }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) throw new Error(data.error || `HTTP ${res.status}`);
+      setState("subscribed");
+      setEmail("");
+      setTimeout(() => setState("idle"), 5000);
+    } catch {
+      setState("error");
+      setTimeout(() => setState("idle"), 5000);
+    }
   }
+  const subscribed = state === "subscribed";
 
   const exploreLinks = [
     { href: `${base}`, label: dict.nav.home },
@@ -45,12 +62,12 @@ export function Footer({
   ];
 
   return (
-    <footer className="bg-[var(--color-ink)] text-[var(--color-paper)]">
+    <footer className="bg-[var(--color-ink)] text-[var(--color-paper)] print:hidden">
       <Container className="pt-24 pb-12">
         {/* Top: newsletter band */}
         <div className="grid gap-12 lg:gap-16 lg:grid-cols-[1.1fr_1fr] pb-16 border-b border-[var(--color-paper)]/10">
           <div>
-            <div className="eyebrow text-[var(--color-paper)]/60 mb-4 flex items-center gap-3">
+            <div className="eyebrow text-[var(--color-paper)]/85 mb-4 flex items-center gap-3">
               <span aria-hidden className="h-px w-8 bg-[var(--color-paper)]/30" />
               {dict.footer.newsletterTitle}
             </div>
@@ -59,7 +76,7 @@ export function Footer({
                 ? "Una nota mensual. Sin ruido."
                 : "A monthly note. No noise."}
             </h2>
-            <p className="mt-5 text-[var(--color-paper)]/70 max-w-md leading-relaxed">
+            <p className="mt-5 text-[var(--color-paper)]/90 max-w-md leading-relaxed">
               {dict.footer.newsletterCopy}
             </p>
           </div>
@@ -84,13 +101,18 @@ export function Footer({
               />
               <button
                 type="submit"
-                className="inline-flex items-center gap-2 text-[var(--color-paper)] hover:text-[var(--color-paper)]/80 transition-colors text-sm tracking-wide uppercase py-3"
+                disabled={state === "sending"}
+                className="inline-flex items-center gap-2 text-[var(--color-paper)] hover:text-[var(--color-paper)]/95 disabled:opacity-50 transition-colors text-sm tracking-wide uppercase py-3"
               >
                 {subscribed ? (
                   <>
                     <Check className="h-4 w-4" />
                     {locale === "es" ? "Listo" : "Done"}
                   </>
+                ) : state === "sending" ? (
+                  <>{locale === "es" ? "Enviando…" : "Sending…"}</>
+                ) : state === "error" ? (
+                  <>{locale === "es" ? "Reintentar" : "Retry"}</>
                 ) : (
                   <>
                     {dict.common.subscribe}
@@ -119,27 +141,51 @@ export function Footer({
                 Elements <span className="italic font-light">Method</span>
               </span>
             </Link>
-            <p className="mt-5 text-sm text-[var(--color-paper)]/60 leading-relaxed max-w-xs">
+            <p className="mt-5 text-sm text-[var(--color-paper)]/85 leading-relaxed max-w-xs">
               {dict.footer.tagline}
             </p>
             <div className="mt-6 flex items-center gap-4">
+              {contactInfo.socialHandles.map((s) => {
+                const Icon = s.name.toLowerCase() === "linkedin" ? Linkedin : Instagram;
+                return (
+                  <a
+                    key={s.name}
+                    href={s.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={s.name}
+                    className="text-[var(--color-paper)]/85 hover:text-[var(--color-paper)] transition-colors"
+                  >
+                    <Icon className="h-4 w-4" />
+                  </a>
+                );
+              })}
+            </div>
+
+            {/* Direct contact rail — phone + WhatsApp + email */}
+            <div className="mt-8 space-y-2.5 text-sm">
               <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Instagram"
-                className="text-[var(--color-paper)]/60 hover:text-[var(--color-paper)] transition-colors"
+                href={`tel:${contactInfo.phoneE164}`}
+                className="flex items-center gap-3 text-[var(--color-paper)]/90 hover:text-[var(--color-paper)] transition-colors"
               >
-                <Instagram className="h-4 w-4" />
+                <Phone className="h-3.5 w-3.5" strokeWidth={1.5} />
+                {contactInfo.phoneDisplayMx}
               </a>
               <a
-                href="https://linkedin.com"
+                href={contactInfo.whatsappLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="LinkedIn"
-                className="text-[var(--color-paper)]/60 hover:text-[var(--color-paper)] transition-colors"
+                className="flex items-center gap-3 text-[var(--color-paper)]/90 hover:text-[var(--color-paper)] transition-colors"
               >
-                <Linkedin className="h-4 w-4" />
+                <MessageCircle className="h-3.5 w-3.5" strokeWidth={1.5} />
+                WhatsApp
+              </a>
+              <a
+                href="mailto:hello@elementsmethod.com"
+                className="flex items-center gap-3 text-[var(--color-paper)]/90 hover:text-[var(--color-paper)] transition-colors"
+              >
+                <Mail className="h-3.5 w-3.5" strokeWidth={1.5} />
+                hello@elementsmethod.com
               </a>
             </div>
           </div>
@@ -148,14 +194,14 @@ export function Footer({
           <FooterCol title={dict.footer.nav.services} links={programLinks} />
 
           <div>
-            <h3 className="eyebrow text-[var(--color-paper)]/60 mb-5">
+            <h3 className="eyebrow text-[var(--color-paper)]/85 mb-5">
               {dict.footer.nav.legal}
             </h3>
             <ul className="space-y-3 text-sm">
               <li>
                 <Link
                   href={`${base}/${locale === "es" ? "privacidad" : "privacy"}`}
-                  className="text-[var(--color-paper)]/70 hover:text-[var(--color-paper)] transition-colors"
+                  className="text-[var(--color-paper)]/90 hover:text-[var(--color-paper)] transition-colors"
                 >
                   {dict.footer.privacy}
                 </Link>
@@ -163,7 +209,7 @@ export function Footer({
               <li>
                 <button
                   type="button"
-                  className="text-[var(--color-paper)]/70 hover:text-[var(--color-paper)] transition-colors text-left"
+                  className="text-[var(--color-paper)]/90 hover:text-[var(--color-paper)] transition-colors text-left"
                   onClick={() => {
                     document.cookie =
                       "em_cookie_consent=; path=/; max-age=0";
@@ -174,12 +220,28 @@ export function Footer({
                 </button>
               </li>
               <li>
-                <a
-                  href="mailto:hello@elementsmethod.com"
-                  className="text-[var(--color-paper)]/70 hover:text-[var(--color-paper)] transition-colors"
+                <Link
+                  href={`${base}/legal/contrato`}
+                  className="text-[var(--color-paper)]/90 hover:text-[var(--color-paper)] transition-colors"
                 >
-                  hello@elementsmethod.com
-                </a>
+                  {locale === "es" ? "Contrato" : "Agreement"}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={`${base}/legal/nda`}
+                  className="text-[var(--color-paper)]/90 hover:text-[var(--color-paper)] transition-colors"
+                >
+                  NDA
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={`${base}/legal/relevo`}
+                  className="text-[var(--color-paper)]/90 hover:text-[var(--color-paper)] transition-colors"
+                >
+                  {locale === "es" ? "Relevo" : "Release"}
+                </Link>
               </li>
             </ul>
           </div>
@@ -206,13 +268,13 @@ function FooterCol({
 }) {
   return (
     <div>
-      <h3 className="eyebrow text-[var(--color-paper)]/60 mb-5">{title}</h3>
+      <h3 className="eyebrow text-[var(--color-paper)]/85 mb-5">{title}</h3>
       <ul className="space-y-3 text-sm">
         {links.map((l) => (
           <li key={l.href}>
             <Link
               href={l.href}
-              className="text-[var(--color-paper)]/70 hover:text-[var(--color-paper)] transition-colors"
+              className="text-[var(--color-paper)]/90 hover:text-[var(--color-paper)] transition-colors"
             >
               {l.label}
             </Link>

@@ -59,10 +59,17 @@ export function LangSwitcher({
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-2 text-[0.75rem] tracking-[0.18em] uppercase",
-        inverted ? "text-[var(--color-paper)]/80" : "text-[var(--color-muted)]",
+        "inline-flex items-center gap-2 text-[0.8rem] tracking-[0.18em] uppercase font-medium",
+        inverted
+          ? "text-[var(--color-paper)]"
+          : "text-[var(--color-ink-soft)]",
         pending && "opacity-60",
       )}
+      style={
+        inverted
+          ? { textShadow: "0 1px 2px rgba(0,0,0,0.35)" }
+          : undefined
+      }
       role="group"
       aria-label="Language"
     >

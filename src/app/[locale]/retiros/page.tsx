@@ -2,12 +2,8 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import {
   Wind,
-  Eye,
-  PenLine,
-  MessageCircle,
   Flame,
   Sparkles,
-  Compass,
   Droplets,
   Mountain,
 } from "lucide-react";
@@ -17,6 +13,9 @@ import { Section, Eyebrow } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { RetreatsShowcase } from "@/components/sections/RetreatsShowcase";
+import { PracticesGallery } from "@/components/sections/PracticesGallery";
+import { RetreatCalendar } from "@/components/sections/RetreatCalendar";
+import { ProvidersInventory } from "@/components/sections/ProvidersInventory";
 import { processSteps, elements } from "@/data/content";
 
 export async function generateMetadata({
@@ -55,14 +54,14 @@ export default async function RetreatsPage({
         <div className="absolute inset-0 -z-10 film-grain" />
 
         <Container className="relative pb-16 md:pb-24">
-          <div className="eyebrow text-[var(--color-paper)]/80 mb-8 flex items-center gap-3">
+          <div className="eyebrow text-[var(--color-paper)]/95 mb-8 flex items-center gap-3">
             <span aria-hidden className="h-px w-12 bg-[var(--color-paper)]/40" />
             {dict.retreats.eyebrow}
           </div>
           <h1 className="display-1 text-balance text-[var(--color-paper)] max-w-[15ch]">
             {dict.retreats.title}
           </h1>
-          <p className="lead mt-8 max-w-2xl text-[var(--color-paper)]/85">
+          <p className="lead mt-8 max-w-2xl text-[var(--color-paper)]/95">
             {dict.retreats.lead}
           </p>
         </Container>
@@ -181,107 +180,14 @@ export default async function RetreatsPage({
         </div>
       </Section>
 
-      {/* SAMPLE EXERCISES — 4 emblematic exercises */}
-      <Section spacing="default">
-        <div className="grid lg:grid-cols-12 gap-12 mb-16">
-          <div className="lg:col-span-6">
-            <Eyebrow className="mb-6 flex items-center gap-3">
-              <Sparkles className="h-3.5 w-3.5" strokeWidth={1.5} />
-              {locale === "es" ? "Ejercicios del campo" : "Field exercises"}
-            </Eyebrow>
-            <h2 className="display-2 text-balance">
-              {locale === "es"
-                ? "Un ejercicio emblemático por elemento."
-                : "One emblematic exercise per element."}
-            </h2>
-          </div>
-          <div className="lg:col-span-6 lg:pt-4">
-            <p className="lead text-pretty">
-              {locale === "es"
-                ? "Estos son ejercicios documentados del programa — cada uno con su entorno, su duración y su por qué."
-                : "These are documented program exercises — each with its environment, duration and rationale."}
-            </p>
-          </div>
-        </div>
+      {/* CALENDAR — 9 retreats (Oct 2026 → Q4 2027) */}
+      <RetreatCalendar locale={locale} />
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-px bg-[var(--color-line)] border border-[var(--color-line)]">
-          {(locale === "es"
-            ? [
-                {
-                  icon: Compass,
-                  el: "Tierra · ROOTS",
-                  t: "El Contacto con las Raíces",
-                  b: "Descalzo sobre tierra de bosque, 30 minutos en silencio con manos en el suelo. Earthing documentado reduce inflamación y regula cortisol.",
-                },
-                {
-                  icon: Flame,
-                  el: "Fuego · IGNITE",
-                  t: "El Consejo del Fuego",
-                  b: "Círculo alrededor de una fogata sin agenda los primeros 60 minutos — solo el fuego. Dos preguntas: ¿cuál es la visión que cargas y no has dicho? ¿Cuál es el fuego que has mantenido demasiado pequeño?",
-                },
-                {
-                  icon: Eye,
-                  el: "Agua · FLOW",
-                  t: "El Testigo del Río",
-                  b: "Solo, junto a agua en movimiento, mínimo 20 minutos en silencio. Activa el Default Mode Network. Tres preguntas para integrar lo que el río mostró.",
-                },
-                {
-                  icon: PenLine,
-                  el: "Aire · CLEAR",
-                  t: "La Verdad de 100 Palabras",
-                  b: "Escribe exactamente 100 palabras sobre tu desafío más importante. Luego 10. Luego 1. La compresión revela la palabra brújula de los meses siguientes.",
-                },
-              ]
-            : [
-                {
-                  icon: Compass,
-                  el: "Earth · ROOTS",
-                  t: "The Root Contact",
-                  b: "Barefoot on forest soil, 30 minutes in silence with hands on the ground. Documented earthing reduces inflammation and regulates cortisol.",
-                },
-                {
-                  icon: Flame,
-                  el: "Fire · IGNITE",
-                  t: "The Fire Council",
-                  b: "Circle around fire with no agenda for the first 60 minutes — only the fire. Two questions: what is the vision you carry and haven't spoken? What is the fire you've kept too small?",
-                },
-                {
-                  icon: Eye,
-                  el: "Water · FLOW",
-                  t: "The River Witness",
-                  b: "Alone, beside moving water, minimum 20 minutes in silence. Activates the Default Mode Network. Three questions to integrate what the river showed.",
-                },
-                {
-                  icon: PenLine,
-                  el: "Air · CLEAR",
-                  t: "The 100-Word Truth",
-                  b: "Write exactly 100 words about your most important challenge. Then 10. Then 1. Compression reveals the compass word of the months ahead.",
-                },
-              ]
-          ).map((row) => {
-            const Icon = row.icon;
-            return (
-              <article
-                key={row.t}
-                className="bg-[var(--color-paper)] p-7 md:p-8 hover:bg-[var(--color-paper-warm)] transition-colors min-h-[320px] flex flex-col"
-              >
-                <div className="flex items-start justify-between mb-6">
-                  <Icon className="h-5 w-5 text-[var(--color-gold-deep)]" strokeWidth={1.5} />
-                  <span className="text-[0.65rem] tracking-[0.22em] uppercase text-[var(--color-muted)]">
-                    {row.el}
-                  </span>
-                </div>
-                <h3 className="font-[family-name:var(--font-display)] text-xl tracking-tight mb-3 italic">
-                  {row.t}
-                </h3>
-                <p className="text-sm text-[var(--color-ink-soft)] leading-relaxed flex-1">
-                  {row.b}
-                </p>
-              </article>
-            );
-          })}
-        </div>
-      </Section>
+      {/* PROVIDERS — 16 field disciplines with element affinity + status */}
+      <ProvidersInventory locale={locale} />
+
+      {/* PRACTICES GALLERY — editorial index of all documented field practices. */}
+      <PracticesGallery locale={locale} />
 
       {/* CTA — apply to a program */}
       <Section spacing="default" tone="ink">
@@ -295,7 +201,7 @@ export default async function RetreatsPage({
                 ? "Las inmersiones viven dentro de un programa."
                 : "Immersions live within a program."}
             </h2>
-            <p className="lead mt-6 text-[var(--color-paper)]/75 text-pretty max-w-2xl">
+            <p className="lead mt-6 text-[var(--color-paper)]/90 text-pretty max-w-2xl">
               {locale === "es"
                 ? "No se ofrecen como módulos sueltos. Se acceden a través de Raíces, Corriente o Fuente — o de Origin para organizaciones."
                 : "They are not offered as standalone modules. You access them through Roots, Current or Source — or Origin for organizations."}

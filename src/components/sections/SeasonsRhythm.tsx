@@ -49,7 +49,7 @@ export function SeasonsRhythm({ locale }: { locale: Locale }) {
             </h2>
           </div>
           <div className="lg:col-span-5">
-            <p className="text-lg text-[var(--color-paper)]/75 leading-relaxed text-pretty">
+            <p className="text-lg text-[var(--color-paper)]/90 leading-relaxed text-pretty">
               {locale === "es"
                 ? "En la física, el núcleo es la masa densa y energética desde la que todo lo demás se organiza. En liderazgo, la persona es el núcleo desde el que radían todas las dinámicas del equipo, la cultura y los resultados organizacionales."
                 : "In physics, the nucleus is the dense, energetic mass from which everything else is organized. In leadership, the person is the nucleus from which all team dynamics, culture and organizational results radiate."}
@@ -104,7 +104,7 @@ export function SeasonsRhythm({ locale }: { locale: Locale }) {
                     </span>
 
                     <div>
-                      <div className="text-[0.62rem] tracking-[0.22em] uppercase text-[var(--color-paper)]/55 mb-1.5">
+                      <div className="text-[0.62rem] tracking-[0.22em] uppercase text-[var(--color-paper)]/80 mb-1.5">
                         {locale === "es" ? circle.whoEs : circle.whoEn}
                       </div>
                       <h3
@@ -118,7 +118,7 @@ export function SeasonsRhythm({ locale }: { locale: Locale }) {
                       </h3>
                     </div>
 
-                    <p className="text-sm text-[var(--color-paper)]/70 leading-relaxed max-w-2xl">
+                    <p className="text-sm text-[var(--color-paper)]/90 leading-relaxed max-w-2xl">
                       {locale === "es" ? circle.bodyEs : circle.bodyEn}
                     </p>
                   </div>
@@ -139,7 +139,7 @@ export function SeasonsRhythm({ locale }: { locale: Locale }) {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="mt-10 text-sm italic text-[var(--color-paper)]/55 max-w-md pl-6 md:pl-10"
+            className="mt-10 text-sm italic text-[var(--color-paper)]/80 max-w-md pl-6 md:pl-10"
           >
             {locale === "es"
               ? "Cada nivel se extiende un grado más allá del anterior. El alcance del líder se mide por la salud de su núcleo."

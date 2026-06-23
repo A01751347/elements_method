@@ -20,11 +20,11 @@ export function NatureLexicon({ locale }: { locale: Locale }) {
 
       <Container className="relative mb-10">
         <div className="flex items-center justify-between gap-6 flex-wrap">
-          <div className="flex items-center gap-3 eyebrow text-[var(--color-paper)]/60">
+          <div className="flex items-center gap-3 eyebrow text-[var(--color-paper)]/85">
             <Leaf className="h-3.5 w-3.5" strokeWidth={1.5} />
             {locale === "es" ? "Léxico del método" : "Method lexicon"}
           </div>
-          <p className="text-[var(--color-paper)]/60 text-sm max-w-md text-pretty">
+          <p className="text-[var(--color-paper)]/85 text-sm max-w-md text-pretty">
             {locale === "es"
               ? "Los cuatro elementos y las seis fases del Protocolo de Desconexión — el vocabulario operativo del método."
               : "The four elements and the six phases of the Disconnection Protocol — the method's operating vocabulary."}
@@ -49,7 +49,7 @@ export function NatureLexicon({ locale }: { locale: Locale }) {
                 key={`${w}-${idx}`}
                 className="shrink-0 inline-flex items-center gap-6 px-8"
               >
-                <span className="font-[family-name:var(--font-display)] text-[clamp(2.5rem,5vw,4.5rem)] italic font-light text-[var(--color-paper)]/85 whitespace-nowrap leading-none">
+                <span className="font-[family-name:var(--font-display)] text-[clamp(2.5rem,5vw,4.5rem)] italic font-light text-[var(--color-paper)]/95 whitespace-nowrap leading-none">
                   {w.toLowerCase()}
                 </span>
                 <span

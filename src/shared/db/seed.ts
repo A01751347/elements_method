@@ -8,6 +8,9 @@ import {
   productCombinations,
   products,
   retreats,
+  venues,
+  providers,
+  subscriptionTiers,
 } from "./schema";
 
 import { productSeeds } from "./seeds/products";
@@ -16,6 +19,13 @@ import { documentSeeds } from "./seeds/documents";
 import { formSeeds } from "./seeds/forms";
 import { calculatorConfigSeeds } from "./seeds/calculator";
 import { retreatSeeds } from "./seeds/retreats";
+import {
+  venueSeeds,
+  providerSeeds,
+  subscriptionTierSeeds,
+  calendarRetreatSeeds,
+  operationsSeedStats,
+} from "./seeds/operations";
 
 async function seedProducts() {
   console.log("→ products");
@@ -201,6 +211,127 @@ async function seedRetreats() {
   console.log(`  ✓ ${retreatSeeds.length} retreats upserted`);
 }
 
+async function seedVenues() {
+  console.log("→ venues (operations)");
+  for (const v of venueSeeds) {
+    await db
+      .insert(venues)
+      .values(v)
+      .onConflictDoUpdate({
+        target: venues.slug,
+        set: {
+          name: v.name,
+          city: v.city,
+          state: v.state,
+          capacity: v.capacity ?? null,
+          notesEs: v.notesEs ?? null,
+          url: v.url ?? null,
+          rangeMxn: v.rangeMxn ?? null,
+          active: v.active ?? true,
+          isPlaceholder: v.isPlaceholder ?? false,
+          placeholderFields: v.placeholderFields ?? null,
+          updatedAt: new Date(),
+        },
+      });
+  }
+  console.log(`  ✓ ${venueSeeds.length} venues upserted`);
+}
+
+async function seedProviders() {
+  console.log("→ providers (operations)");
+  for (const p of providerSeeds) {
+    await db
+      .insert(providers)
+      .values(p)
+      .onConflictDoUpdate({
+        target: providers.slug,
+        set: {
+          disciplineEs: p.disciplineEs,
+          disciplineEn: p.disciplineEn,
+          elementAffinity: p.elementAffinity,
+          descriptionEs: p.descriptionEs ?? null,
+          descriptionEn: p.descriptionEn ?? null,
+          providerName: p.providerName ?? null,
+          providerContact: p.providerContact ?? null,
+          status: p.status,
+          notesEs: p.notesEs ?? null,
+          notesEn: p.notesEn ?? null,
+          active: p.active ?? true,
+          isPlaceholder: p.isPlaceholder ?? true,
+          placeholderFields: p.placeholderFields ?? null,
+          updatedAt: new Date(),
+        },
+      });
+  }
+  console.log(`  ✓ ${providerSeeds.length} providers upserted`);
+}
+
+async function seedSubscriptionTiers() {
+  console.log("→ subscription_tiers (operations)");
+  for (const t of subscriptionTierSeeds) {
+    await db
+      .insert(subscriptionTiers)
+      .values(t)
+      .onConflictDoUpdate({
+        target: subscriptionTiers.slug,
+        set: {
+          nameEs: t.nameEs,
+          nameEn: t.nameEn,
+          taglineEs: t.taglineEs ?? null,
+          taglineEn: t.taglineEn ?? null,
+          cadenceEs: t.cadenceEs ?? null,
+          cadenceEn: t.cadenceEn ?? null,
+          includesEs: t.includesEs ?? null,
+          includesEn: t.includesEn ?? null,
+          priceLabelMxn: t.priceLabelMxn ?? null,
+          priceLabelEn: t.priceLabelEn ?? null,
+          highlight: t.highlight ?? false,
+          sortOrder: t.sortOrder ?? 0,
+          status: t.status ?? "draft",
+          isPlaceholder: t.isPlaceholder ?? true,
+          placeholderFields: t.placeholderFields ?? null,
+          updatedAt: new Date(),
+        },
+      });
+  }
+  console.log(`  ✓ ${subscriptionTierSeeds.length} subscription tiers upserted`);
+}
+
+async function seedCalendarRetreats() {
+  console.log("→ retreats (production calendar 2026-2027)");
+  for (const r of calendarRetreatSeeds) {
+    const existing = await db
+      .select({ id: retreats.id })
+      .from(retreats)
+      .where(sql`${retreats.nameEs} = ${r.nameEs} AND ${retreats.startDate} = ${r.startDate}`)
+      .limit(1);
+    if (existing.length > 0) {
+      await db
+        .update(retreats)
+        .set({
+          nameEn: r.nameEn,
+          endDate: r.endDate,
+          location: r.location,
+          modality: r.modality,
+          elementsCovered: r.elementsCovered,
+          descriptionEs: r.descriptionEs ?? null,
+          descriptionEn: r.descriptionEn ?? null,
+          imageUrl: r.imageUrl ?? null,
+          priceMxn: r.priceMxn,
+          priceUsd: r.priceUsd ?? null,
+          capacity: r.capacity,
+          lowSeatsThreshold: r.lowSeatsThreshold ?? 5,
+          active: r.active ?? true,
+          updatedAt: new Date(),
+        })
+        .where(sql`${retreats.id} = ${existing[0].id}`);
+    } else {
+      await db.insert(retreats).values(r);
+    }
+  }
+  console.log(`  ✓ ${calendarRetreatSeeds.length} production retreats upserted`);
+}
+
 async function main() {
   console.log("Seeding Elements Method DB…\n");
   await seedProducts();
@@ -209,6 +340,12 @@ async function main() {
   await seedForms();
   await seedCalculator();
   await seedRetreats();
+  await seedVenues();
+  await seedProviders();
+  await seedSubscriptionTiers();
+  await seedCalendarRetreats();
+  console.log(`\n  Operations placeholders: ${operationsSeedStats.placeholdersTotal} fields across`);
+  console.log(`    ${operationsSeedStats.retreats} retreats · ${operationsSeedStats.venues} venues · ${operationsSeedStats.providers} providers · ${operationsSeedStats.subscriptionTiers} tiers`);
   console.log("\n✓ done.");
 }
 

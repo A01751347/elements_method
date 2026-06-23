@@ -78,7 +78,7 @@ export function HeroSection({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6, duration: 1 }}
-        className="absolute top-28 right-6 hidden md:flex items-center gap-3 text-[0.7rem] tracking-[0.22em] uppercase text-[var(--color-paper)]/70 rotate-90 origin-right translate-x-8"
+        className="absolute top-28 right-6 hidden md:flex items-center gap-3 text-[0.7rem] tracking-[0.22em] uppercase text-[var(--color-paper)]/90 rotate-90 origin-right translate-x-8"
       >
         <span aria-hidden className="h-px w-10 bg-[var(--color-paper)]/40" />
         Water · Fire · Air · Earth
@@ -161,10 +161,10 @@ export function HeroSection({
                   className="group flex items-center gap-3 py-5 px-4 border-r last:border-r-0 border-[var(--color-paper)]/15 hover:bg-[var(--color-paper)]/5 transition-colors"
                 >
                   <Icon
-                    className={`h-4 w-4 text-[var(--color-paper)]/70 group-hover:text-[var(--color-paper)] transition-colors ${el.anim}`}
+                    className={`h-4 w-4 text-[var(--color-paper)]/90 group-hover:text-[var(--color-paper)] transition-colors ${el.anim}`}
                     strokeWidth={1.5}
                   />
-                  <span className="text-[0.78rem] tracking-[0.2em] uppercase text-[var(--color-paper)]/80 group-hover:text-[var(--color-paper)] transition-colors">
+                  <span className="text-[0.78rem] tracking-[0.2em] uppercase text-[var(--color-paper)]/95 group-hover:text-[var(--color-paper)] transition-colors">
                     {String(idx + 1).padStart(2, "0")} {el.label}
                   </span>
                 </Link>
@@ -181,7 +181,7 @@ export function HeroSection({
         transition={{ delay: 1.4, duration: 0.8 }}
         className="absolute bottom-6 inset-x-0 z-10"
       >
-        <Container className="flex items-center justify-between gap-6 text-[var(--color-paper)]/70">
+        <Container className="flex items-center justify-between gap-6 text-[var(--color-paper)]/90">
           <div className="flex items-center gap-3 text-[0.72rem] tracking-[0.2em] uppercase">
             <ArrowDown className="h-3.5 w-3.5 animate-bounce" aria-hidden />
             {locale === "es" ? "Desplázate" : "Scroll"}

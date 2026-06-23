@@ -30,7 +30,7 @@ export function StatsBand({ locale }: { locale: Locale }) {
               className="flex flex-col gap-3"
             >
               <CountUp value={s.value} suffix={s.suffix} />
-              <div className="text-sm tracking-wide text-[var(--color-paper)]/60 uppercase">
+              <div className="text-sm tracking-wide text-[var(--color-paper)]/85 uppercase">
                 {locale === "es" ? s.labelEs : s.labelEn}
               </div>
               <div className="h-px w-12 bg-[var(--color-paper)]/30 mt-1" />
@@ -67,7 +67,7 @@ function CountUp({ value, suffix }: { value: number; suffix: string }) {
       >
         {display}
       </span>
-      <span className="font-[family-name:var(--font-display)] text-3xl text-[var(--color-paper)]/70">
+      <span className="font-[family-name:var(--font-display)] text-3xl text-[var(--color-paper)]/90">
         {suffix}
       </span>
     </div>

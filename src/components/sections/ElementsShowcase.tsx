@@ -88,7 +88,7 @@ export function ElementsShowcase({
                   <span
                     className={cn(
                       "text-[0.7rem] tracking-[0.22em] uppercase",
-                      isActive ? "text-[var(--color-paper)]/70" : "text-[var(--color-muted)]",
+                      isActive ? "text-[var(--color-paper)]/90" : "text-[var(--color-muted)]",
                     )}
                   >
                     0{idx + 1}
@@ -100,7 +100,7 @@ export function ElementsShowcase({
                 <div
                   className={cn(
                     "mt-2 text-[0.75rem] tracking-wide",
-                    isActive ? "text-[var(--color-paper)]/60" : "text-[var(--color-muted)]",
+                    isActive ? "text-[var(--color-paper)]/85" : "text-[var(--color-muted)]",
                   )}
                 >
                   {locale === "es" ? el.qualityEs : el.qualityEn}
@@ -148,7 +148,7 @@ export function ElementsShowcase({
                 <div className="absolute inset-x-0 bottom-0 h-1/2 scrim-bottom pointer-events-none" />
                 <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between gap-4">
                   <div>
-                    <div className="text-[0.7rem] tracking-[0.22em] uppercase text-[var(--color-paper)]/70 mb-1">
+                    <div className="text-[0.7rem] tracking-[0.22em] uppercase text-[var(--color-paper)]/90 mb-1">
                       {locale === "es" ? "Elemento activo" : "Active element"}
                     </div>
                     <div
@@ -172,7 +172,7 @@ export function ElementsShowcase({
 
               {/* Content side */}
               <div className="lg:col-span-6 p-8 md:p-12 lg:p-16">
-                <div className="eyebrow text-[var(--color-paper)]/60 mb-6 flex items-center gap-3">
+                <div className="eyebrow text-[var(--color-paper)]/85 mb-6 flex items-center gap-3">
                   <span aria-hidden className="h-px w-8 bg-[var(--color-paper)]/30" />
                   {locale === "es" ? "Cuatro capas" : "Four layers"}
                 </div>
@@ -219,10 +219,10 @@ export function ElementsShowcase({
 function Row({ label, body }: { label: string; body: string }) {
   return (
     <div className="grid grid-cols-[100px_1fr] gap-4 pb-5 border-b border-[var(--color-paper)]/10 last:border-0">
-      <div className="text-[0.7rem] tracking-[0.18em] uppercase text-[var(--color-paper)]/60 pt-0.5">
+      <div className="text-[0.7rem] tracking-[0.18em] uppercase text-[var(--color-paper)]/85 pt-0.5">
         {label}
       </div>
-      <p className="text-[var(--color-paper)]/85 text-[0.95rem] leading-relaxed">
+      <p className="text-[var(--color-paper)]/95 text-[0.95rem] leading-relaxed">
         {body}
       </p>
     </div>

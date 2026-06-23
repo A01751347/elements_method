@@ -43,7 +43,7 @@ export default async function BlogPage({
         <div className="absolute inset-0 -z-10 film-grain" />
 
         <Container className="relative pb-16 md:pb-24">
-          <div className="eyebrow text-[var(--color-paper)]/80 mb-8 flex items-center gap-3">
+          <div className="eyebrow text-[var(--color-paper)]/95 mb-8 flex items-center gap-3">
             <span aria-hidden className="h-px w-12 bg-[var(--color-paper)]/40" />
             {dict.blog.eyebrow}
           </div>

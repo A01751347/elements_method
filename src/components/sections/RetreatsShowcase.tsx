@@ -268,7 +268,7 @@ function StatusBadge({
     );
   }
   return (
-    <span className="inline-flex items-center gap-1.5 bg-[var(--color-ink)]/80 backdrop-blur-sm px-3 py-1.5 text-[0.7rem] tracking-[0.18em] uppercase text-[var(--color-paper)]/80">
+    <span className="inline-flex items-center gap-1.5 bg-[var(--color-ink)]/80 backdrop-blur-sm px-3 py-1.5 text-[0.7rem] tracking-[0.18em] uppercase text-[var(--color-paper)]/95">
       <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-paper)]/60" />
       {dict.retreats.status.closed}
     </span>

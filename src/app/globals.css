@@ -12,9 +12,9 @@
   --color-paper: #f5f0e8;        /* Lino · fondo cálido */
   --color-paper-warm: #ebe4d5;   /* Lino más cálido (derivado) */
   --color-paper-deep: #ddd2bd;   /* Acento neutro para divisores */
-  --color-ink: #2c2c2a;          /* Piedra · tipografía + fondos oscuros */
-  --color-ink-soft: #4a4a47;     /* Piedra suavizado */
-  --color-muted: #7a7670;        /* Neutro medio */
+  --color-ink: #1f1f1d;          /* Piedra · tipografía + fondos oscuros (más oscuro para AA en weight 400) */
+  --color-ink-soft: #3a3a37;     /* Piedra suavizado — antes #4a4a47 era ilegible con weight 300 */
+  --color-muted: #5a5650;        /* Neutro medio — antes #7a7670, demasiado claro para texto */
   --color-line: #d8cfba;         /* Línea sutil */
 
   /* Acento dorado — el Núcleo del líder */
@@ -76,15 +76,28 @@
     text-rendering: optimizeLegibility;
     color-scheme: light;
     scroll-behavior: smooth;
+    font-size: 17px; /* base bump from default 16 for screen legibility */
+  }
+  @media (min-width: 1024px) {
+    html { font-size: 18px; }
   }
 
   body {
     background: var(--color-paper);
     color: var(--color-ink);
     font-family: var(--font-sans);
-    font-weight: 300; /* Jost Light */
+    font-weight: 400; /* Jost Regular — antes 300 era ilegible */
+    font-size: 1rem;
+    line-height: 1.6;
     overflow-x: hidden;
   }
+
+  /* Paragraphs get readable line-height by default — but NOT a hard color,
+   * because dark sections (Section tone="ink", FinalCta, footer) set
+   * text-[var(--color-paper)] on a parent and rely on inheritance. Setting
+   * `color` on `p` here would break that. Opt into soft ink with `.lead-muted`
+   * or by adding text-[var(--color-ink-soft)] explicitly on light pages. */
+  p { line-height: 1.65; }
 
   ::selection {
     background: var(--color-gold);
@@ -93,7 +106,7 @@
 
   h1, h2, h3, h4 {
     font-family: var(--font-display);
-    font-weight: 300; /* Cormorant Light */
+    font-weight: 500; /* Cormorant Medium — antes 300 era humo */
     letter-spacing: -0.012em;
     color: var(--color-ink);
   }
@@ -131,51 +144,61 @@
 
   .eyebrow {
     font-family: var(--font-sans);
-    font-size: 0.7rem;
-    letter-spacing: 0.22em;
+    font-size: 0.8rem;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--color-muted);
-    font-weight: 400; /* Jost Regular for label weight */
+    /* color INHERITS from parent — heroes set text-[var(--color-paper)]
+     * on the section so eyebrows over images render in paper automatically.
+     * Light pages inherit body's --color-ink (a touch heavy for labels —
+     * those pages can add text-[var(--color-ink-soft)] explicitly). */
+    color: inherit;
+    font-weight: 500;
   }
 
   .display-1 {
     font-family: var(--font-display);
     font-size: clamp(3rem, 8.5vw, 7rem);
-    line-height: 0.98;
-    font-weight: 300;
+    line-height: 1.02;
+    font-weight: 500;            /* antes 300 — Cormorant a 300 desaparece */
     letter-spacing: -0.022em;
   }
 
   .display-2 {
     font-family: var(--font-display);
     font-size: clamp(2.25rem, 5.5vw, 4.25rem);
-    line-height: 1.05;
-    font-weight: 300;
+    line-height: 1.08;
+    font-weight: 500;
     letter-spacing: -0.018em;
   }
 
   .display-3 {
     font-family: var(--font-display);
     font-size: clamp(1.5rem, 3vw, 2.5rem);
-    line-height: 1.12;
+    line-height: 1.15;
     letter-spacing: -0.012em;
-    font-weight: 400;
+    font-weight: 500;
   }
 
   .display-mega {
     font-family: var(--font-display);
     font-size: clamp(4rem, 18vw, 14rem);
-    line-height: 0.9;
+    line-height: 0.92;
     letter-spacing: -0.03em;
-    font-weight: 300;
+    font-weight: 400;
   }
 
   .lead {
-    font-size: clamp(1.05rem, 1.25vw, 1.25rem);
-    line-height: 1.55;
-    color: var(--color-ink-soft);
-    font-weight: 300;
+    font-size: clamp(1.125rem, 1.35vw, 1.375rem);
+    line-height: 1.6;
+    /* Same inherit strategy as .eyebrow — heroes set text-[var(--color-paper)]
+     * on the section, normal pages will inherit body's --color-ink. */
+    color: inherit;
+    font-weight: 400;
   }
+  /* When .lead is rendered on a normal light page (no parent text color),
+   * the inherited color is --color-ink which is fine but a bit heavy for
+   * intro copy. Pages can opt into the soft variant explicitly. */
+  .lead-muted { color: var(--color-ink-soft); }
 
   .rule-fade {
     height: 1px;
@@ -307,3 +330,109 @@
 .anim-air { animation: air-breathe 6s ease-in-out infinite; }
 .anim-earth { animation: earth-settle 9s ease-in-out infinite; }
 .anim-eter { animation: eter-shimmer 8s ease-in-out infinite; }
+
+/* ─── PRINT STYLES — for legal docs & receipts ──────────────────────────────
+ *
+ * When the user prints (or "Save as PDF") any page, we strip the chrome:
+ *  - Public site Header/Footer hidden (added via .print\:hidden in components)
+ *  - Cookie banner hidden
+ *  - Hero gradients / images neutralized (they don't print well)
+ *  - Body forced to white background + dark ink (default browser print)
+ *  - Forced page break before <h1> after the first one (for multi-doc)
+ *  - Headings stay black; reduce display sizes for paper readability
+ *
+ * Pages can also opt out per-block with `print:hidden` (Tailwind utility).
+ */
+@media print {
+  html, body {
+    background: #ffffff !important;
+    color: #1a1a1a !important;
+    font-size: 11pt;
+    line-height: 1.55;
+  }
+  body {
+    -webkit-print-color-adjust: economy;
+    print-color-adjust: economy;
+  }
+  /* Remove fixed positioning from chrome */
+  header, nav[role="navigation"],
+  [class*="CookieBanner"],
+  .print\:hidden { display: none !important; }
+  /* Drop background images & decorative video/iframe */
+  section[class*="bg-gradient"],
+  section[class*="bg-[var(--color-ink)]"] {
+    background: #ffffff !important;
+    color: #1a1a1a !important;
+  }
+  /* Display headlines a touch tighter on paper */
+  h1, .display-1 { font-size: 22pt !important; line-height: 1.15 !important; }
+  h2, .display-2 { font-size: 17pt !important; line-height: 1.2 !important; }
+  h3, .display-3 { font-size: 13pt !important; }
+  /* Avoid orphan paragraph splits at page boundaries */
+  p, li, blockquote { orphans: 3; widows: 3; }
+  h1, h2, h3 { page-break-after: avoid; break-after: avoid; }
+  table { page-break-inside: avoid; break-inside: avoid; }
+  a { color: #1a1a1a !important; text-decoration: underline; }
+  /* Page margins */
+  @page {
+    size: A4;
+    margin: 18mm 16mm 18mm 16mm;
+  }
+}
+
+/* ─── ADMIN SHELL — readability overrides ───────────────────────────────────
+ *
+ * The admin uses Tailwind grays directly (zinc-500/600, text-xs, etc.) which
+ * are too light + too small for sustained operational use. These overrides
+ * upgrade every text element inside `.admin-shell` to a baseline that's
+ * comfortable to read for hours.
+ *
+ * Strategy: keep semantics, just lift the floor.
+ *   text-xs (12px)       → 14px
+ *   text-[0.65rem|0.7rem] → 13px
+ *   zinc-400/500          → zinc-700 (real ink, not decoration)
+ *   font-medium baseline  on table heads + nav items
+ */
+.admin-shell {
+  font-size: 15px;
+  font-weight: 500;
+  color: rgb(24 24 27); /* zinc-900 */
+  font-family: var(--font-sans);
+  line-height: 1.55;
+}
+.admin-shell p {
+  color: rgb(39 39 42); /* zinc-800 */
+  line-height: 1.6;
+}
+.admin-shell h1 { font-family: var(--font-sans); font-weight: 600; color: rgb(24 24 27); }
+.admin-shell h2 { font-family: var(--font-sans); font-weight: 600; color: rgb(24 24 27); }
+.admin-shell h3 { font-family: var(--font-sans); font-weight: 600; color: rgb(24 24 27); }
+.admin-shell .text-xs { font-size: 0.875rem; font-weight: 500; }
+.admin-shell .text-\[0\.7rem\] { font-size: 0.825rem; font-weight: 500; }
+.admin-shell .text-\[0\.65rem\] { font-size: 0.8rem; font-weight: 500; }
+.admin-shell .text-\[0\.6rem\] { font-size: 0.75rem; font-weight: 500; }
+.admin-shell .text-zinc-400 { color: rgb(82 82 91); }   /* was 161 161 170 */
+.admin-shell .text-zinc-500 { color: rgb(63 63 70); }   /* was 113 113 122 */
+.admin-shell .text-zinc-600 { color: rgb(39 39 42); }   /* was 82 82 91  */
+.admin-shell .text-zinc-700 { color: rgb(24 24 27); font-weight: 500; }
+.admin-shell th { font-weight: 600; color: rgb(39 39 42); font-size: 0.85rem; letter-spacing: 0.06em; }
+.admin-shell td { font-size: 0.95rem; color: rgb(24 24 27); padding-top: 0.875rem; padding-bottom: 0.875rem; }
+.admin-shell td .text-xs { font-size: 0.85rem; color: rgb(39 39 42); }
+.admin-shell input,
+.admin-shell select,
+.admin-shell textarea {
+  font-size: 0.95rem;
+  color: rgb(24 24 27);
+  font-weight: 500;
+}
+.admin-shell input::placeholder,
+.admin-shell textarea::placeholder {
+  color: rgb(113 113 122);
+  font-weight: 400;
+}
+/* "PH" / status pill badges — bigger and bolder */
+.admin-shell .tracking-\[0\.14em\],
+.admin-shell .tracking-\[0\.16em\],
+.admin-shell .tracking-\[0\.18em\] { letter-spacing: 0.1em; }
+/* Code blocks (folio, IDs, env tokens) */
+.admin-shell code, .admin-shell .font-mono { font-size: 0.85rem; font-weight: 500; }

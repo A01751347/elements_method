@@ -45,7 +45,7 @@ export default async function CompaniesPage({
       <section className="relative min-h-[70vh] flex items-end overflow-hidden -mt-20 pt-20 text-[var(--color-paper)]">
         <div className="absolute inset-0 -z-20">
           <Image
-            src="https://images.unsplash.com/photo-1573164574572-cb89e39749b4?w=2400&q=85&auto=format&fit=crop"
+            src="/images/heroes/empresas.jpg"
             alt=""
             fill
             priority
@@ -59,7 +59,7 @@ export default async function CompaniesPage({
         <Container className="relative pb-16 md:pb-24">
           <div className="grid lg:grid-cols-12 gap-12 items-end">
             <div className="lg:col-span-8">
-              <div className="eyebrow text-[var(--color-paper)]/80 mb-8 flex items-center gap-3">
+              <div className="eyebrow text-[var(--color-paper)]/95 mb-8 flex items-center gap-3">
                 <span aria-hidden className="h-px w-12 bg-[var(--color-paper)]/40" />
                 {dict.companies.eyebrow}
               </div>
@@ -68,7 +68,7 @@ export default async function CompaniesPage({
               </h1>
             </div>
             <div className="lg:col-span-4">
-              <p className="lead text-[var(--color-paper)]/85">{dict.companies.lead}</p>
+              <p className="lead text-[var(--color-paper)]/95">{dict.companies.lead}</p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Button
                   href="mailto:hello@elementsmethod.com"
@@ -83,6 +83,34 @@ export default async function CompaniesPage({
           </div>
         </Container>
       </section>
+
+      {/* EXECUTIVE SUMMARY — verbatim from elements-method-presentation.docx */}
+      <Section spacing="default">
+        <div className="grid lg:grid-cols-12 gap-12">
+          <div className="lg:col-span-4">
+            <Eyebrow className="mb-6">
+              {locale === "es" ? "Resumen ejecutivo" : "Executive Summary"}
+            </Eyebrow>
+          </div>
+          <div className="lg:col-span-8 space-y-6 text-lg leading-relaxed text-[var(--color-ink-soft)]">
+            <p className="text-[var(--color-ink)] text-balance font-[family-name:var(--font-display)] text-2xl md:text-3xl leading-snug">
+              {locale === "es"
+                ? "La variable más importante en cualquier organización es la calidad de su liderazgo. Y, sin embargo, la mayoría de los programas de desarrollo de liderazgo abordan los síntomas — estilos de comunicación, frameworks de decisión, dinámicas de equipo — sin abordar la fuente."
+                : "The most important variable in any organization is the quality of its leadership. Yet most leadership development programs address the symptoms — communication styles, decision frameworks, team dynamics — without addressing the source."}
+            </p>
+            <p className="italic font-[family-name:var(--font-display)] text-xl text-[var(--color-ink)]">
+              {locale === "es"
+                ? "La fuente es el líder mismo."
+                : "The source is the leader themselves."}
+            </p>
+            <p>
+              {locale === "es"
+                ? "Elements Method es un programa de inmersión de liderazgo basado en naturaleza, diseñado para devolver a los líderes a su naturaleza esencial — y, al hacerlo, desbloquear el tipo de presencia, claridad y propósito que transforma no solo a los individuos, sino las organizaciones que lideran."
+                : "Elements Method is a nature-based leadership immersion program designed to return leaders to their essential nature — and in doing so, unlock the kind of presence, clarity, and purpose that transforms not just individuals, but the organizations they lead."}
+            </p>
+          </div>
+        </div>
+      </Section>
 
       {/* WHO THIS IS FOR */}
       <Section spacing="default" tone="warm" className="paper-grain">
@@ -166,6 +194,37 @@ export default async function CompaniesPage({
               {locale === "es"
                 ? "La vida organizacional moderna desconecta sistemáticamente a los líderes de las cualidades que hacen posible el liderazgo."
                 : "Modern organizational life systematically disconnects leaders from the qualities that make leadership possible."}
+            </p>
+          </div>
+        </div>
+
+        {/* BURNOUT STATS — verbatim from elements-method-presentation.docx */}
+        <div className="mb-12 grid md:grid-cols-[1fr_1fr_2fr] gap-px bg-[var(--color-line)] border border-[var(--color-line)]">
+          <div className="bg-[var(--color-paper-warm)] p-8 md:p-10 flex flex-col justify-end">
+            <div className="font-[family-name:var(--font-display)] text-6xl md:text-7xl text-[var(--color-fire-ink)] tabular-nums leading-none">
+              76%
+            </div>
+            <p className="mt-4 text-sm text-[var(--color-ink-soft)] leading-relaxed">
+              {locale === "es"
+                ? "de los líderes reportan sentirse quemados o emocionalmente agotados."
+                : "of leaders report feeling burned out or emotionally depleted."}
+            </p>
+          </div>
+          <div className="bg-[var(--color-paper-warm)] p-8 md:p-10 flex flex-col justify-end">
+            <div className="font-[family-name:var(--font-display)] text-6xl md:text-7xl text-[var(--color-fire-ink)] tabular-nums leading-none">
+              65%
+            </div>
+            <p className="mt-4 text-sm text-[var(--color-ink-soft)] leading-relaxed">
+              {locale === "es"
+                ? "de los empleados dicen que su jefe es la principal fuente de estrés en sus vidas."
+                : "of employees say their manager is the primary source of stress in their lives."}
+            </p>
+          </div>
+          <div className="bg-[var(--color-paper)] p-8 md:p-10 flex items-center">
+            <p className="font-[family-name:var(--font-display)] text-xl md:text-2xl italic leading-snug text-[var(--color-ink)]">
+              {locale === "es"
+                ? "Y aún así, las organizaciones siguen invirtiendo en programas de liderazgo que añaden más herramientas a manos ya saturadas."
+                : "And yet, organizations continue to invest in leadership programs that add more tools to already-full hands."}
             </p>
           </div>
         </div>
@@ -281,7 +340,7 @@ export default async function CompaniesPage({
             </h2>
           </div>
           <div className="lg:col-span-4">
-            <p className="text-lg text-[var(--color-paper)]/75 leading-relaxed text-pretty mb-8">
+            <p className="text-lg text-[var(--color-paper)]/90 leading-relaxed text-pretty mb-8">
               {locale === "es"
                 ? "Contáctanos para explorar el diseño correcto para tu organización."
                 : "Please contact us to explore the right design for your organization."}
@@ -295,7 +354,7 @@ export default async function CompaniesPage({
               </a>
               <a
                 href="https://www.elementsmethod.com"
-                className="block text-[var(--color-paper)]/70 hover:text-[var(--color-paper)] transition-colors text-sm"
+                className="block text-[var(--color-paper)]/90 hover:text-[var(--color-paper)] transition-colors text-sm"
               >
                 www.elementsmethod.com
               </a>

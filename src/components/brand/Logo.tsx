@@ -1,16 +1,43 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Locale } from "@/i18n/config";
 import { cn } from "@/lib/utils";
+
+/**
+ * Brand logo files (added Jun 23, 2026):
+ *   - `/images/elements/elements_logo_nobg.png` — transparent PNG, use on
+ *     any colored background (header, footer, admin sidebar, dark sections).
+ *   - `/images/elements/elements_logo.jpeg` — opaque JPEG with background,
+ *     use for emails, PDFs, OG images, anywhere a transparent file isn't
+ *     supported.
+ *
+ * Both are 1024×1024 squares — rendered through next/image with explicit
+ * dimensions so layout doesn't shift.
+ */
+export const LOGO_PNG = "/images/elements/elements_logo_nobg.png";
+export const LOGO_OPAQUE = "/images/elements/elements_logo.jpeg";
 
 export function Logo({
   locale,
   inverted,
   className,
+  showWordmark = true,
+  size = "default",
 }: {
   locale: Locale;
   inverted?: boolean;
   className?: string;
+  showWordmark?: boolean;
+  size?: "default" | "sm" | "lg";
 }) {
+  const markSize =
+    size === "sm" ? 28 : size === "lg" ? 44 : 34;
+  const textCls =
+    size === "sm"
+      ? "text-[0.95rem]"
+      : size === "lg"
+        ? "text-[1.25rem]"
+        : "text-[1.0625rem]";
   return (
     <Link
       href={`/${locale}`}
@@ -20,75 +47,71 @@ export function Logo({
         inverted ? "text-[var(--color-paper)]" : "text-[var(--color-ink)]",
         className,
       )}
+      style={
+        inverted
+          ? { textShadow: "0 1px 2px rgba(0,0,0,0.4)" }
+          : undefined
+      }
     >
-      <LogoMark inverted={inverted} />
-      <span
-        className="font-[family-name:var(--font-display)] text-[1.0625rem] tracking-tight leading-none"
-      >
-        Elements <span className="italic font-light">Method</span>
-      </span>
+      <LogoMark size={markSize} />
+      {showWordmark && (
+        <span
+          className={cn(
+            "font-[family-name:var(--font-display)] tracking-tight leading-none",
+            textCls,
+          )}
+        >
+          Elements <span className="italic font-light">Method</span>
+        </span>
+      )}
     </Link>
   );
 }
 
+/**
+ * Square logo mark — the PNG with no background. Works over any color.
+ * Pass `inverted` only as legacy alias; the PNG itself is color-fixed.
+ */
 export function LogoMark({
-  inverted,
+  size = 32,
   className,
 }: {
   inverted?: boolean;
+  size?: number;
   className?: string;
 }) {
-  const stroke = inverted ? "var(--color-paper)" : "var(--color-ink)";
   return (
-    <svg
-      width="28"
-      height="28"
-      viewBox="0 0 28 28"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
+    <Image
+      src={LOGO_PNG}
+      width={size}
+      height={size}
+      alt=""
       aria-hidden
-    >
-      {/* Four element marks composed in a circle */}
-      <circle
-        cx="14"
-        cy="14"
-        r="13"
-        stroke={stroke}
-        strokeWidth="1"
-        opacity="0.35"
-      />
-      {/* Water (top-left): wave */}
-      <path
-        d="M5 9 Q7 8 9 9 T13 9"
-        stroke={stroke}
-        strokeWidth="1.2"
-        strokeLinecap="round"
-        fill="none"
-      />
-      {/* Fire (top-right): flame */}
-      <path
-        d="M19 6 Q22 9 19 12 Q16 9 19 6 Z"
-        stroke={stroke}
-        strokeWidth="1.2"
-        strokeLinejoin="round"
-        fill="none"
-      />
-      {/* Air (bottom-left): three lines */}
-      <path
-        d="M5 17 H11 M5 19.5 H9 M5 22 H10"
-        stroke={stroke}
-        strokeWidth="1.2"
-        strokeLinecap="round"
-      />
-      {/* Earth (bottom-right): triangle */}
-      <path
-        d="M16 22 L19 17 L22 22 Z"
-        stroke={stroke}
-        strokeWidth="1.2"
-        strokeLinejoin="round"
-        fill="none"
-      />
-    </svg>
+      priority
+      className={cn("shrink-0 select-none", className)}
+      style={{ width: size, height: size }}
+    />
+  );
+}
+
+/**
+ * Opaque logo — use in emails, PDFs, anywhere a transparent PNG isn't ideal.
+ */
+export function LogoOpaque({
+  size = 64,
+  className,
+}: {
+  size?: number;
+  className?: string;
+}) {
+  return (
+    <Image
+      src={LOGO_OPAQUE}
+      width={size}
+      height={size}
+      alt="Elements Method"
+      className={cn("shrink-0 select-none", className)}
+      style={{ width: size, height: size }}
+    />
   );
 }

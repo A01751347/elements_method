@@ -68,14 +68,14 @@ export default async function PathsPage({
         <div className="absolute inset-0 -z-10 film-grain" />
 
         <Container className="relative pb-16 md:pb-24">
-          <div className="eyebrow text-[var(--color-paper)]/80 mb-8 flex items-center gap-3">
+          <div className="eyebrow text-[var(--color-paper)]/95 mb-8 flex items-center gap-3">
             <span aria-hidden className="h-px w-12 bg-[var(--color-paper)]/40" />
             {dict.paths.eyebrow}
           </div>
           <h1 className="display-1 text-balance text-[var(--color-paper)] max-w-[15ch]">
             {dict.paths.title}
           </h1>
-          <p className="lead mt-8 max-w-2xl text-[var(--color-paper)]/85">
+          <p className="lead mt-8 max-w-2xl text-[var(--color-paper)]/95">
             {dict.paths.lead}
           </p>
         </Container>
@@ -162,12 +162,20 @@ export default async function PathsPage({
                         </div>
                       </div>
 
-                      <div className="mt-6">
+                      <div className="mt-6 space-y-2">
                         <Button
-                          href="mailto:hello@elementsmethod.com"
+                          href={`/${locale}/${locale === "es" ? "los-caminos" : "paths"}/${p.slug}`}
                           size="sm"
                           variant="primary"
                           trailingArrow
+                          className="w-full"
+                        >
+                          {locale === "es" ? "Ver detalle" : "View details"}
+                        </Button>
+                        <Button
+                          href="mailto:hello@elementsmethod.com"
+                          size="sm"
+                          variant="secondary"
                           className="w-full"
                         >
                           {cta}
@@ -264,7 +272,7 @@ export default async function PathsPage({
             <p className="text-lg text-[var(--color-gold-soft)] italic mb-6">
               {locale === "es" ? originProgram.tagEs : originProgram.tagEn}
             </p>
-            <p className="text-lg text-[var(--color-paper)]/75 leading-relaxed text-pretty max-w-2xl">
+            <p className="text-lg text-[var(--color-paper)]/90 leading-relaxed text-pretty max-w-2xl">
               {locale === "es" ? originProgram.bodyEs : originProgram.bodyEn}
             </p>
           </div>
@@ -278,7 +286,7 @@ export default async function PathsPage({
               </a>
               <a
                 href="https://www.elementsmethod.com"
-                className="block text-[var(--color-paper)]/70 hover:text-[var(--color-paper)] transition-colors text-sm"
+                className="block text-[var(--color-paper)]/90 hover:text-[var(--color-paper)] transition-colors text-sm"
               >
                 www.elementsmethod.com
               </a>

@@ -40,8 +40,8 @@ export function LocationsSection({ locale }: { locale: Locale }) {
           <div className="lg:col-span-5">
             <p className="lead text-pretty">
               {locale === "es"
-                ? "Coaching, psicología y práctica somática se integran al mismo tiempo. Esto es lo que separa Elements de un curso, una terapia o un retiro tradicional."
-                : "Coaching, psychology and somatic practice integrate at once. This is what separates Elements from a course, a therapy or a traditional retreat."}
+                ? "Integración de neurociencia, NLP, psicología y práctica somática en cada sesión. Trabajo desde adentro hacia afuera — el líder primero, las herramientas después."
+                : "Integration of neuroscience, NLP, psychology and somatic practice in every session. Working from the inside out — the leader first, the tools after."}
             </p>
           </div>
         </div>

@@ -122,21 +122,21 @@ export const es: Dict = {
     eyebrow: "Leadership Immersion Programs · Water · Fire · Air · Earth",
     title: "Lidera desde tu naturaleza profunda",
     subtitle:
-      "Experiencias de transformación para líderes y organizaciones, ancladas en la sabiduría del Agua, el Fuego, el Aire y la Tierra.",
+      "Elements Method es un programa de desarrollo de liderazgo basado en inmersiones en la naturaleza, diseñado para devolver a los líderes a su fuente esencial de poder — y en ese proceso, transformar no solo a los individuos, sino las organizaciones que lideran.",
     primaryCta: "Explorar Programas",
     secondaryCta: "Conocer el Método",
     philosophyEyebrow: "La filosofía",
     philosophyTitle: "La naturaleza no gestiona. La naturaleza lidera.",
     philosophyBody:
-      "El Elements Method devuelve a los ejecutivos a su fuente instintiva de poder. A través de experiencias inmersivas en entornos naturales, los líderes descubren las cuatro fuerzas fundamentales que moldean el liderazgo resiliente, auténtico y efectivo. Esto no es un retiro. Es un regreso.",
+      "La naturaleza no tiene una crisis de liderazgo. Nosotros sí. Quizá porque dejamos de aprender de ella.",
     elementsEyebrow: "Los cuatro elementos",
-    elementsTitle: "Cuatro dimensiones del liderazgo. Un núcleo unificado.",
+    elementsTitle: "Cuatro fuerzas distintas, un centro unificado.",
     elementsLead:
-      "Tierra, Fuego, Agua y Aire — cuatro fuerzas que todo líder ya carga. Elements Method las activa, secuencia y entrena hasta que se integran en el Éter del Núcleo.",
+      "Cuando un líder se reconecta con su propia naturaleza — cuando encuentra su Agua, su Fuego, su Aire y su Tierra — no necesita más herramientas. Se reconecta con su ser completo.",
     programsEyebrow: "Elige tu Camino",
-    programsTitle: "Tres rutas. Una misma profundidad.",
+    programsTitle: "Tres niveles de profundidad. Un mismo método.",
     programsLead:
-      "Raíces, Corriente y Fuente comparten metodología y framework. Lo que cambia es la cadencia y el grado de personalización. Eliges según el momento de tu liderazgo.",
+      "Raíces, Corriente y Fuente comparten metodología y framework. Lo que cambia es la cadencia, la profundidad y el grado de personalización. Eliges según el momento de tu liderazgo.",
     experienceEyebrow: "La experiencia de inmersión",
     experienceTitle: "Las actividades cambian. La estructura no.",
     experienceLead:
@@ -148,7 +148,8 @@ export const es: Dict = {
     testimonialsEyebrow: "Voces del programa",
     testimonialsTitle: "Lo que dicen quienes ya pasaron.",
     companiesEyebrow: "Para organizaciones",
-    companiesTitle: "El nivel de tu organización no excede el nivel de claridad mental de quien la dirige.",
+    companiesTitle:
+      "El nivel de resultados de una empresa no supera el nivel de claridad mental de quien la dirige.",
     companiesLead:
       "Origin — retiros corporativos diseñados a la medida alrededor de inmersiones de equipo, desarrollo de cultura de liderazgo y transformación organizacional.",
     companiesCta: "Iniciar conversación",
@@ -156,7 +157,7 @@ export const es: Dict = {
   },
   about: {
     eyebrow: "Quiénes somos",
-    title: "25 años escuchando a líderes en tres continentes.",
+    title: "25 años escuchando a líderes en el Caribe, Estados Unidos y América Latina.",
     lead:
       "Elements Method nace de un patrón consistente identificado a lo largo de 25 años de trabajo con líderes: los más capaces son aquellos que viven en consciencia, con intención, y priorizan su trabajo interior.",
   },
@@ -223,9 +224,9 @@ export const es: Dict = {
   footer: {
     tagline:
       "Leadership Immersion Programs. La naturaleza no gestiona. La naturaleza lidera.",
-    newsletterTitle: "Boletín mensual",
+    newsletterTitle: "Notas del campo",
     newsletterCopy:
-      "Una nota corta cada mes. Lectura, fecha del próximo retiro, una pregunta abierta. Sin venta.",
+      "Notas ocasionales desde las inmersiones y las próximas fechas. Cuando haya algo que valga la pena escribir.",
     nav: {
       explore: "Explorar",
       services: "Programas",
@@ -276,21 +277,21 @@ export const en: Dict = {
     eyebrow: "Leadership Immersion Programs · Water · Fire · Air · Earth",
     title: "Lead from your true nature",
     subtitle:
-      "Transformative leadership journeys for executives and organizations, rooted in the wisdom of the Nature Elements Water, Fire, Air, and Earth.",
+      "Elements Method is a leadership development program built on nature immersions, designed to return leaders to their essential source of power — and in that process, transform not only the individuals, but the organizations they lead.",
     primaryCta: "Explore Programs",
     secondaryCta: "Discover the Method",
     philosophyEyebrow: "The philosophy",
     philosophyTitle: "Nature doesn't manage. Nature leads.",
     philosophyBody:
-      "The Elements Method brings executives back to their instinctive source of power. Through immersive experiences in natural environments, leaders discover the four fundamental forces that shape resilient, authentic, and effective leadership. This is not a retreat. This is a return.",
+      "Nature doesn't have a leadership crisis. We do. Perhaps because we stopped learning from it.",
     elementsEyebrow: "The four elements",
-    elementsTitle: "Four leadership dimensions. One unified core.",
+    elementsTitle: "Four distinct forces, one unified center.",
     elementsLead:
-      "Earth, Fire, Water and Air — four forces every leader already carries. Elements Method activates, sequences, and trains them until they integrate in the Éter of the Nucleus.",
+      "When a leader reconnects with their own nature — when they find their Water, their Fire, their Air and their Earth — they don't need more tools. They reconnect with their complete being.",
     programsEyebrow: "Choose your Journey",
-    programsTitle: "Three routes. The same depth.",
+    programsTitle: "Three depths. One method.",
     programsLead:
-      "Roots, Current and Source share methodology and framework. What changes is the cadence and degree of personalization. You choose by the moment of your leadership.",
+      "Roots, Current and Source share methodology and framework. What changes is the cadence, the depth, and the degree of personalization. You choose by the moment of your leadership.",
     experienceEyebrow: "The immersion experience",
     experienceTitle: "Activities change. The structure doesn't.",
     experienceLead:
@@ -302,7 +303,8 @@ export const en: Dict = {
     testimonialsEyebrow: "Program voices",
     testimonialsTitle: "What those who walked through say.",
     companiesEyebrow: "For organizations",
-    companiesTitle: "Your organization doesn't exceed the mental clarity of those who lead it.",
+    companiesTitle:
+      "An organization's results do not exceed the mental clarity of the person who leads it.",
     companiesLead:
       "Origin — bespoke corporate retreats designed around team immersions, leadership culture development, and organizational transformation.",
     companiesCta: "Begin the conversation",
@@ -310,7 +312,7 @@ export const en: Dict = {
   },
   about: {
     eyebrow: "Who we are",
-    title: "25 years listening to leaders across three continents.",
+    title: "25 years listening to leaders across the Caribbean, the United States, and Latin America.",
     lead:
       "Elements Method was born from a consistent pattern identified over 25 years of work with leaders: the most capable are those who live with consciousness, with intention, and who prioritize their inner work.",
   },
@@ -377,9 +379,9 @@ export const en: Dict = {
   footer: {
     tagline:
       "Leadership Immersion Programs. Nature doesn't manage. Nature leads.",
-    newsletterTitle: "Monthly journal",
+    newsletterTitle: "Field notes",
     newsletterCopy:
-      "A short note each month. Reading, next retreat date, an open question. No selling.",
+      "Occasional notes from the immersions and upcoming dates. When there's something worth writing.",
     nav: {
       explore: "Explore",
       services: "Programs",

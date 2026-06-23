@@ -57,7 +57,7 @@ export function Eyebrow({
     <div
       className={cn(
         "eyebrow flex items-center gap-3",
-        inverted && "text-[var(--color-paper)]/70",
+        inverted && "text-[var(--color-paper)]/90",
         className,
       )}
     >
