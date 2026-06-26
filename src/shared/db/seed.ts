@@ -10,7 +10,6 @@ import {
   retreats,
   venues,
   providers,
-  subscriptionTiers,
 } from "./schema";
 
 import { productSeeds } from "./seeds/products";
@@ -22,7 +21,6 @@ import { retreatSeeds } from "./seeds/retreats";
 import {
   venueSeeds,
   providerSeeds,
-  subscriptionTierSeeds,
   calendarRetreatSeeds,
   operationsSeedStats,
 } from "./seeds/operations";
@@ -266,37 +264,6 @@ async function seedProviders() {
   console.log(`  ✓ ${providerSeeds.length} providers upserted`);
 }
 
-async function seedSubscriptionTiers() {
-  console.log("→ subscription_tiers (operations)");
-  for (const t of subscriptionTierSeeds) {
-    await db
-      .insert(subscriptionTiers)
-      .values(t)
-      .onConflictDoUpdate({
-        target: subscriptionTiers.slug,
-        set: {
-          nameEs: t.nameEs,
-          nameEn: t.nameEn,
-          taglineEs: t.taglineEs ?? null,
-          taglineEn: t.taglineEn ?? null,
-          cadenceEs: t.cadenceEs ?? null,
-          cadenceEn: t.cadenceEn ?? null,
-          includesEs: t.includesEs ?? null,
-          includesEn: t.includesEn ?? null,
-          priceLabelMxn: t.priceLabelMxn ?? null,
-          priceLabelEn: t.priceLabelEn ?? null,
-          highlight: t.highlight ?? false,
-          sortOrder: t.sortOrder ?? 0,
-          status: t.status ?? "draft",
-          isPlaceholder: t.isPlaceholder ?? true,
-          placeholderFields: t.placeholderFields ?? null,
-          updatedAt: new Date(),
-        },
-      });
-  }
-  console.log(`  ✓ ${subscriptionTierSeeds.length} subscription tiers upserted`);
-}
-
 async function seedCalendarRetreats() {
   console.log("→ retreats (production calendar 2026-2027)");
   for (const r of calendarRetreatSeeds) {
@@ -342,10 +309,9 @@ async function main() {
   await seedRetreats();
   await seedVenues();
   await seedProviders();
-  await seedSubscriptionTiers();
   await seedCalendarRetreats();
   console.log(`\n  Operations placeholders: ${operationsSeedStats.placeholdersTotal} fields across`);
-  console.log(`    ${operationsSeedStats.retreats} retreats · ${operationsSeedStats.venues} venues · ${operationsSeedStats.providers} providers · ${operationsSeedStats.subscriptionTiers} tiers`);
+  console.log(`    ${operationsSeedStats.retreats} retreats · ${operationsSeedStats.venues} venues · ${operationsSeedStats.providers} providers`);
   console.log("\n✓ done.");
 }
 

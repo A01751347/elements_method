@@ -18,7 +18,6 @@ const NAV_GROUPS = [
     label: "Catálogo",
     items: [
       { href: "/admin/productos", label: "Productos" },
-      { href: "/admin/membresias", label: "Membresías · 3" },
       { href: "/admin/documentos", label: "Documentos · 3" },
       { href: "/admin/formularios", label: "Formularios" },
     ],

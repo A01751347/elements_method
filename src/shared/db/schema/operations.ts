@@ -5,7 +5,6 @@
  *  - venues:          candidate locations (Tepoztlán, Valle de Bravo, etc.)
  *  - providers:       discipline facilitators (yoga, breathwork, caballos, etc.)
  *  - inscriptions:    leads coming from public Contact + Apply forms
- *  - subscription_tiers: 3 continuity membership tiers (Campo / Núcleo / Círculo)
  *
  * All free-text fields are bilingual where they surface on the public site.
  */
@@ -96,34 +95,3 @@ export const inscriptions = pgTable("inscriptions", {
 
 export type Inscription = typeof inscriptions.$inferSelect;
 export type NewInscription = typeof inscriptions.$inferInsert;
-
-// ────────────────────────────────────────────────────────────────────────────
-// SUBSCRIPTION TIERS — Continuity membership (Campo / Núcleo / Círculo)
-// ────────────────────────────────────────────────────────────────────────────
-
-export const subscriptionTiers = pgTable("subscription_tiers", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  slug: text("slug").notNull().unique(),
-  nameEs: text("name_es").notNull(),
-  nameEn: text("name_en").notNull(),
-  taglineEs: text("tagline_es"),
-  taglineEn: text("tagline_en"),
-  cadenceEs: text("cadence_es"),
-  cadenceEn: text("cadence_en"),
-  includesEs: text("includes_es").array(),
-  includesEn: text("includes_en").array(),
-  priceLabelMxn: text("price_label_mxn"),
-  priceLabelEn: text("price_label_en"),
-  priceMxn: decimal("price_mxn", { precision: 10, scale: 2 }),
-  priceUsd: decimal("price_usd", { precision: 10, scale: 2 }),
-  highlight: boolean("highlight").default(false).notNull(),
-  sortOrder: integer("sort_order").default(0).notNull(),
-  status: text("status").default("draft").notNull(), // draft | published | archived
-  isPlaceholder: boolean("is_placeholder").default(true).notNull(),
-  placeholderFields: text("placeholder_fields").array(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
-
-export type SubscriptionTier = typeof subscriptionTiers.$inferSelect;
-export type NewSubscriptionTier = typeof subscriptionTiers.$inferInsert;

@@ -4,7 +4,6 @@ import {
   providersInventory,
   venuesInventory,
   legalDocs,
-  subscriptionTiers,
 } from "@/data/launchData";
 import { AdminPageHeader, PlaceholderNote } from "./_components/admin-ui";
 
@@ -32,7 +31,6 @@ export default function AdminDashboardPage() {
     ...calendarRetreats.flatMap((r) => r.placeholderFields),
     ...providersInventory.flatMap((p) => p.placeholderFields),
     ...venuesInventory.flatMap((v) => v.placeholderFields),
-    ...subscriptionTiers.flatMap((s) => s.placeholderFields),
     ...legalDocs.flatMap((d) => d.placeholderFields),
   ].length;
 
@@ -66,12 +64,6 @@ export default function AdminDashboardPage() {
       value: `${placeholdersTotal}`,
       detail: "Campos marcados como datos no reales",
       tone: placeholdersTotal > 50 ? "amber" : "neutral",
-    },
-    {
-      label: "Membresías",
-      value: `${subscriptionTiers.length}`,
-      detail: "Tiers de continuidad publicados",
-      tone: "neutral",
     },
     {
       label: "Documentos legales",

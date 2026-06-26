@@ -9,14 +9,9 @@ import {
   calendarRetreats,
   providersInventory,
   venuesInventory,
-  subscriptionTiers as subscriptionTiersData,
   legalDocs,
 } from "../../../data/launchData";
-import type {
-  NewVenue,
-  NewProvider,
-  NewSubscriptionTier,
-} from "../schema/operations";
+import type { NewVenue, NewProvider } from "../schema/operations";
 import type { NewRetreat } from "../schema/retreats";
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -61,34 +56,6 @@ export const providerSeeds: Omit<NewProvider, "id" | "createdAt" | "updatedAt">[
   }));
 
 // ────────────────────────────────────────────────────────────────────────────
-// SUBSCRIPTION TIERS
-// ────────────────────────────────────────────────────────────────────────────
-
-export const subscriptionTierSeeds: Omit<
-  NewSubscriptionTier,
-  "id" | "createdAt" | "updatedAt"
->[] = subscriptionTiersData.map((t, idx) => ({
-  slug: t.slug,
-  nameEs: t.nameEs,
-  nameEn: t.nameEn,
-  taglineEs: t.taglineEs,
-  taglineEn: t.taglineEn,
-  cadenceEs: t.cadenceEs,
-  cadenceEn: t.cadenceEn,
-  includesEs: t.includesEs,
-  includesEn: t.includesEn,
-  priceLabelMxn: t.priceLabelMxn,
-  priceLabelEn: t.priceLabelEn,
-  priceMxn: null,
-  priceUsd: null,
-  highlight: idx === 1,
-  sortOrder: idx,
-  status: "draft",
-  isPlaceholder: t.isPlaceholder,
-  placeholderFields: t.placeholderFields,
-}));
-
-// ────────────────────────────────────────────────────────────────────────────
 // RETREATS — replaces the old 4-element demo seeds with the 9-retreat
 // production calendar driven by launchData (Oct 2026 → Q4 2027).
 // ────────────────────────────────────────────────────────────────────────────
@@ -118,12 +85,10 @@ export const calendarRetreatSeeds: Omit<
 export const operationsSeedStats = {
   venues: venueSeeds.length,
   providers: providerSeeds.length,
-  subscriptionTiers: subscriptionTierSeeds.length,
   retreats: calendarRetreatSeeds.length,
   placeholdersTotal:
     venuesInventory.reduce((n, v) => n + v.placeholderFields.length, 0) +
     providersInventory.reduce((n, p) => n + p.placeholderFields.length, 0) +
-    subscriptionTiersData.reduce((n, t) => n + t.placeholderFields.length, 0) +
     calendarRetreats.reduce((n, r) => n + r.placeholderFields.length, 0) +
     legalDocs.reduce((n, d) => n + d.placeholderFields.length, 0),
 };
