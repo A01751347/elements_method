@@ -195,19 +195,19 @@ export default async function PathsPage({
         <div className="grid lg:grid-cols-12 gap-12 mb-12">
           <div className="lg:col-span-6">
             <Eyebrow className="mb-6">
-              {locale === "es" ? "El arco de Raíces" : "The Roots Arc"}
+              {locale === "es" ? "El arco elemental" : "The Elemental Arc"}
             </Eyebrow>
             <h2 className="display-2 text-balance">
               {locale === "es"
-                ? "Cinco meses. Cinco elementos."
-                : "Five months. Five elements."}
+                ? "Cuatro elementos. Un núcleo."
+                : "Four elements. One core."}
             </h2>
           </div>
           <div className="lg:col-span-6 lg:pt-3">
             <p className="lead text-pretty">
               {locale === "es"
-                ? "El recorrido completo de Raíces atraviesa los cuatro elementos en orden secuenciado — Tierra primero por arraigo, Fuego por activación, Agua por claridad, Aire por perspectiva — y cierra en el Éter del Núcleo."
-                : "The full Roots journey traverses the four elements in sequenced order — Earth first for grounding, Fire for activation, Water for clarity, Air for perspective — and closes in the Éter of the Nucleus."}
+                ? "Todos los programas atraviesan los cuatro elementos en orden secuenciado — Tierra por arraigo, Fuego por activación, Agua por claridad, Aire por perspectiva — y cierran integrando el aprendizaje en el núcleo que eres tú. Cada programa recorre este arco en una duración distinta."
+                : "Every program traverses the four elements in sequenced order — Earth for grounding, Fire for activation, Water for clarity, Air for perspective — and closes by integrating the learning into the core that is you. Each program travels this arc over a different duration."}
             </p>
           </div>
         </div>
@@ -227,28 +227,24 @@ export default async function PathsPage({
                 <Icon className="h-5 w-5 mt-1" strokeWidth={1.5} style={{ color }} />
                 <span className="font-[family-name:var(--font-display)] text-xl tracking-tight">
                   {locale === "es"
-                    ? `Mes ${row.month} · ${
-                        row.elementKey === "eter"
-                          ? "Éter"
-                          : row.elementKey === "tierra"
-                            ? "Tierra"
-                            : row.elementKey === "fuego"
-                              ? "Fuego"
-                              : row.elementKey === "agua"
-                                ? "Agua"
-                                : "Aire"
-                      }`
-                    : `Month ${row.month} · ${
-                        row.elementKey === "eter"
-                          ? "Éter"
-                          : row.elementKey === "tierra"
-                            ? "Earth"
-                            : row.elementKey === "fuego"
-                              ? "Fire"
-                              : row.elementKey === "agua"
-                                ? "Water"
-                                : "Air"
-                      }`}
+                    ? row.elementKey === "eter"
+                      ? "Integración"
+                      : row.elementKey === "tierra"
+                        ? "Tierra"
+                        : row.elementKey === "fuego"
+                          ? "Fuego"
+                          : row.elementKey === "agua"
+                            ? "Agua"
+                            : "Aire"
+                    : row.elementKey === "eter"
+                      ? "Integration"
+                      : row.elementKey === "tierra"
+                        ? "Earth"
+                        : row.elementKey === "fuego"
+                          ? "Fire"
+                          : row.elementKey === "agua"
+                            ? "Water"
+                            : "Air"}
                 </span>
                 <p className="text-[var(--color-ink-soft)] leading-relaxed">
                   {locale === "es" ? row.titleEs : row.titleEn}

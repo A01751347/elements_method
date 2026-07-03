@@ -203,8 +203,8 @@ export default async function RetreatsPage({
             </h2>
             <p className="lead mt-6 text-[var(--color-paper)]/90 text-pretty max-w-2xl">
               {locale === "es"
-                ? "No se ofrecen como módulos sueltos. Se acceden a través de Raíces, Corriente o Fuente — o de Origin para organizaciones."
-                : "They are not offered as standalone modules. You access them through Roots, Current or Source — or Origin for organizations."}
+                ? "No se ofrecen como módulos sueltos. Se acceden a través de Fluir, Momentum, Raíz, Brújula u Oneness — o de Origin para organizaciones."
+                : "They are not offered as standalone modules. You access them through Flow, Momentum, Root, Compass or Oneness — or Origin for organizations."}
             </p>
           </div>
           <div className="lg:col-span-5">

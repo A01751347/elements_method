@@ -153,8 +153,8 @@ export default async function ProgramDetailPage({
               </Eyebrow>
               <h2 className="display-2 text-balance">
                 {locale === "es"
-                  ? "Un viaje de cinco meses por los cuatro elementos + Éter."
-                  : "A five-month journey through all four elements + Éter."}
+                  ? "Un viaje de cinco meses por los cuatro elementos + integración."
+                  : "A five-month journey through all four elements + integration."}
               </h2>
             </div>
             <div className="lg:col-span-6 lg:pt-4">
@@ -181,9 +181,19 @@ export default async function ProgramDetailPage({
                     className="font-[family-name:var(--font-display)] text-xl tracking-tight"
                     style={{ color: el?.accent ?? "var(--color-ink)" }}
                   >
-                    {locale === "es"
-                      ? `Mes ${row.month} · ${el?.nameEs ?? ""}`
-                      : `Month ${row.month} · ${el?.nameEn ?? ""}`}
+                    {(() => {
+                      const label =
+                        row.elementKey === "eter"
+                          ? locale === "es"
+                            ? "Integración"
+                            : "Integration"
+                          : locale === "es"
+                            ? el?.nameEs ?? ""
+                            : el?.nameEn ?? "";
+                      return locale === "es"
+                        ? `Mes ${row.month} · ${label}`
+                        : `Month ${row.month} · ${label}`;
+                    })()}
                   </span>
                   <p className="text-[var(--color-ink-soft)] leading-relaxed">
                     {locale === "es" ? row.titleEs : row.titleEn}
@@ -201,7 +211,7 @@ export default async function ProgramDetailPage({
           <div className="grid lg:grid-cols-12 gap-12 mb-12">
             <div className="lg:col-span-6">
               <Eyebrow className="mb-6">
-                {locale === "es" ? "Raíces vs Corriente" : "Roots vs Current"}
+                {locale === "es" ? "Fluir vs Momentum" : "Flow vs Momentum"}
               </Eyebrow>
               <h2 className="display-2 text-balance">
                 {includesHeading}
@@ -212,7 +222,7 @@ export default async function ProgramDetailPage({
           <div className="grid md:grid-cols-2 gap-px bg-[var(--color-line)] border border-[var(--color-line)]">
             <div className="bg-[var(--color-paper)] p-8 md:p-10">
               <div className="eyebrow text-[var(--color-muted)] mb-6">
-                Roots (Journey)
+                {locale === "es" ? "Fluir · Flow" : "Flow"}
               </div>
               <ul className="space-y-3 text-[var(--color-ink-soft)]">
                 {comparativa.left.map((line, i) => (
@@ -228,7 +238,7 @@ export default async function ProgramDetailPage({
             </div>
             <div className="bg-[var(--color-paper-warm)] p-8 md:p-10">
               <div className="eyebrow text-[var(--color-fire)] mb-6">
-                Current (Intensive) ✦
+                Momentum ✦
               </div>
               <ul className="space-y-3 text-[var(--color-ink-soft)]">
                 {comparativa.right.map((line, i) => (

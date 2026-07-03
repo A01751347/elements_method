@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
-import { ArrowUpRight, Check, Sparkles, Clock, Compass } from "lucide-react";
+import { ArrowUpRight, Check, Sparkles, Clock, Compass, Waves, User } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import type { Dict } from "@/i18n/dictionaries";
 import { paths as staticPaths, type PathInfo } from "@/data/content";
@@ -12,7 +12,9 @@ import { Eyebrow } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 
-const PATH_ICONS = [Compass, Sparkles, Clock];
+// One icon per program, in display order (Fluir, Momentum, Raíz, Brújula, Oneness).
+// `?? Sparkles` guards against any future program with no assigned icon.
+const PATH_ICONS = [Waves, Sparkles, Clock, Compass, User];
 
 export function PathsPreview({
   locale,
@@ -23,7 +25,9 @@ export function PathsPreview({
   dict: Dict;
   paths?: PathInfo[];
 }) {
-  const paths = pathsProp && pathsProp.length > 0 ? pathsProp : staticPaths;
+  // Home preview shows the three group programs (the grid is 3-wide); the full
+  // five-program list lives on /los-caminos. An explicit prop overrides this.
+  const paths = pathsProp && pathsProp.length > 0 ? pathsProp : staticPaths.slice(0, 3);
   const [hovered, setHovered] = React.useState<number | null>(null);
 
   return (
@@ -48,7 +52,7 @@ export function PathsPreview({
             const short = locale === "es" ? p.shortEs : p.shortEn;
             const includes = locale === "es" ? p.includesEs : p.includesEn;
             const duration = locale === "es" ? p.durationEs : p.durationEn;
-            const Icon = PATH_ICONS[idx];
+            const Icon = PATH_ICONS[idx] ?? Sparkles;
             const isHovered = hovered === idx;
             const isDim = hovered !== null && hovered !== idx;
 

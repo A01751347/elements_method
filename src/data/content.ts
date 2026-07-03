@@ -434,34 +434,40 @@ export interface PathInfo {
   ctaEn: string;
 }
 
+/**
+ * Programs, ordered from longest to shortest duration (client request).
+ * NOTE: route `slug`s are kept stable (raices/corriente/fuente/…) so existing
+ * URLs, redirects and the [slug] detail page's conditionals keep working —
+ * only the display names changed (Fluir / Momentum / Raíz / Brújula / Oneness).
+ */
 export const paths: PathInfo[] = [
   {
     slug: "raices",
-    nameEs: "Raíces",
-    nameEn: "Roots",
+    nameEs: "Fluir",
+    nameEn: "Flow",
     tagEs: "El Camino · Grupal",
     tagEn: "The Journey · Group",
-    headlineEs: "Encuentra tu fundamento. Lidera desde tus profundidades.",
-    headlineEn: "Find your foundation. Lead from your depths.",
-    shortEs: "Programa de inmersión de 5 meses.",
-    shortEn: "5-month immersion program.",
+    headlineEs: "Sin prisa, pero sin pausa. La profundidad a su propio ritmo.",
+    headlineEn: "No hurry, no pause. Depth at its own pace.",
+    shortEs: "Programa de profundidad de 5 meses.",
+    shortEn: "5-month depth program.",
     longEs:
-      "El programa de entrada al universo Elements Method. Diseñado para líderes que buscan profundidad con comunidad de práctica. Cada mes: una inmersión presencial en naturaleza, una metodología y espacio de reflexión.",
+      "Nuestro programa de mayor profundidad. Cada mes se dedica a un solo elemento — Agua, Fuego, Aire y Tierra en los primeros cuatro meses; el quinto cierra integrando todo el aprendizaje y las vivencias. Con una salida mensual donde se trabajan dos metodologías completas del elemento del mes. Como el agua que fluye a su propio ritmo, cada mes construye sobre el anterior de forma orgánica.",
     longEn:
-      "The entry point to the Elements Method universe. Designed for leaders who want depth with community of practice. Each month: one in-person nature immersion, one methodology, and space for reflection.",
+      "Our deepest program. Each month is devoted to a single element — Water, Fire, Air and Earth across the first four months; the fifth closes by integrating all the learning and lived experience. One monthly outing works two complete methodologies of that month's element. Like water flowing at its own pace, each month builds organically on the one before.",
     includesEs: [
-      "1 inmersión presencial en naturaleza por mes",
-      "4 metodologías a implementar y practicar",
+      "1 salida mensual de inmersión en naturaleza",
+      "2 metodologías completas por elemento",
       "Entornos naturales seleccionados",
-      "Recorrido por los 4 elementos + Éter",
+      "Recorrido por los 4 elementos + integración",
       "Acceso a comunidad de práctica y coaches",
       "Acceso especial a programa de continuidad — 2 sesiones de coaching individual por mes durante 6 meses (costo adicional)",
     ],
     includesEn: [
-      "1 in-person nature immersion per month",
-      "4 methodologies to implement and practice",
+      "1 monthly nature-immersion outing",
+      "2 complete methodologies per element",
       "Curated natural environments",
-      "Journey through all 4 elements + Éter",
+      "Journey through all 4 elements + integration",
       "Access to community of practice and coaches",
       "Special access to continuation program — 2 individual coaching sessions per month for 6 months (additional cost)",
     ],
@@ -471,37 +477,37 @@ export const paths: PathInfo[] = [
     durationEn: "5 months",
     capacityEs: "Hasta 15 participantes",
     capacityEn: "Up to 15 participants",
-    ctaEs: "Comenzar Raíces",
-    ctaEn: "Begin Roots",
+    ctaEs: "Comenzar Fluir",
+    ctaEn: "Begin Flow",
   },
   {
     slug: "corriente",
-    nameEs: "Corriente",
-    nameEn: "Current",
+    nameEs: "Momentum",
+    nameEn: "Momentum",
     tagEs: "Intensivo · Grupal",
     tagEn: "Intensive · Group",
-    headlineEs: "Doble la inmersión. Doble el momentum.",
-    headlineEn: "Double the immersion. Double the momentum.",
-    shortEs: "Experiencia de inmersión acelerada · 3 meses.",
-    shortEn: "Accelerated immersion experience · 3 months.",
+    headlineEs: "La fuerza acumulada de un cuerpo en movimiento.",
+    headlineEn: "The accumulated force of a body in motion.",
+    shortEs: "Programa acelerado de 3 meses.",
+    shortEn: "Accelerated 3-month program.",
     longEs:
-      "Para líderes que necesitan transformación a mayor velocidad. El doble de inmersiones por mes crea una frecuencia de contacto con los elementos que produce integración acelerada.",
+      "Nuestro programa de mayor intensidad y velocidad: 3 meses con dos salidas mensuales, donde cada jornada cubre dos metodologías y dos experiencias en un solo día — el doble de densidad que cualquier otro programa grupal. El sexto y último encuentro se dedica enteramente a una metodología y a la integración de todo lo vivido. Pensado para quien enfrenta un momento crítico — una transición de rol, una ventana de 90 días donde el cambio debe ser visible y medible.",
     longEn:
-      "For leaders who need transformation at greater speed. Double the immersions per month creates a contact frequency with the elements that produces accelerated integration.",
+      "Our most intense, fast-moving program: 3 months with two monthly outings, where each day covers two methodologies and two experiences — twice the density of any other group program. The sixth and final gathering is devoted entirely to one methodology and to integrating everything lived. For anyone facing a critical moment — a role transition, a 90-day window where change must be visible and measurable.",
     includesEs: [
-      "2 inmersiones presenciales en naturaleza por mes",
-      "2 metodologías por mes a implementar",
+      "2 salidas de inmersión por mes",
+      "2 metodologías y 2 experiencias por jornada",
       "Entornos naturales seleccionados",
-      "Recorrido por los 4 elementos + Éter",
+      "Recorrido por los 4 elementos + integración",
       "Integración e implementación acelerada por elemento",
       "Acceso a comunidad de práctica y coaches",
       "Acceso especial a programa de continuidad — 2 sesiones de coaching por mes durante 6 meses (costo adicional)",
     ],
     includesEn: [
-      "2 in-person nature immersions per month",
-      "2 methodologies per month to implement",
+      "2 immersion outings per month",
+      "2 methodologies and 2 experiences per day",
       "Curated natural environments",
-      "Journey through all 4 elements + Éter",
+      "Journey through all 4 elements + integration",
       "Accelerated integration and implementation per element",
       "Access to community of practice and coaches",
       "Special access to continuation program — 2 coaching sessions per month for 6 months (additional cost)",
@@ -512,51 +518,123 @@ export const paths: PathInfo[] = [
     durationEn: "3 months",
     capacityEs: "Hasta 15 participantes",
     capacityEn: "Up to 15 participants",
-    ctaEs: "Comenzar Corriente",
-    ctaEn: "Begin Current",
+    ctaEs: "Comenzar Momentum",
+    ctaEn: "Begin Momentum",
   },
   {
     slug: "fuente",
-    nameEs: "Fuente",
-    nameEn: "Source",
+    nameEs: "Raíz",
+    nameEn: "Root",
     tagEs: "Inmersión Total · Retiro 3 días",
     tagEn: "Full Immersion · 3-day Retreat",
-    headlineEs: "La transformación más completa.",
-    headlineEn: "The most complete transformation.",
-    shortEs: "Retiro grupal de 3 días + programa de coaching individual de 6 meses.",
-    shortEn: "3-day group retreat + 6-month individual coaching program.",
+    headlineEs: "La puerta de entrada. Los cinco elementos en un solo fin de semana.",
+    headlineEn: "The gateway. All five elements in a single weekend.",
+    shortEs: "Retiro de 3 días.",
+    shortEn: "3-day retreat.",
     longEs:
-      "La oferta más completa y exclusiva de Elements Method. Un retiro de tres días donde se realizan cuatro inmersiones presenciales y se exploran los cuatro elementos con sus metodologías. Seguido de un programa de coaching individualizado que da continuidad a lo aprendido durante seis meses.",
+      "La puerta de entrada al universo Elements Method: un retiro intensivo de 3 días donde cada jornada se dedica a un elemento, seguido de un cierre integrador en la mañana final. Selecciona la experiencia más potente y representativa de cada elemento, priorizando la vivencia completa del arco de los cuatro elementos. Ideal como primera experiencia, como retiro anual de equipo directivo, o como introducción antes de un programa de mayor duración.",
     longEn:
-      "The most complete and exclusive Elements Method offering. A three-day retreat with four in-person nature immersions exploring all four elements with their methodologies. Followed by a six-month individual coaching program that sustains everything learned.",
+      "The gateway to the Elements Method universe: an intensive 3-day retreat where each day is devoted to one element, followed by an integrative close on the final morning. It selects the most powerful, representative experience of each element, prioritizing the full arc of the four elements. Ideal as a first experience, an annual leadership-team retreat, or an introduction before a longer program.",
     includesEs: [
       "Retiro de 3 días (jueves a sábado)",
       "4 inmersiones presenciales en naturaleza",
-      "Recorrido por los 4 elementos + Éter",
-      "12 sesiones de coaching individual post-retiro (mínimo 6 meses, 2/mes)",
-      "Diseño de curriculum personalizado para el proceso de coaching",
-      "Mapa de liderazgo 1:1 por elemento",
-      "Coach senior de mayor experiencia",
+      "Recorrido por los 4 elementos + integración",
+      "Cierre integrador en la mañana final",
+      "Entornos naturales seleccionados",
       "Acceso a comunidad de retiros ejecutivos",
     ],
     includesEn: [
       "3-day retreat (Thursday to Saturday)",
       "4 in-person nature immersions",
-      "Journey through all 4 elements + Éter",
-      "12 individual post-retreat coaching sessions (minimum 6 months, 2/month)",
-      "Personalized curriculum design for coaching process",
-      "1:1 leadership map per element",
-      "Most senior coach",
+      "Journey through all 4 elements + integration",
+      "Integrative close on the final morning",
+      "Curated natural environments",
       "Access to executive retreats community",
     ],
-    modalityEs: "Retiro grupal · hasta 15 líderes",
-    modalityEn: "Group retreat · up to 15 leaders",
-    durationEs: "3 días + 6 meses de coaching",
-    durationEn: "3 days + 6 months of coaching",
-    capacityEs: "Hasta 15 líderes",
-    capacityEn: "Up to 15 leaders",
-    ctaEs: "Comenzar Fuente",
-    ctaEn: "Begin Source",
+    modalityEs: "Retiro grupal · hasta 15 participantes",
+    modalityEn: "Group retreat · up to 15 participants",
+    durationEs: "3 días",
+    durationEn: "3 days",
+    capacityEs: "Hasta 15 participantes",
+    capacityEn: "Up to 15 participants",
+    ctaEs: "Comenzar Raíz",
+    ctaEn: "Begin Root",
+  },
+  {
+    slug: "brujula",
+    nameEs: "Brújula",
+    nameEn: "Compass",
+    tagEs: "Taller a la medida · 1 día",
+    tagEn: "Custom Workshop · 1 day",
+    headlineEs: "Un día para reencontrar tu norte.",
+    headlineEn: "One day to find your north again.",
+    shortEs: "Taller de un día hecho a la medida.",
+    shortEn: "Custom one-day workshop.",
+    longEs:
+      "Un taller de un día diseñado a la medida del grupo o la organización. Concentra una experiencia inmersiva completa en una sola jornada: contacto con la naturaleza, una metodología central y un espacio de reflexión e integración. Ideal como primera aproximación al método, como activación de equipo o como jornada de reencuadre en un momento clave.",
+    longEn:
+      "A one-day workshop custom-designed for the group or organization. It concentrates a complete immersive experience into a single day: contact with nature, one core methodology, and space for reflection and integration. Ideal as a first taste of the method, a team activation, or a reset day at a pivotal moment.",
+    includesEs: [
+      "1 jornada completa de inmersión",
+      "1 metodología central del método",
+      "Contenido diseñado a la medida del grupo",
+      "Entorno natural seleccionado",
+      "Espacio de reflexión e integración",
+    ],
+    includesEn: [
+      "1 full immersion day",
+      "1 core methodology of the method",
+      "Content tailored to the group",
+      "Curated natural environment",
+      "Space for reflection and integration",
+    ],
+    modalityEs: "Grupal a la medida · organización o equipo",
+    modalityEn: "Custom group · organization or team",
+    durationEs: "1 día",
+    durationEn: "1 day",
+    capacityEs: "A definir con el grupo",
+    capacityEn: "Defined with the group",
+    ctaEs: "Diseñar mi Brújula",
+    ctaEn: "Design my Compass",
+  },
+  {
+    slug: "soulfull",
+    nameEs: "Oneness",
+    nameEn: "Oneness",
+    tagEs: "Inmersión Individual · Privado",
+    tagEn: "Individual Immersion · Private",
+    headlineEs: "Tu proceso, completamente tuyo.",
+    headlineEn: "Your process, entirely your own.",
+    shortEs: "Inmersión individual completamente personalizada.",
+    shortEn: "Fully personalized individual immersion.",
+    longEs:
+      "Una inmersión individual, diseñada por completo alrededor de una sola persona y del resultado que busca. Cada inmersión, cada sesión de coaching y cada locación son exclusivamente para ti. Para quien prefiere crecer en un entorno privado o requiere confidencialidad absoluta — la máxima personalización del método.",
+    longEn:
+      "An individual immersion, designed entirely around one person and the result they seek. Every immersion, coaching session and location is exclusively for you. For those who prefer to grow in a private setting or need absolute confidentiality — the method at its most personalized.",
+    includesEs: [
+      "Programa completamente privado e individual",
+      "Diseño a la medida del resultado que buscas",
+      "Recorrido por los 4 elementos + integración",
+      "Coaching individual con coach senior",
+      "Locaciones curadas para tu proceso",
+      "Confidencialidad absoluta",
+    ],
+    includesEn: [
+      "Fully private, individual program",
+      "Designed around the result you seek",
+      "Journey through all 4 elements + integration",
+      "Individual coaching with a senior coach",
+      "Curated locations for your process",
+      "Absolute confidentiality",
+    ],
+    modalityEs: "Individual · privado",
+    modalityEn: "Individual · private",
+    durationEs: "A la medida",
+    durationEn: "Custom",
+    capacityEs: "1 persona",
+    capacityEn: "1 person",
+    ctaEs: "Comenzar Oneness",
+    ctaEn: "Begin Oneness",
   },
 ];
 
@@ -567,10 +645,10 @@ export const paths: PathInfo[] = [
 export const originProgram = {
   nameEs: "Origin",
   nameEn: "Origin",
-  tagEs: "Retiros corporativos a la medida",
+  tagEs: "Retiros corporativos hechos a la medida",
   tagEn: "Custom-built corporate retreats",
   bodyEs:
-    "Elements Method ofrece programas organizacionales a la medida diseñados alrededor de inmersiones de equipo, desarrollo de cultura de liderazgo y transformación organizacional. Un programa puede llevar a un equipo directivo completo a través del marco de los Cuatro Elementos, creando lenguaje compartido, confianza profundizada y cultura organizacional alineada.",
+    "Elements Method ofrece programas organizacionales hechos a la medida, diseñados alrededor de inmersiones de equipo, desarrollo de cultura de liderazgo y transformación organizacional. Un programa puede llevar a un equipo directivo completo a través del marco de los Cuatro Elementos, creando lenguaje compartido, confianza profundizada y cultura organizacional alineada.",
   bodyEn:
     "Elements Method offers bespoke organizational programs designed around team immersions, leadership culture development, and organizational transformation. A single corporate program can bring an entire leadership team through the Four Elements framework, creating shared language, deepened trust, and aligned organizational culture.",
   ctaEs: "Iniciar conversación",
@@ -578,7 +656,11 @@ export const originProgram = {
 };
 
 /**
- * The 5-month arc of Roots — verbatim from master doc.
+ * The elemental arc — the sequence every program traverses.
+ * Numbered by phase (not month): each program spans this arc over a
+ * different duration, so we avoid "Mes N" per client feedback. The closing
+ * phase is the integration into the Núcleo (the person themselves), not a
+ * separate "Éter" step.
  */
 export const rootsArc = [
   {
@@ -608,8 +690,8 @@ export const rootsArc = [
   {
     month: 5,
     elementKey: "eter" as ElementKey,
-    titleEs: "Quién y qué es la esencia nueva tuya como Líder",
-    titleEn: "Who and what is your new essence as a Leader",
+    titleEs: "Integración: el aprendizaje vuelve al núcleo que eres tú",
+    titleEn: "Integration: the learning returns to the core that is you",
   },
 ];
 
@@ -625,7 +707,7 @@ export interface ProgramStat {
 }
 
 export interface ProgramDetail {
-  slug: "raices" | "corriente" | "fuente" | "soulfull";
+  slug: "raices" | "corriente" | "fuente" | "brujula" | "soulfull";
   url: string;
   headerKickerEs: string;
   headerKickerEn: string;
@@ -681,18 +763,18 @@ export const programDetails: ProgramDetail[] = [
   // ─── RAÍCES — slides 9-11 verbatim ────────────────────────────────────
   {
     slug: "raices",
-    url: "elementsmethod.com/roots",
+    url: "elementsmethod.com/flow",
     headerKickerEs: "Programa Grupal · 5 Meses",
     headerKickerEn: "Group Program · 5 Months",
-    nameEs: "Roots Journey",
-    nameEn: "Roots Journey",
-    taglineEs: "Encuentra tu fundamento. Lidera desde tus profundidades.",
-    taglineEn: "Find your foundation. Lead from your depths.",
+    nameEs: "Fluir · Flow",
+    nameEn: "Flow",
+    taglineEs: "Sin prisa, pero sin pausa. La profundidad a su propio ritmo.",
+    taglineEn: "No hurry, no pause. Depth at its own pace.",
     stats: [
       { value: "5", labelEs: "Meses", labelEn: "Months" },
-      { value: "5", labelEs: "Inmersiones presenciales", labelEn: "In-Person Immersions" },
-      { value: "4", labelEs: "Leadership Frameworks", labelEn: "Leadership Frameworks" },
-      { value: "12", labelEs: "Sesiones de coaching", labelEn: "Coaching Sessions" },
+      { value: "5", labelEs: "Salidas — 1 por mes", labelEn: "Outings — 1 per month" },
+      { value: "8", labelEs: "Metodologías", labelEn: "Methodologies" },
+      { value: "4", labelEs: "Elementos", labelEn: "Elements" },
     ],
     includesHeadingEs: "Todo lo que necesitas para ir a profundidad",
     includesHeadingEn: "Everything You Need to Go Deep",
@@ -706,12 +788,12 @@ export const programDetails: ProgramDetail[] = [
           "Full-day experiences in carefully selected natural environments. Each location is chosen to embody its element and create conditions for genuine transformation.",
       },
       {
-        titleEs: "Coaching individual",
-        titleEn: "Individual Coaching",
+        titleEs: "Un elemento por mes",
+        titleEn: "One element per month",
         bodyEs:
-          "Dos sesiones privadas al mes con un coach certificado de Elements Method. Enfocadas en integración, informadas por el elemento, y completamente personalizadas al filo de tu liderazgo.",
+          "A diferencia de Momentum, que prioriza la velocidad, Fluir prioriza la profundidad: cada elemento tiene un mes completo para asentarse, integrarse y manifestarse en el comportamiento real antes de avanzar al siguiente.",
         bodyEn:
-          "Two private sessions per month with a certified Elements Method coach. Integration-focused, element-informed, and entirely personalized to your leadership edge.",
+          "Unlike Momentum, which prioritizes speed, Flow prioritizes depth: each element gets a full month to settle, integrate and show up in real behavior before moving to the next.",
       },
       {
         titleEs: "Círculos grupales virtuales",
@@ -722,8 +804,8 @@ export const programDetails: ProgramDetail[] = [
           "Monthly virtual gatherings with your cohort for shared integration, peer accountability, and collective wisdom. Where insights become commitments.",
       },
     ],
-    whoForHeadingEs: "Roots es para líderes que...",
-    whoForHeadingEn: "Roots is made for leaders who...",
+    whoForHeadingEs: "Fluir es para quienes...",
+    whoForHeadingEn: "Flow is made for those who...",
     whoForItems: [
       {
         titleEs: "Buscan profundidad, no solo herramientas",
@@ -751,34 +833,50 @@ export const programDetails: ProgramDetail[] = [
       },
     ],
     ctaEs:
-      "Aplica para Raíces · La próxima cohorte comienza en 60 días. Los lugares son limitados para asegurar profundidad de experiencia.",
+      "Aplica para Fluir · La próxima cohorte comienza en 60 días. Los lugares son limitados para asegurar profundidad de experiencia.",
     ctaEn:
-      "Apply for Roots · The next cohort begins in 60 days. Spaces are limited to ensure depth of experience.",
-    primaryElement: "tierra",
+      "Apply for Flow · The next cohort begins in 60 days. Spaces are limited to ensure depth of experience.",
+    primaryElement: "agua",
   },
 
-  // ─── CORRIENTE — slides 12-13 verbatim ────────────────────────────────
+  // ─── CORRIENTE (Momentum) — slides 12-13 ──────────────────────────────
   {
     slug: "corriente",
-    url: "elementsmethod.com/current",
-    headerKickerEs: "Intensivo Grupal · Continuo",
-    headerKickerEn: "Intensive Group · Ongoing",
-    nameEs: "Current Intensive",
-    nameEn: "Current Intensive",
-    taglineEs: "Doble la inmersión. Doble el momentum.",
-    taglineEn: "Double the immersion. Double the momentum.",
+    url: "elementsmethod.com/momentum",
+    headerKickerEs: "Intensivo Grupal · 3 Meses",
+    headerKickerEn: "Intensive Group · 3 Months",
+    nameEs: "Momentum",
+    nameEn: "Momentum",
+    taglineEs: "La fuerza acumulada de un cuerpo en movimiento.",
+    taglineEn: "The accumulated force of a body in motion.",
     stats: [
       { value: "3", labelEs: "Meses", labelEn: "Months" },
-      { value: "12", labelEs: "Sesiones de coaching (continuidad)", labelEn: "Coaching Sessions (continuation)" },
-      { value: "5", labelEs: "Elementos cubiertos", labelEn: "Elements Covered" },
-      { value: "5", labelEs: "Inmersiones", labelEn: "Immersions" },
-      { value: "5", labelEs: "Metodologías", labelEn: "Methodologies" },
+      { value: "6", labelEs: "Salidas — 2 por mes", labelEn: "Outings — 2 per month" },
+      { value: "4", labelEs: "Elementos", labelEn: "Elements" },
+      { value: "10", labelEs: "Metodologías", labelEn: "Methodologies" },
     ],
-    includesHeadingEs: "El doble de tiempo en el campo. El doble de transformación.",
-    includesHeadingEn: "Twice the field time. Twice the transformation.",
-    includesBlocks: [],
-    whoForHeadingEs: "Para quién es Corriente",
-    whoForHeadingEn: "Who Current is for",
+    includesHeadingEs: "El doble de densidad. La mitad del tiempo.",
+    includesHeadingEn: "Twice the density. Half the time.",
+    includesBlocks: [
+      {
+        titleEs: "Dos salidas al mes",
+        titleEn: "Two outings a month",
+        bodyEs:
+          "Cada jornada cubre dos metodologías y dos experiencias en un solo día — el doble de densidad que cualquier otro programa grupal. El sexto y último encuentro se dedica enteramente a una metodología y a integrar todo lo vivido.",
+        bodyEn:
+          "Each day covers two methodologies and two experiences — twice the density of any other group program. The sixth and final gathering is devoted entirely to one methodology and to integrating everything lived.",
+      },
+      {
+        titleEs: "Para un momento crítico",
+        titleEn: "For a critical moment",
+        bodyEs:
+          "Momentum describe su propia naturaleza: la fuerza acumulada de un cuerpo en movimiento, que crece con cada repetición. Pensado para quien enfrenta una transición de rol o una ventana de 90 días donde el cambio debe ser visible y medible.",
+        bodyEn:
+          "Momentum describes its own nature: the accumulated force of a body in motion, growing with each repetition. Built for anyone facing a role transition or a 90-day window where change must be visible and measurable.",
+      },
+    ],
+    whoForHeadingEs: "Para quién es Momentum",
+    whoForHeadingEn: "Who Momentum is for",
     whoForItems: [
       {
         titleEs: "Líderes en momentos críticos de transición",
@@ -800,9 +898,9 @@ export const programDetails: ProgramDetail[] = [
         titleEs: "Líderes que aprenden por experiencia repetida",
         titleEn: "Leaders who learn through repeated experience",
         bodyEs:
-          "Sabes que el cambio real necesita reiteración. El ritmo de Corriente te da esa reiteración.",
+          "Sabes que el cambio real necesita reiteración. El ritmo de Momentum te da esa reiteración.",
         bodyEn:
-          "You know real change needs reiteration. Current's rhythm gives you that reiteration.",
+          "You know real change needs reiteration. Momentum's rhythm gives you that reiteration.",
       },
       {
         titleEs: "Quienes valoran la comunidad como aceleradora",
@@ -813,8 +911,8 @@ export const programDetails: ProgramDetail[] = [
           "Sharing the path with a small, committed cohort accelerates what no individual process achieves.",
       },
     ],
-    cadenceHeadingEs: "Un mes típico en Corriente",
-    cadenceHeadingEn: "A Typical Month in Current",
+    cadenceHeadingEs: "Un mes típico en Momentum",
+    cadenceHeadingEn: "A Typical Month in Momentum",
     cadence: [
       {
         label: "Sem 1 · Week 1",
@@ -879,94 +977,94 @@ export const programDetails: ProgramDetail[] = [
     ],
     comparativaEs: {
       left: [
-        "Raíces (Journey) · 5 meses",
-        "1 inmersión / mes",
-        "2 sesiones de coaching",
-        "5 inmersiones totales",
+        "Fluir (Flow) · 5 meses",
+        "1 salida / mes",
+        "Un elemento por mes",
+        "Prioriza la profundidad",
       ],
       right: [
-        "Corriente (Intensive) · 3 meses",
-        "2 inmersiones / mes",
-        "2 sesiones de coaching",
+        "Momentum · 3 meses",
+        "2 salidas / mes",
+        "Dos metodologías por jornada",
+        "Prioriza la velocidad e intensidad",
         "Integración acelerada",
-        "5 inmersiones totales",
       ],
     },
     comparativaEn: {
       left: [
-        "Roots (Journey) · 5 months",
-        "1 immersion / month",
-        "2 coaching sessions",
-        "5 immersions total",
+        "Flow · 5 months",
+        "1 outing / month",
+        "One element per month",
+        "Prioritizes depth",
       ],
       right: [
-        "Current (Intensive) · 3 months",
-        "2 immersions / month",
-        "2 coaching sessions",
+        "Momentum · 3 months",
+        "2 outings / month",
+        "Two methodologies per day",
+        "Prioritizes speed and intensity",
         "Accelerated integration",
-        "5 immersions total",
       ],
     },
-    ctaEs: "Aplica para Corriente · Las cohortes intensivas se mantienen deliberadamente pequeñas.",
-    ctaEn: "Apply for Current · Intensive cohorts are kept deliberately small.",
+    ctaEs: "Aplica para Momentum · Las cohortes intensivas se mantienen deliberadamente pequeñas.",
+    ctaEn: "Apply for Momentum · Intensive cohorts are kept deliberately small.",
     primaryElement: "fuego",
   },
 
-  // ─── FUENTE — slides 14-17 verbatim ───────────────────────────────────
+  // ─── FUENTE (Raíz) — slides 14-17 ─────────────────────────────────────
   {
     slug: "fuente",
-    url: "elementsmethod.com/source",
+    url: "elementsmethod.com/root",
     headerKickerEs: "Inmersión Total · Retiro de 3 días en naturaleza",
     headerKickerEn: "Full Immersion · 3-day retreat in nature",
-    nameEs: "Source Full Immersion",
-    nameEn: "Source Full Immersion",
-    taglineEs: "La transformación de liderazgo más intensa e inmersiva disponible.",
-    taglineEn: "The most intense and immersive leadership transformation available.",
+    nameEs: "Raíz · Root",
+    nameEn: "Root",
+    taglineEs: "La puerta de entrada. Los cinco elementos en un solo fin de semana.",
+    taglineEn: "The gateway. All five elements in a single weekend.",
     stats: [
       { value: "3", labelEs: "Días", labelEn: "Days" },
       { value: "4", labelEs: "Inmersiones", labelEn: "Immersions" },
-      { value: "5", labelEs: "Elementos", labelEn: "Elements" },
+      { value: "4", labelEs: "Elementos", labelEn: "Elements" },
       { value: "4", labelEs: "Metodologías", labelEn: "Methodologies" },
-      { value: "12", labelEs: "Sesiones de coaching post-retiro", labelEn: "Coaching Sessions post-retreat" },
+      { value: "1", labelEs: "Cierre integrador", labelEn: "Integrative close" },
     ],
-    includesHeadingEs: "Diseñado para ti, alrededor de ti",
-    includesHeadingEn: "Built for you, around you",
+    includesHeadingEs: "La experiencia más concentrada del método",
+    includesHeadingEn: "The most concentrated experience of the method",
     includesBlocks: [
       {
-        titleEs: "Diseño de programa a la medida",
-        titleEn: "Custom Program Design",
+        titleEs: "Un elemento por jornada",
+        titleEn: "One element per day",
         bodyEs:
-          "Tu camino en Source comienza con un proceso de intake profundo. Mapeamos tu historia de liderazgo, tu contexto actual y tu aspiración más profunda — y diseñamos tu secuencia elemental alrededor de eso.",
+          "Un retiro intensivo de 3 días donde cada jornada se dedica a un elemento, seguido de un cierre integrador en la mañana final. La experiencia más concentrada y completa que ofrecemos en formato corto.",
         bodyEn:
-          "Your Source journey begins with a deep intake process. We map your leadership history, your current context, and your deepest aspiration — then design your element sequence around that.",
+          "An intensive 3-day retreat where each day is devoted to one element, followed by an integrative close on the final morning. The most concentrated, complete experience we offer in a short format.",
+      },
+      {
+        titleEs: "La experiencia más potente de cada elemento",
+        titleEn: "Each element's most powerful experience",
+        bodyEs:
+          "A diferencia de los programas de mayor duración, Raíz no profundiza en múltiples metodologías por elemento — selecciona la experiencia más potente y representativa de cada uno, priorizando la vivencia completa del arco de los cuatro elementos.",
+        bodyEn:
+          "Unlike the longer programs, Root doesn't go deep into multiple methodologies per element — it selects each element's most powerful, representative experience, prioritizing the full arc of the four elements.",
       },
       {
         titleEs: "Locaciones curadas",
         titleEn: "Curated Field Locations",
         bodyEs:
-          "Seleccionamos entornos naturales que hablan a tu filo específico. Tu inmersión de agua puede ser un río diferente al de alguien más — porque tu claridad vive en una corriente diferente.",
+          "Entornos naturales seleccionados para encarnar cada elemento y crear las condiciones para una vivencia genuina a lo largo del fin de semana extendido.",
         bodyEn:
-          "We select natural environments that speak to your specific edge. Your water immersion might be a different river than someone else's — because your clarity lives in a different current.",
+          "Natural environments selected to embody each element and create the conditions for a genuine experience across the extended weekend.",
       },
       {
-        titleEs: "Coaching de nivel senior",
-        titleEn: "Senior-Level Coaching",
+        titleEs: "La puerta de entrada ideal",
+        titleEn: "The ideal entry point",
         bodyEs:
-          "Los participantes de Source trabajan con nuestros coaches más senior — líderes con profunda experiencia en desarrollo ejecutivo y facilitación elemental. Esto es coaching al nivel más alto.",
+          "Ideal como primera experiencia, como retiro anual de equipo directivo, o como introducción antes de comprometerse con un programa de mayor duración.",
         bodyEn:
-          "Source participants work with our most senior coaches — leaders with deep experience in executive development and elemental facilitation. This is coaching at the highest level.",
-      },
-      {
-        titleEs: "Integración en tiempo real",
-        titleEn: "Real-Time Integration",
-        bodyEs:
-          "Con cuatro inmersiones por mes (en el período de coaching continuo), no esperas a que los insights aterricen. Se integran en tiempo real, entre días de campo, a través del coaching y en tus momentos reales de liderazgo.",
-        bodyEn:
-          "With four immersions per month, you're not waiting for insights to land. They integrate in real time, between field days, through coaching, and in your actual leadership moments.",
+          "Ideal as a first experience, an annual leadership-team retreat, or an introduction before committing to a longer program.",
       },
     ],
-    whoForHeadingEs: "Source es para el líder listo para ir a la raíz",
-    whoForHeadingEn: "Source is for the leader who is ready to go to the root",
+    whoForHeadingEs: "Raíz es para quien quiere vivir el arco completo",
+    whoForHeadingEn: "Root is for those who want the full arc",
     whoForItems: [
       {
         titleEs: "Atraviesas un umbral significativo de liderazgo",
@@ -1001,124 +1099,193 @@ export const programDetails: ProgramDetail[] = [
           "Who has earned the ability to invest fully in yourself.",
       },
     ],
-    cadenceHeadingEs: "Cómo se ve un mes en Source",
-    cadenceHeadingEn: "What a Month in Source Looks Like",
+    cadenceHeadingEs: "Cómo se ve el retiro de Raíz",
+    cadenceHeadingEn: "What the Root retreat looks like",
     cadence: [
       {
-        label: "Sem 1 · Week 1",
-        titleEs: "Inmersión de apertura",
-        titleEn: "Opening Immersion",
+        label: "Día 1 · Day 1",
+        titleEs: "Primeras jornadas",
+        titleEn: "First days",
         bulletsEs: [
-          "Encuentro de día completo con el elemento",
-          "Coaching de apertura para definir intención y contexto",
+          "Cada día dedicado a un elemento",
+          "Contacto con la naturaleza + su experiencia más representativa",
         ],
         bulletsEn: [
-          "Full-day element encounter",
-          "Opening coaching to set intention and context",
+          "Each day devoted to one element",
+          "Contact with nature + its most representative experience",
         ],
       },
       {
-        label: "Sem 2 · Week 2",
-        titleEs: "Día de campo de profundización",
-        titleEn: "Deepening Field Day",
+        label: "Día 2 · Day 2",
+        titleEs: "Segunda jornada",
+        titleEn: "Second day",
         bulletsEs: [
-          "Segunda inmersión que va más profundo en el mismo elemento",
-          "Coaching de integración a mitad de mes",
+          "Nuevo elemento, nueva inmersión presencial",
+          "Reflexión y diálogo grupal facilitado",
         ],
         bulletsEn: [
-          "Second immersion goes deeper into the same element",
-          "Mid-month integration coaching",
+          "New element, new in-person immersion",
+          "Facilitated reflection and group dialogue",
         ],
       },
       {
-        label: "Sem 3 · Week 3",
-        titleEs: "Inmersión de filo",
-        titleEn: "Edge Immersion",
+        label: "Día 3 · Day 3",
+        titleEs: "Tercera jornada",
+        titleEn: "Third day",
         bulletsEs: [
-          "Experiencia de desafío diseñada para empujar tu filo de liderazgo",
-          "Tercera sesión de coaching",
+          "Se completa el arco de los cuatro elementos",
+          "Vivencia completa priorizada sobre la profundidad en uno solo",
         ],
         bulletsEn: [
-          "A challenge experience designed to push your leadership edge",
-          "Third coaching session",
+          "The four-element arc is completed",
+          "Full experience prioritized over depth in any single one",
         ],
       },
       {
-        label: "Sem 4 · Week 4",
-        titleEs: "Cierre y síntesis",
-        titleEn: "Closing & Synthesis",
+        label: "Cierre · Close",
+        titleEs: "Cierre integrador",
+        titleEn: "Integrative close",
         bulletsEs: [
-          "Inmersión final del mes",
-          "Coaching de síntesis para integrar y hacer puente al siguiente elemento",
+          "Mañana final dedicada a la integración",
+          "El aprendizaje vuelve al núcleo que eres tú",
         ],
         bulletsEn: [
-          "Final immersion of the month",
-          "Synthesis coaching to integrate and bridge to the next element",
+          "Final morning devoted to integration",
+          "The learning returns to the core that is you",
         ],
       },
     ],
-    closingTitleEs: "Una nota sobre Source",
-    closingTitleEn: "A note on Source",
+    closingTitleEs: "Una nota sobre Raíz",
+    closingTitleEn: "A note on Root",
     closingBodyEs:
-      "“Tomamos muy pocos clientes de Source a la vez. Esto nos permite darle a cada engagement la profundidad y presencia que merece.” Source comienza con una conversación de discovery. No hay formulario de aplicación — solo una conversación para ver si somos la pareja correcta.",
+      "Raíz es la puerta de entrada al universo Elements Method. Es el programa ideal como primera experiencia, como retiro anual de un equipo directivo, o como introducción antes de comprometerse con un programa de mayor duración.",
     closingBodyEn:
-      "“We take very few Source clients at a time. This allows us to give each engagement the depth and presence it deserves.” Source engagements begin with a discovery conversation. There is no application form — only a conversation to see if we're the right fit for each other.",
-    closingNoteEs: "Regresa a tu Fuente. Esto no es un formulario. Es una invitación a una conversación. Cuéntanos dónde estás y qué estás buscando — desde ahí lo tomamos.",
+      "Root is the gateway to the Elements Method universe. It is the ideal program as a first experience, as a leadership team's annual retreat, or as an introduction before committing to a longer program.",
+    closingNoteEs: "Empieza por la raíz. Esto no es un formulario. Es una invitación a una conversación. Cuéntanos dónde estás y qué estás buscando — desde ahí lo tomamos.",
     closingNoteEn:
-      "Return to your Source. This is not a form. It's an invitation to a conversation. Tell us where you are and what you're looking for — we'll take it from there.",
-    ctaEs: "Solicitar conversación de discovery",
-    ctaEn: "Request Discovery Call",
-    primaryElement: "agua",
+      "Begin at the root. This is not a form. It's an invitation to a conversation. Tell us where you are and what you're looking for — we'll take it from there.",
+    ctaEs: "Solicitar conversación",
+    ctaEn: "Request a Conversation",
+    primaryElement: "tierra",
   },
 
-  // ─── SOULFULL (Source 1:1 variant) — slide 15 verbatim ────────────────
+  // ─── BRÚJULA (Compass — custom one-day workshop) ──────────────────────
   {
-    slug: "soulfull",
-    url: "elementsmethod.com/soulfull",
-    headerKickerEs: "Inmersión Total · Retiro privado de 3 días en naturaleza",
-    headerKickerEn: "Full Immersion · Private 3-day retreat in nature",
-    nameEs: "SoulFull Individual Immersion",
-    nameEn: "SoulFull Individual Immersion",
-    taglineEs:
-      "Para líderes que crecen mejor en un entorno privado. Cada engagement es diseñado a la medida.",
-    taglineEn:
-      "For leaders that feel better growing in a private environment. Each engagement is custom-designed for you.",
+    slug: "brujula",
+    url: "elementsmethod.com/compass",
+    headerKickerEs: "Taller a la medida · 1 Día",
+    headerKickerEn: "Custom Workshop · 1 Day",
+    nameEs: "Brújula · Compass",
+    nameEn: "Compass",
+    taglineEs: "Un día para reencontrar tu norte.",
+    taglineEn: "One day to find your north again.",
     stats: [
-      { value: "4", labelEs: "Inmersiones / mes", labelEn: "Immersions / month" },
-      { value: "12", labelEs: "Sesiones de coaching", labelEn: "Coaching Sessions" },
-      { value: "1", labelEs: "Líder · tú", labelEn: "Leader · you" },
-      { value: "100%", labelEs: "Personalización", labelEn: "Personalization" },
+      { value: "1", labelEs: "Día", labelEn: "Day" },
+      { value: "1", labelEs: "Metodología central", labelEn: "Core methodology" },
+      { value: "100%", labelEs: "A la medida", labelEn: "Custom-built" },
+      { value: "1", labelEs: "Entorno natural", labelEn: "Natural environment" },
     ],
-    includesHeadingEs: "Source en formato 1:1",
-    includesHeadingEn: "Source in 1:1 format",
+    includesHeadingEs: "Una jornada completa, diseñada a tu medida",
+    includesHeadingEn: "A full day, designed to your measure",
     includesBlocks: [
       {
-        titleEs: "Programa completamente privado",
-        titleEn: "Fully private program",
+        titleEs: "Una experiencia inmersiva en un día",
+        titleEn: "An immersive experience in a day",
         bodyEs:
-          "Ningún componente grupal. Cada inmersión, cada sesión de coaching y cada locación son exclusivamente para ti.",
+          "Brújula concentra una experiencia completa en una sola jornada: contacto con la naturaleza, una metodología central del método y un espacio de reflexión e integración.",
         bodyEn:
-          "No group component. Every immersion, coaching session and location is exclusively for you.",
+          "Compass concentrates a complete experience into a single day: contact with nature, one core methodology of the method, and space for reflection and integration.",
       },
       {
-        titleEs: "Cadencia acelerada",
-        titleEn: "Accelerated cadence",
+        titleEs: "Diseñado a la medida del grupo",
+        titleEn: "Designed to the group's measure",
         bodyEs:
-          "Cuatro inmersiones por mes — no esperas para que los insights aterricen. Se integran entre los días de campo en tiempo real.",
+          "Cada Brújula se diseña alrededor del grupo o la organización y del momento que atraviesan — como primera aproximación al método, como activación de equipo o como jornada de reencuadre.",
         bodyEn:
-          "Four immersions per month — you don't wait for insights to land. They integrate between field days in real time.",
+          "Each Compass is designed around the group or organization and the moment they're in — as a first taste of the method, a team activation, or a reset day.",
       },
     ],
-    whoForHeadingEs: "Para quién es SoulFull",
-    whoForHeadingEn: "Who SoulFull is for",
+    whoForHeadingEs: "Para quién es Brújula",
+    whoForHeadingEn: "Who Compass is for",
     whoForItems: [
       {
-        titleEs: "Líderes que requieren confidencialidad absoluta",
-        titleEn: "Leaders who require absolute confidentiality",
+        titleEs: "Equipos que quieren una primera experiencia",
+        titleEn: "Teams wanting a first experience",
         bodyEs:
-          "Algunos procesos no pueden compartirse con un grupo. SoulFull es ese contenedor.",
+          "Una forma de conocer el método antes de comprometerse con un programa de mayor duración.",
         bodyEn:
-          "Some processes can't be shared with a group. SoulFull is that container.",
+          "A way to get to know the method before committing to a longer program.",
+      },
+      {
+        titleEs: "Organizaciones en un momento clave",
+        titleEn: "Organizations at a pivotal moment",
+        bodyEs:
+          "Una jornada de reencuadre para realinear al equipo alrededor de lo que importa.",
+        bodyEn:
+          "A reset day to realign the team around what matters.",
+      },
+    ],
+    ctaEs: "Diseñar mi Brújula",
+    ctaEn: "Design my Compass",
+    primaryElement: "aire",
+  },
+
+  // ─── SOULFULL (Oneness — individual immersion) ────────────────────────
+  {
+    slug: "soulfull",
+    url: "elementsmethod.com/oneness",
+    headerKickerEs: "Inmersión Individual · Privado",
+    headerKickerEn: "Individual Immersion · Private",
+    nameEs: "Oneness",
+    nameEn: "Oneness",
+    taglineEs:
+      "Tu proceso, completamente tuyo. Cada experiencia diseñada a la medida del resultado que buscas.",
+    taglineEn:
+      "Your process, entirely your own. Every experience designed around the result you seek.",
+    stats: [
+      { value: "1", labelEs: "Persona", labelEn: "Person" },
+      { value: "100%", labelEs: "Personalización", labelEn: "Personalization" },
+      { value: "4", labelEs: "Elementos + integración", labelEn: "Elements + integration" },
+      { value: "1:1", labelEs: "Coach senior", labelEn: "Senior coach" },
+    ],
+    includesHeadingEs: "El método en su forma más personal",
+    includesHeadingEn: "The method at its most personal",
+    includesBlocks: [
+      {
+        titleEs: "Diseñado a la medida de tus resultados",
+        titleEn: "Designed around your results",
+        bodyEs:
+          "Cada experiencia de coaching es individual y personalizada a los resultados que quieres lograr. Mapeamos tu punto de partida y tu aspiración, y diseñamos tu secuencia elemental alrededor de eso.",
+        bodyEn:
+          "Every coaching experience is individual and personalized to the results you want to achieve. We map your starting point and your aspiration, and design your element sequence around that.",
+      },
+      {
+        titleEs: "Individual o grupal, según tus necesidades",
+        titleEn: "Individual or group, as you need",
+        bodyEs:
+          "El proceso de coaching puede ser individual o grupal, dependiendo de las necesidades del individuo o de la organización. Las sesiones se enfocan en los objetivos y resultados deseados de quienes participan.",
+        bodyEn:
+          "The coaching process can be individual or group-based, depending on the needs of the individual or the organization. Sessions focus on participants' goals and desired results.",
+      },
+      {
+        titleEs: "Completamente privado",
+        titleEn: "Fully private",
+        bodyEs:
+          "Cada inmersión, cada sesión de coaching y cada locación son exclusivamente para ti. Para quien requiere confidencialidad absoluta o prefiere crecer en un entorno privado.",
+        bodyEn:
+          "Every immersion, coaching session and location is exclusively for you. For those who require absolute confidentiality or prefer to grow in a private setting.",
+      },
+    ],
+    whoForHeadingEs: "Para quién es Oneness",
+    whoForHeadingEn: "Who Oneness is for",
+    whoForItems: [
+      {
+        titleEs: "Quienes requieren confidencialidad absoluta",
+        titleEn: "Those who require absolute confidentiality",
+        bodyEs:
+          "Algunos procesos no pueden compartirse con un grupo. Oneness es ese contenedor.",
+        bodyEn:
+          "Some processes can't be shared with a group. Oneness is that container.",
       },
       {
         titleEs: "Quienes prefieren el crecimiento en privado",
@@ -1128,9 +1295,17 @@ export const programDetails: ProgramDetail[] = [
         bodyEn:
           "Not for lack of community, but because your process asks for sustained intimacy.",
       },
+      {
+        titleEs: "Una persona o un equipo con un objetivo propio",
+        titleEn: "An individual or a team with its own goal",
+        bodyEs:
+          "El proceso se adapta: enfocado en los objetivos y resultados que tú — o tu organización — desean lograr.",
+        bodyEn:
+          "The process adapts: focused on the goals and results you — or your organization — want to achieve.",
+      },
     ],
-    ctaEs: "Solicitar conversación de discovery",
-    ctaEn: "Request Discovery Call",
+    ctaEs: "Solicitar conversación",
+    ctaEn: "Request a Conversation",
     primaryElement: "eter",
   },
 ];
@@ -1275,34 +1450,40 @@ export const testimonials: Testimonial[] = [
 /**
  * Stats sourced from elements-method-presentation.md and elements-master doc.
  */
+/**
+ * Stats — every figure verified against its primary source (Jul 2026).
+ * See docs commit notes: figures corrected from an earlier draft to match
+ * what the sources actually report (e.g. NK-cell study is Li 2007, not 2008;
+ * self-awareness stat is the 10–15% finding, not an unsourced "3x").
+ */
 export const stats = [
   {
     value: 21,
     suffix: "%",
-    labelEs: "Menos cortisol tras 20 minutos en naturaleza",
-    labelEn: "Less cortisol after 20 minutes in nature",
-    source: "Hunter et al. · 2019",
+    labelEs: "Menos cortisol por hora en naturaleza — óptimo a los 20–30 min",
+    labelEn: "Less cortisol per hour in nature — optimal at 20–30 min",
+    source: "Hunter et al. · Frontiers in Psychology, 2019",
   },
   {
     value: 50,
     suffix: "%",
-    labelEs: "Más células NK del sistema inmune tras 2h de Shinrin-yoku",
-    labelEn: "More NK immune cells after 2h Shinrin-yoku",
-    source: "Li · 2008",
+    labelEs: "Más actividad de células NK del sistema inmune tras un baño de bosque",
+    labelEn: "More NK immune-cell activity after a forest-bathing trip",
+    source: "Li · Nippon Medical School, 2007",
   },
   {
-    value: 3,
-    suffix: "x",
-    labelEs: "Más engagement bajo líderes auto-conscientes",
-    labelEn: "Higher engagement under self-aware leaders",
-    source: "Eurich · Harvard Business Review",
-  },
-  {
-    value: 27,
+    value: 15,
     suffix: "%",
-    labelEs: "Más crecimiento de revenue en culturas con seguridad psicológica",
-    labelEn: "Higher revenue growth in psychologically safe cultures",
-    source: "Google · Project Aristotle",
+    labelEs: "De las personas son realmente auto-conscientes, aunque el 95% cree serlo",
+    labelEn: "Of people are truly self-aware, though 95% believe they are",
+    source: "Eurich · Harvard Business Review, 2018",
+  },
+  {
+    value: 1,
+    suffix: "º",
+    labelEs: "Factor de los equipos de alto desempeño: la seguridad psicológica",
+    labelEn: "Factor in high-performing teams: psychological safety",
+    source: "Google Project Aristotle · Edmondson, Harvard",
   },
 ];
 
@@ -1397,9 +1578,9 @@ export const faqs = [
     qEs: "¿Qué es exactamente Elements Method?",
     qEn: "What exactly is Elements Method?",
     aEs:
-      "Un programa de desarrollo de liderazgo basado en inmersiones en la naturaleza, diseñado para devolver a los líderes a su fuente esencial de poder. Integra neurociencia, programación neurolingüística, coaching internacional, frameworks estratégicos y práctica somática en cada sesión.",
+      "Un programa de desarrollo personal con impacto profesional, basado en inmersiones en la naturaleza, diseñado para devolver a las personas —especialmente a quienes lideran— a su fuente esencial de poder. Integra neurociencia, programación neurolingüística, coaching internacional, frameworks estratégicos y práctica somática en cada sesión.",
     aEn:
-      "A nature-based leadership development program designed to return leaders to their essential source of power. It integrates neuroscience, NLP, international coaching, strategic frameworks and somatic practice in every session.",
+      "A nature-based personal development program with professional impact, designed to return people — especially those who lead — to their essential source of power. It integrates neuroscience, NLP, international coaching, strategic frameworks and somatic practice in every session.",
   },
   {
     qEs: "¿Cuál es la diferencia con un retiro o un curso de liderazgo?",
@@ -1413,17 +1594,17 @@ export const faqs = [
     qEs: "¿Para quién está diseñado?",
     qEn: "Who is it designed for?",
     aEs:
-      "Ejecutivos senior en momentos de transición, líderes que sienten que su liderazgo no refleja quiénes son, fundadores en puntos de inflexión, directivos enfrentando agotamiento, y líderes buscando integrar lo personal con lo profesional.",
+      "Para personas comprometidas con su desarrollo — especialmente quienes lideran. Ejecutivos senior en momentos de transición, líderes que sienten que su liderazgo no refleja quiénes son, fundadores en puntos de inflexión, directivos enfrentando agotamiento, y cualquier persona que busque integrar lo personal con lo profesional. Las organizaciones son nuestro foco principal, pero el método también acompaña procesos individuales.",
     aEn:
-      "Senior executives in transition, leaders whose leadership doesn't reflect who they are, founders at inflection points, directors facing burnout, and leaders seeking to integrate the personal with the professional.",
+      "For people committed to their development — especially those who lead. Senior executives in transition, leaders whose leadership doesn't reflect who they are, founders at inflection points, directors facing burnout, and anyone seeking to integrate the personal with the professional. Organizations are our primary focus, yet the method also supports individual journeys.",
   },
   {
     qEs: "¿Qué programas ofrecen?",
     qEn: "What programs do you offer?",
     aEs:
-      "Tres programas: Raíces (5 meses, grupal hasta 15), Corriente (3 meses intensivo grupal) y Fuente (retiro de 3 días + 6 meses de coaching individual). Para organizaciones existe Origin — retiros corporativos a la medida.",
+      "Cinco caminos, ordenados de mayor a menor duración: Fluir (5 meses, grupal), Momentum (3 meses intensivo grupal), Raíz (retiro de 3 días), Brújula (taller de 1 día a la medida) y Oneness (inmersión individual). Para organizaciones existe Origin — retiros corporativos hechos a la medida.",
     aEn:
-      "Three programs: Roots (5 months, group up to 15), Current (3-month intensive group) and Source (3-day retreat + 6 months individual coaching). For organizations there is Origin — bespoke corporate retreats.",
+      "Five paths, from longest to shortest: Flow (5 months, group), Momentum (3-month intensive group), Root (3-day retreat), Compass (custom 1-day workshop) and Oneness (individual immersion). For organizations there is Origin — bespoke corporate retreats.",
   },
   {
     qEs: "¿Qué resultados puedo esperar?",

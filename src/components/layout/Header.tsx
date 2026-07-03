@@ -113,7 +113,7 @@ export function Header({
               scrolled ? "h-16" : "h-20",
             )}
           >
-            <Logo locale={locale} inverted={inverted} />
+            <Logo locale={locale} inverted={inverted} size="lg" />
 
             <nav className="hidden lg:flex items-center gap-8">
               {links.map((l) => {

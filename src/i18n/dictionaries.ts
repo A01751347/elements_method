@@ -104,7 +104,7 @@ export const es: Dict = {
     method: "El Método",
     companies: "Organizaciones",
     retreats: "Experiencia",
-    blog: "Diario",
+    blog: "Artículos",
     cta: "Cotizar para mi organización",
   },
   common: {
@@ -119,10 +119,10 @@ export const es: Dict = {
     noVat: "Inversión a confirmar",
   },
   home: {
-    eyebrow: "Leadership Immersion Programs · Water · Fire · Air · Earth",
-    title: "Lidera desde tu naturaleza profunda",
+    eyebrow: "Programas inmersivos basados en la naturaleza",
+    title: "Tu camino hacia la maestría de tu ser",
     subtitle:
-      "Elements Method es un programa de desarrollo de liderazgo basado en inmersiones en la naturaleza, diseñado para devolver a los líderes a su fuente esencial de poder — y en ese proceso, transformar no solo a los individuos, sino las organizaciones que lideran.",
+      "Elements Method es un programa de desarrollo personal con impacto profesional, basado en inmersiones en la naturaleza. Está diseñado para devolver a las personas —especialmente a quienes lideran— a su fuente esencial de poder, y en ese proceso transformar no solo al individuo, sino a sus entornos y a las organizaciones que lo rodean.",
     primaryCta: "Explorar Programas",
     secondaryCta: "Conocer el Método",
     philosophyEyebrow: "La filosofía",
@@ -134,9 +134,9 @@ export const es: Dict = {
     elementsLead:
       "Cuando un líder se reconecta con su propia naturaleza — cuando encuentra su Agua, su Fuego, su Aire y su Tierra — no necesita más herramientas. Se reconecta con su ser completo.",
     programsEyebrow: "Elige tu Camino",
-    programsTitle: "Tres niveles de profundidad. Un mismo método.",
+    programsTitle: "Distintos niveles de profundidad. Un mismo método.",
     programsLead:
-      "Raíces, Corriente y Fuente comparten metodología y framework. Lo que cambia es la cadencia, la profundidad y el grado de personalización. Eliges según el momento de tu liderazgo.",
+      "Fluir, Momentum, Raíz, Brújula y Oneness comparten metodología y framework. Lo que cambia es la duración, la cadencia, la profundidad y el grado de personalización. Eliges según tu momento y el resultado que buscas.",
     experienceEyebrow: "La experiencia de inmersión",
     experienceTitle: "Las actividades cambian. La estructura no.",
     experienceLead:
@@ -165,19 +165,19 @@ export const es: Dict = {
     eyebrow: "Programas",
     title: "Elige tu Camino.",
     lead:
-      "Raíces, Corriente y Fuente comparten metodología y framework. Lo que cambia es la cadencia, la profundidad y el grado de personalización.",
+      "Fluir, Momentum, Raíz, Brújula y Oneness comparten metodología y framework. Lo que cambia es la duración, la cadencia, la profundidad y el grado de personalización.",
   },
   method: {
     eyebrow: "El Método",
-    title: "Cuatro elementos. Un Núcleo. Una intervención al estado interno.",
+    title: "Cuatro elementos. Un Núcleo. Múltiples métodos que te conectan con tu estado interno.",
     lead:
-      "La mayoría intenta cambiar sus resultados sin transformar el sistema interno desde donde los producen. Elements interviene ese sistema usando los cuatro elementos como filosofía de desarrollo — y la naturaleza como metodología.",
+      "La mayoría intenta cambiar sus resultados sin transformar el sistema interno desde donde los producen. Elements interviene ese sistema usando los cuatro elementos como base, la naturaleza como entorno interno y externo, y metodologías que integran neurociencia, psicología y un liderazgo expansivo, adaptativo y humano. Todo en búsqueda de tus mejores resultados.",
   },
   companies: {
     eyebrow: "Organizaciones",
-    title: "Origin — Retiros corporativos a la medida.",
+    title: "Origin — Retiros corporativos hechos a la medida.",
     lead:
-      "Elements Method ofrece programas organizacionales bespoke diseñados alrededor de inmersiones de equipo, desarrollo de cultura de liderazgo y transformación organizacional. Un programa puede llevar a un equipo directivo completo a través del marco de los Cuatro Elementos.",
+      "Elements Method ofrece programas organizacionales hechos a la medida, diseñados alrededor de inmersiones de equipo, desarrollo de cultura de liderazgo y transformación organizacional. Un programa puede llevar a un equipo directivo completo a través del marco de los Cuatro Elementos.",
     benefits: [
       {
         title: "Mejora medible en confianza de equipo y seguridad psicológica",
@@ -215,10 +215,10 @@ export const es: Dict = {
     },
   },
   blog: {
-    eyebrow: "Diario",
-    title: "Notas desde el campo.",
+    eyebrow: "Artículos",
+    title: "Artículos de interés.",
     lead:
-      "Lecturas breves desde las inmersiones, sesiones de coaching y conversaciones de discovery. Próximamente.",
+      "Lecturas breves desde las inmersiones, las sesiones de coaching y las conversaciones de descubrimiento. Próximamente.",
     readMore: "Leer artículo",
   },
   footer: {
@@ -259,7 +259,7 @@ export const en: Dict = {
     method: "The Method",
     companies: "Organizations",
     retreats: "Experience",
-    blog: "Journal",
+    blog: "Articles",
     cta: "Quote for my organization",
   },
   common: {
@@ -324,9 +324,9 @@ export const en: Dict = {
   },
   method: {
     eyebrow: "The Method",
-    title: "Four elements. One Nucleus. An intervention in the inner state.",
+    title: "Four elements. One Nucleus. Multiple methods that connect you to your inner state.",
     lead:
-      "Most try to change their results without transforming the inner system that produces them. Elements intervenes that system using the four elements as a development philosophy — and nature as methodology.",
+      "Most try to change their results without transforming the inner system that produces them. Elements intervenes in that system using the four elements as its base, nature as both inner and outer environment, and methodologies that integrate neuroscience, psychology and an expansive, adaptive, human leadership. All in pursuit of your best results.",
   },
   companies: {
     eyebrow: "Organizations",
@@ -370,8 +370,8 @@ export const en: Dict = {
     },
   },
   blog: {
-    eyebrow: "Journal",
-    title: "Notes from the field.",
+    eyebrow: "Articles",
+    title: "Articles worth your time.",
     lead:
       "Short reads from immersions, coaching sessions and discovery conversations. Coming soon.",
     readMore: "Read article",

@@ -23,7 +23,10 @@ import type { Dict } from "@/i18n/dictionaries";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 
-const HERO_IMAGE = "/images/heroes/home.jpg";
+// Home hero image. Nature-first per client feedback (was a luxury resort
+// terrace, home.jpg — replaced with a forest trail that echoes the
+// "Tu camino / Your path" headline). Swap here to update the home hero.
+const HERO_IMAGE = "/images/heroes/caminos.jpg";
 
 export function HeroSection({
   locale,
@@ -81,7 +84,7 @@ export function HeroSection({
         className="absolute top-28 right-6 hidden md:flex items-center gap-3 text-[0.7rem] tracking-[0.22em] uppercase text-[var(--color-paper)]/90 rotate-90 origin-right translate-x-8"
       >
         <span aria-hidden className="h-px w-10 bg-[var(--color-paper)]/40" />
-        Water · Fire · Air · Earth
+        {locale === "es" ? "Agua · Fuego · Aire · Tierra" : "Water · Fire · Air · Earth"}
       </motion.div>
 
       <Container className="relative pb-16 md:pb-24 z-10">
@@ -100,11 +103,11 @@ export function HeroSection({
             <WordReveal
               words={
                 locale === "es"
-                  ? ["Lidera", "desde", "tu", "naturaleza", "profunda"]
-                  : ["Lead", "from", "your", "true", "nature"]
+                  ? ["Tu", "camino", "hacia", "la", "maestría", "de", "tu", "ser"]
+                  : ["Your", "path", "to", "mastery", "of", "your", "being"]
               }
-              italicIndices={locale === "es" ? [3, 4] : [3, 4]}
-              accentIndices={locale === "es" ? [3, 4] : [3, 4]}
+              italicIndices={locale === "es" ? [4, 5, 6, 7] : [3, 4, 5, 6]}
+              accentIndices={locale === "es" ? [4, 5, 6, 7] : [3, 4, 5, 6]}
             />
           </h1>
 

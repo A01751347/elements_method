@@ -125,7 +125,7 @@ export default function MethodPage({
             </Eyebrow>
             <h2 className="display-3 text-balance">
               {locale === "es"
-                ? "Trasforma y eleva el núcleo, y todo lo que orbita a su alrededor cambiará."
+                ? "Transforma y eleva el núcleo, y todo lo que orbita a su alrededor cambiará."
                 : "Transform and elevate the nucleus, and everything that orbits around it will change."}
             </h2>
           </div>
@@ -156,24 +156,29 @@ export default function MethodPage({
         <div className="grid lg:grid-cols-12 gap-12 mb-14">
           <div className="lg:col-span-5">
             <Eyebrow inverted className="mb-6">
-              {locale === "es" ? "La epidemia de desconexión" : "The Disconnection Epidemic"}
+              {locale === "es" ? "Las cargas del líder de hoy" : "The weight leaders carry today"}
             </Eyebrow>
             <h2 className="display-2 text-balance text-[var(--color-paper)]">
               {locale === "es"
-                ? "La vida organizacional moderna desconecta sistemáticamente al líder de las cualidades que hacen el liderazgo posible."
-                : "Modern organizational life systematically disconnects leaders from the very qualities that make leadership possible."}
+                ? "El ritmo de hoy desconecta poco a poco al líder de las cualidades que hacen posible su mejor liderazgo."
+                : "Today's pace slowly disconnects leaders from the very qualities that make their best leadership possible."}
             </h2>
           </div>
           <div className="lg:col-span-7 lg:pt-3 space-y-5">
             <p className="text-lg text-[var(--color-paper)]/95 leading-relaxed text-pretty">
               {locale === "es"
-                ? "No es una crisis de capacidad. Es una crisis de conexión. Los líderes que trabajamos no carecen de habilidades — carecen de algo más fundamental: una conexión viva y encarnada con quienes realmente son."
+                ? "No es una crisis de capacidad. Es una crisis de conexión. Los líderes con quienes trabajamos no carecen de habilidades — simplemente necesitan hacer una conexión viva y encarnada con quienes realmente son."
                 : "It is not a crisis of capability. It is a crisis of connection. The leaders we work with aren't missing skills. They're missing something more fundamental: a living, embodied connection to who they actually are."}
             </p>
             <p className="text-lg italic text-[var(--color-gold-soft)] leading-relaxed text-pretty border-l border-[var(--color-gold-soft)]/30 pl-5">
               {locale === "es"
-                ? "76% de los líderes reportan sentirse quemados o emocionalmente agotados. 65% de los empleados dicen que su jefe es la principal fuente de estrés en sus vidas. Y aún así, las organizaciones siguen invirtiendo en programas de liderazgo que añaden más herramientas a manos ya saturadas."
-                : "76% of leaders report feeling burned out or emotionally depleted. 65% of employees say their manager is the primary source of stress in their lives. And yet, organizations continue to invest in leadership programs that add more tools to already-full hands."}
+                ? "72% de los líderes se sienten consumidos al final del día. Y su impacto pesa: un manager influye en la salud mental de su gente tanto como su pareja. La respuesta más común es añadir más herramientas a manos ya saturadas — cuando lo que falta no es una herramienta más, sino volver a la fuente."
+                : "72% of leaders feel used up at the end of the day. And their impact is heavy: a manager affects their people's mental health as much as their partner does. The usual answer is to add more tools to already-full hands — when what's missing isn't another tool, but a return to the source."}
+            </p>
+            <p className="text-xs text-[var(--color-paper)]/55 leading-relaxed pl-5">
+              {locale === "es"
+                ? "DDI, Global Leadership Forecast 2023 · The Workforce Institute (UKG), 2023."
+                : "DDI, Global Leadership Forecast 2023 · The Workforce Institute (UKG), 2023."}
             </p>
           </div>
         </div>
@@ -181,7 +186,7 @@ export default function MethodPage({
         <div className="grid md:grid-cols-2 gap-px bg-[var(--color-paper)]/10 border border-[var(--color-paper)]/15">
           <div className="bg-[var(--color-ink)] p-8 md:p-10">
             <div className="eyebrow text-[var(--color-paper)]/85 mb-6">
-              {locale === "es" ? "Lo que las organizaciones producen" : "What organizations produce"}
+              {locale === "es" ? "Lo que el ritmo actual produce" : "What today's pace produces"}
             </div>
             <ul className="space-y-3 text-[var(--color-paper)]/90">
               {(locale === "es"
@@ -242,25 +247,26 @@ export default function MethodPage({
         </div>
       </Section>
 
-      {/* THE NUCLEUS + ETER */}
+      {/* THE NUCLEUS — the integrating center (kept deliberately grounded,
+       *  no "Éter/Spirit" esoteric framing per client feedback). */}
       <Section spacing="default" tone="warm" className="paper-grain">
         <div className="grid lg:grid-cols-12 gap-12 items-end mb-16">
           <div className="lg:col-span-6">
             <Eyebrow className="mb-6 flex items-center gap-3">
               <Atom className="h-3.5 w-3.5" strokeWidth={1.5} />
-              {locale === "es" ? "El Núcleo + Éter" : "The Nucleus + Éter"}
+              {locale === "es" ? "El Núcleo" : "The Nucleus"}
             </Eyebrow>
             <h2 className="display-2 text-balance">
               {locale === "es"
-                ? "El quinto elemento es la energía del Núcleo."
-                : "The fifth element is the energy of the Nucleus."}
+                ? "Al centro de los cuatro elementos: tú."
+                : "At the center of the four elements: you."}
             </h2>
           </div>
           <div className="lg:col-span-6 lg:pt-4">
             <p className="lead text-pretty">
               {locale === "es"
-                ? "Tierra, Fuego, Agua y Aire impactan directamente el núcleo, que es el líder. Y el núcleo del líder tiene como energía principal el Éter — Espíritu — donde se concentra el autoconocimiento, el propósito trascendental, la sabiduría, la intención, la plenitud, la conexión humana, la gratitud, el servicio y el legado."
-                : "Earth, Fire, Water and Air directly impact the nucleus, which is the leader. And the leader's nucleus has Éter — Spirit — as its principal energy, where self-knowledge, transcendent purpose, wisdom, intention, plenitude, human connection, gratitude, service and legacy concentrate."}
+                ? "Tierra, Fuego, Agua y Aire impactan directamente el núcleo, que eres tú. Ahí se concentra lo que integra todo lo demás: el autoconocimiento, el propósito, la sabiduría, la intención, la plenitud, la conexión humana, la gratitud, el servicio y el legado."
+                : "Earth, Fire, Water and Air directly impact the nucleus, which is you. That's where everything else is integrated: self-knowledge, purpose, wisdom, intention, plenitude, human connection, gratitude, service and legacy."}
             </p>
           </div>
         </div>
@@ -282,8 +288,8 @@ export default function MethodPage({
             </div>
             <p className="text-[var(--color-ink-soft)] leading-relaxed">
               {locale === "es"
-                ? "Elements Method trabaja de adentro hacia afuera: cuando el Núcleo está saludable y el Éter integra los cuatro elementos, todo lo demás se reorganiza naturalmente."
-                : "Elements Method works from the inside out: when the Nucleus is healthy and Éter integrates the four elements, everything else reorganizes naturally."}
+                ? "Elements Method trabaja de adentro hacia afuera: cuando el Núcleo está saludable e integra los cuatro elementos, todo lo demás se reorganiza naturalmente."
+                : "Elements Method works from the inside out: when the Nucleus is healthy and integrates the four elements, everything else reorganizes naturally."}
             </p>
           </div>
         </div>

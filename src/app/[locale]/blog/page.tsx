@@ -13,7 +13,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  return { title: locale === "en" ? "Journal" : "Diario" };
+  return { title: locale === "en" ? "Articles" : "Artículos" };
 }
 
 export default async function BlogPage({

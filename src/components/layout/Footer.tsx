@@ -53,12 +53,14 @@ export function Footer({
     { href: `${base}/${locale === "es" ? "blog" : "journal"}`, label: dict.nav.blog },
   ];
 
+  const caminosBase = `${base}/${locale === "es" ? "los-caminos" : "paths"}`;
   const programLinks = [
-    { href: `${base}/${locale === "es" ? "los-caminos" : "paths"}`, label: locale === "es" ? "Raíces" : "Roots" },
-    { href: `${base}/${locale === "es" ? "los-caminos" : "paths"}`, label: locale === "es" ? "Corriente" : "Current" },
-    { href: `${base}/${locale === "es" ? "los-caminos" : "paths"}`, label: locale === "es" ? "Fuente" : "Source" },
+    { href: `${caminosBase}/raices`, label: locale === "es" ? "Fluir" : "Flow" },
+    { href: `${caminosBase}/corriente`, label: "Momentum" },
+    { href: `${caminosBase}/fuente`, label: locale === "es" ? "Raíz" : "Root" },
+    { href: `${caminosBase}/brujula`, label: locale === "es" ? "Brújula" : "Compass" },
+    { href: `${caminosBase}/soulfull`, label: "Oneness" },
     { href: `${base}/${locale === "es" ? "empresas" : "companies"}`, label: "Origin" },
-    { href: `${base}/${locale === "es" ? "retiros" : "retreats"}`, label: dict.nav.retreats },
   ];
 
   return (

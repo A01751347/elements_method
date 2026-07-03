@@ -353,8 +353,8 @@ export default async function AboutPage({
           <div className="lg:col-span-7 lg:pt-4 space-y-6 text-lg leading-relaxed text-[var(--color-paper)]/95 max-w-2xl">
             <p>
               {locale === "es"
-                ? "Elements Method es un programa de desarrollo de liderazgo basado en inmersiones en la naturaleza, diseñado para devolver a los líderes a su fuente esencial de poder — y en ese proceso, transformar no solo a los individuos, sino las organizaciones que lideran."
-                : "Elements Method is a nature-based leadership development program, designed to return leaders to their essential source of power — and in that process, transform not only individuals, but the organizations they lead."}
+                ? "Elements Method es un programa de desarrollo personal con impacto profesional, basado en inmersiones en la naturaleza, diseñado para devolver a las personas —especialmente a quienes lideran— a su fuente esencial de poder. Y en ese proceso, transformar no solo al individuo, sino a sus entornos y a las organizaciones que lo rodean."
+                : "Elements Method is a nature-based personal development program with professional impact, designed to return people — especially those who lead — to their essential source of power. And in that process, transform not only the individual, but their environments and the organizations around them."}
             </p>
             <p>
               {locale === "es"

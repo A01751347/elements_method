@@ -34,6 +34,9 @@ export function StatsBand({ locale }: { locale: Locale }) {
                 {locale === "es" ? s.labelEs : s.labelEn}
               </div>
               <div className="h-px w-12 bg-[var(--color-paper)]/30 mt-1" />
+              <div className="text-[0.7rem] tracking-wide text-[var(--color-paper)]/55 not-italic">
+                {s.source}
+              </div>
             </motion.div>
           ))}
         </div>

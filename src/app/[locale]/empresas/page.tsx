@@ -181,53 +181,60 @@ export default async function CompaniesPage({
         <div className="grid lg:grid-cols-12 gap-12 mb-16">
           <div className="lg:col-span-7">
             <Eyebrow className="mb-6">
-              {locale === "es" ? "La epidemia de desconexión" : "The disconnection epidemic"}
+              {locale === "es" ? "Las cargas del líder de hoy" : "The weight leaders carry today"}
             </Eyebrow>
             <h2 className="display-2 text-balance">
               {locale === "es"
-                ? "Lo que las organizaciones producen. Lo que los líderes necesitan."
-                : "What organizations produce. What leaders need."}
+                ? "Lo que el ritmo actual produce. Lo que los líderes necesitan."
+                : "What today's pace produces. What leaders need."}
             </h2>
           </div>
           <div className="lg:col-span-5 lg:pt-3">
             <p className="lead text-pretty">
               {locale === "es"
-                ? "La vida organizacional moderna desconecta sistemáticamente a los líderes de las cualidades que hacen posible el liderazgo."
-                : "Modern organizational life systematically disconnects leaders from the qualities that make leadership possible."}
+                ? "El ritmo de hoy desconecta poco a poco a los líderes de las cualidades que hacen posible su mejor liderazgo."
+                : "Today's pace slowly disconnects leaders from the very qualities that make their best leadership possible."}
             </p>
           </div>
         </div>
 
-        {/* BURNOUT STATS — verbatim from elements-method-presentation.docx */}
-        <div className="mb-12 grid md:grid-cols-[1fr_1fr_2fr] gap-px bg-[var(--color-line)] border border-[var(--color-line)]">
+        {/* LEADERSHIP LOAD STATS — figures verified against primary sources
+         *  (DDI GLF 2023 · The Workforce Institute/UKG 2023). Framed around the
+         *  weight leaders carry, not around blaming the organization. */}
+        <div className="mb-4 grid md:grid-cols-[1fr_1fr_2fr] gap-px bg-[var(--color-line)] border border-[var(--color-line)]">
           <div className="bg-[var(--color-paper-warm)] p-8 md:p-10 flex flex-col justify-end">
             <div className="font-[family-name:var(--font-display)] text-6xl md:text-7xl text-[var(--color-fire-ink)] tabular-nums leading-none">
-              76%
+              72%
             </div>
             <p className="mt-4 text-sm text-[var(--color-ink-soft)] leading-relaxed">
               {locale === "es"
-                ? "de los líderes reportan sentirse quemados o emocionalmente agotados."
-                : "of leaders report feeling burned out or emotionally depleted."}
+                ? "de los líderes se sienten consumidos al final del día."
+                : "of leaders feel used up at the end of the day."}
             </p>
           </div>
           <div className="bg-[var(--color-paper-warm)] p-8 md:p-10 flex flex-col justify-end">
             <div className="font-[family-name:var(--font-display)] text-6xl md:text-7xl text-[var(--color-fire-ink)] tabular-nums leading-none">
-              65%
+              69%
             </div>
             <p className="mt-4 text-sm text-[var(--color-ink-soft)] leading-relaxed">
               {locale === "es"
-                ? "de los empleados dicen que su jefe es la principal fuente de estrés en sus vidas."
-                : "of employees say their manager is the primary source of stress in their lives."}
+                ? "de las personas dicen que su manager influye en su salud mental tanto como su pareja."
+                : "of people say their manager affects their mental health as much as their partner."}
             </p>
           </div>
           <div className="bg-[var(--color-paper)] p-8 md:p-10 flex items-center">
             <p className="font-[family-name:var(--font-display)] text-xl md:text-2xl italic leading-snug text-[var(--color-ink)]">
               {locale === "es"
-                ? "Y aún así, las organizaciones siguen invirtiendo en programas de liderazgo que añaden más herramientas a manos ya saturadas."
-                : "And yet, organizations continue to invest in leadership programs that add more tools to already-full hands."}
+                ? "El liderazgo pesa. Por eso la respuesta no es una herramienta más, sino devolver al líder a su fuente."
+                : "Leadership is heavy. That's why the answer isn't another tool — it's returning the leader to their source."}
             </p>
           </div>
         </div>
+        <p className="mb-12 text-xs text-[var(--color-muted)] leading-relaxed">
+          {locale === "es"
+            ? "Fuentes: DDI, Global Leadership Forecast 2023 · The Workforce Institute (UKG), 2023."
+            : "Sources: DDI, Global Leadership Forecast 2023 · The Workforce Institute (UKG), 2023."}
+        </p>
 
         <div className="grid md:grid-cols-2 gap-px bg-[var(--color-line)] border border-[var(--color-line)]">
           <div className="bg-[var(--color-paper)] p-8 md:p-12">
