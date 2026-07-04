@@ -185,8 +185,8 @@ export default async function ProgramDetailPage({
                       const label =
                         row.elementKey === "eter"
                           ? locale === "es"
-                            ? "Integración"
-                            : "Integration"
+                            ? "Éter · Integración"
+                            : "Ether · Integration"
                           : locale === "es"
                             ? el?.nameEs ?? ""
                             : el?.nameEn ?? "";

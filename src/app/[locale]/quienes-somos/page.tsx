@@ -425,10 +425,11 @@ function FounderPortrait() {
         preserveAspectRatio="xMidYMid slice"
         aria-hidden
       >
-        {/* Compass-like mark — N/E/S/O cardinal arcs around a gold core */}
+        {/* Compass-like mark — N/E/S/O cardinal arcs around the Ether core.
+            Outer ring stays brand gold; the core is Ether violet (#6B5B95). */}
         <circle cx="50" cy="62" r="28" stroke="#C9A96E" strokeWidth="0.4" fill="none" opacity="0.6" />
         <circle cx="50" cy="62" r="20" stroke="#2C2C2A" strokeWidth="0.3" fill="none" opacity="0.4" strokeDasharray="1 2" />
-        <circle cx="50" cy="62" r="3" fill="#C9A96E" />
+        <circle cx="50" cy="62" r="3" fill="#6B5B95" />
         {/* Cardinal arcs */}
         <path d="M50 38 A 24 24 0 0 1 74 62" stroke="#2B6B8A" strokeWidth="1.2" fill="none" opacity="0.7" />
         <path d="M74 62 A 24 24 0 0 1 50 86" stroke="#C4622D" strokeWidth="1.2" fill="none" opacity="0.7" />

@@ -123,8 +123,8 @@ export const es: Dict = {
     title: "Tu camino hacia la maestría de tu ser",
     subtitle:
       "Elements Method es un programa de desarrollo personal con impacto profesional, basado en inmersiones en la naturaleza. Está diseñado para devolver a las personas —especialmente a quienes lideran— a su fuente esencial de poder, y en ese proceso transformar no solo al individuo, sino a sus entornos y a las organizaciones que lo rodean.",
-    primaryCta: "Explorar Programas",
-    secondaryCta: "Conocer el Método",
+    primaryCta: "Descubre tu elemento",
+    secondaryCta: "Explorar programas",
     philosophyEyebrow: "La filosofía",
     philosophyTitle: "La naturaleza no gestiona. La naturaleza lidera.",
     philosophyBody:
@@ -157,9 +157,9 @@ export const es: Dict = {
   },
   about: {
     eyebrow: "Quiénes somos",
-    title: "25 años escuchando a líderes en el Caribe, Estados Unidos y América Latina.",
+    title: "26 años escuchando a líderes en el Caribe, Estados Unidos y América Latina.",
     lead:
-      "Elements Method nace de un patrón consistente identificado a lo largo de 25 años de trabajo con líderes: los más capaces son aquellos que viven en consciencia, con intención, y priorizan su trabajo interior.",
+      "Elements Method nace de un patrón consistente identificado a lo largo de 26 años de trabajo con líderes: los más capaces son aquellos que viven en consciencia, con intención, y priorizan su trabajo interior.",
   },
   paths: {
     eyebrow: "Programas",
@@ -278,8 +278,8 @@ export const en: Dict = {
     title: "Lead from your true nature",
     subtitle:
       "Elements Method is a leadership development program built on nature immersions, designed to return leaders to their essential source of power — and in that process, transform not only the individuals, but the organizations they lead.",
-    primaryCta: "Explore Programs",
-    secondaryCta: "Discover the Method",
+    primaryCta: "Discover your element",
+    secondaryCta: "Explore programs",
     philosophyEyebrow: "The philosophy",
     philosophyTitle: "Nature doesn't manage. Nature leads.",
     philosophyBody:
@@ -289,9 +289,9 @@ export const en: Dict = {
     elementsLead:
       "When a leader reconnects with their own nature — when they find their Water, their Fire, their Air and their Earth — they don't need more tools. They reconnect with their complete being.",
     programsEyebrow: "Choose your Journey",
-    programsTitle: "Three depths. One method.",
+    programsTitle: "Different depths. One method.",
     programsLead:
-      "Roots, Current and Source share methodology and framework. What changes is the cadence, the depth, and the degree of personalization. You choose by the moment of your leadership.",
+      "Flow, Momentum, Root, Compass and Oneness share methodology and framework. What changes is duration, cadence, depth, and the degree of personalization. You choose by your moment and the result you're after.",
     experienceEyebrow: "The immersion experience",
     experienceTitle: "Activities change. The structure doesn't.",
     experienceLead:
@@ -312,15 +312,15 @@ export const en: Dict = {
   },
   about: {
     eyebrow: "Who we are",
-    title: "25 years listening to leaders across the Caribbean, the United States, and Latin America.",
+    title: "26 years listening to leaders across the Caribbean, the United States, and Latin America.",
     lead:
-      "Elements Method was born from a consistent pattern identified over 25 years of work with leaders: the most capable are those who live with consciousness, with intention, and who prioritize their inner work.",
+      "Elements Method was born from a consistent pattern identified over 26 years of work with leaders: the most capable are those who live with consciousness, with intention, and who prioritize their inner work.",
   },
   paths: {
     eyebrow: "Programs",
     title: "Choose your Journey.",
     lead:
-      "Roots, Current and Source share methodology and framework. What changes is cadence, depth and degree of personalization.",
+      "Flow, Momentum, Root, Compass and Oneness share methodology and framework. What changes is duration, cadence, depth and the degree of personalization.",
   },
   method: {
     eyebrow: "The Method",

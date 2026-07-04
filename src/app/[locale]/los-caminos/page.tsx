@@ -38,7 +38,7 @@ const ELEMENT_COLORS: Record<string, string> = {
   fuego: "#C4622D",
   aire: "#7A9BAD",
   tierra: "#3D5A3E",
-  eter: "#C9A96E",
+  eter: "#6B5B95",
 };
 
 export default async function PathsPage({
@@ -228,7 +228,7 @@ export default async function PathsPage({
                 <span className="font-[family-name:var(--font-display)] text-xl tracking-tight">
                   {locale === "es"
                     ? row.elementKey === "eter"
-                      ? "Integración"
+                      ? "Éter · Integración"
                       : row.elementKey === "tierra"
                         ? "Tierra"
                         : row.elementKey === "fuego"
@@ -237,7 +237,7 @@ export default async function PathsPage({
                             ? "Agua"
                             : "Aire"
                     : row.elementKey === "eter"
-                      ? "Integration"
+                      ? "Ether · Integration"
                       : row.elementKey === "tierra"
                         ? "Earth"
                         : row.elementKey === "fuego"

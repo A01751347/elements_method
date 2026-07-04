@@ -247,14 +247,14 @@ export default function MethodPage({
         </div>
       </Section>
 
-      {/* THE NUCLEUS — the integrating center (kept deliberately grounded,
-       *  no "Éter/Spirit" esoteric framing per client feedback). */}
+      {/* THE NUCLEUS + ÉTER — the leader at the center, and Ether as the fifth
+       *  element that integrates the other four (per elements-web-content.docx). */}
       <Section spacing="default" tone="warm" className="paper-grain">
         <div className="grid lg:grid-cols-12 gap-12 items-end mb-16">
           <div className="lg:col-span-6">
             <Eyebrow className="mb-6 flex items-center gap-3">
               <Atom className="h-3.5 w-3.5" strokeWidth={1.5} />
-              {locale === "es" ? "El Núcleo" : "The Nucleus"}
+              {locale === "es" ? "El Núcleo · Éter" : "The Nucleus · Ether"}
             </Eyebrow>
             <h2 className="display-2 text-balance">
               {locale === "es"
@@ -288,8 +288,8 @@ export default function MethodPage({
             </div>
             <p className="text-[var(--color-ink-soft)] leading-relaxed">
               {locale === "es"
-                ? "Elements Method trabaja de adentro hacia afuera: cuando el Núcleo está saludable e integra los cuatro elementos, todo lo demás se reorganiza naturalmente."
-                : "Elements Method works from the inside out: when the Nucleus is healthy and integrates the four elements, everything else reorganizes naturally."}
+                ? "Elements Method trabaja de adentro hacia afuera. Éter es el quinto elemento: el espacio que contiene a los otros cuatro. Cuando el Núcleo está sano y el Éter integra Agua, Fuego, Aire y Tierra, todo lo demás se reorganiza."
+                : "Elements Method works from the inside out. Ether is the fifth element: the space that contains the other four. When the Nucleus is healthy and Ether integrates Water, Fire, Air and Earth, everything else reorganizes."}
             </p>
           </div>
         </div>

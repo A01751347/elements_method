@@ -12,6 +12,8 @@ import { LocationsSection } from "@/components/sections/LocationsSection";
 import { MantraDivider } from "@/components/sections/MantraDivider";
 import { ProcessSteps } from "@/components/sections/ProcessSteps";
 import { PathsPreview } from "@/components/sections/PathsPreview";
+import { CoachingSection } from "@/components/sections/CoachingSection";
+import { CommunitySection } from "@/components/sections/CommunitySection";
 import { SeasonsRhythm } from "@/components/sections/SeasonsRhythm";
 import { StatsBand } from "@/components/sections/StatsBand";
 import { RetreatsShowcase } from "@/components/sections/RetreatsShowcase";
@@ -54,7 +56,9 @@ export default async function HomePage({
         height="medium"
       />
       <PathsPreview locale={locale} dict={dict} />
+      <CoachingSection locale={locale} />
       <SeasonsRhythm locale={locale} />
+      <CommunitySection locale={locale} />
       <StatsBand locale={locale} />
       <RetreatsShowcase locale={locale} dict={dict} />
       <TestimonialsCarousel locale={locale} dict={dict} />

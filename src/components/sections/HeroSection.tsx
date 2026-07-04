@@ -127,7 +127,7 @@ export function HeroSection({
             className="mt-10 flex flex-wrap gap-3"
           >
             <Button
-              href={`${base}/${locale === "es" ? "los-caminos" : "paths"}`}
+              href={`${base}/${locale === "es" ? "el-metodo" : "method"}`}
               size="lg"
               variant="solidLight"
               trailingArrow
@@ -135,7 +135,7 @@ export function HeroSection({
               {dict.home.primaryCta}
             </Button>
             <Button
-              href={`${base}/${locale === "es" ? "retiros" : "retreats"}`}
+              href={`${base}/${locale === "es" ? "los-caminos" : "paths"}`}
               size="lg"
               variant="outlineLight"
             >

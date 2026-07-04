@@ -41,8 +41,8 @@
   --color-earth-soft: #C8D4C0;
   --color-air: #7A9BAD;          /* Aire · Oeste */
   --color-air-soft: #D2DCE4;
-  --color-eter: #C9A96E;         /* Éter · centro · oro */
-  --color-eter-soft: #EBDCBE;
+  --color-eter: #6B5B95;         /* Éter · integración · violeta (docx) */
+  --color-eter-soft: #D8D1E6;
 
   /* === ELEMENTOS · variantes AAA para TEXTO ===
    * Los colores brillantes de arriba son para rellenos/decoración. Como texto
@@ -54,7 +54,7 @@
   --color-fire-ink: #7A2F0E;
   --color-air-ink: #2E4754;
   --color-earth-ink: #2A3E2B;
-  --color-eter-ink: #57441A;
+  --color-eter-ink: #423861;     /* violeta oscuro AAA sobre papel */
 
   /* === Tipografía oficial ===
    * Cormorant Garamond — Títulos · Light (300) + Regular (400)
