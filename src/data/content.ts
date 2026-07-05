@@ -2050,7 +2050,81 @@ export const shadowProfile: ShadowProfileRow[] = [
 ];
 
 /**
- * Founder profile — only Ana Michelle Concepción appears in the new docs.
+ * Co-founders — brief, parallel bios for /quienes-somos.
+ * The page centers on Elements Method; each founder gets a short semblanza
+ * + one quote, not an extended personal résumé.
+ *
+ * `image` is a placeholder path — drop the real photo at that path to use it.
+ * Ana's bio is a DRAFT condensed from her longer profile (below) for review.
+ */
+export interface FounderInfo {
+  slug: string;
+  name: string;
+  roleEs: string;
+  roleEn: string;
+  locationEs: string;
+  locationEn: string;
+  image: string;
+  bioEs: string;
+  bioEn: string;
+  quoteEs: string;
+  quoteEn: string;
+  socials: { platform: string; handle: string; url: string }[];
+}
+
+export const founders: FounderInfo[] = [
+  {
+    slug: "ana-michelle-concepcion",
+    name: "Ana Michelle Concepción",
+    roleEs: "Cofundadora de Elements Method",
+    roleEn: "Co-founder of Elements Method",
+    locationEs: "Ciudad de México",
+    locationEn: "Mexico City",
+    image: "/images/founders/ana-michelle.jpg",
+    bioEs:
+      "Ana Michelle Concepción es coach de resultados y bienestar, y cofundadora de Elements Method. Tras más de dos décadas liderando equipos a nivel directivo en organizaciones globales, dejó el mundo corporativo convencida de que los mejores resultados no nacen de más herramientas, sino de un líder que cuida su cuerpo, su mente y sus emociones, y que actúa con consciencia y propósito.\n\nDesde esa convicción fundó The Healing House e integró coaching internacional, neurociencia, programación neurolingüística y práctica somática en un mismo camino de desarrollo. En Elements Method une esa experiencia con el poder de la naturaleza para devolver a las personas —y a quienes lideran— a su fuente esencial de poder, y desde ahí transformar sus entornos y sus organizaciones.",
+    bioEn:
+      "Ana Michelle Concepción is a results and wellness coach and co-founder of Elements Method. After more than two decades leading teams at executive level in global organizations, she left the corporate world convinced that the best results come not from more tools, but from a leader who tends to their body, mind and emotions, and acts with consciousness and purpose.\n\nFrom that conviction she founded The Healing House and integrated international coaching, neuroscience, NLP and somatic practice into a single path of development. At Elements Method she brings that experience together with the power of nature to return people — and those who lead — to their essential source of power, and from there transform their environments and organizations.",
+    quoteEs:
+      "Nuestras emociones son la base de todo lo que hacemos; si cuidas tu cuerpo, tu mente y tus emociones, tus acciones te llevan al éxito.",
+    quoteEn:
+      "Our emotions are the foundation of everything we do; if you care for your body, your mind and your emotions, your actions lead to success.",
+    socials: [
+      {
+        platform: "LinkedIn",
+        handle: "ana-michelle-concepcion-esterrich",
+        url: "https://www.linkedin.com/in/ana-michelle-concepcion-esterrich-51b7017/",
+      },
+      {
+        platform: "Instagram",
+        handle: "@anamichellecoach",
+        url: "https://www.instagram.com/anamichellecoach/",
+      },
+    ],
+  },
+  {
+    slug: "andres-flores-pedroza",
+    name: "Andrés Flores Pedroza",
+    roleEs: "Cofundador de Elements Method",
+    roleEn: "Co-founder of Elements Method",
+    locationEs: "México",
+    locationEn: "Mexico",
+    image: "/images/founders/andres-flores.jpg",
+    bioEs:
+      "Andrés Flores Pedroza es estratega, facilitador de procesos de transformación y cofundador de Elements Method. Desde hace más de 18 años ha acompañado a personas, equipos y organizaciones a generar cambios significativos, convencido de que toda transformación sostenible comienza en el desarrollo de quien lidera.\n\nSu trayectoria en estrategia, innovación y construcción de marcas le permitió comprender que los mejores resultados no dependen únicamente del conocimiento técnico, sino de la claridad mental, la inteligencia emocional y la capacidad de conectar con un propósito auténtico. Impulsado por esa visión, amplió su formación en liderazgo, desarrollo humano y Psylvotherapy (Terapia de Bosque), integrando el poder de la naturaleza como una herramienta para fortalecer el bienestar, la creatividad, la resiliencia y la toma de decisiones conscientes.\n\nEs fundador de Arquetipik, una iniciativa que diseña experiencias inmersivas en la naturaleza para promover el crecimiento personal y el liderazgo consciente, y de SOUL Strategy, una metodología que acompaña a personas y líderes a descubrir, expresar y alinear su identidad con el impacto que desean generar. En Elements Method, Andrés integra estrategia, naturaleza y desarrollo humano para acompañar a líderes y organizaciones a construir una nueva forma de liderar: más consciente, auténtica y profundamente humana.",
+    bioEn:
+      "Andrés Flores Pedroza is a strategist, facilitator of transformation processes, and co-founder of Elements Method. For more than 18 years he has helped people, teams and organizations create meaningful change, convinced that all sustainable transformation begins in the development of the person who leads.\n\nHis background in strategy, innovation and brand-building led him to understand that the best results depend not only on technical knowledge, but on mental clarity, emotional intelligence and the capacity to connect with an authentic purpose. Driven by that vision, he expanded his training in leadership, human development and Psylvotherapy (Forest Therapy), integrating the power of nature as a tool to strengthen wellbeing, creativity, resilience and conscious decision-making.\n\nHe is the founder of Arquetipik, an initiative that designs immersive nature experiences for personal growth and conscious leadership, and of SOUL Strategy, a methodology that helps people and leaders discover, express and align their identity with the impact they want to create. At Elements Method, Andrés brings together strategy, nature and human development to help leaders and organizations build a new way of leading: more conscious, authentic and deeply human.",
+    quoteEs:
+      "Las organizaciones cambian cuando las personas cambian. Y las personas cambian cuando vuelven a conectar con su propia naturaleza.",
+    quoteEn:
+      "Organizations change when people change. And people change when they reconnect with their own nature.",
+    socials: [],
+  },
+];
+
+/**
+ * Founder profile — extended Ana Michelle Concepción record (legacy).
+ * Retained as a data source; the /quienes-somos page now uses `founders`.
  */
 export const founder = {
   nameEs: "Ana Michelle Concepción Esterrich",
