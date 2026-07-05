@@ -199,15 +199,15 @@ export default async function PathsPage({
             </Eyebrow>
             <h2 className="display-2 text-balance">
               {locale === "es"
-                ? "Cuatro elementos. Un núcleo."
-                : "Four elements. One core."}
+                ? "Cinco elementos. Un núcleo."
+                : "Five elements. One core."}
             </h2>
           </div>
           <div className="lg:col-span-6 lg:pt-3">
             <p className="lead text-pretty">
               {locale === "es"
-                ? "Todos los programas atraviesan los cuatro elementos en orden secuenciado — Tierra por arraigo, Fuego por activación, Agua por claridad, Aire por perspectiva — y cierran integrando el aprendizaje en el núcleo que eres tú. Cada programa recorre este arco en una duración distinta."
-                : "Every program traverses the four elements in sequenced order — Earth for grounding, Fire for activation, Water for clarity, Air for perspective — and closes by integrating the learning into the core that is you. Each program travels this arc over a different duration."}
+                ? "Todos los programas atraviesan los cuatro elementos en orden secuenciado — Tierra por arraigo, Fuego por activación, Agua por claridad, Aire por perspectiva — y siempre cierran con Éter, la integración que devuelve el aprendizaje al núcleo que eres tú. Cada programa recorre este arco en una duración distinta."
+                : "Every program traverses the four elements in sequenced order — Earth for grounding, Fire for activation, Water for clarity, Air for perspective — and always closes with Ether, the integration that returns the learning to the core that is you. Each program travels this arc over a different duration."}
             </p>
           </div>
         </div>

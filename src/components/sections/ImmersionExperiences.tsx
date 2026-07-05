@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Droplets, Flame, Wind, Mountain } from "lucide-react";
+import { Droplets, Flame, Wind, Mountain, Sparkles } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import type { Dict } from "@/i18n/dictionaries";
 import { elements } from "@/data/content";
@@ -44,9 +44,9 @@ export function ImmersionExperiences({
           </div>
         </div>
 
-        {/* Vertical stacked entries with element accent */}
+        {/* Vertical stacked entries with element accent — all five elements */}
         <div className="border-y-2 border-[var(--color-ink)]/15">
-          {elements.slice(0, 4).map((el, idx) => {
+          {elements.map((el, idx) => {
             const Icon =
               el.key === "agua"
                 ? Droplets
@@ -54,7 +54,9 @@ export function ImmersionExperiences({
                   ? Flame
                   : el.key === "aire"
                     ? Wind
-                    : Mountain;
+                    : el.key === "tierra"
+                      ? Mountain
+                      : Sparkles;
             const name = locale === "es" ? el.nameEs : el.nameEn;
             const experience =
               locale === "es" ? el.experienceEs : el.experienceEn;

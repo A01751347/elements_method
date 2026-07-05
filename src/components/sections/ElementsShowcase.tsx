@@ -35,11 +35,11 @@ export function ElementsShowcase({
   locale: Locale;
   dict: Dict;
 }) {
-  // Only the 4 trainable elements are shown in the showcase.
-  // Éter is the Nucleus and lives in El Método page, not here.
-  const trainable = elements.filter((e) => e.key !== "eter");
+  // All five elements are shown — the four trainable ones plus Éter, the
+  // integrating fifth. Éter always appears last (it closes the arc).
+  const shown = elements;
   const [active, setActive] = React.useState<ElementKey>("agua");
-  const current = trainable.find((e) => e.key === active) ?? trainable[0];
+  const current = shown.find((e) => e.key === active) ?? shown[0];
 
   return (
     <section className="bg-[var(--color-paper-warm)] py-24 md:py-36 relative paper-grain overflow-hidden">
@@ -57,8 +57,8 @@ export function ElementsShowcase({
         </div>
 
         {/* Element tabs */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-[var(--color-line)] mb-px">
-          {trainable.map((el, idx) => {
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-px bg-[var(--color-line)] mb-px">
+          {shown.map((el, idx) => {
             const Icon = ICONS[el.key];
             const isActive = active === el.key;
             const name = locale === "es" ? el.nameEs : el.nameEn;

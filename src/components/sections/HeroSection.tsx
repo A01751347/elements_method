@@ -17,6 +17,7 @@ import {
   Flame,
   Wind,
   Mountain,
+  Sparkles,
 } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import type { Dict } from "@/i18n/dictionaries";
@@ -84,7 +85,7 @@ export function HeroSection({
         className="absolute top-28 right-6 hidden md:flex items-center gap-3 text-[0.7rem] tracking-[0.22em] uppercase text-[var(--color-paper)]/90 rotate-90 origin-right translate-x-8"
       >
         <span aria-hidden className="h-px w-10 bg-[var(--color-paper)]/40" />
-        {locale === "es" ? "Agua · Fuego · Aire · Tierra" : "Water · Fire · Air · Earth"}
+        {locale === "es" ? "Agua · Fuego · Aire · Tierra · Éter" : "Water · Fire · Air · Earth · Ether"}
       </motion.div>
 
       <Container className="relative pb-16 md:pb-24 z-10">
@@ -148,13 +149,14 @@ export function HeroSection({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.05 }}
-            className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-px max-w-3xl border-t border-[var(--color-paper)]/15"
+            className="mt-16 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-px max-w-4xl border-t border-[var(--color-paper)]/15"
           >
             {[
               { icon: Droplets, label: locale === "es" ? "Agua" : "Water", anim: "anim-water" },
               { icon: Flame, label: locale === "es" ? "Fuego" : "Fire", anim: "anim-fire" },
               { icon: Wind, label: locale === "es" ? "Aire" : "Air", anim: "anim-air" },
               { icon: Mountain, label: locale === "es" ? "Tierra" : "Earth", anim: "anim-earth" },
+              { icon: Sparkles, label: "Éter", anim: "anim-eter" },
             ].map((el, idx) => {
               const Icon = el.icon;
               return (

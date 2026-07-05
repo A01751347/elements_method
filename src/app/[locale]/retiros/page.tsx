@@ -90,13 +90,14 @@ export default async function RetreatsPage({
           </div>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-[var(--color-line)] border border-[var(--color-line)]">
-          {elements.slice(0, 4).map((el) => {
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-px bg-[var(--color-line)] border border-[var(--color-line)]">
+          {elements.map((el) => {
             const Icon =
               el.key === "agua" ? Droplets
               : el.key === "fuego" ? Flame
               : el.key === "aire" ? Wind
-              : Mountain;
+              : el.key === "tierra" ? Mountain
+              : Sparkles;
             return (
               <article
                 key={el.key}

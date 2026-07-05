@@ -48,7 +48,7 @@ const ELEMENT_FILTERS: { key: ElementKey | "all"; es: string; en: string }[] = [
   { key: "fuego", es: "Fuego", en: "Fire" },
   { key: "agua", es: "Agua", en: "Water" },
   { key: "aire", es: "Aire", en: "Air" },
-  { key: "eter", es: "Éter", en: "Éter" },
+  { key: "eter", es: "Éter", en: "Ether" },
 ];
 
 export function ProvidersInventory({ locale }: { locale: Locale }) {
@@ -68,8 +68,8 @@ export function ProvidersInventory({ locale }: { locale: Locale }) {
           </Eyebrow>
           <h2 className="display-2 text-balance">
             {locale === "es"
-              ? "Dieciséis disciplinas curadas alrededor de los cuatro elementos."
-              : "Sixteen disciplines curated around the four elements."}
+              ? "Dieciséis disciplinas curadas alrededor de los cinco elementos."
+              : "Sixteen disciplines curated around the five elements."}
           </h2>
         </div>
         <div className="lg:col-span-6 lg:pt-3">

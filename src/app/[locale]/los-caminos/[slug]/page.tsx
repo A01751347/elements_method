@@ -153,8 +153,8 @@ export default async function ProgramDetailPage({
               </Eyebrow>
               <h2 className="display-2 text-balance">
                 {locale === "es"
-                  ? "Un viaje de cinco meses por los cuatro elementos + integración."
-                  : "A five-month journey through all four elements + integration."}
+                  ? "Un viaje de cinco meses por los cuatro elementos, cerrando con Éter — la integración."
+                  : "A five-month journey through all four elements, closing with Ether — integration."}
               </h2>
             </div>
             <div className="lg:col-span-6 lg:pt-4">

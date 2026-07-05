@@ -15,8 +15,8 @@ export function PhilosophyStrip({ locale }: { locale: Locale }) {
   // Brand-line opening from pptx slide 3+7 verbatim
   const phrase =
     locale === "es"
-      ? "El Elements Method devuelve a los ejecutivos a su fuente instintiva de poder. A través de experiencias inmersivas en entornos naturales, los líderes descubren las cuatro fuerzas fundamentales que moldean el liderazgo resiliente, auténtico y efectivo."
-      : "The Elements Method brings executives back to their instinctive source of power. Through immersive experiences in natural environments, leaders discover the four fundamental forces that shape resilient, authentic, and effective leadership.";
+      ? "El Elements Method devuelve a los ejecutivos a su fuente instintiva de poder. A través de experiencias inmersivas en entornos naturales, los líderes descubren las cuatro fuerzas fundamentales que moldean el liderazgo resiliente, auténtico y efectivo — y el Éter que las integra."
+      : "The Elements Method brings executives back to their instinctive source of power. Through immersive experiences in natural environments, leaders discover the four fundamental forces that shape resilient, authentic, and effective leadership — and the Ether that integrates them.";
 
   const closingEs = "Esto no es un retiro. Es un regreso.";
   const closingEn = "This is not a retreat. This is a return.";

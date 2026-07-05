@@ -129,10 +129,10 @@ export const es: Dict = {
     philosophyTitle: "La naturaleza no gestiona. La naturaleza lidera.",
     philosophyBody:
       "La naturaleza no tiene una crisis de liderazgo. Nosotros sí. Quizá porque dejamos de aprender de ella.",
-    elementsEyebrow: "Los cuatro elementos",
-    elementsTitle: "Cuatro fuerzas distintas, un centro unificado.",
+    elementsEyebrow: "Los cinco elementos",
+    elementsTitle: "Cinco fuerzas. Un líder integrado.",
     elementsLead:
-      "Cuando un líder se reconecta con su propia naturaleza — cuando encuentra su Agua, su Fuego, su Aire y su Tierra — no necesita más herramientas. Se reconecta con su ser completo.",
+      "Cuando un líder se reconecta con su propia naturaleza — cuando encuentra su Agua, su Fuego, su Aire y su Tierra, y aprende a integrarlos en el Éter — no necesita más herramientas. Se reconecta con su ser completo.",
     programsEyebrow: "Elige tu Camino",
     programsTitle: "Distintos niveles de profundidad. Un mismo método.",
     programsLead:
@@ -169,15 +169,15 @@ export const es: Dict = {
   },
   method: {
     eyebrow: "El Método",
-    title: "Cuatro elementos. Un Núcleo. Múltiples métodos que te conectan con tu estado interno.",
+    title: "Cinco elementos. Un Núcleo. Múltiples métodos que te conectan con tu estado interno.",
     lead:
-      "La mayoría intenta cambiar sus resultados sin transformar el sistema interno desde donde los producen. Elements interviene ese sistema usando los cuatro elementos como base, la naturaleza como entorno interno y externo, y metodologías que integran neurociencia, psicología y un liderazgo expansivo, adaptativo y humano. Todo en búsqueda de tus mejores resultados.",
+      "La mayoría intenta cambiar sus resultados sin transformar el sistema interno desde donde los producen. Elements interviene ese sistema usando los cinco elementos —Agua, Fuego, Aire, Tierra y el Éter que los integra— como base, la naturaleza como entorno interno y externo, y metodologías que integran neurociencia, psicología y un liderazgo expansivo, adaptativo y humano. Todo en búsqueda de tus mejores resultados.",
   },
   companies: {
     eyebrow: "Organizaciones",
     title: "Origin — Retiros corporativos hechos a la medida.",
     lead:
-      "Elements Method ofrece programas organizacionales hechos a la medida, diseñados alrededor de inmersiones de equipo, desarrollo de cultura de liderazgo y transformación organizacional. Un programa puede llevar a un equipo directivo completo a través del marco de los Cuatro Elementos.",
+      "Elements Method ofrece programas organizacionales hechos a la medida, diseñados alrededor de inmersiones de equipo, desarrollo de cultura de liderazgo y transformación organizacional. Un programa puede llevar a un equipo directivo completo a través del marco de los Cinco Elementos.",
     benefits: [
       {
         title: "Mejora medible en confianza de equipo y seguridad psicológica",
@@ -284,10 +284,10 @@ export const en: Dict = {
     philosophyTitle: "Nature doesn't manage. Nature leads.",
     philosophyBody:
       "Nature doesn't have a leadership crisis. We do. Perhaps because we stopped learning from it.",
-    elementsEyebrow: "The four elements",
-    elementsTitle: "Four distinct forces, one unified center.",
+    elementsEyebrow: "The five elements",
+    elementsTitle: "Five forces. One integrated leader.",
     elementsLead:
-      "When a leader reconnects with their own nature — when they find their Water, their Fire, their Air and their Earth — they don't need more tools. They reconnect with their complete being.",
+      "When a leader reconnects with their own nature — when they find their Water, their Fire, their Air and their Earth, and learn to integrate them in Ether — they don't need more tools. They reconnect with their complete being.",
     programsEyebrow: "Choose your Journey",
     programsTitle: "Different depths. One method.",
     programsLead:
@@ -324,15 +324,15 @@ export const en: Dict = {
   },
   method: {
     eyebrow: "The Method",
-    title: "Four elements. One Nucleus. Multiple methods that connect you to your inner state.",
+    title: "Five elements. One Nucleus. Multiple methods that connect you to your inner state.",
     lead:
-      "Most try to change their results without transforming the inner system that produces them. Elements intervenes in that system using the four elements as its base, nature as both inner and outer environment, and methodologies that integrate neuroscience, psychology and an expansive, adaptive, human leadership. All in pursuit of your best results.",
+      "Most try to change their results without transforming the inner system that produces them. Elements intervenes in that system using the five elements —Water, Fire, Air, Earth and the Ether that integrates them— as its base, nature as both inner and outer environment, and methodologies that integrate neuroscience, psychology and an expansive, adaptive, human leadership. All in pursuit of your best results.",
   },
   companies: {
     eyebrow: "Organizations",
     title: "Origin — Bespoke corporate retreats.",
     lead:
-      "Elements Method offers bespoke organizational programs designed around team immersions, leadership culture development, and organizational transformation. A single program can bring an entire leadership team through the Four Elements framework.",
+      "Elements Method offers bespoke organizational programs designed around team immersions, leadership culture development, and organizational transformation. A single program can bring an entire leadership team through the Five Elements framework.",
     benefits: [
       {
         title: "Measurable improvement in team trust and psychological safety",

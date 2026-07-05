@@ -301,29 +301,29 @@ export default function MethodPage({
           <div className="mb-16 grid lg:grid-cols-12 gap-12">
             <div className="lg:col-span-7">
               <Eyebrow className="mb-6">
-                {locale === "es" ? "Cuatro elementos, cuatro frameworks" : "Four elements, four frameworks"}
+                {locale === "es" ? "Cinco elementos, cinco frameworks" : "Five elements, five frameworks"}
               </Eyebrow>
               <h2 className="display-2 text-balance">
-                ROOTS · IGNITE · FLOW · CLEAR
+                ROOTS · IGNITE · FLOW · CLEAR · ECOS
               </h2>
             </div>
             <div className="lg:col-span-5">
               <p className="lead text-pretty">
                 {locale === "es"
-                  ? "Cada elemento tiene un framework operativo con competencias específicas que se entrenan y observan."
-                  : "Each element has an operational framework with specific competencies that are trained and observed."}
+                  ? "Cada elemento tiene un framework operativo con competencias específicas que se entrenan y observan. El quinto, ECOS, es el del Éter: el que integra a los otros cuatro."
+                  : "Each element has an operational framework with specific competencies that are trained and observed. The fifth, ECOS, belongs to Ether: the one that integrates the other four."}
               </p>
             </div>
           </div>
 
-          {/* Only show the 4 trainable elements (Éter handled separately).
-           *  Each card surfaces the framework's hero module image with a
-           *  scrim that intensifies on the active tab. */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-16">
-            {elements.slice(0, 4).map((el, idx) => {
+          {/* All five elements, Éter included. Each card surfaces the
+           *  framework's hero module image (Éter falls back to its element
+           *  image) with a scrim that intensifies on the active tab. */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 mb-16">
+            {elements.map((el, idx) => {
               const isActive = activeIdx === idx;
               const name = locale === "es" ? el.nameEs : el.nameEn;
-              const moduleImg = frameworkImages[el.key];
+              const moduleImg = frameworkImages[el.key] ?? elementImages[el.key];
               return (
                 <button
                   key={el.key}
@@ -686,8 +686,8 @@ export default function MethodPage({
           <div className="lg:col-span-7 lg:pt-3">
             <p className="lead text-pretty">
               {locale === "es"
-                ? "Para cualquier desafío de liderazgo que enfrentas ahora mismo, los cuatro elementos te dan cuatro preguntas concretas. Con el tiempo, acceder a los cuatro se vuelve instintivo: la marca del líder integrado."
-                : "For any leadership challenge you face right now, the four elements give you four concrete questions. Over time, accessing all four becomes instinctive: the mark of the integrated leader."}
+                ? "Para cualquier desafío de liderazgo que enfrentas ahora mismo, los cuatro elementos te dan cuatro preguntas concretas. Con el tiempo, acceder a los cuatro e integrarlos en el Éter se vuelve instintivo: la marca del líder integrado."
+                : "For any leadership challenge you face right now, the four elements give you four concrete questions. Over time, accessing all four and integrating them in Ether becomes instinctive: the mark of the integrated leader."}
             </p>
           </div>
         </div>
