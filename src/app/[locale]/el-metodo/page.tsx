@@ -675,7 +675,7 @@ export default function MethodPage({
           <div className="lg:col-span-5">
             <Eyebrow className="mb-6 flex items-center gap-3">
               <Compass className="h-3.5 w-3.5" strokeWidth={1.5} />
-              {locale === "es" ? "El Escaneo de los 4 Elementos" : "The 4-Element Scan"}
+              {locale === "es" ? "El Escaneo de los Elementos" : "The Elemental Scan"}
             </Eyebrow>
             <h2 className="display-2 text-balance">
               {locale === "es"
@@ -686,8 +686,8 @@ export default function MethodPage({
           <div className="lg:col-span-7 lg:pt-3">
             <p className="lead text-pretty">
               {locale === "es"
-                ? "Para cualquier desafío de liderazgo que enfrentas ahora mismo, los cuatro elementos te dan cuatro preguntas concretas. Con el tiempo, acceder a los cuatro e integrarlos en el Éter se vuelve instintivo: la marca del líder integrado."
-                : "For any leadership challenge you face right now, the four elements give you four concrete questions. Over time, accessing all four and integrating them in Ether becomes instinctive: the mark of the integrated leader."}
+                ? "Para cualquier desafío de liderazgo que enfrentas ahora mismo, los cuatro elementos te dan cuatro preguntas concretas — y el Éter, una quinta que las integra. Con el tiempo, acceder a los cuatro e integrarlos en el Éter se vuelve instintivo: la marca del líder integrado."
+                : "For any leadership challenge you face right now, the four elements give you four concrete questions — and Ether a fifth that integrates them. Over time, accessing all four and integrating them in Ether becomes instinctive: the mark of the integrated leader."}
             </p>
           </div>
         </div>
@@ -931,8 +931,9 @@ const DAILY_ICONS: Record<ElementKey, LucideIcon> = {
 
 function DailyScanGrid({ locale }: { locale: "es" | "en" }) {
   const rows = locale === "es" ? dailyScanEs : dailyScanEn;
+  const total = String(rows.length).padStart(2, "0");
   return (
-    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-[var(--color-line)] border border-[var(--color-line)]">
+    <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-px bg-[var(--color-line)] border border-[var(--color-line)]">
       {rows.map((row, idx) => {
         const el = elements.find((e) => e.key === row.element);
         const Icon = DAILY_ICONS[row.element];
@@ -960,7 +961,7 @@ function DailyScanGrid({ locale }: { locale: "es" | "en" }) {
               {prompt}
             </p>
             <div className="mt-6 pt-4 border-t border-[var(--color-line)] text-[0.62rem] tracking-[0.22em] uppercase text-[var(--color-muted)]">
-              {String(idx + 1).padStart(2, "0")} / 04
+              {String(idx + 1).padStart(2, "0")} / {total}
             </div>
           </article>
         );

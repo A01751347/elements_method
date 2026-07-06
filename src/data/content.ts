@@ -1417,42 +1417,100 @@ export const testimonials: Testimonial[] = [
 ];
 
 /**
- * Stats sourced from elements-method-presentation.md and elements-master doc.
+ * Stats — every figure verified against its PRIMARY source (Jul 2026) and
+ * corrected where the popular phrasing was wrong. Each has a `url` to the
+ * source so the claim is clickable. Notes on corrections:
+ *   - Cortisol 21% is a per-HOUR rate (not a 20-min total); 20–30 min is the
+ *     most efficient dose. (Hunter 2019)
+ *   - Memory +20% was after a ~50-min nature walk, not "20 min". (Berman 2008)
+ *   - The 50% creativity gain is Atchley/Strayer 2012 (Kansas/Utah) after
+ *     FOUR DAYS — NOT a Michigan 20-min effect. Kept as its own honest stat.
+ *   - NK +50% is Li 2007; the >30-day persistence is the Li 2010 review.
+ *   - No solid source ties "3× engagement" to self-aware leaders; the real,
+ *     citable finding is Korn Ferry (self-aware-led firms → higher returns).
+ *   - "27% revenue growth · Project Aristotle" is a myth: 27% is a Gallup
+ *     TURNOVER reduction. Reframed to what Google actually found.
+ *   - Hölzel 2011 gray-matter increase was the HIPPOCAMPUS, not the PFC.
  */
 /**
- * Stats — every figure verified against its primary source (Jul 2026).
- * See docs commit notes: figures corrected from an earlier draft to match
- * what the sources actually report (e.g. NK-cell study is Li 2007, not 2008;
- * self-awareness stat is the 10–15% finding, not an unsourced "3x").
+ * A stat. `metricEs/En` is the short highlighted figure ("21% / hora",
+ * "4 días", "8 sem") shown large; `labelEs/En` is the sentence; `source` +
+ * `url` make it a clickable citation. Some entries are qualitative — their
+ * metric is a short phrase, not a percentage.
  */
-export const stats = [
+export interface StatInfo {
+  metricEs: string;
+  metricEn: string;
+  labelEs: string;
+  labelEn: string;
+  source: string;
+  url: string;
+}
+
+export const stats: StatInfo[] = [
   {
-    value: 21,
-    suffix: "%",
-    labelEs: "Menos cortisol por hora en naturaleza — óptimo a los 20–30 min",
-    labelEn: "Less cortisol per hour in nature — optimal at 20–30 min",
+    metricEs: "−21%",
+    metricEn: "−21%",
+    labelEs: "de cortisol por hora en naturaleza — el mayor beneficio se gana entre 20 y 30 minutos.",
+    labelEn: "cortisol per hour in nature — the greatest benefit comes between 20 and 30 minutes.",
     source: "Hunter et al. · Frontiers in Psychology, 2019",
+    url: "https://doi.org/10.3389/fpsyg.2019.00722",
   },
   {
-    value: 50,
-    suffix: "%",
-    labelEs: "Más actividad de células NK del sistema inmune tras un baño de bosque",
-    labelEn: "More NK immune-cell activity after a forest-bathing trip",
-    source: "Li · Nippon Medical School, 2007",
+    metricEs: "+20%",
+    metricEn: "+20%",
+    labelEs: "de memoria de trabajo y atención tras una caminata en la naturaleza.",
+    labelEn: "in working memory and attention after a walk in nature.",
+    source: "Berman, Jonides & Kaplan · University of Michigan · Psychological Science, 2008",
+    url: "https://doi.org/10.1111/j.1467-9280.2008.02225.x",
   },
   {
-    value: 15,
-    suffix: "%",
-    labelEs: "De las personas son realmente auto-conscientes, aunque el 95% cree serlo",
-    labelEn: "Of people are truly self-aware, though 95% believe they are",
+    metricEs: "+50%",
+    metricEn: "+50%",
+    labelEs: "en resolución creativa de problemas tras cuatro días inmersos en la naturaleza.",
+    labelEn: "in creative problem-solving after four days immersed in nature.",
+    source: "Atchley, Strayer & Atchley · Kansas / Utah · PLoS ONE, 2012",
+    url: "https://doi.org/10.1371/journal.pone.0051474",
+  },
+  {
+    metricEs: "+50%",
+    metricEn: "+50%",
+    labelEs: "de actividad de células NK del sistema inmune tras un baño de bosque; el efecto persiste más de 30 días.",
+    labelEn: "in NK immune-cell activity after a forest-bathing trip; the effect lasts over 30 days.",
+    source: "Li · Nippon Medical School · Int. J. Immunopathol. Pharmacol., 2007",
+    url: "https://pubmed.ncbi.nlm.nih.gov/17903349/",
+  },
+  {
+    metricEs: "10–15%",
+    metricEn: "10–15%",
+    labelEs: "de las personas son realmente auto-conscientes, aunque el 95% cree serlo — la base de un mejor criterio.",
+    labelEn: "of people are truly self-aware, though 95% believe they are — the basis of better judgment.",
     source: "Eurich · Harvard Business Review, 2018",
+    url: "https://hbr.org/2018/01/what-self-awareness-really-is-and-how-to-cultivate-it",
   },
   {
-    value: 1,
-    suffix: "º",
-    labelEs: "Factor de los equipos de alto desempeño: la seguridad psicológica",
-    labelEn: "Factor in high-performing teams: psychological safety",
-    source: "Google Project Aristotle · Edmondson, Harvard",
+    metricEs: "VFC ↑",
+    metricEn: "HRV ↑",
+    labelEs: "un sistema nervioso regulado (mayor variabilidad de frecuencia cardíaca) mejora la función ejecutiva y el criterio.",
+    labelEn: "a regulated nervous system (higher heart-rate variability) improves executive function and judgment.",
+    source: "Thayer et al. · Annals of Behavioral Medicine, 2009",
+    url: "https://pubmed.ncbi.nlm.nih.gov/19424767/",
+  },
+  {
+    metricEs: "27%",
+    metricEn: "27%",
+    labelEs: "menos rotación cuando la gente siente que su opinión cuenta — el poder de la seguridad psicológica.",
+    labelEn: "lower turnover when people feel their opinions count — the power of psychological safety.",
+    source: "Gallup, 2017 · concepto de Amy Edmondson, Harvard",
+    url: "https://www.gallup.com/workplace/236198/create-culture-psychological-safety.aspx",
+  },
+  {
+    metricEs: "8 sem",
+    metricEn: "8 wks",
+    labelEs: "de mindfulness (MBSR) aumentan la materia gris del hipocampo, medible por resonancia magnética.",
+    labelEn: "of mindfulness (MBSR) increase hippocampal gray matter, measurable by MRI.",
+    source: "Hölzel et al. · Psychiatry Research: Neuroimaging, 2011",
+    url: "https://pubmed.ncbi.nlm.nih.gov/21071182/",
   },
 ];
 
@@ -2354,6 +2412,11 @@ export const dailyScanEs = [
     promptEs:
       "¿Dónde necesito ser más consistente, más presente, más digno de confianza? ¿Qué fundamento necesita fortalecerse?",
   },
+  {
+    element: "eter" as ElementKey,
+    promptEs:
+      "¿Qué elemento pide realmente este momento? ¿Cómo integro los cuatro en una sola respuesta, en lugar de reaccionar desde uno solo?",
+  },
 ];
 
 export const dailyScanEn = [
@@ -2376,6 +2439,11 @@ export const dailyScanEn = [
     element: "tierra" as ElementKey,
     promptEn:
       "Where do I need to be more consistent, more present, more trustworthy? What foundation needs strengthening?",
+  },
+  {
+    element: "eter" as ElementKey,
+    promptEn:
+      "What does this moment actually call for? How do I integrate all four into a single response, instead of reacting from just one?",
   },
 ];
 
