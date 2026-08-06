@@ -9,7 +9,7 @@ export const productTypeEnum = pgEnum("product_type", [
   "programa_corporativo",
 ]);
 
-export const elementEnum = pgEnum("element", ["agua", "fuego", "aire", "tierra"]);
+export const elementEnum = pgEnum("element", ["agua", "fuego", "aire", "tierra", "eter"]);
 
 export const currencyEnum = pgEnum("currency", ["MXN", "USD"]);
 

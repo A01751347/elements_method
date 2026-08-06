@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import { modalityAxes } from "@/data/content";
+import type { ModalityAxis } from "@/data/content";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Section";
 
@@ -21,7 +22,14 @@ const AXIS_ICONS = [Brain, Heart, Activity];
  * typographic column with its modalities listed below. No image selector,
  * no horizontal split — visually distinct from ElementsShowcase (tabs + panel).
  */
-export function LocationsSection({ locale }: { locale: Locale }) {
+export function LocationsSection({
+  locale,
+  axes,
+}: {
+  locale: Locale;
+  axes?: ModalityAxis[];
+}) {
+  const effectiveAxes = axes && axes.length > 0 ? axes : modalityAxes;
   return (
     <section className="bg-[var(--color-paper)] py-24 md:py-36 relative">
       <Container>
@@ -47,7 +55,7 @@ export function LocationsSection({ locale }: { locale: Locale }) {
         </div>
 
         <div className="grid md:grid-cols-3 gap-0 relative">
-          {modalityAxes.map((axis, idx) => {
+          {effectiveAxes.map((axis, idx) => {
             const Icon = AXIS_ICONS[idx];
             return (
               <motion.div

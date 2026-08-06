@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from "motion/react";
 import { Atom } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import { impactCircles } from "@/data/content";
+import type { ImpactCircleInfo } from "@/data/content";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Section";
 
@@ -13,7 +14,15 @@ import { Eyebrow } from "@/components/ui/Section";
  * Each level rendered as an expanding row that visually grows outward from
  * the nucleus, distinct from grid-of-cards used elsewhere on the home.
  */
-export function SeasonsRhythm({ locale }: { locale: Locale }) {
+export function SeasonsRhythm({
+  locale,
+  circles,
+}: {
+  locale: Locale;
+  circles?: ImpactCircleInfo[];
+}) {
+  const impactCirclesData =
+    circles && circles.length > 0 ? circles : impactCircles;
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -67,7 +76,7 @@ export function SeasonsRhythm({ locale }: { locale: Locale }) {
           />
 
           <ol className="space-y-px">
-            {impactCircles.map((circle, idx) => {
+            {impactCirclesData.map((circle, idx) => {
               // Each successive level extends visually wider: 60% → 100%
               const widthPct = 60 + idx * 10;
               const isNucleus = idx === 0;

@@ -12,7 +12,13 @@ import { Container } from "@/components/ui/Container";
  * A slowly rotating compass with the five elements anchors the bottom.
  * Differentiated from Hero and FinalCta (both full-bleed photo + parallax).
  */
-export function MantraDivider({ locale }: { locale: Locale }) {
+export function MantraDivider({
+  locale,
+  mantra,
+}: {
+  locale: Locale;
+  mantra?: { es: string; en: string };
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -22,7 +28,8 @@ export function MantraDivider({ locale }: { locale: Locale }) {
   const compassRotate = useTransform(scrollYProgress, [0, 1], [-45, 45]);
   const phraseY = useTransform(scrollYProgress, [0, 1], ["20%", "-20%"]);
 
-  const sentence = locale === "es" ? mantraEs : mantraEn;
+  const effectiveMantra = mantra ?? { es: mantraEs, en: mantraEn };
+  const sentence = locale === "es" ? effectiveMantra.es : effectiveMantra.en;
   const parts = sentence.split(" — ");
 
   return (

@@ -24,6 +24,7 @@ import {
   calendarRetreatSeeds,
   operationsSeedStats,
 } from "./seeds/operations";
+import { seedEditorialContent } from "./seeds/content";
 
 async function seedProducts() {
   console.log("→ products");
@@ -310,6 +311,7 @@ async function main() {
   await seedVenues();
   await seedProviders();
   await seedCalendarRetreats();
+  await seedEditorialContent();
   console.log(`\n  Operations placeholders: ${operationsSeedStats.placeholdersTotal} fields across`);
   console.log(`    ${operationsSeedStats.retreats} retreats · ${operationsSeedStats.venues} venues · ${operationsSeedStats.providers} providers`);
   console.log("\n✓ done.");

@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 import { Droplets, Flame, Wind, Mountain, Sparkles } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import type { Dict } from "@/i18n/dictionaries";
-import { elements } from "@/data/content";
+import { elements as staticElements, type ElementInfo } from "@/data/content";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Section";
 
@@ -25,10 +25,14 @@ import { Eyebrow } from "@/components/ui/Section";
 export function ImmersionExperiences({
   locale,
   dict,
+  elements,
 }: {
   locale: Locale;
   dict: Dict;
+  elements?: ElementInfo[];
 }) {
+  const effectiveElements =
+    elements && elements.length > 0 ? elements : staticElements;
   return (
     <section className="py-24 md:py-36 bg-[var(--color-paper-warm)] paper-grain relative overflow-hidden">
       <Container>
@@ -46,7 +50,7 @@ export function ImmersionExperiences({
 
         {/* Vertical stacked entries with element accent — all five elements */}
         <div className="border-y-2 border-[var(--color-ink)]/15">
-          {elements.map((el, idx) => {
+          {effectiveElements.map((el, idx) => {
             const Icon =
               el.key === "agua"
                 ? Droplets

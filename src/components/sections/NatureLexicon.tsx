@@ -3,8 +3,16 @@ import type { Locale } from "@/i18n/config";
 import { lexiconEs, lexiconEn } from "@/data/content";
 import { Container } from "@/components/ui/Container";
 
-export function NatureLexicon({ locale }: { locale: Locale }) {
-  const words = locale === "es" ? lexiconEs : lexiconEn;
+export function NatureLexicon({
+  locale,
+  lexicon,
+}: {
+  locale: Locale;
+  lexicon?: { es: string[]; en: string[] };
+}) {
+  const effectiveEs = lexicon && lexicon.es.length > 0 ? lexicon.es : lexiconEs;
+  const effectiveEn = lexicon && lexicon.en.length > 0 ? lexicon.en : lexiconEn;
+  const words = locale === "es" ? effectiveEs : effectiveEn;
   const items = [...words, ...words, ...words];
 
   return (

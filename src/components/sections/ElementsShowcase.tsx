@@ -15,7 +15,12 @@ import {
 } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import type { Dict } from "@/i18n/dictionaries";
-import { elements, elementImages, type ElementKey } from "@/data/content";
+import {
+  elements as staticElements,
+  elementImages,
+  type ElementKey,
+  type ElementInfo,
+} from "@/data/content";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Section";
 import { cn } from "@/lib/utils";
@@ -31,13 +36,17 @@ const ICONS: Record<ElementKey, LucideIcon> = {
 export function ElementsShowcase({
   locale,
   dict,
+  elements: elementsProp,
 }: {
   locale: Locale;
   dict: Dict;
+  elements?: ElementInfo[];
 }) {
   // All five elements are shown — the four trainable ones plus Éter, the
   // integrating fifth. Éter always appears last (it closes the arc).
-  const shown = elements;
+  const elementsList =
+    elementsProp && elementsProp.length > 0 ? elementsProp : staticElements;
+  const shown = elementsList;
   const [active, setActive] = React.useState<ElementKey>("agua");
   const current = shown.find((e) => e.key === active) ?? shown[0];
 

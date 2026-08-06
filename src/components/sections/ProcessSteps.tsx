@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import { processSteps } from "@/data/content";
+import type { ProcessStep } from "@/data/content";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Section";
 
@@ -19,7 +20,14 @@ import { Eyebrow } from "@/components/ui/Section";
 // Release · Encounter · Methodology · Reflection · Dialogue · Integration
 const ICONS = [Wind, Eye, Compass, PenLine, MessageCircle, Sparkles];
 
-export function ProcessSteps({ locale }: { locale: Locale }) {
+export function ProcessSteps({
+  locale,
+  steps,
+}: {
+  locale: Locale;
+  steps?: ProcessStep[];
+}) {
+  const effectiveSteps = steps && steps.length > 0 ? steps : processSteps;
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -57,7 +65,7 @@ export function ProcessSteps({ locale }: { locale: Locale }) {
             className="absolute top-0 left-0 right-0 h-px bg-[var(--color-moss-700)] origin-left z-10 hidden lg:block"
           />
 
-          {processSteps.map((step, idx) => {
+          {effectiveSteps.map((step, idx) => {
             const Icon = ICONS[idx];
             return (
               <motion.div

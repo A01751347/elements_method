@@ -3,7 +3,7 @@
 import { motion } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
 import type { Locale } from "@/i18n/config";
-import { stats } from "@/data/content";
+import { stats as staticStats, type StatInfo } from "@/data/content";
 import { Container } from "@/components/ui/Container";
 
 /**
@@ -12,8 +12,15 @@ import { Container } from "@/components/ui/Container";
  * (Replaces the old animated count-up, which couldn't hold qualitative
  * findings or citations.)
  */
-export function StatsBand({ locale }: { locale: Locale }) {
+export function StatsBand({
+  locale,
+  stats,
+}: {
+  locale: Locale;
+  stats?: StatInfo[];
+}) {
   const es = locale === "es";
+  const effectiveStats = stats && stats.length > 0 ? stats : staticStats;
   return (
     <section className="bg-[var(--color-ink)] text-[var(--color-paper)] py-20 md:py-28 relative overflow-hidden">
       <div
@@ -38,7 +45,7 @@ export function StatsBand({ locale }: { locale: Locale }) {
         </div>
 
         <div className="border-t border-[var(--color-paper)]/15">
-          {stats.map((s, idx) => (
+          {effectiveStats.map((s, idx) => (
             <motion.a
               key={idx}
               href={s.url}

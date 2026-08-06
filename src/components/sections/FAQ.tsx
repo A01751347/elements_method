@@ -4,13 +4,20 @@ import * as React from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Plus, Minus } from "lucide-react";
 import type { Locale } from "@/i18n/config";
-import { faqs } from "@/data/content";
+import { faqs as staticFaqs } from "@/data/content";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Section";
 import { cn } from "@/lib/utils";
 
-export function FAQ({ locale }: { locale: Locale }) {
+export function FAQ({
+  locale,
+  faqs,
+}: {
+  locale: Locale;
+  faqs?: { qEs: string; qEn: string; aEs: string; aEn: string }[];
+}) {
   const [open, setOpen] = React.useState<number | null>(0);
+  const effectiveFaqs = faqs && faqs.length > 0 ? faqs : staticFaqs;
 
   return (
     <section className="py-24 md:py-36 bg-[var(--color-paper-warm)] paper-grain">
@@ -42,7 +49,7 @@ export function FAQ({ locale }: { locale: Locale }) {
 
           <div className="lg:col-span-8">
             <div className="border-t border-[var(--color-line)]">
-              {faqs.map((faq, idx) => {
+              {effectiveFaqs.map((faq, idx) => {
                 const isOpen = open === idx;
                 return (
                   <motion.div

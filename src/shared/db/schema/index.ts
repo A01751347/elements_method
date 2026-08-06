@@ -10,3 +10,5 @@ export * from "./testimonials";
 export * from "./enterprise";
 export * from "./integrations";
 export * from "./operations";
+export * from "./content";
+export * from "./site";

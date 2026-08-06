@@ -11,8 +11,14 @@ import { Eyebrow } from "@/components/ui/Section";
  * Aspirational, not transactional. Sits near the bottom of the homepage.
  * The 5 Circles of Impact ("The Ripple") already live in SeasonsRhythm.
  */
-export function CommunitySection({ locale }: { locale: Locale }) {
-  const s = communitySection;
+export function CommunitySection({
+  locale,
+  section,
+}: {
+  locale: Locale;
+  section?: typeof communitySection;
+}) {
+  const s = section ?? communitySection;
   const es = locale === "es";
   const paragraphs = (es ? s.bodyEs : s.bodyEn).split("\n\n");
   return (
