@@ -4,7 +4,10 @@ import { isLocale } from "@/i18n/config";
 import { Section, Eyebrow } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
 import { InscriptionForm } from "@/components/forms/InscriptionForm";
-import { contactInfo } from "@/data/launchData";
+import { contactInfo as staticContactInfo } from "@/data/launchData";
+import { getContactInfo } from "@/modules/content/contact";
+
+export const revalidate = 60;
 
 export async function generateMetadata({
   params,
@@ -27,6 +30,8 @@ export default async function ContactPage({
 }) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
+
+  const contactInfo = (await getContactInfo()) ?? staticContactInfo;
 
   return (
     <>

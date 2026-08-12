@@ -71,6 +71,15 @@ export default async function AdminFormDetailPage({
         action={
           <div className="flex gap-2">
             <AdminSecondaryButton href="/admin/formularios">← Volver</AdminSecondaryButton>
+            <AdminSecondaryButton href={`/admin/formularios/${f.slug}/editar`}>
+              Editar
+            </AdminSecondaryButton>
+            <a
+              href={`/api/forms/${f.slug}/export`}
+              className="inline-flex items-center gap-2 bg-white border border-zinc-300 text-zinc-700 px-3 py-1.5 text-xs hover:bg-zinc-50 transition-colors"
+            >
+              Exportar CSV
+            </a>
             <AdminPrimaryButton href={`/admin/formularios/${f.slug}/enviar`}>
               Enviar
             </AdminPrimaryButton>

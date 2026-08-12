@@ -9,6 +9,7 @@ import {
   Td,
   Th,
 } from "../_components/admin-ui";
+import { updateInscriptionStatus } from "./actions";
 
 const STATUS_VARIANT: Record<string, "green" | "amber" | "neutral" | "blue"> = {
   new: "blue",
@@ -17,6 +18,14 @@ const STATUS_VARIANT: Record<string, "green" | "amber" | "neutral" | "blue"> = {
   converted: "green",
   archived: "neutral",
 };
+
+const STATUS_OPTIONS = [
+  { value: "new", label: "Nuevo" },
+  { value: "contacted", label: "Contactado" },
+  { value: "qualified", label: "Calificado" },
+  { value: "converted", label: "Convertido" },
+  { value: "archived", label: "Archivado" },
+] as const;
 
 async function loadInscriptions() {
   try {
@@ -99,7 +108,38 @@ export default async function AdminInscriptionsPage() {
                   )}
                 </Td>
                 <Td>
-                  <StatusPill status={l.status} variant={STATUS_VARIANT[l.status]} />
+                  <div className="flex items-center gap-2">
+                    <StatusPill
+                      status={l.status}
+                      variant={STATUS_VARIANT[l.status]}
+                    />
+                    <form
+                      action={updateInscriptionStatus.bind(null, l.id)}
+                      className="flex items-center gap-1.5"
+                    >
+                      <label className="sr-only" htmlFor={`status-${l.id}`}>
+                        Cambiar status
+                      </label>
+                      <select
+                        id={`status-${l.id}`}
+                        name="status"
+                        defaultValue={l.status}
+                        className="rounded border border-zinc-300 bg-white px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-zinc-900"
+                      >
+                        {STATUS_OPTIONS.map((o) => (
+                          <option key={o.value} value={o.value}>
+                            {o.label}
+                          </option>
+                        ))}
+                      </select>
+                      <button
+                        type="submit"
+                        className="rounded border border-zinc-300 bg-white px-2 py-1 text-xs text-zinc-700 hover:bg-zinc-50 transition-colors"
+                      >
+                        Guardar
+                      </button>
+                    </form>
+                  </div>
                 </Td>
               </tr>
             ))}

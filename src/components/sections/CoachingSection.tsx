@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import type { Locale } from "@/i18n/config";
 import { coachingSection } from "@/data/content";
+import type { CoachingSection as CoachingSectionData } from "@/modules/content/siteSections";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Section";
 
@@ -11,8 +12,14 @@ import { Eyebrow } from "@/components/ui/Section";
  * "An immersion opens the door. Sustained coaching is what ensures the leader
  *  crosses." One clean band: headline + body + a row per group program.
  */
-export function CoachingSection({ locale }: { locale: Locale }) {
-  const s = coachingSection;
+export function CoachingSection({
+  locale,
+  section,
+}: {
+  locale: Locale;
+  section?: CoachingSectionData;
+}) {
+  const s = section ?? coachingSection;
   const es = locale === "es";
   return (
     <section className="bg-[var(--color-paper)] py-24 md:py-36 paper-grain relative overflow-hidden">

@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import { Section, Eyebrow } from "@/components/ui/Section";
-import { providersInventory, type ProviderInfo } from "@/data/launchData";
+import { providersInventory as staticProviders, type ProviderInfo } from "@/data/launchData";
 import { elements, type ElementKey } from "@/data/content";
 
 const ICONS: Record<ElementKey, LucideIcon> = {
@@ -51,8 +51,16 @@ const ELEMENT_FILTERS: { key: ElementKey | "all"; es: string; en: string }[] = [
   { key: "eter", es: "Éter", en: "Ether" },
 ];
 
-export function ProvidersInventory({ locale }: { locale: Locale }) {
+export function ProvidersInventory({
+  locale,
+  providers,
+}: {
+  locale: Locale;
+  providers?: ProviderInfo[];
+}) {
   const [filter, setFilter] = useState<ElementKey | "all">("all");
+  const providersInventory =
+    providers && providers.length > 0 ? providers : staticProviders;
   const list =
     filter === "all"
       ? providersInventory

@@ -7,14 +7,22 @@ import { getDictionary } from "@/i18n/dictionaries";
 import {
   findProgram,
   programDetails,
-  rootsArc,
-  elementImages,
-  elements,
+  rootsArc as staticRootsArc,
+  elementImages as staticElementImages,
+  elements as staticElements,
   type ElementKey,
 } from "@/data/content";
+import { findProgramDetail } from "@/modules/content/programDetails";
+import { getRootsArc } from "@/modules/content/siteSections";
+import { getElements, getElementImages } from "@/modules/content/elements";
+import { getPathPrice } from "@/modules/content/pathPricing";
+import { getRequiredDocs } from "@/modules/content/requiredDocs";
+import { CheckoutButton } from "@/components/forms/CheckoutButton";
 import { Section, Eyebrow } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
+
+export const revalidate = 60;
 
 /**
  * Detail page for individual programs.
@@ -32,7 +40,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
-  const program = findProgram(slug);
+  const program = (await findProgramDetail(slug)) ?? findProgram(slug);
   if (!program) return { title: "Programa" };
   const title = locale === "en" ? program.nameEn : program.nameEs;
   return { title };
@@ -45,13 +53,29 @@ export default async function ProgramDetailPage({
 }) {
   const { locale, slug } = await params;
   if (!isLocale(locale)) notFound();
-  const program = findProgram(slug);
+
+  // Fetch program detail + supporting content from the DB, with static fallback.
+  const [dbProgram, dbRootsArc, dbElements, dbElementImages, price, requiredDocs] =
+    await Promise.all([
+      findProgramDetail(slug),
+      getRootsArc(),
+      getElements(),
+      getElementImages(),
+      getPathPrice(slug),
+      getRequiredDocs("persona"),
+    ]);
+  const program = dbProgram ?? findProgram(slug);
   if (!program) notFound();
+
+  const rootsArc = dbRootsArc.length > 0 ? dbRootsArc : staticRootsArc;
+  const elements = dbElements.length > 0 ? dbElements : staticElements;
+  const elementImages =
+    Object.keys(dbElementImages).length > 0 ? dbElementImages : staticElementImages;
 
   const dict = getDictionary(locale);
   const elementInfo = elements.find((e) => e.key === program.primaryElement);
   const heroImage =
-    elementImages[program.primaryElement] ?? elementImages.tierra;
+    elementImages[program.primaryElement as ElementKey] ?? elementImages.tierra;
 
   const headerKicker = locale === "es" ? program.headerKickerEs : program.headerKickerEn;
   const name = locale === "es" ? program.nameEs : program.nameEn;
@@ -471,11 +495,41 @@ export default async function ProgramDetailPage({
                 www.elementsmethod.com
               </a>
             </div>
+
+            {price && (
+              <div className="mb-6">
+                <div className="text-[0.65rem] tracking-[0.22em] uppercase text-[var(--color-paper)]/80 mb-1">
+                  {locale === "es" ? "Inversión" : "Investment"}
+                </div>
+                <div className="font-[family-name:var(--font-display)] text-2xl text-[var(--color-paper)] mb-4">
+                  ${price.priceMxn.toLocaleString("es-MX")} MXN
+                </div>
+                <CheckoutButton
+                  locale={locale}
+                  pathSlug={price.productSlug}
+                  productName={
+                    locale === "es" ? program.nameEs : program.nameEn
+                  }
+                  amountMxn={price.priceMxn}
+                  label={locale === "es" ? "Inscribirme y pagar" : "Enroll and pay"}
+                  requiredDocs={requiredDocs.map((d) => ({
+                    slug: d.slug,
+                    nameEs: d.nameEs,
+                    nameEn: d.nameEn,
+                  }))}
+                />
+              </div>
+            )}
+
             <Button
               href="mailto:hello@elementsmethod.com"
               size="lg"
               trailingArrow
-              className="bg-[var(--color-paper)] text-[var(--color-ink)] hover:bg-[var(--color-paper-warm)] w-full"
+              className={
+                price
+                  ? "bg-transparent border border-[var(--color-paper)]/40 text-[var(--color-paper)] hover:bg-[var(--color-paper)]/10 w-full"
+                  : "bg-[var(--color-paper)] text-[var(--color-ink)] hover:bg-[var(--color-paper-warm)] w-full"
+              }
             >
               {locale === "es"
                 ? program.slug === "fuente" || program.slug === "soulfull"

@@ -5,6 +5,7 @@ import { forms, formTokens, formResponses } from "@/shared/db/schema/forms";
 import {
   AdminPageHeader,
   AdminTable,
+  AdminPrimaryButton,
   AdminSecondaryButton,
   PlaceholderNote,
   StatusPill,
@@ -64,8 +65,11 @@ export default async function AdminFormsPage() {
     <>
       <AdminPageHeader
         title="Formularios"
-        subtitle="Cuestionarios de inicio, durante y cierre que se envían a participantes con un enlace de un solo uso."
+        subtitle="Cuestionarios que se envían a participantes con un enlace de un solo uso. Crea los que necesites y define sus preguntas."
         count={list.length}
+        action={
+          <AdminPrimaryButton href="/admin/formularios/nuevo">+ Nuevo</AdminPrimaryButton>
+        }
       />
       {empty && (
         <div className="mb-6 border-l-2 border-amber-500 bg-amber-50 px-4 py-3 text-xs text-amber-900">
@@ -123,6 +127,9 @@ export default async function AdminFormsPage() {
                 <div className="flex justify-end gap-1.5">
                   <AdminSecondaryButton href={`/admin/formularios/${f.slug}`}>
                     Ver
+                  </AdminSecondaryButton>
+                  <AdminSecondaryButton href={`/admin/formularios/${f.slug}/editar`}>
+                    Editar
                   </AdminSecondaryButton>
                   <Link
                     href={`/admin/formularios/${f.slug}/enviar`}

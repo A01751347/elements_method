@@ -13,11 +13,15 @@ import { Section, Eyebrow } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import {
-  founders,
+  founders as staticFounders,
   type FounderInfo,
-  differentiatorsEs,
-  differentiatorsEn,
+  differentiatorsEs as staticDifferentiatorsEs,
+  differentiatorsEn as staticDifferentiatorsEn,
 } from "@/data/content";
+import { getFounders } from "@/modules/content/founders";
+import { getDifferentiators } from "@/modules/content/siteSections";
+
+export const revalidate = 60;
 
 const SOCIAL_ICON: Record<string, typeof Linkedin> = {
   LinkedIn: Linkedin,
@@ -43,6 +47,21 @@ export default async function AboutPage({
   if (!isLocale(locale)) notFound();
   const dict = getDictionary(locale);
   const es = locale === "es";
+
+  const [dbFounders, dbDifferentiators] = await Promise.all([
+    getFounders(),
+    getDifferentiators(),
+  ]);
+
+  const founders = dbFounders.length > 0 ? dbFounders : staticFounders;
+  const differentiatorsEs =
+    dbDifferentiators.es.length > 0
+      ? dbDifferentiators.es
+      : staticDifferentiatorsEs;
+  const differentiatorsEn =
+    dbDifferentiators.en.length > 0
+      ? dbDifferentiators.en
+      : staticDifferentiatorsEn;
 
   return (
     <>

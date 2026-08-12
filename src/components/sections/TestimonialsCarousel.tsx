@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Quote, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import type { Dict } from "@/i18n/dictionaries";
-import { testimonials } from "@/data/content";
+import { testimonials as staticTestimonials, type Testimonial } from "@/data/content";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Section";
 
@@ -18,10 +18,16 @@ import { Eyebrow } from "@/components/ui/Section";
 export function TestimonialsCarousel({
   locale,
   dict,
+  testimonials: testimonialsProp,
 }: {
   locale: Locale;
   dict: Dict;
+  testimonials?: Testimonial[];
 }) {
+  const testimonials =
+    testimonialsProp && testimonialsProp.length > 0
+      ? testimonialsProp
+      : staticTestimonials;
   const [index, setIndex] = React.useState(0);
   const [direction, setDirection] = React.useState(1);
   const [paused, setPaused] = React.useState(false);

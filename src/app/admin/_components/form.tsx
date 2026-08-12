@@ -9,7 +9,7 @@ export function FormSection({ title, children }: { title: string; children: Reac
   );
 }
 
-export function FormRow({ label, children }: { label: string; children: ReactNode }) {
+export function FormRow({ label, children }: { label: ReactNode; children: ReactNode }) {
   return (
     <div className="grid grid-cols-[180px_1fr] gap-4 items-start">
       <label className="text-xs uppercase tracking-[0.14em] text-zinc-500 pt-2">
@@ -25,17 +25,20 @@ export function Input({
   defaultValue,
   type = "text",
   className = "",
+  placeholder,
 }: {
   name: string;
   defaultValue?: string;
   type?: string;
   className?: string;
+  placeholder?: string;
 }) {
   return (
     <input
       type={type}
       name={name}
       defaultValue={defaultValue}
+      placeholder={placeholder}
       className={`w-full rounded border border-zinc-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-zinc-900 ${className}`}
     />
   );

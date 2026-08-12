@@ -9,6 +9,7 @@ import {
   Td,
   Th,
 } from "../_components/admin-ui";
+import { markOrderPaid } from "./actions";
 
 async function loadPendingTransfers() {
   try {
@@ -82,27 +83,20 @@ export default async function AdminTransfersPage() {
                   <StatusPill status="Validar" variant="amber" />
                 </Td>
                 <Td className="text-right">
-                  <button
-                    type="button"
-                    className="bg-emerald-600 text-white px-3 py-1.5 text-xs hover:bg-emerald-700"
-                  >
-                    Marcar paid
-                  </button>
+                  <form action={markOrderPaid.bind(null, o.id)} className="inline">
+                    <button
+                      type="submit"
+                      className="bg-emerald-600 text-white px-3 py-1.5 text-xs hover:bg-emerald-700"
+                    >
+                      Marcar paid
+                    </button>
+                  </form>
                 </Td>
               </tr>
             ))}
           </tbody>
         </AdminTable>
       )}
-
-      <div className="mt-6 rounded-lg border border-zinc-200 bg-white p-5">
-        <h2 className="text-sm font-medium mb-3">Pendiente: server action validate</h2>
-        <p className="text-sm text-zinc-600 leading-relaxed">
-          El botón <strong>Marcar paid</strong> está pendiente de un server action que ejecute{" "}
-          <code className="font-mono text-xs bg-zinc-100 px-1">UPDATE orders SET status=&apos;paid&apos;, paid_at=now(), transfer_validated_at=now(), transfer_validated_by=&lt;admin email&gt;</code>{" "}
-          y dispare email de confirmación al comprador.
-        </p>
-      </div>
     </>
   );
 }

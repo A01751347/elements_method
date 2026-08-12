@@ -1,6 +1,9 @@
 import Link from "next/link";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, FileText } from "lucide-react";
+import { asc } from "drizzle-orm";
 import { legalDocs } from "@/data/launchData";
+import { db } from "@/shared/db/client";
+import { documentTemplates } from "@/shared/db/schema";
 import {
   AdminPageHeader,
   AdminSecondaryButton,
@@ -12,7 +15,21 @@ import {
   Th,
 } from "../_components/admin-ui";
 
-export default function AdminLegalDocsPage() {
+export const dynamic = "force-dynamic";
+
+async function loadTemplates() {
+  try {
+    return await db
+      .select()
+      .from(documentTemplates)
+      .orderBy(asc(documentTemplates.nameEs));
+  } catch {
+    return [];
+  }
+}
+
+export default async function AdminLegalDocsPage() {
+  const templates = await loadTemplates();
   return (
     <>
       <AdminPageHeader
@@ -64,6 +81,51 @@ export default function AdminLegalDocsPage() {
           ))}
         </tbody>
       </AdminTable>
+
+      {templates.length > 0 && (
+        <div className="mt-10">
+          <h2 className="text-sm font-medium mb-1 flex items-center gap-2">
+            <FileText className="h-4 w-4 text-zinc-500" strokeWidth={1.5} />
+            Plantillas en base de datos (generación PDF)
+          </h2>
+          <p className="text-xs text-zinc-500 mb-4">
+            Estas plantillas alimentan la generación de PDF con tokens
+            personalizados. Agrega <code className="font-mono">?folio=EM-…</code>{" "}
+            para rellenar con los datos de una orden.
+          </p>
+          <AdminTable>
+            <thead>
+              <tr>
+                <Th>Slug</Th>
+                <Th>Nombre</Th>
+                <Th>Aplica a</Th>
+                <Th className="text-right">PDF</Th>
+              </tr>
+            </thead>
+            <tbody>
+              {templates.map((t) => (
+                <tr key={t.id} className="hover:bg-zinc-50">
+                  <Td className="font-mono text-xs">{t.slug}</Td>
+                  <Td className="font-medium">{t.nameEs}</Td>
+                  <Td className="text-xs uppercase tracking-[0.14em] text-zinc-500">
+                    {t.appliesTo}
+                  </Td>
+                  <Td className="text-right whitespace-nowrap">
+                    <a
+                      href={`/api/documento/${t.slug}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-xs text-zinc-600 hover:text-zinc-900 underline underline-offset-2"
+                    >
+                      Ver PDF
+                    </a>
+                  </Td>
+                </tr>
+              ))}
+            </tbody>
+          </AdminTable>
+        </div>
+      )}
     </>
   );
 }

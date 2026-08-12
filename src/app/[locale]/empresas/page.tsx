@@ -16,7 +16,10 @@ import { getDictionary } from "@/i18n/dictionaries";
 import { Container } from "@/components/ui/Container";
 import { Section, Eyebrow } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
-import { testimonials } from "@/data/content";
+import { testimonials as staticTestimonials } from "@/data/content";
+import { getTestimonials } from "@/modules/content/testimonials";
+
+export const revalidate = 60;
 
 const BENEFIT_ICONS = [ClipboardList, Layers, Target, ShieldCheck];
 
@@ -37,7 +40,8 @@ export default async function CompaniesPage({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const dict = getDictionary(locale);
-  const testimonial = testimonials[0];
+  const dbTestimonials = await getTestimonials("empresas");
+  const testimonial = dbTestimonials[0] ?? staticTestimonials[0];
 
   return (
     <>
@@ -71,12 +75,12 @@ export default async function CompaniesPage({
               <p className="lead text-[var(--color-paper)]/95">{dict.companies.lead}</p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Button
-                  href="mailto:hello@elementsmethod.com"
+                  href={`/${locale}/${locale === "es" ? "empresas" : "companies"}/cotizar`}
                   size="lg"
                   trailingArrow
                   className="bg-[var(--color-paper)] text-[var(--color-ink)] hover:bg-[var(--color-paper-warm)]"
                 >
-                  {dict.companies.cta}
+                  {locale === "es" ? "Cotizar mi programa" : "Get a quote"}
                 </Button>
               </div>
             </div>

@@ -1,127 +1,277 @@
 import Link from "next/link";
+import { count, eq, desc, sql, gte } from "drizzle-orm";
+import { db } from "@/shared/db/client";
 import {
-  calendarRetreats,
-  providersInventory,
-  venuesInventory,
-  legalDocs,
-} from "@/data/launchData";
-import { AdminPageHeader, PlaceholderNote } from "./_components/admin-ui";
+  orders,
+  enterpriseQuotes,
+  inscriptions,
+  subscribers,
+  calendarRetreats as calendarRetreatsTable,
+} from "@/shared/db/schema";
+import { AdminPageHeader } from "./_components/admin-ui";
 
-export default function AdminDashboardPage() {
-  // 7-day-launch operations dashboard. Aggregates straight off launchData
-  // until the matching tables are seeded; admin can swap source by table.
-  const openRetreats = calendarRetreats.filter((r) => r.status === "open").length;
-  const nextRetreat = [...calendarRetreats].sort(
-    (a, b) => +new Date(a.startDate) - +new Date(b.startDate),
-  )[0];
-  const daysToNext = nextRetreat
-    ? Math.max(
-        0,
-        Math.ceil((+new Date(nextRetreat.startDate) - +new Date()) / 86400000),
-      )
-    : 0;
-  const venuesPending = venuesInventory.filter((v) =>
-    ["researching", "cotizacion-en-proceso", "sin-respuesta"].includes(v.state),
-  ).length;
-  const venuesConfirmed = venuesInventory.filter((v) => v.state === "confirmed").length;
-  const providersPending = providersInventory.filter(
-    (p) => p.status !== "confirmed",
-  ).length;
-  const placeholdersTotal = [
-    ...calendarRetreats.flatMap((r) => r.placeholderFields),
-    ...providersInventory.flatMap((p) => p.placeholderFields),
-    ...venuesInventory.flatMap((v) => v.placeholderFields),
-    ...legalDocs.flatMap((d) => d.placeholderFields),
-  ].length;
+export const dynamic = "force-dynamic";
 
-  const kpis = [
+/** Business KPIs pulled live from the DB (RF-ADM-03). Degrades to zeros. */
+async function loadKpis() {
+  const startOfMonth = new Date();
+  startOfMonth.setDate(1);
+  startOfMonth.setHours(0, 0, 0, 0);
+  const startOfYear = new Date(startOfMonth.getFullYear(), 0, 1);
+
+  try {
+    const [
+      paidAgg,
+      monthAgg,
+      yearAgg,
+      pendingCount,
+      quotesCount,
+      leadsCount,
+      newLeads,
+      subsCount,
+    ] = await Promise.all([
+      db
+        .select({
+          n: count(),
+          sum: sql<string>`COALESCE(SUM(${orders.total}), 0)`,
+        })
+        .from(orders)
+        .where(eq(orders.status, "paid")),
+      db
+        .select({ sum: sql<string>`COALESCE(SUM(${orders.total}), 0)` })
+        .from(orders)
+        .where(sql`${orders.status} = 'paid' AND ${orders.paidAt} >= ${startOfMonth}`),
+      db
+        .select({ sum: sql<string>`COALESCE(SUM(${orders.total}), 0)` })
+        .from(orders)
+        .where(sql`${orders.status} = 'paid' AND ${orders.paidAt} >= ${startOfYear}`),
+      db
+        .select({ n: count() })
+        .from(orders)
+        .where(sql`${orders.status} IN ('pending_payment','pending_transfer_validation')`),
+      db.select({ n: count() }).from(enterpriseQuotes),
+      db.select({ n: count() }).from(inscriptions),
+      db
+        .select({ n: count() })
+        .from(inscriptions)
+        .where(gte(inscriptions.createdAt, startOfMonth)),
+      db.select({ n: count() }).from(subscribers),
+    ]);
+
+    const paidN = paidAgg[0]?.n ?? 0;
+    const leadsN = leadsCount[0]?.n ?? 0;
+    // Conversion = paid orders / total leads (proxy).
+    const conversion = leadsN > 0 ? Math.round((paidN / leadsN) * 100) : 0;
+
+    return {
+      revenueYear: Number(yearAgg[0]?.sum ?? 0),
+      revenueMonth: Number(monthAgg[0]?.sum ?? 0),
+      revenueAll: Number(paidAgg[0]?.sum ?? 0),
+      paidOrders: paidN,
+      pendingOrders: pendingCount[0]?.n ?? 0,
+      quotes: quotesCount[0]?.n ?? 0,
+      leads: leadsN,
+      newLeads: newLeads[0]?.n ?? 0,
+      subscribers: subsCount[0]?.n ?? 0,
+      conversion,
+    };
+  } catch (e) {
+    console.error("[admin/dashboard] KPI load failed", e);
+    return {
+      revenueYear: 0,
+      revenueMonth: 0,
+      revenueAll: 0,
+      paidOrders: 0,
+      pendingOrders: 0,
+      quotes: 0,
+      leads: 0,
+      newLeads: 0,
+      subscribers: 0,
+      conversion: 0,
+    };
+  }
+}
+
+async function loadUpcomingRetreats() {
+  try {
+    return await db
+      .select()
+      .from(calendarRetreatsTable)
+      .orderBy(desc(calendarRetreatsTable.orderIdx))
+      .limit(5);
+  } catch {
+    return [];
+  }
+}
+
+async function loadRecentOrders() {
+  try {
+    return await db
+      .select()
+      .from(orders)
+      .orderBy(desc(orders.createdAt))
+      .limit(6);
+  } catch {
+    return [];
+  }
+}
+
+const mxn = (n: number) => `$${n.toLocaleString("es-MX")}`;
+
+export default async function AdminDashboardPage() {
+  const [kpi, retreats, recentOrders] = await Promise.all([
+    loadKpis(),
+    loadUpcomingRetreats(),
+    loadRecentOrders(),
+  ]);
+
+  const kpis: { label: string; value: string; detail: string; tone: string }[] = [
     {
-      label: "Próximo retiro",
-      value: nextRetreat ? `${daysToNext} días` : "—",
-      detail: nextRetreat ? `${nextRetreat.themeEs} · ${nextRetreat.dateLabelEs}` : "",
-      tone: daysToNext < 30 ? "red" : daysToNext < 90 ? "amber" : "neutral",
+      label: "Ingresos del año",
+      value: mxn(kpi.revenueYear),
+      detail: `Este mes: ${mxn(kpi.revenueMonth)}`,
+      tone: "green",
     },
     {
-      label: "Retiros abiertos",
-      value: `${openRetreats}/${calendarRetreats.length}`,
-      detail: "Aplicaciones abiertas en el calendario 2026-2027",
+      label: "Órdenes pagadas",
+      value: String(kpi.paidOrders),
+      detail: `${kpi.pendingOrders} pendientes de pago/validación`,
       tone: "neutral",
     },
     {
-      label: "Locaciones pendientes",
-      value: `${venuesPending}`,
-      detail: `${venuesConfirmed} confirmadas · ${venuesInventory.length} totales`,
-      tone: venuesConfirmed === 0 ? "red" : "amber",
+      label: "Tasa de conversión",
+      value: `${kpi.conversion}%`,
+      detail: "Órdenes pagadas / leads totales",
+      tone: kpi.conversion > 0 ? "green" : "neutral",
     },
     {
-      label: "Proveedores pendientes",
-      value: `${providersPending}`,
-      detail: `${providersInventory.length - providersPending} confirmados · ${providersInventory.length} totales`,
-      tone: providersPending > 8 ? "amber" : "neutral",
-    },
-    {
-      label: "Placeholders activos",
-      value: `${placeholdersTotal}`,
-      detail: "Campos marcados como datos no reales",
-      tone: placeholdersTotal > 50 ? "amber" : "neutral",
-    },
-    {
-      label: "Documentos legales",
-      value: `${legalDocs.length}`,
-      detail: "En borrador · pendientes revisión legal",
-      tone: "amber",
-    },
-    {
-      label: "Inscripciones nuevas",
-      value: "0",
-      detail: "Sin backend de leads conectado",
+      label: "Cotizaciones",
+      value: String(kpi.quotes),
+      detail: "Empresas / Origin",
       tone: "neutral",
     },
+    {
+      label: "Leads nuevos (mes)",
+      value: String(kpi.newLeads),
+      detail: `${kpi.leads} leads totales`,
+      tone: "neutral",
+    },
+    {
+      label: "Suscriptores",
+      value: String(kpi.subscribers),
+      detail: "Newsletter",
+      tone: "neutral",
+    },
+    {
+      label: "Ingresos totales",
+      value: mxn(kpi.revenueAll),
+      detail: "Histórico (órdenes pagadas)",
+      tone: "green",
+    },
+    {
+      label: "Analytics",
+      value: "GA4 ↗",
+      detail: "Ver métricas de tráfico en Google Analytics",
+      tone: "neutral",
+      href: "https://analytics.google.com/",
+    } as { label: string; value: string; detail: string; tone: string; href?: string },
   ];
 
   return (
     <>
       <AdminPageHeader
         title="Dashboard"
-        subtitle="Operaciones del lanzamiento de 7 días — KPIs operativos en tiempo real desde launchData."
+        subtitle="KPIs de negocio en tiempo real desde la base de datos."
       />
-      <PlaceholderNote />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
-        {kpis.map((k) => (
-          <div
-            key={k.label}
-            className="rounded-lg border border-zinc-200 bg-white p-4"
-          >
-            <p className="text-[0.65rem] uppercase tracking-[0.16em] text-zinc-500 mb-2">
-              {k.label}
-            </p>
-            <p
-              className={`text-2xl font-medium tabular-nums ${
-                k.tone === "red"
-                  ? "text-red-700"
-                  : k.tone === "amber"
-                    ? "text-amber-800"
-                    : "text-zinc-900"
-              }`}
+        {kpis.map((k) => {
+          const inner = (
+            <>
+              <p className="text-[0.65rem] uppercase tracking-[0.16em] text-zinc-500 mb-2">
+                {k.label}
+              </p>
+              <p
+                className={`text-2xl font-medium tabular-nums ${
+                  k.tone === "red"
+                    ? "text-red-700"
+                    : k.tone === "amber"
+                      ? "text-amber-800"
+                      : k.tone === "green"
+                        ? "text-emerald-700"
+                        : "text-zinc-900"
+                }`}
+              >
+                {k.value}
+              </p>
+              {k.detail && (
+                <p className="mt-2 text-xs text-zinc-500 leading-snug">{k.detail}</p>
+              )}
+            </>
+          );
+          const href = (k as { href?: string }).href;
+          return href ? (
+            <a
+              key={k.label}
+              href={href}
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-lg border border-zinc-200 bg-white p-4 hover:border-zinc-300 transition-colors"
             >
-              {k.value}
-            </p>
-            {k.detail && (
-              <p className="mt-2 text-xs text-zinc-500 leading-snug">{k.detail}</p>
-            )}
-          </div>
-        ))}
+              {inner}
+            </a>
+          ) : (
+            <div key={k.label} className="rounded-lg border border-zinc-200 bg-white p-4">
+              {inner}
+            </div>
+          );
+        })}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="rounded-lg border border-zinc-200 bg-white p-5">
+          <h2 className="text-sm font-medium mb-4">Órdenes recientes</h2>
+          {recentOrders.length === 0 ? (
+            <p className="text-sm text-zinc-500">Aún no hay órdenes.</p>
+          ) : (
+            <ul className="divide-y divide-zinc-100">
+              {recentOrders.map((o) => (
+                <li key={o.id} className="py-3 flex items-center justify-between">
+                  <div className="min-w-0">
+                    <div className="text-sm font-medium text-zinc-900 truncate">
+                      {o.buyerName}
+                    </div>
+                    <div className="text-xs text-zinc-500 mt-0.5 font-mono">
+                      {o.folio}
+                    </div>
+                  </div>
+                  <div className="text-right shrink-0 ml-4">
+                    <div className="text-sm tabular-nums">
+                      {mxn(Number(o.total))}
+                    </div>
+                    <div className="text-[0.6rem] uppercase tracking-[0.14em] text-zinc-500 mt-0.5">
+                      {o.status}
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+          <Link
+            href="/admin/pagos"
+            className="mt-4 inline-block text-xs text-zinc-600 hover:text-zinc-900 underline underline-offset-2"
+          >
+            Ver todas las órdenes →
+          </Link>
+        </div>
+
+        <div className="rounded-lg border border-zinc-200 bg-white p-5">
           <h2 className="text-sm font-medium mb-4">Próximos retiros</h2>
-          <ul className="divide-y divide-zinc-100">
-            {[...calendarRetreats]
-              .sort((a, b) => +new Date(a.startDate) - +new Date(b.startDate))
-              .slice(0, 5)
-              .map((r) => (
+          {retreats.length === 0 ? (
+            <p className="text-sm text-zinc-500">Sin retiros en el calendario.</p>
+          ) : (
+            <ul className="divide-y divide-zinc-100">
+              {retreats.map((r) => (
                 <li key={r.slug} className="py-3 flex items-center justify-between">
                   <div className="min-w-0">
                     <Link
@@ -130,9 +280,7 @@ export default function AdminDashboardPage() {
                     >
                       {r.themeEs}
                     </Link>
-                    <div className="text-xs text-zinc-500 mt-0.5">
-                      {r.dateLabelEs}
-                    </div>
+                    <div className="text-xs text-zinc-500 mt-0.5">{r.dateLabelEs}</div>
                   </div>
                   <div className="text-right shrink-0 ml-4">
                     <div className="text-xs tabular-nums">
@@ -144,36 +292,8 @@ export default function AdminDashboardPage() {
                   </div>
                 </li>
               ))}
-          </ul>
-        </div>
-
-        <div className="rounded-lg border border-zinc-200 bg-white p-5">
-          <h2 className="text-sm font-medium mb-4">Locaciones por confirmar</h2>
-          <ul className="divide-y divide-zinc-100">
-            {venuesInventory
-              .filter((v) =>
-                ["researching", "cotizacion-en-proceso", "sin-respuesta"].includes(
-                  v.state,
-                ),
-              )
-              .slice(0, 5)
-              .map((v) => (
-                <li key={v.slug} className="py-3 flex items-center justify-between">
-                  <div className="min-w-0">
-                    <Link
-                      href={`/admin/locaciones/${v.slug}`}
-                      className="text-sm font-medium text-zinc-900 hover:text-zinc-600 truncate block"
-                    >
-                      {v.name}
-                    </Link>
-                    <div className="text-xs text-zinc-500 mt-0.5">{v.city}</div>
-                  </div>
-                  <div className="text-[0.6rem] uppercase tracking-[0.14em] text-zinc-500 ml-4 shrink-0">
-                    {v.state.replace(/-/g, " ")}
-                  </div>
-                </li>
-              ))}
-          </ul>
+            </ul>
+          )}
         </div>
       </div>
     </>

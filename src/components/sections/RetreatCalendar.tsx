@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import { Section, Eyebrow } from "@/components/ui/Section";
-import { calendarRetreats, type CalendarRetreat } from "@/data/launchData";
+import { calendarRetreats as staticCalendarRetreats, type CalendarRetreat } from "@/data/launchData";
 import { elements, type ElementKey } from "@/data/content";
 
 const ICONS: Record<ElementKey, LucideIcon> = {
@@ -54,7 +54,15 @@ const VENUE_STATE_LABEL: Record<
   tbd: { es: "Sede por confirmar", en: "Venue TBD" },
 };
 
-export function RetreatCalendar({ locale }: { locale: Locale }) {
+export function RetreatCalendar({
+  locale,
+  retreats,
+}: {
+  locale: Locale;
+  retreats?: CalendarRetreat[];
+}) {
+  const calendarRetreats =
+    retreats && retreats.length > 0 ? retreats : staticCalendarRetreats;
   return (
     <Section spacing="default" tone="warm" className="paper-grain">
       <div className="grid lg:grid-cols-12 gap-12 mb-12">

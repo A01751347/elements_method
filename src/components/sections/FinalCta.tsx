@@ -8,11 +8,18 @@ import type { Locale } from "@/i18n/config";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { calLink, CAL_EVENT_TYPES } from "@/shared/integrations/cal";
-import { contactInfo } from "@/data/launchData";
+import { contactInfo as staticContactInfo, type ContactInfo } from "@/data/launchData";
 
 const CTA_IMAGE = "/images/heroes/final-cta.jpg";
 
-export function FinalCta({ locale }: { locale: Locale }) {
+export function FinalCta({
+  locale,
+  contact,
+}: {
+  locale: Locale;
+  contact?: ContactInfo;
+}) {
+  const contactInfo = contact ?? staticContactInfo;
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,

@@ -1,11 +1,16 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { Check, AlertCircle } from "lucide-react";
+import { Check, AlertCircle, Download } from "lucide-react";
 import { isLocale } from "@/i18n/config";
+import { eq } from "drizzle-orm";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
 import { contactInfo } from "@/data/launchData";
+import { db } from "@/shared/db/client";
+import { orders } from "@/shared/db/schema";
+import { safeRead } from "@/modules/content/safe";
+import { PurchaseTracker } from "@/components/integrations/PurchaseTracker";
 
 export async function generateMetadata({
   params,
@@ -34,8 +39,32 @@ export default async function ThankYouPage({
 
   const isDryRun = sp.dryrun === "1";
 
+  // Resolve the paid order (if any) so we can fire the Purchase conversion event
+  // with the real amount. Degrades safely when the order/table isn't there.
+  const order = sp.session_id
+    ? await safeRead(undefined, async () => {
+        const rows = await db
+          .select({
+            total: orders.total,
+            currency: orders.currency,
+            folio: orders.folio,
+          })
+          .from(orders)
+          .where(eq(orders.stripeSessionId, sp.session_id!))
+          .limit(1);
+        return rows[0];
+      })
+    : undefined;
+
   return (
     <>
+      {order && (
+        <PurchaseTracker
+          value={Number(order.total)}
+          currency={order.currency}
+          transactionId={order.folio}
+        />
+      )}
       <section className="-mt-20 pt-32 pb-12 bg-[var(--color-paper-warm)] paper-grain">
         <Container>
           <div className="max-w-3xl">
@@ -67,7 +96,24 @@ export default async function ThankYouPage({
               </div>
             )}
 
-            {sp.session_id && (
+            {order && (
+              <div className="mt-8">
+                <a
+                  href={`/api/comprobante/${order.folio}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 bg-[var(--color-ink)] text-[var(--color-paper)] px-5 py-3 text-sm tracking-wide hover:bg-[var(--color-ink)]/90 transition-colors"
+                >
+                  <Download className="h-4 w-4" />
+                  {locale === "es" ? "Descargar comprobante (PDF)" : "Download receipt (PDF)"}
+                </a>
+                <p className="mt-3 text-xs text-[var(--color-muted)] font-mono">
+                  {locale === "es" ? "Folio" : "Reference"}: {order.folio}
+                </p>
+              </div>
+            )}
+
+            {!order && sp.session_id && (
               <p className="mt-4 text-xs text-[var(--color-muted)] font-mono">
                 Referencia: {sp.session_id}
               </p>

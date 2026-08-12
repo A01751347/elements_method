@@ -6,6 +6,10 @@ import { X, Settings, Check } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import type { Dict } from "@/i18n/dictionaries";
 import { Button } from "@/components/ui/Button";
+import {
+  loadPixels,
+  type TrackingConfig,
+} from "@/shared/integrations/tracking";
 
 const COOKIE_KEY = "em_cookie_consent";
 const SESSION_KEY = "em_session_id";
@@ -41,52 +45,14 @@ function getOrCreateSessionId(): string {
   return id;
 }
 
-function loadPixels(consent: ConsentState) {
-  if (typeof window === "undefined") return;
-  if (consent.analytics) {
-    const ga = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
-    if (ga && !document.querySelector(`script[data-pixel="ga"]`)) {
-      const s = document.createElement("script");
-      s.async = true;
-      s.src = `https://www.googletagmanager.com/gtag/js?id=${ga}`;
-      s.dataset.pixel = "ga";
-      document.head.appendChild(s);
-      const init = document.createElement("script");
-      init.dataset.pixel = "ga-init";
-      init.text = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${ga}',{anonymize_ip:true});`;
-      document.head.appendChild(init);
-    }
-  }
-  if (consent.marketing) {
-    const ads = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID;
-    if (ads && !document.querySelector(`script[data-pixel="google-ads"]`)) {
-      const s = document.createElement("script");
-      s.async = true;
-      s.src = `https://www.googletagmanager.com/gtag/js?id=${ads}`;
-      s.dataset.pixel = "google-ads";
-      document.head.appendChild(s);
-    }
-    const li = process.env.NEXT_PUBLIC_LINKEDIN_PARTNER_ID;
-    if (li && !document.querySelector(`script[data-pixel="linkedin"]`)) {
-      const init = document.createElement("script");
-      init.dataset.pixel = "linkedin";
-      init.text = `_linkedin_partner_id='${li}';window._linkedin_data_partner_ids=window._linkedin_data_partner_ids||[];window._linkedin_data_partner_ids.push(_linkedin_partner_id);`;
-      document.head.appendChild(init);
-      const s = document.createElement("script");
-      s.async = true;
-      s.src = "https://snap.licdn.com/li.lms-analytics/insight.min.js";
-      s.dataset.pixel = "linkedin-load";
-      document.head.appendChild(s);
-    }
-  }
-}
-
 export function CookieBanner({
   locale,
   dict,
+  tracking,
 }: {
   locale: Locale;
   dict: Dict;
+  tracking: TrackingConfig;
 }) {
   const [show, setShow] = React.useState(false);
   const [mode, setMode] = React.useState<"banner" | "settings">("banner");
@@ -97,7 +63,7 @@ export function CookieBanner({
     if (existing) {
       try {
         const consent = JSON.parse(existing) as ConsentState;
-        loadPixels(consent);
+        loadPixels(tracking, consent);
         return;
       } catch {
         /* invalid stored value — re-prompt */
@@ -105,7 +71,8 @@ export function CookieBanner({
     }
     const t = window.setTimeout(() => setShow(true), 800);
     return () => window.clearTimeout(t);
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tracking]);
 
   async function persist(consent: ConsentState) {
     setCookie(COOKIE_KEY, JSON.stringify(consent));
@@ -124,7 +91,7 @@ export function CookieBanner({
     } catch {
       /* best-effort */
     }
-    loadPixels(consent);
+    loadPixels(tracking, consent);
     setShow(false);
   }
 
@@ -199,8 +166,8 @@ export function CookieBanner({
                   title={locale === "es" ? "Marketing" : "Marketing"}
                   body={
                     locale === "es"
-                      ? "Google Ads y LinkedIn para atribución de campañas."
-                      : "Google Ads and LinkedIn for campaign attribution."
+                      ? "Meta (Facebook/Instagram), Google Ads y LinkedIn para atribución de campañas."
+                      : "Meta (Facebook/Instagram), Google Ads and LinkedIn for campaign attribution."
                   }
                   checked={pref.marketing}
                   onChange={(v) => setPref((p) => ({ ...p, marketing: v }))}

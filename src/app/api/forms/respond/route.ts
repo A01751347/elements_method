@@ -3,6 +3,7 @@ import { z } from "zod";
 import { and, eq, gt, isNull } from "drizzle-orm";
 import { db } from "@/shared/db/client";
 import { forms, formTokens, formResponses } from "@/shared/db/schema/forms";
+import { testimonials } from "@/shared/db/schema/testimonials";
 import { sendMail, emailLayout, escapeHtml, OPS_EMAIL } from "@/shared/integrations/resend";
 
 export const runtime = "nodejs";
@@ -95,17 +96,22 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "TOKEN_UPDATE_FAILED" }, { status: 500 });
   }
 
+  let responseId: string | null = null;
   try {
-    await db.insert(formResponses).values({
-      formId: tokenRow.formId,
-      tokenId: tokenRow.id,
-      orderId: tokenRow.orderId,
-      retreatId: tokenRow.retreatId,
-      respondentEmail: tokenRow.recipientEmail,
-      respondentName: tokenRow.recipientName,
-      answers,
-      shareablePhrase: shareablePhrase ?? null,
-    });
+    const inserted = await db
+      .insert(formResponses)
+      .values({
+        formId: tokenRow.formId,
+        tokenId: tokenRow.id,
+        orderId: tokenRow.orderId,
+        retreatId: tokenRow.retreatId,
+        respondentEmail: tokenRow.recipientEmail,
+        respondentName: tokenRow.recipientName,
+        answers,
+        shareablePhrase: shareablePhrase ?? null,
+      })
+      .returning({ id: formResponses.id });
+    responseId = inserted[0]?.id ?? null;
   } catch (e) {
     console.error("[forms:respond] response insert failed", e);
     // Compensating action — re-open the token so the user can retry
@@ -118,6 +124,33 @@ export async function POST(req: Request) {
       console.error("[forms:respond] compensating rollback failed", rollbackErr);
     }
     return NextResponse.json({ ok: false, error: "INSERT_FAILED" }, { status: 500 });
+  }
+
+  // A shareable-phrase answer becomes a PENDING testimonial (approved_by_admin
+  // = false, published = false) so the admin can approve it from
+  // /admin/testimoniales. The "allow_publication" answer gates it: "No" skips
+  // creation entirely; the anonymous option strips the author's name.
+  const consent =
+    typeof answers["allow_publication"] === "string"
+      ? (answers["allow_publication"] as string)
+      : null;
+  const consentDenied = consent !== null && /^no\b/i.test(consent.trim());
+  const anonymous = consent !== null && /an[oó]nim|anonymous/i.test(consent);
+  if (shareablePhrase && shareablePhrase.trim() && !consentDenied) {
+    try {
+      await db.insert(testimonials).values({
+        type: "quote_only",
+        authorName: anonymous ? null : tokenRow.recipientName,
+        quoteEs: shareablePhrase.trim(),
+        quoteEn: shareablePhrase.trim(),
+        sourceFormResponseId: responseId,
+        retreatId: tokenRow.retreatId,
+      });
+    } catch (e) {
+      // Non-fatal: the response is already saved; the phrase remains visible
+      // in the form response detail for manual recovery.
+      console.error("[forms:respond] testimonial insert failed", e);
+    }
   }
 
   // Notify ops

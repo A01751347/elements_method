@@ -5,6 +5,7 @@ import { db } from "@/shared/db/client";
 import { products } from "@/shared/db/schema/products";
 import {
   AdminPageHeader,
+  AdminSecondaryButton,
   AdminTable,
   EmptyState,
   StatusPill,
@@ -66,6 +67,7 @@ export default async function AdminProductsPage() {
               <Th>Precio USD</Th>
               <Th>Stripe MXN</Th>
               <Th>Activo</Th>
+              <Th className="text-right">Acciones</Th>
             </tr>
           </thead>
           <tbody>
@@ -103,6 +105,11 @@ export default async function AdminProductsPage() {
                     status={p.active ? "Activo" : "Inactivo"}
                     variant={p.active ? "green" : "neutral"}
                   />
+                </Td>
+                <Td className="text-right whitespace-nowrap">
+                  <AdminSecondaryButton href={`/admin/productos/${p.id}`}>
+                    Editar
+                  </AdminSecondaryButton>
                 </Td>
               </tr>
             ))}

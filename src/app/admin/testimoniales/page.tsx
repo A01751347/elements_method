@@ -10,6 +10,11 @@ import {
   Td,
   Th,
 } from "../_components/admin-ui";
+import {
+  toggleTestimonialPublished,
+  approveTestimonial,
+  rejectTestimonial,
+} from "./actions";
 
 async function loadTestimonials() {
   try {
@@ -41,29 +46,91 @@ export default async function AdminTestimonialsPage() {
       {list.length === 0 ? (
         <EmptyState
           title="Sin testimoniales"
-          body="Hoy /el-metodo renderiza el testimonial verbatim de Alexandra Reyes desde content.ts. Cuando uses la DB, los testimoniales de aquí sustituyen esa fuente."
+          body="Cuando un participante responda la pregunta testimonial de una encuesta (y autorice publicarla), aparecerá aquí como pendiente. Al aceptarla se publica directo en la página principal."
         />
       ) : (
         <AdminTable>
           <thead>
             <tr>
               <Th>Nombre</Th>
-              <Th>Empresa</Th>
-              <Th>Tipo</Th>
+              <Th>Frase</Th>
+              <Th>Origen</Th>
               <Th>Publicado</Th>
+              <Th>Aprobado</Th>
+              <Th>Acciones</Th>
             </tr>
           </thead>
           <tbody>
             {list.map((t) => (
               <tr key={t.id} className="hover:bg-zinc-50">
-                <Td className="font-medium">{t.authorName}</Td>
-                <Td className="text-xs">{t.companyName ?? "—"}</Td>
-                <Td className="text-xs uppercase tracking-[0.14em]">{t.type}</Td>
+                <Td className="font-medium">
+                  {t.authorName ?? <span className="text-zinc-400 italic">Anónimo</span>}
+                  {t.companyName && (
+                    <div className="text-xs text-zinc-500 font-normal">{t.companyName}</div>
+                  )}
+                </Td>
+                <Td className="text-xs max-w-md">
+                  <span className="line-clamp-2 italic" title={t.quoteEs ?? undefined}>
+                    {t.quoteEs ? `“${t.quoteEs}”` : "—"}
+                  </span>
+                </Td>
+                <Td>
+                  <StatusPill
+                    status={t.sourceFormResponseId ? "Encuesta" : "Manual"}
+                    variant={t.sourceFormResponseId ? "blue" : "neutral"}
+                  />
+                </Td>
                 <Td>
                   <StatusPill
                     status={t.published ? "Sí" : "No"}
                     variant={t.published ? "green" : "amber"}
                   />
+                </Td>
+                <Td>
+                  <StatusPill
+                    status={t.approvedByAdmin ? "Sí" : "No"}
+                    variant={t.approvedByAdmin ? "green" : "amber"}
+                  />
+                </Td>
+                <Td>
+                  <div className="flex items-center gap-3">
+                    <form
+                      action={toggleTestimonialPublished.bind(
+                        null,
+                        t.id,
+                        !t.published
+                      )}
+                    >
+                      <button
+                        type="submit"
+                        className="text-xs text-zinc-700 hover:text-zinc-900 hover:underline"
+                      >
+                        {t.published ? "Despublicar" : "Publicar"}
+                      </button>
+                    </form>
+                    {!t.approvedByAdmin && (
+                      <>
+                        <form action={approveTestimonial.bind(null, t.id)}>
+                          <button
+                            type="submit"
+                            className="text-xs text-emerald-700 hover:text-emerald-900 hover:underline"
+                          >
+                            Aceptar y publicar
+                          </button>
+                        </form>
+                        {t.sourceFormResponseId && (
+                          <form action={rejectTestimonial.bind(null, t.id)}>
+                            <button
+                              type="submit"
+                              className="text-xs text-red-700 hover:text-red-900 hover:underline"
+                            >
+                              Rechazar
+                            </button>
+                          </form>
+                        )}
+                      </>
+                    )}
+                  </div>
                 </Td>
               </tr>
             ))}

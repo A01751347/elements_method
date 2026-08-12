@@ -59,6 +59,7 @@ export default async function AdminEnterprisePage() {
               <Th>Modalidad</Th>
               <Th>Total</Th>
               <Th>Status</Th>
+              <Th className="text-right">PDF</Th>
             </tr>
           </thead>
           <tbody>
@@ -80,6 +81,16 @@ export default async function AdminEnterprisePage() {
                     status={q.status}
                     variant={QUOTE_STATUS_VARIANT[q.status] ?? "neutral"}
                   />
+                </Td>
+                <Td className="text-right whitespace-nowrap">
+                  <a
+                    href={`/api/cotizacion/${q.quoteNumber}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-xs text-zinc-600 hover:text-zinc-900 underline underline-offset-2"
+                  >
+                    Cotización
+                  </a>
                 </Td>
               </tr>
             ))}

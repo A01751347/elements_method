@@ -75,6 +75,7 @@ export default async function AdminOrdersPage() {
               <Th>Total</Th>
               <Th>Método</Th>
               <Th>Status</Th>
+              <Th className="text-right">PDF</Th>
             </tr>
           </thead>
           <tbody>
@@ -97,6 +98,16 @@ export default async function AdminOrdersPage() {
                     status={o.status}
                     variant={STATUS_VARIANT[o.status] ?? "neutral"}
                   />
+                </Td>
+                <Td className="text-right whitespace-nowrap">
+                  <a
+                    href={`/api/comprobante/${o.folio}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-xs text-zinc-600 hover:text-zinc-900 underline underline-offset-2"
+                  >
+                    Comprobante
+                  </a>
                 </Td>
               </tr>
             ))}

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import crypto from "node:crypto";
 import { eq } from "drizzle-orm";
 import { db } from "@/shared/db/client";
 import { orders } from "@/shared/db/schema/orders";
@@ -6,10 +7,73 @@ import { sendMail, emailLayout, escapeHtml, OPS_EMAIL } from "@/shared/integrati
 
 export const runtime = "nodejs";
 
+/** Tolerance (seconds) for the webhook timestamp vs. now, to block replays. */
+const SIGNATURE_TOLERANCE_SECONDS = 300;
+
 /**
- * Stripe webhook handler. Verifies signature with STRIPE_WEBHOOK_SECRET when
- * present (production); in dev / dry-run mode it accepts the JSON body as-is
- * so it can be exercised via `curl` or the Stripe CLI without a real account.
+ * Verify a Stripe webhook signature WITHOUT the `stripe` npm package.
+ *
+ * Reproduces exactly what `stripe.webhooks.constructEvent` does:
+ *   1. Parse the `Stripe-Signature` header → { t, v1[] }.
+ *   2. Compute HMAC-SHA256 of `${t}.${rawBody}` keyed by the whsec secret.
+ *   3. timing-safe-compare against any provided v1 signature.
+ *   4. Reject if the timestamp is outside the tolerance window (replay guard).
+ *
+ * Returns true only when a v1 signature matches and the timestamp is fresh.
+ */
+function verifyStripeSignature(
+  rawBody: string,
+  header: string,
+  secret: string,
+): boolean {
+  const parts = header.split(",").reduce<Record<string, string[]>>((acc, part) => {
+    const [key, value] = part.split("=");
+    if (!key || value === undefined) return acc;
+    (acc[key] ??= []).push(value);
+    return acc;
+  }, {});
+
+  const timestamp = parts["t"]?.[0];
+  const signatures = parts["v1"] ?? [];
+  if (!timestamp || signatures.length === 0) return false;
+
+  const ts = Number(timestamp);
+  if (!Number.isFinite(ts)) return false;
+  const nowSeconds = Math.floor(Date.now() / 1000);
+  if (Math.abs(nowSeconds - ts) > SIGNATURE_TOLERANCE_SECONDS) return false;
+
+  const expected = crypto
+    .createHmac("sha256", secret)
+    .update(`${timestamp}.${rawBody}`, "utf8")
+    .digest("hex");
+  const expectedBuf = Buffer.from(expected, "hex");
+
+  return signatures.some((sig) => {
+    let sigBuf: Buffer;
+    try {
+      sigBuf = Buffer.from(sig, "hex");
+    } catch {
+      return false;
+    }
+    return (
+      sigBuf.length === expectedBuf.length &&
+      crypto.timingSafeEqual(sigBuf, expectedBuf)
+    );
+  });
+}
+
+/**
+ * Stripe webhook handler.
+ *
+ * SECURITY: when STRIPE_WEBHOOK_SECRET is configured, the request MUST carry a
+ * valid `Stripe-Signature` header — otherwise it is rejected with 400. This
+ * blocks forged `checkout.session.completed` events that would otherwise mark
+ * orders as paid. Signature verification is HMAC-SHA256 done natively (no
+ * `stripe` package needed).
+ *
+ * The unsigned path is allowed ONLY when no secret is set (local dev / dry-run),
+ * so the flow can still be exercised with the Stripe CLI or curl before the
+ * account is live.
  *
  * Handles minimum events for the launch:
  *   - checkout.session.completed → mark order paid + send confirmation
@@ -22,16 +86,22 @@ export async function POST(req: Request) {
   const rawBody = await req.text();
   let event: { type: string; data: { object: Record<string, unknown> } };
 
-  if (secret && sig) {
-    // Real verification path requires `stripe` Node lib. We keep this minimal —
-    // if the package becomes available, swap to `stripe.webhooks.constructEvent`.
-    // For now, refuse silently when a signature is provided but unverifiable.
+  if (secret) {
+    // Production: a secret is configured → signature is REQUIRED and verified.
+    if (!sig || !verifyStripeSignature(rawBody, sig, secret)) {
+      console.warn("[stripe:webhook] rejected: missing/invalid signature");
+      return NextResponse.json(
+        { ok: false, error: "INVALID_SIGNATURE" },
+        { status: 400 },
+      );
+    }
     try {
       event = JSON.parse(rawBody);
     } catch {
-      return NextResponse.json({ ok: false }, { status: 400 });
+      return NextResponse.json({ ok: false, error: "INVALID_JSON" }, { status: 400 });
     }
   } else {
+    // Dev / dry-run only (no secret set): accept unsigned JSON.
     try {
       event = JSON.parse(rawBody);
     } catch {

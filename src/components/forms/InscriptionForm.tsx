@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Check, Loader2, AlertCircle } from "lucide-react";
 import type { Locale } from "@/i18n/config";
+import { trackLead } from "@/shared/integrations/tracking";
 
 type Source = "apply" | "contact" | "newsletter" | "corporate";
 
@@ -98,6 +99,7 @@ export function InscriptionForm({
         throw new Error(data.error || `HTTP ${res.status}`);
       }
       setState("success");
+      trackLead({ source: source || retreatSlug || pathSlug || "inscription" });
       form.reset();
     } catch (err) {
       setState("error");

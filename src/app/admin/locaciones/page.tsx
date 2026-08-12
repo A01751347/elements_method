@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Plus, ExternalLink } from "lucide-react";
-import { venuesInventory } from "@/data/launchData";
+import { venuesInventory as staticVenues } from "@/data/launchData";
+import { getVenues } from "@/modules/content/venues";
 import {
   AdminPageHeader,
   AdminPrimaryButton,
@@ -29,7 +30,9 @@ const STATE_LABEL: Record<string, string> = {
   "available-2027": "Disponible 2027",
 };
 
-export default function AdminVenuesPage() {
+export default async function AdminVenuesPage() {
+  const dbVenues = await getVenues();
+  const venuesInventory = dbVenues.length > 0 ? dbVenues : staticVenues;
   return (
     <>
       <AdminPageHeader

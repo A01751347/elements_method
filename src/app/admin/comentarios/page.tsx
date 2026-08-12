@@ -9,6 +9,7 @@ import {
   Td,
   Th,
 } from "../_components/admin-ui";
+import { approveComment, rejectComment } from "./actions";
 
 const STATUS_VARIANT: Record<string, "green" | "amber" | "red"> = {
   approved: "green",
@@ -78,12 +79,22 @@ export default async function AdminCommentsPage() {
                   />
                 </Td>
                 <Td className="text-right whitespace-nowrap">
-                  <button className="bg-emerald-600 text-white px-2 py-1 text-xs hover:bg-emerald-700 mr-1">
-                    Aprobar
-                  </button>
-                  <button className="bg-red-600 text-white px-2 py-1 text-xs hover:bg-red-700">
-                    Rechazar
-                  </button>
+                  <form action={approveComment.bind(null, c.id)} className="inline">
+                    <button
+                      type="submit"
+                      className="bg-emerald-600 text-white px-2 py-1 text-xs hover:bg-emerald-700 mr-1"
+                    >
+                      Aprobar
+                    </button>
+                  </form>
+                  <form action={rejectComment.bind(null, c.id)} className="inline">
+                    <button
+                      type="submit"
+                      className="bg-red-600 text-white px-2 py-1 text-xs hover:bg-red-700"
+                    >
+                      Rechazar
+                    </button>
+                  </form>
                 </Td>
               </tr>
             ))}

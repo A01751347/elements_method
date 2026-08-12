@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
+import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/shared/db/client";
-import { orders } from "@/shared/db/schema/orders";
+import { orders, documentTemplates, orderDocuments } from "@/shared/db/schema";
 import { createCheckoutSession } from "@/shared/integrations/stripe";
+import { buildLegalDocPdf } from "@/shared/pdf/legalDoc";
 
 export const runtime = "nodejs";
 
@@ -14,7 +16,62 @@ const Schema = z.object({
   amountMxn: z.number().int().positive().max(2_000_000),
   productName: z.string().min(2).max(200),
   locale: z.enum(["es", "en"]).default("es"),
+  acceptedDocs: z.array(z.string().max(120)).max(20).optional(),
 });
+
+/**
+ * For each accepted document, generate the personalized PDF, hash it, and store
+ * an immutable acceptance record in order_documents. Best-effort per document.
+ */
+async function recordAcceptedDocs(
+  orderId: string,
+  data: z.infer<typeof Schema>,
+) {
+  for (const slug of data.acceptedDocs ?? []) {
+    try {
+      const tplRows = await db
+        .select()
+        .from(documentTemplates)
+        .where(
+          and(
+            eq(documentTemplates.slug, slug),
+            eq(documentTemplates.active, true),
+          ),
+        )
+        .limit(1);
+      const tpl = tplRows[0];
+      if (!tpl) continue;
+
+      const templateMarkdown =
+        data.locale === "en"
+          ? tpl.templateHtmlEn ?? tpl.templateHtmlEs
+          : tpl.templateHtmlEs;
+      const { hash } = await buildLegalDocPdf({
+        name: data.locale === "en" ? tpl.nameEn ?? tpl.nameEs : tpl.nameEs,
+        templateMarkdown,
+        tokens: {
+          PARTICIPANTE_NOMBRE: data.name,
+          PARTICIPANTE_EMAIL: data.email,
+          INVERSION_MXN: data.amountMxn.toLocaleString("es-MX"),
+        },
+      });
+
+      await db.insert(orderDocuments).values({
+        orderId,
+        documentTemplateId: tpl.id,
+        documentVersion: tpl.currentVersion,
+        // The PDF is generated on demand from /api/documento; the hash pins the
+        // exact accepted content/version.
+        generatedPdfUrl: `/api/documento/${slug}`,
+        generatedPdfHash: hash,
+        accepted: true,
+        acceptedAt: new Date(),
+      });
+    } catch (e) {
+      console.error(`[checkout] record accepted doc ${slug} failed`, e);
+    }
+  }
+}
 
 export async function POST(req: Request) {
   let payload: unknown;
@@ -69,22 +126,31 @@ export async function POST(req: Request) {
     )
       .toString()
       .padStart(4, "0")}`;
-    await db.insert(orders).values({
-      folio,
-      buyerType: "persona",
-      buyerName: data.name,
-      buyerEmail: data.email,
-      productIds: [],
-      retreatId: null,
-      subtotal: subtotal.toFixed(2),
-      iva: iva.toFixed(2),
-      total: String(data.amountMxn),
-      currency: "MXN",
-      language: data.locale,
-      paymentMethod: "stripe",
-      stripeSessionId: session.sessionId ?? null,
-      status: "pending_payment",
-    });
+    const inserted = await db
+      .insert(orders)
+      .values({
+        folio,
+        buyerType: "persona",
+        buyerName: data.name,
+        buyerEmail: data.email,
+        productIds: [],
+        retreatId: null,
+        subtotal: subtotal.toFixed(2),
+        iva: iva.toFixed(2),
+        total: String(data.amountMxn),
+        currency: "MXN",
+        language: data.locale,
+        paymentMethod: "stripe",
+        stripeSessionId: session.sessionId ?? null,
+        status: "pending_payment",
+      })
+      .returning({ id: orders.id });
+
+    // Record accepted documents as immutable snapshots (RF-DOC-05/09).
+    const orderId = inserted[0]?.id;
+    if (orderId && data.acceptedDocs && data.acceptedDocs.length > 0) {
+      await recordAcceptedDocs(orderId, data);
+    }
   } catch (e) {
     console.error("[checkout] order draft insert failed", e);
   }

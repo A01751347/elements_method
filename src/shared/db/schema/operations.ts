@@ -20,6 +20,44 @@ import {
 } from "drizzle-orm/pg-core";
 
 // ────────────────────────────────────────────────────────────────────────────
+// CALENDAR RETREATS — the public /retiros calendar (2026-2027).
+// Mirrors the CalendarRetreat shape (src/data/launchData.ts) 1:1 so the admin
+// edits map directly to columns and reflect on the public calendar.
+// Separate from `retreats` (which holds the commerce/orders relationship).
+// ────────────────────────────────────────────────────────────────────────────
+
+export const calendarRetreats = pgTable("calendar_retreats", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  slug: text("slug").notNull().unique(),
+  orderIdx: integer("order_idx").default(0).notNull(),
+  themeEs: text("theme_es").notNull(),
+  themeEn: text("theme_en").notNull(),
+  elementKey: text("element_key").notNull(),
+  startDate: text("start_date").notNull(), // ISO YYYY-MM-DD (display calendar)
+  endDate: text("end_date").notNull(),
+  dateLabelEs: text("date_label_es").notNull(),
+  dateLabelEn: text("date_label_en").notNull(),
+  venueState: text("venue_state").notNull(), // confirmed | tentative | tbd
+  venueLabelEs: text("venue_label_es").notNull(),
+  venueLabelEn: text("venue_label_en").notNull(),
+  venueNote: text("venue_note").notNull().default(""),
+  summaryEs: text("summary_es").notNull(),
+  summaryEn: text("summary_en").notNull(),
+  status: text("status").notNull(), // open | waitlist | closed | sold
+  capacity: integer("capacity").notNull(),
+  seatsLeft: integer("seats_left").notNull(),
+  investmentLabelEs: text("investment_label_es").notNull().default(""),
+  investmentLabelEn: text("investment_label_en").notNull().default(""),
+  isPlaceholder: boolean("is_placeholder").default(false).notNull(),
+  placeholderFields: text("placeholder_fields").array().notNull().default([]),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export type CalendarRetreatRow = typeof calendarRetreats.$inferSelect;
+export type NewCalendarRetreat = typeof calendarRetreats.$inferInsert;
+
+// ────────────────────────────────────────────────────────────────────────────
 // VENUES — candidate locations
 // ────────────────────────────────────────────────────────────────────────────
 

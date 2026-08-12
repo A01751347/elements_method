@@ -10,6 +10,7 @@ import {
   Td,
   Th,
 } from "../_components/admin-ui";
+import { deleteLogo, toggleLogoActive } from "./actions";
 
 async function loadLogos() {
   try {
@@ -46,6 +47,7 @@ export default async function AdminLogosPage() {
               <Th>Empresa</Th>
               <Th>Logo</Th>
               <Th>Activo</Th>
+              <Th>Acciones</Th>
             </tr>
           </thead>
           <tbody>
@@ -69,6 +71,26 @@ export default async function AdminLogosPage() {
                     status={l.active ? "Activo" : "Inactivo"}
                     variant={l.active ? "green" : "neutral"}
                   />
+                </Td>
+                <Td>
+                  <div className="flex items-center gap-4">
+                    <form action={toggleLogoActive.bind(null, l.id, !l.active)}>
+                      <button
+                        type="submit"
+                        className="text-sm text-zinc-600 hover:text-zinc-900 hover:underline"
+                      >
+                        {l.active ? "Desactivar" : "Activar"}
+                      </button>
+                    </form>
+                    <form action={deleteLogo.bind(null, l.id)}>
+                      <button
+                        type="submit"
+                        className="text-sm text-red-700 hover:text-red-900 hover:underline"
+                      >
+                        Eliminar
+                      </button>
+                    </form>
+                  </div>
                 </Td>
               </tr>
             ))}

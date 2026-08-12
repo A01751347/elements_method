@@ -41,6 +41,10 @@ const NAV_GROUPS = [
       { href: "/admin/suscriptores", label: "Suscriptores" },
     ],
   },
+  {
+    label: "Configuración",
+    items: [{ href: "/admin/analytics", label: "Analytics & Pixeles" }],
+  },
 ];
 
 export default async function AdminLayout({

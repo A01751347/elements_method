@@ -8,15 +8,18 @@ import type { Dict } from "@/i18n/dictionaries";
 import { Container } from "@/components/ui/Container";
 import { LangSwitcher } from "./LangSwitcher";
 import { LogoMark } from "@/components/brand/Logo";
-import { contactInfo } from "@/data/launchData";
+import { contactInfo as staticContactInfo, type ContactInfo } from "@/data/launchData";
 
 export function Footer({
   locale,
   dict,
+  contact,
 }: {
   locale: Locale;
   dict: Dict;
+  contact?: ContactInfo;
 }) {
+  const contactInfo = contact ?? staticContactInfo;
   const base = `/${locale}`;
   const [email, setEmail] = React.useState("");
   const [state, setState] = React.useState<"idle" | "sending" | "subscribed" | "error">(

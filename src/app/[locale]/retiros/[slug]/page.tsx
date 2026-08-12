@@ -25,7 +25,13 @@ import {
   contactInfo,
   type CalendarRetreat,
 } from "@/data/launchData";
+import {
+  getCalendarRetreats,
+  getCalendarRetreatBySlug,
+} from "@/modules/content/calendarRetreats";
 import { elements, type ElementKey } from "@/data/content";
+
+export const revalidate = 60;
 
 const ICONS: Record<ElementKey, LucideIcon> = {
   agua: Droplets,
@@ -73,13 +79,18 @@ export default async function RetreatDetailPage({
 }) {
   const { locale, slug } = await params;
   if (!isLocale(locale)) notFound();
-  const retreat = findRetreatBySlug(slug);
+  const [dbRetreat, dbAll] = await Promise.all([
+    getCalendarRetreatBySlug(slug),
+    getCalendarRetreats(),
+  ]);
+  const retreat = dbRetreat ?? findRetreatBySlug(slug);
   if (!retreat) notFound();
   const el = elements.find((e) => e.key === retreat.elementKey);
   const Icon = ICONS[retreat.elementKey];
 
   const localeKey = locale === "es" ? "Es" : "En";
-  const otherRetreats = calendarRetreats
+  const allRetreats = dbAll.length > 0 ? dbAll : calendarRetreats;
+  const otherRetreats = allRetreats
     .filter((r) => r.slug !== retreat.slug)
     .slice(0, 3);
 

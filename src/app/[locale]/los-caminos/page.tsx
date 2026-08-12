@@ -11,10 +11,18 @@ import {
 } from "lucide-react";
 import { isLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
-import { paths, originProgram, rootsArc } from "@/data/content";
+import {
+  paths as staticPaths,
+  originProgram as staticOriginProgram,
+  rootsArc as staticRootsArc,
+} from "@/data/content";
+import { getPaths } from "@/modules/content/paths";
+import { getOriginProgram, getRootsArc } from "@/modules/content/siteSections";
 import { Section, Eyebrow } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
+
+export const revalidate = 60;
 
 export async function generateMetadata({
   params,
@@ -49,6 +57,19 @@ export default async function PathsPage({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const dict = getDictionary(locale);
+
+  const [dbPaths, dbOriginProgram, dbRootsArc] = await Promise.all([
+    getPaths(),
+    getOriginProgram(),
+    getRootsArc(),
+  ]);
+
+  const paths = dbPaths.length > 0 ? dbPaths : staticPaths;
+  const originProgram =
+    dbOriginProgram.nameEs || dbOriginProgram.nameEn
+      ? dbOriginProgram
+      : staticOriginProgram;
+  const rootsArc = dbRootsArc.length > 0 ? dbRootsArc : staticRootsArc;
 
   return (
     <>

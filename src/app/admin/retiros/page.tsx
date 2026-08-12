@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Plus } from "lucide-react";
-import { calendarRetreats } from "@/data/launchData";
+import { calendarRetreats as staticCalendarRetreats } from "@/data/launchData";
+import { getCalendarRetreats } from "@/modules/content/calendarRetreats";
 import { elements } from "@/data/content";
 import {
   AdminPageHeader,
@@ -21,7 +22,10 @@ const STATUS_VARIANT: Record<string, "green" | "amber" | "neutral" | "red"> = {
   sold: "red",
 };
 
-export default function AdminRetreatsPage() {
+export default async function AdminRetreatsPage() {
+  const dbRetreats = await getCalendarRetreats();
+  const calendarRetreats =
+    dbRetreats.length > 0 ? dbRetreats : staticCalendarRetreats;
   const sorted = [...calendarRetreats].sort(
     (a, b) => +new Date(a.startDate) - +new Date(b.startDate),
   );

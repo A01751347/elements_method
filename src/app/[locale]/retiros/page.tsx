@@ -16,7 +16,13 @@ import { RetreatsShowcase } from "@/components/sections/RetreatsShowcase";
 import { PracticesGallery } from "@/components/sections/PracticesGallery";
 import { RetreatCalendar } from "@/components/sections/RetreatCalendar";
 import { ProvidersInventory } from "@/components/sections/ProvidersInventory";
-import { processSteps, elements } from "@/data/content";
+import { processSteps as staticProcessSteps, elements as staticElements } from "@/data/content";
+import { getElements } from "@/modules/content/elements";
+import { getProcessSteps } from "@/modules/content/processSteps";
+import { getCalendarRetreats } from "@/modules/content/calendarRetreats";
+import { getProviders } from "@/modules/content/providers";
+
+export const revalidate = 60;
 
 export async function generateMetadata({
   params,
@@ -35,6 +41,16 @@ export default async function RetreatsPage({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const dict = getDictionary(locale);
+
+  const [dbElements, dbProcessSteps, calendarRetreatsData, providersData] =
+    await Promise.all([
+      getElements(),
+      getProcessSteps(),
+      getCalendarRetreats(),
+      getProviders(),
+    ]);
+  const elements = dbElements.length > 0 ? dbElements : staticElements;
+  const processSteps = dbProcessSteps.length > 0 ? dbProcessSteps : staticProcessSteps;
 
   return (
     <>
@@ -182,10 +198,10 @@ export default async function RetreatsPage({
       </Section>
 
       {/* CALENDAR — 9 retreats (Oct 2026 → Q4 2027) */}
-      <RetreatCalendar locale={locale} />
+      <RetreatCalendar locale={locale} retreats={calendarRetreatsData} />
 
       {/* PROVIDERS — 16 field disciplines with element affinity + status */}
-      <ProvidersInventory locale={locale} />
+      <ProvidersInventory locale={locale} providers={providersData} />
 
       {/* PRACTICES GALLERY — editorial index of all documented field practices. */}
       <PracticesGallery locale={locale} />

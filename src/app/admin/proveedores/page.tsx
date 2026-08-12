@@ -1,5 +1,6 @@
 import { Plus } from "lucide-react";
-import { providersInventory } from "@/data/launchData";
+import { providersInventory as staticProviders } from "@/data/launchData";
+import { getProviders } from "@/modules/content/providers";
 import { elements } from "@/data/content";
 import {
   AdminPageHeader,
@@ -20,7 +21,9 @@ const STATUS_VARIANT: Record<string, "green" | "amber" | "neutral" | "red"> = {
   researching: "neutral",
 };
 
-export default function AdminProvidersPage() {
+export default async function AdminProvidersPage() {
+  const dbProviders = await getProviders();
+  const providersInventory = dbProviders.length > 0 ? dbProviders : staticProviders;
   return (
     <>
       <AdminPageHeader

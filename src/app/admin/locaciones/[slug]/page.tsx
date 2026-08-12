@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
 import { venuesInventory } from "@/data/launchData";
+import { getVenueBySlug } from "@/modules/content/venues";
 import {
   AdminPageHeader,
   AdminPrimaryButton,
   AdminSecondaryButton,
   PlaceholderBadge,
-  PlaceholderNote,
 } from "../../_components/admin-ui";
 import {
   FormSection,
@@ -14,10 +14,7 @@ import {
   Textarea,
   Select,
 } from "../../_components/form";
-
-export function generateStaticParams() {
-  return venuesInventory.map((v) => ({ slug: v.slug }));
-}
+import { updateVenue, deleteVenue } from "../actions";
 
 export default async function AdminVenueEditPage({
   params,
@@ -25,7 +22,8 @@ export default async function AdminVenueEditPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const v = venuesInventory.find((x) => x.slug === slug);
+  const v =
+    (await getVenueBySlug(slug)) ?? venuesInventory.find((x) => x.slug === slug);
   if (!v) notFound();
 
   return (
@@ -34,17 +32,13 @@ export default async function AdminVenueEditPage({
         title={`Locación: ${v.name}`}
         subtitle={v.city}
         action={
-          <div className="flex gap-2">
-            <AdminSecondaryButton href="/admin/locaciones">
-              ← Volver
-            </AdminSecondaryButton>
-            <AdminPrimaryButton>Guardar</AdminPrimaryButton>
-          </div>
+          <AdminSecondaryButton href="/admin/locaciones">
+            ← Volver
+          </AdminSecondaryButton>
         }
       />
-      <PlaceholderNote />
 
-      <form className="space-y-8 max-w-3xl">
+      <form action={updateVenue.bind(null, v.slug)} className="space-y-8 max-w-3xl">
         <FormSection title="Identificación">
           <FormRow label="Slug">
             <Input name="slug" defaultValue={v.slug} />
@@ -85,23 +79,30 @@ export default async function AdminVenueEditPage({
         </FormSection>
 
         <FormSection title="Placeholders activos">
+          <FormRow label="Placeholders (coma)">
+            <Input
+              name="placeholderFields"
+              defaultValue={(v.placeholderFields ?? []).join(", ")}
+            />
+          </FormRow>
           <div className="flex items-start gap-3">
             <PlaceholderBadge fields={v.placeholderFields} />
             <p className="text-xs text-amber-800">
               Campos placeholder de esta locación.
             </p>
           </div>
-          <div className="mt-3 grid grid-cols-2 sm:grid-cols-3 gap-2">
-            {v.placeholderFields.map((f) => (
-              <code
-                key={f}
-                className="font-mono text-[0.7rem] bg-amber-50 text-amber-900 px-2 py-1 border border-amber-200"
-              >
-                {f}
-              </code>
-            ))}
-          </div>
         </FormSection>
+
+        <div className="flex items-center gap-3 pt-4 border-t border-zinc-200">
+          <AdminPrimaryButton type="submit">Guardar</AdminPrimaryButton>
+          <AdminSecondaryButton href="/admin/locaciones">Cancelar</AdminSecondaryButton>
+          <button
+            formAction={deleteVenue.bind(null, v.slug)}
+            className="ml-auto text-sm text-red-700 hover:text-red-900 hover:underline"
+          >
+            Eliminar
+          </button>
+        </div>
       </form>
     </>
   );
