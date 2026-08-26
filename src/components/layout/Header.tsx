@@ -89,33 +89,43 @@ export function Header({
 
   return (
     <>
+      {/* The header is ALWAYS a visible band (client feedback #1: "el logo no se
+       *  ve… debe haber una franja arriba porque no se ven ninguno de los
+       *  títulos"). Three states, all of them a real surface:
+       *    · over a dark hero  → translucent ink band + blur
+       *    · scrolled          → paper band + hairline
+       *    · light page at top → paper band, slightly lighter               */}
       <header
         className={cn(
           "fixed top-0 inset-x-0 z-50 transition-all duration-500 print:hidden",
           scrolled
             ? "bg-[var(--color-paper)]/92 backdrop-blur-md border-b border-[var(--color-line)]/60"
-            : "bg-transparent border-b border-transparent",
+            : inverted
+              ? "bg-[var(--color-ink)]/55 backdrop-blur-md border-b border-[var(--color-paper)]/15"
+              : "bg-[var(--color-paper)]/80 backdrop-blur-md border-b border-[var(--color-line)]/40",
         )}
       >
-        {/* Top-edge scrim — only over dark heroes at top of page. A subtle
-         *  ink→transparent gradient that boosts contrast for nav text against
-         *  bright skies/horizons without darkening the hero image visually. */}
+        {/* Extra top-edge scrim over dark heroes — softens the seam between the
+         *  band and a bright sky so the band doesn't read as a hard bar. */}
         {inverted && (
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[var(--color-ink)]/45 via-[var(--color-ink)]/20 to-transparent"
+            className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[var(--color-ink)]/35 to-transparent"
           />
         )}
         <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
           <div
             className={cn(
-              "flex items-center justify-between transition-[height] duration-500",
+              // gap-10/gap-14 guarantees a minimum gutter between the wordmark
+              // and the first nav link — `justify-between` alone let them touch
+              // at ~1265px wide (client feedback #6).
+              "flex items-center justify-between gap-10 xl:gap-14 transition-[height] duration-500",
               scrolled ? "h-16" : "h-20",
             )}
           >
-            <Logo locale={locale} inverted={inverted} size="lg" />
+            <Logo locale={locale} inverted={inverted} size="lg" className="shrink-0" />
 
-            <nav className="hidden lg:flex items-center gap-8">
+            <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
               {links.map((l) => {
                 const isActive =
                   pathname === l.href || pathname.startsWith(`${l.href}/`);

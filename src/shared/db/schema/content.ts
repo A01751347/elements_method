@@ -9,7 +9,7 @@
  * Design rules:
  *  - Every public-facing free-text field is bilingual (`*Es` / `*En`).
  *  - `element` values use free `text` (not the pg enum) because editorial
- *    content includes the fifth element `eter`, and admins may reorder.
+ *    content includes the legacy `eter` row (the Núcleo), and admins may reorder.
  *  - `sortOrder` on every collection so the admin controls display order.
  *  - Child rows cascade-delete with their parent.
  */
@@ -23,16 +23,17 @@ import {
 } from "drizzle-orm/pg-core";
 
 // ────────────────────────────────────────────────────────────────────────────
-// ELEMENTS — the 5 elements (Tierra, Fuego, Agua, Aire, Éter)
+// ELEMENTS — Tierra, Fuego, Agua, Aire + the legacy `eter` row, which is now
+// the Núcleo (the leader). See the note on ElementKey in @/data/content.
 // Source: content.ts → `elements` (ElementInfo[])
 // ────────────────────────────────────────────────────────────────────────────
 
 export const elementsContent = pgTable("elements_content", {
   id: uuid("id").primaryKey().defaultRandom(),
-  key: text("key").notNull().unique(), // agua | fuego | aire | tierra | eter
+  key: text("key").notNull().unique(), // agua | fuego | aire | tierra | eter (= Núcleo)
   nameEs: text("name_es").notNull(),
   nameEn: text("name_en").notNull(),
-  framework: text("framework"), // ROOTS / IGNITE / FLOW / CLEAR (null for eter)
+  framework: text("framework"), // ROOTS / IGNITE / FLOW / CLEAR (null for the Núcleo)
   qualityEs: text("quality_es").notNull(),
   qualityEn: text("quality_en").notNull(),
   cultivaEs: text("cultiva_es").notNull(),

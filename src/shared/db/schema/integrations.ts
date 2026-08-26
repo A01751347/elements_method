@@ -12,6 +12,9 @@ export const subscribers = pgTable("subscribers", {
   id: uuid("id").primaryKey().defaultRandom(),
   email: text("email").notNull().unique(),
   name: text("name"),
+  // Optional — the footer form asks for it so we can also send event info by
+  // phone/WhatsApp (client feedback #40). Requires `pnpm db:push`.
+  phone: text("phone"),
   source: text("source"), // 'footer' | 'blog' | 'companies' | 'checkout'
   language: text("language"),
   mailchimpStatus: text("mailchimp_status"), // 'subscribed' | 'unsubscribed' | 'pending'

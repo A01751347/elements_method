@@ -17,7 +17,7 @@ import { safeRead } from "./safe";
  * exposed as the exported `Lexicon` type below.
  *
  * Rows are ordered by `sortOrder` (ascending) so the original editorial order —
- * the five elements, the six Disconnection-Protocol phases, then the closing
+ * the four elements plus the Núcleo, the six Disconnection-Protocol phases, then the closing
  * tagline — is preserved. The `lexicon_content` table has NO `active` column,
  * so no active filter is applied.
  *

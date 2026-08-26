@@ -133,7 +133,7 @@ export function CookieBanner({
             </button>
             <h3
               id="cookie-title"
-              className="font-[family-name:var(--font-display)] text-xl mb-2"
+              className="font-[family-name:var(--font-display)] text-xl mb-2 text-[var(--color-paper)]"
             >
               {dict.cookies.title}
             </h3>

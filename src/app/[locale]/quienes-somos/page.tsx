@@ -92,8 +92,8 @@ export default async function AboutPage({
           </h1>
           <p className="lead mt-8 max-w-2xl text-[var(--color-paper)]/95">
             {es
-              ? "Elements Method existe para devolver a las personas —y a quienes lideran— a su fuente esencial de poder, usando los cinco elementos de la naturaleza como espejo y maestro."
-              : "Elements Method exists to return people — and those who lead — to their essential source of power, using the five elements of nature as mirror and teacher."}
+              ? "Elements Method existe para devolver a las personas —y a quienes lideran— a su fuente esencial de poder, usando los cuatro elementos de la naturaleza como espejo y maestro."
+              : "Elements Method exists to return people — and those who lead — to their essential source of power, using the four elements of nature as mirror and teacher."}
           </p>
         </Container>
       </section>
@@ -107,15 +107,20 @@ export default async function AboutPage({
             </Eyebrow>
             <h2 className="display-2 text-balance">
               {es
-                ? "La naturaleza no gestiona. La naturaleza lidera."
-                : "Nature doesn't manage. Nature leads."}
+                ? "La mayor enseñanza de la naturaleza es su capacidad de autogestionarse."
+                : "Nature's greatest lesson is its capacity to govern itself."}
             </h2>
+            <p className="mt-6 text-[var(--color-ink-soft)] leading-relaxed">
+              {es
+                ? "Mediante Elements Method diseñamos tu camino hacia ella."
+                : "Through Elements Method we design your path toward it."}
+            </p>
           </div>
           <div className="lg:col-span-7 space-y-6 text-lg leading-relaxed text-[var(--color-ink-soft)]">
             <p className="text-[var(--color-ink)] text-xl">
               {es
-                ? "El liderazgo no es un conjunto de competencias que se añaden desde afuera. Es una capacidad que ya existe —latente— dentro de cada persona. Igual que el Agua, el Fuego, el Aire y la Tierra ya existen en la naturaleza, esperando ser reconocidos y trabajados."
-                : "Leadership is not a set of competencies added from the outside. It is a capacity that already exists — latent — inside every person. The same way Water, Fire, Air and Earth already exist in nature, waiting to be recognized and worked with."}
+                ? "El liderazgo no es un conjunto de competencias que se añaden desde afuera. Es una capacidad que ya existe —latente— dentro de cada persona. Igual que el Agua, el Fuego, el Aire y la Tierra ya existen en la naturaleza, esperando ser reconocidos y gestionados."
+                : "Leadership is not a set of competencies added from the outside. It is a capacity that already exists — latent — inside every person. The same way Water, Fire, Air and Earth already exist in nature, waiting to be recognized and managed."}
             </p>
             <p>
               {es
@@ -123,6 +128,11 @@ export default async function AboutPage({
                 : "Self mastery, as Elements Method understands it, does not mean control over yourself. It means deep knowledge of yourself — and from that knowledge, the freedom to choose how you lead instead of reacting from automatic patterns."}
             </p>
             <p className="italic text-[var(--color-gold-deep)] font-[family-name:var(--font-display)] text-2xl">
+              {es
+                ? "La naturaleza es el entorno. El líder es el territorio por descubrir."
+                : "Nature is the setting. The leader is the territory to be discovered."}
+            </p>
+            <p className="italic text-[var(--color-ink-soft)]">
               {es ? "Esto no es un retiro. Es un regreso." : "This is not a retreat. This is a return."}
             </p>
           </div>
@@ -200,8 +210,8 @@ export default async function AboutPage({
             </Eyebrow>
             <h2 className="display-2 text-[var(--color-paper)] text-balance">
               {es
-                ? "La naturaleza no tiene una crisis de liderazgo. Nosotros sí. Quizá porque dejamos de aprender de ella."
-                : "Nature does not have a leadership crisis. We do. Perhaps because we stopped learning from it."}
+                ? "La naturaleza nos enseña. No tiene una crisis de liderazgo; nosotros sí, quizá porque dejamos de aprender de ella."
+                : "Nature teaches us. It has no leadership crisis; we do — perhaps because we stopped learning from it."}
             </h2>
           </div>
           <div className="lg:col-span-7 lg:pt-4 space-y-6 text-lg leading-relaxed text-[var(--color-paper)]/95 max-w-2xl">
@@ -320,7 +330,7 @@ function FounderBlock({
 /**
  * Founder portrait. Uses the real photo at `founder.image` when present;
  * otherwise renders the decorative compass mark (four element arcs around the
- * Ether violet core). Drop a photo at the image path to replace it.
+ * gold Núcleo). Drop a photo at the image path to replace it.
  */
 function FounderPortrait({
   founder,
@@ -350,15 +360,18 @@ function FounderPortrait({
       >
         <circle cx="50" cy="62" r="28" stroke="#C9A96E" strokeWidth="0.4" fill="none" opacity="0.6" />
         <circle cx="50" cy="62" r="20" stroke="#2C2C2A" strokeWidth="0.3" fill="none" opacity="0.4" strokeDasharray="1 2" />
-        <circle cx="50" cy="62" r="3" fill="#6B5B95" />
+        <circle cx="50" cy="62" r="3" fill="#8A6F3C" />
         <path d="M50 38 A 24 24 0 0 1 74 62" stroke="#2B6B8A" strokeWidth="1.2" fill="none" opacity="0.7" />
         <path d="M74 62 A 24 24 0 0 1 50 86" stroke="#C4622D" strokeWidth="1.2" fill="none" opacity="0.7" />
         <path d="M50 86 A 24 24 0 0 1 26 62" stroke="#3D5A3E" strokeWidth="1.2" fill="none" opacity="0.7" />
         <path d="M26 62 A 24 24 0 0 1 50 38" stroke="#7A9BAD" strokeWidth="1.2" fill="none" opacity="0.7" />
       </svg>
       <div className="absolute bottom-5 left-5 right-5 text-[var(--color-ink)]">
+        {/* Each founder's own role — the label used to be hardcoded to
+         *  "Cofundador", which was both wrong for Ana and dropped the fact that
+         *  she created the method (client feedback #74). */}
         <div className="eyebrow text-[var(--color-muted)] mb-1">
-          {es ? "Cofundador · Elements Method" : "Co-founder · Elements Method"}
+          {es ? founder.roleEs : founder.roleEn}
         </div>
       </div>
     </div>

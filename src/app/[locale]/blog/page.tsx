@@ -55,6 +55,9 @@ export default async function BlogPage({
           <h1 className="display-1 text-balance text-[var(--color-paper)] max-w-[16ch]">
             {dict.blog.title}
           </h1>
+          <p className="lead mt-8 max-w-2xl text-[var(--color-paper)]/95">
+            {dict.blog.lead}
+          </p>
         </Container>
       </section>
 
@@ -114,14 +117,22 @@ export default async function BlogPage({
               </Eyebrow>
               <h2 className="display-2 text-balance">
                 {locale === "es"
-                  ? "Estamos preparando el primer artículo."
-                  : "We're preparing the first article."}
+                  ? "Estamos migrando aquí el archivo completo."
+                  : "We're migrating the full archive here."}
               </h2>
               <p className="lead mt-8 max-w-2xl text-pretty">
                 {locale === "es"
-                  ? "Pronto publicaremos contenido editorial sobre liderazgo, naturaleza y los cinco elementos."
-                  : "We'll soon publish editorial content on leadership, nature, and the five elements."}
+                  ? "Los artículos que ya publicamos en LinkedIn se están reeditando para vivir aquí, junto con casos de nuestras inmersiones y los estudios que sostienen la metodología. Mientras tanto, puedes leerlos en LinkedIn."
+                  : "The articles already published on LinkedIn are being re-edited to live here, alongside cases from our immersions and the research behind the methodology. In the meantime, you can read them on LinkedIn."}
               </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Button
+                  href="https://www.linkedin.com/in/ana-michelle-concepcion-esterrich-51b7017/recent-activity/all/"
+                  trailingArrow
+                >
+                  {locale === "es" ? "Leer en LinkedIn" : "Read on LinkedIn"}
+                </Button>
+              </div>
             </div>
 
             <div className="lg:col-span-5">

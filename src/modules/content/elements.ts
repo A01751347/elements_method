@@ -5,6 +5,7 @@ import { asc, eq } from "drizzle-orm";
 import { db } from "@/shared/db/client";
 import { elementComponents, elementsContent } from "@/shared/db/schema";
 import {
+  elements as staticElements,
   elementImages,
   frameworkImages,
   type ElementInfo,
@@ -13,7 +14,9 @@ import {
 import { safeRead } from "./safe";
 
 /**
- * Read query: the five elements (Tierra, Fuego, Agua, Aire, Éter).
+ * Read query: the four elements (Tierra, Fuego, Agua, Aire) plus the legacy
+ * `eter` row, which is now the Núcleo — see the note on ElementKey. Sections
+ * that present "the elements" filter it out with `onlyElements()`.
  *
  * Source tables:
  *  - elements_content   (elementsContent)   — parent, one row per element
@@ -29,9 +32,9 @@ import { safeRead } from "./safe";
  *
  * Reconstruction notes:
  *  - `components` is rebuilt from `element_components` ordered by its own
- *    `sortOrder`. Éter has no components in the static source; when the DB has
+ *    `sortOrder`. The Núcleo has no components in the static source; when the DB has
  *    no child rows for an element we return `null` for `components` (matching
- *    the static shape, where Éter's `components` is `null`, not `[]`).
+ *    the static shape, where the Núcleo's `components` is `null`, not `[]`).
  *  - `elements_content` has no `active` column, so no active filter is applied.
  *  - Empty DB returns `[]` — never throws.
  *
@@ -73,8 +76,9 @@ export async function getElements(): Promise<ElementInfo[]> {
 
     return rows.map((r): ElementInfo => {
       const comps = componentsByElement.get(r.id);
+      const key = r.key as ElementKey;
       return {
-        key: r.key as ElementKey,
+        key,
         nameEs: r.nameEs,
         nameEn: r.nameEn,
         framework: r.framework,
@@ -88,6 +92,11 @@ export async function getElements(): Promise<ElementInfo[]> {
         natureEn: r.natureEn,
         methodEs: r.methodEs,
         methodEn: r.methodEn,
+        // The acronym breakdown (ROOTS / IGNITE / FLOW / CLEAR letter by
+        // letter) is presentation structure, not editorial copy, so it has no
+        // DB column — it always comes from the static definition for this key.
+        frameworkItems:
+          staticElements.find((e) => e.key === key)?.frameworkItems ?? null,
         bodyEs: r.bodyEs,
         bodyEn: r.bodyEn,
         experienceEs: r.experienceEs,
@@ -95,7 +104,7 @@ export async function getElements(): Promise<ElementInfo[]> {
         paradoxEs: r.paradoxEs,
         paradoxEn: r.paradoxEn,
         // `null` (not `[]`) when there are no component rows, matching the
-        // static shape where Éter's `components` is `null`.
+        // static shape where the Núcleo's `components` is `null`.
         components: comps && comps.length > 0 ? comps : null,
         invitationEs: r.invitationEs,
         invitationEn: r.invitationEn,
@@ -198,6 +207,9 @@ export async function getElementByKey(
       natureEn: row.natureEn,
       methodEs: row.methodEs,
       methodEn: row.methodEn,
+      // Presentation structure, not editorial copy — see getElements().
+      frameworkItems:
+        staticElements.find((e) => e.key === key)?.frameworkItems ?? null,
       bodyEs: row.bodyEs,
       bodyEn: row.bodyEn,
       experienceEs: row.experienceEs,

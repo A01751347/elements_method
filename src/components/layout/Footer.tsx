@@ -22,6 +22,9 @@ export function Footer({
   const contactInfo = contact ?? staticContactInfo;
   const base = `/${locale}`;
   const [email, setEmail] = React.useState("");
+  // Optional phone — so we can also reach subscribers about upcoming events
+  // (client feedback #40).
+  const [phone, setPhone] = React.useState("");
   const [state, setState] = React.useState<"idle" | "sending" | "subscribed" | "error">(
     "idle",
   );
@@ -34,12 +37,18 @@ export function Footer({
       const res = await fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, source: "footer", locale }),
+        body: JSON.stringify({
+          email,
+          phone: phone.trim() || undefined,
+          source: "footer",
+          locale,
+        }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok || !data.ok) throw new Error(data.error || `HTTP ${res.status}`);
       setState("subscribed");
       setEmail("");
+      setPhone("");
       setTimeout(() => setState("idle"), 5000);
     } catch {
       setState("error");
@@ -57,13 +66,17 @@ export function Footer({
   ];
 
   const caminosBase = `${base}/${locale === "es" ? "los-caminos" : "paths"}`;
+  // Same order as /los-caminos: the two entry-point offers first.
   const programLinks = [
-    { href: `${caminosBase}/raices`, label: locale === "es" ? "Fluir" : "Flow" },
-    { href: `${caminosBase}/corriente`, label: "Momentum" },
-    { href: `${caminosBase}/fuente`, label: locale === "es" ? "Raíz" : "Root" },
     { href: `${caminosBase}/brujula`, label: locale === "es" ? "Brújula" : "Compass" },
+    { href: `${caminosBase}/fuente`, label: locale === "es" ? "Raíz" : "Root" },
+    { href: `${caminosBase}/corriente`, label: "Momentum" },
+    { href: `${caminosBase}/raices`, label: locale === "es" ? "Fluir" : "Flow" },
     { href: `${caminosBase}/soulfull`, label: "Oneness" },
-    { href: `${base}/${locale === "es" ? "empresas" : "companies"}`, label: "Origin" },
+    {
+      href: `${base}/${locale === "es" ? "empresas" : "companies"}`,
+      label: locale === "es" ? "A la medida" : "Bespoke",
+    },
   ];
 
   return (
@@ -126,6 +139,22 @@ export function Footer({
                 )}
               </button>
             </div>
+            <label htmlFor="footer-phone" className="sr-only">
+              {locale === "es" ? "Teléfono (opcional)" : "Phone (optional)"}
+            </label>
+            <input
+              id="footer-phone"
+              type="tel"
+              autoComplete="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder={
+                locale === "es"
+                  ? "Teléfono (opcional) — para avisarte de eventos"
+                  : "Phone (optional) — so we can tell you about events"
+              }
+              className="w-full border-b border-[var(--color-paper)]/30 bg-transparent py-3 text-[var(--color-paper)] placeholder:text-[var(--color-paper)]/40 focus:border-[var(--color-paper)] focus:outline-none transition-colors"
+            />
             <p className="text-[0.75rem] text-[var(--color-paper)]/50">
               {locale === "es"
                 ? "Al suscribirte aceptas nuestro aviso de privacidad."

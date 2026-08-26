@@ -1,12 +1,6 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import {
-  Wind,
-  Flame,
-  Sparkles,
-  Droplets,
-  Mountain,
-} from "lucide-react";
+import { Wind, Flame, Sparkles, Droplets, Mountain, Atom } from "lucide-react";
 import { isLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { Section, Eyebrow } from "@/components/ui/Section";
@@ -16,7 +10,11 @@ import { RetreatsShowcase } from "@/components/sections/RetreatsShowcase";
 import { PracticesGallery } from "@/components/sections/PracticesGallery";
 import { RetreatCalendar } from "@/components/sections/RetreatCalendar";
 import { ProvidersInventory } from "@/components/sections/ProvidersInventory";
-import { processSteps as staticProcessSteps, elements as staticElements } from "@/data/content";
+import {
+  processSteps as staticProcessSteps,
+  elements as staticElements,
+  onlyElements,
+} from "@/data/content";
 import { getElements } from "@/modules/content/elements";
 import { getProcessSteps } from "@/modules/content/processSteps";
 import { getCalendarRetreats } from "@/modules/content/calendarRetreats";
@@ -49,7 +47,8 @@ export default async function RetreatsPage({
       getCalendarRetreats(),
       getProviders(),
     ]);
-  const elements = dbElements.length > 0 ? dbElements : staticElements;
+  // Only the four elements — the Núcleo is the leader, not an immersion.
+  const elements = onlyElements(dbElements.length > 0 ? dbElements : staticElements);
   const processSteps = dbProcessSteps.length > 0 ? dbProcessSteps : staticProcessSteps;
 
   return (
@@ -93,15 +92,15 @@ export default async function RetreatsPage({
             </Eyebrow>
             <h2 className="display-2 text-balance">
               {locale === "es"
-                ? "Una experiencia por elemento."
-                : "One experience per element."}
+                ? "Múltiples experiencias por elemento."
+                : "Multiple experiences per element."}
             </h2>
           </div>
           <div className="lg:col-span-5">
             <p className="lead text-pretty italic">
               {locale === "es"
-                ? "Las actividades varían y son diferentes en cada generación de retiro."
-                : "Activities will vary and will be different in each retreat generation event."}
+                ? "Cada elemento se puede trabajar de muchas maneras. Las actividades se diseñan según el retiro, el grupo y el venue — y son diferentes en cada generación."
+                : "Every element can be worked in many ways. The activities are designed around the retreat, the group and the venue — and differ in every generation."}
             </p>
           </div>
         </div>
@@ -113,7 +112,7 @@ export default async function RetreatsPage({
               : el.key === "fuego" ? Flame
               : el.key === "aire" ? Wind
               : el.key === "tierra" ? Mountain
-              : Sparkles;
+              : Atom;
             return (
               <article
                 key={el.key}
@@ -136,11 +135,13 @@ export default async function RetreatsPage({
                 <div className="text-[0.65rem] tracking-[0.22em] uppercase text-[var(--color-muted)] mb-2">
                   {locale === "es" ? `Elemento ${el.nameEs}` : `${el.nameEn} Element`}
                 </div>
-                <h3 className="font-[family-name:var(--font-display)] text-xl tracking-tight mb-3 italic">
-                  {locale === "es" ? el.experienceEs : el.experienceEn}
+                <h3 className="font-[family-name:var(--font-display)] text-xl tracking-tight mb-3">
+                  {locale === "es" ? el.qualityEs : el.qualityEn}
                 </h3>
                 <p className="text-sm text-[var(--color-ink-soft)] leading-relaxed mt-auto">
-                  {locale === "es" ? el.qualityEs : el.qualityEn}
+                  {locale === "es"
+                    ? "Varias experiencias posibles. Elegimos las que mejor sirven al grupo y al entorno de cada inmersión."
+                    : "Several possible experiences. We choose the ones that best serve the group and the setting of each immersion."}
                 </p>
               </article>
             );

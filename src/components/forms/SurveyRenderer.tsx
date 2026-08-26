@@ -13,7 +13,9 @@ export type FormFieldType =
   | "date"
   | "email"
   | "number"
-  | "rating";
+  | "rating"
+  /** Block divider — a heading + intro, no input. Carries no answer. */
+  | "section";
 
 export interface FormField {
   key: string;
@@ -25,6 +27,23 @@ export interface FormField {
   scaleMin?: number;
   scaleMax?: number;
   shareablePhrase?: boolean;
+  /**
+   * Supporting text under the question — the "↳" hints in the Master Plan
+   * questionnaires, or the intro prose of a `section`.
+   */
+  helpEs?: string;
+  helpEn?: string;
+  /** Anchor captions for the ends of a scale ("1 = …" / "10 = …"). */
+  minLabelEs?: string;
+  minLabelEn?: string;
+  maxLabelEs?: string;
+  maxLabelEn?: string;
+  /**
+   * "label" (default) renders the small uppercase caption used by short admin
+   * fields. "prompt" renders a full multi-line question in reading type —
+   * required for the retreat questionnaires, whose questions run 3–6 lines.
+   */
+  style?: "label" | "prompt";
 }
 
 export interface SurveyDefinition {
@@ -176,6 +195,23 @@ function SurveyField({
   const inputBase =
     "w-full border-0 border-b border-[var(--color-line)] bg-transparent px-1 py-3 text-sm focus:outline-none focus:border-[var(--color-ink)] transition-colors";
 
+  // Block divider — heading + intro prose, no input and no answer.
+  if (field.type === "section") {
+    const intro = locale === "es" ? field.helpEs : field.helpEn;
+    return (
+      <div className="pt-8 first:pt-0 border-t border-[var(--color-line)] first:border-t-0">
+        <h3 className="font-[family-name:var(--font-display)] text-2xl md:text-3xl tracking-tight text-balance">
+          {label}
+        </h3>
+        {intro && (
+          <p className="mt-3 text-[var(--color-ink-soft)] leading-relaxed text-pretty max-w-2xl whitespace-pre-line">
+            {intro}
+          </p>
+        )}
+      </div>
+    );
+  }
+
   if (
     field.type === "short_text" ||
     field.type === "email" ||
@@ -280,12 +316,14 @@ function SurveyField({
             </label>
           ))}
         </div>
-        <div className="mt-2 flex justify-between text-[0.65rem] tracking-[0.18em] uppercase text-[var(--color-muted)]">
-          <span>
-            {locale === "es" ? "Mínimo" : "Min"} · {min}
+        <div className="mt-3 flex justify-between gap-6 text-[0.72rem] leading-snug text-[var(--color-muted)]">
+          <span className="max-w-[46%]">
+            {(locale === "es" ? field.minLabelEs : field.minLabelEn) ??
+              `${locale === "es" ? "Mínimo" : "Min"} · ${min}`}
           </span>
-          <span>
-            {locale === "es" ? "Máximo" : "Max"} · {max}
+          <span className="max-w-[46%] text-right">
+            {(locale === "es" ? field.maxLabelEs : field.maxLabelEn) ??
+              `${locale === "es" ? "Máximo" : "Max"} · ${max}`}
           </span>
         </div>
       </Wrapper>
@@ -298,7 +336,7 @@ function SurveyField({
 function Wrapper({
   field,
   label,
-  locale: _locale,
+  locale,
   children,
 }: {
   field: FormField;
@@ -306,23 +344,36 @@ function Wrapper({
   locale: "es" | "en";
   children: React.ReactNode;
 }) {
+  // Questions from the retreat instruments run several lines; rendering them
+  // in the small uppercase caption style makes them unreadable.
+  const prompt = field.style === "prompt";
+  const help = locale === "es" ? field.helpEs : field.helpEn;
   return (
     <div>
       <label
         htmlFor={field.key}
-        className="block text-[0.7rem] uppercase tracking-[0.22em] text-[var(--color-muted)] mb-2"
+        className={
+          prompt
+            ? "block text-[1.02rem] leading-relaxed text-[var(--color-ink)] mb-3 whitespace-pre-line text-pretty"
+            : "block text-[0.7rem] uppercase tracking-[0.22em] text-[var(--color-muted)] mb-2"
+        }
       >
         {label}
         {field.required && <span className="ml-1 text-[var(--color-fire-ink)]">*</span>}
         {field.shareablePhrase && (
           <span
-            className="ml-2 inline-block bg-[var(--color-gold-soft)] text-[var(--color-ink)] px-1.5 py-0.5 text-[0.6rem] normal-case"
+            className="ml-2 inline-block bg-[var(--color-gold-soft)] text-[var(--color-ink)] px-1.5 py-0.5 text-[0.6rem] normal-case tracking-normal"
             title="Esta respuesta puede usarse como testimonio (con tu permiso)"
           >
             shareable
           </span>
         )}
       </label>
+      {help && (
+        <p className="-mt-1 mb-3 text-sm italic text-[var(--color-muted)] text-pretty">
+          ↳ {help}
+        </p>
+      )}
       {children}
     </div>
   );

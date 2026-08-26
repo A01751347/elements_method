@@ -34,8 +34,8 @@ export function NatureLexicon({
           </div>
           <p className="text-[var(--color-paper)]/85 text-sm max-w-md text-pretty">
             {locale === "es"
-              ? "Los cinco elementos y las seis fases del Protocolo de Desconexión — el vocabulario operativo del método."
-              : "The five elements and the six phases of the Disconnection Protocol — the method's operating vocabulary."}
+              ? "Los cuatro elementos, el núcleo que los integra y las seis fases del Protocolo de Desconexión — el vocabulario operativo del método."
+              : "The four elements, the core that integrates them and the six phases of the Disconnection Protocol — the method's operating vocabulary."}
           </p>
         </div>
       </Container>

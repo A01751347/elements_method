@@ -9,7 +9,8 @@ const ELEMENT_HUE: Record<ElementKey, string> = {
   fuego: "#E8C9B0",
   agua: "#B5D0DE",
   aire: "#D2DCE4",
-  eter: "#D8D1E6",
+  // legacy `eter` key = the Núcleo (see ElementKey in @/data/content)
+  eter: "#E4D6B8",
 };
 
 const EXPERIENCE_BY_ELEMENT: Record<ElementKey, { es: string; en: string }> = {
@@ -17,7 +18,7 @@ const EXPERIENCE_BY_ELEMENT: Record<ElementKey, { es: string; en: string }> = {
   fuego: { es: "Vision Ceremony", en: "Vision Ceremony" },
   agua: { es: "Riverine Reflection & Deep Listening", en: "Riverine Reflection & Deep Listening" },
   aire: { es: "Summit Perspective", en: "Summit Perspective" },
-  eter: { es: "Integración & Mandala de Liderazgo", en: "Integration & Leadership Mandala" },
+  eter: { es: "Integración en el Núcleo", en: "Integration in the Core" },
 };
 
 function isElementKey(s: string): s is ElementKey {
@@ -80,6 +81,11 @@ export async function getUpcomingRetreats(
       sold: Number(r.sold ?? 0),
       imageHue: ELEMENT_HUE[primary],
       image: r.imageUrl ?? elementImages[primary],
+      // A single-element, full-day immersion is sold as Brújula; a multi-element
+      // one is the 3-day Raíz retreat (client feedback #66/#69).
+      programEs: elements.length > 1 ? "Raíz · Retiro 3 días" : "Brújula · Taller de 1 día",
+      programEn: elements.length > 1 ? "Root · 3-day retreat" : "Compass · 1-day workshop",
+      programSlug: elements.length > 1 ? "fuente" : "brujula",
       experienceEs: exp.es,
       experienceEn: exp.en,
     };

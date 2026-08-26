@@ -122,21 +122,21 @@ export const es: Dict = {
     eyebrow: "Programas inmersivos basados en la naturaleza",
     title: "Tu camino hacia la maestría de tu ser",
     subtitle:
-      "Elements Method es un programa de desarrollo personal con impacto profesional, basado en inmersiones en la naturaleza. Está diseñado para devolver a las personas —especialmente a quienes lideran— a su fuente esencial de poder, y en ese proceso transformar no solo al individuo, sino a sus entornos y a las organizaciones que lo rodean.",
-    primaryCta: "Descubre tu elemento",
+      "Elements Method es un programa de desarrollo con impacto personal y profesional, basado en inmersiones en la naturaleza. Está diseñado para devolver a las personas —especialmente a quienes lideran— a su fuente esencial de poder, para que no solo se transformen a sí mismas: para que ese impacto se refleje en sus entornos, en sus equipos y en las organizaciones que las rodean.",
+    primaryCta: "Descubre tu elemento dominante",
     secondaryCta: "Explorar programas",
     philosophyEyebrow: "La filosofía",
     philosophyTitle: "La naturaleza no gestiona. La naturaleza lidera.",
     philosophyBody:
       "La naturaleza no tiene una crisis de liderazgo. Nosotros sí. Quizá porque dejamos de aprender de ella.",
-    elementsEyebrow: "Los cinco elementos",
-    elementsTitle: "Cinco fuerzas. Un líder integrado.",
+    elementsEyebrow: "Los cuatro elementos",
+    elementsTitle: "Cuatro fuerzas. Un líder integrado.",
     elementsLead:
-      "Cuando un líder se reconecta con su propia naturaleza — cuando encuentra su Agua, su Fuego, su Aire y su Tierra, y aprende a integrarlos en el Éter — no necesita más herramientas. Se reconecta con su ser completo.",
+      "Cuando un líder se reconecta con su propia naturaleza — cuando encuentra su Agua, su Fuego, su Aire y su Tierra, y aprende a integrarlos en su núcleo — no necesita más herramientas. Se reconecta con su ser completo.",
     programsEyebrow: "Elige tu Camino",
     programsTitle: "Distintos niveles de profundidad. Un mismo método.",
     programsLead:
-      "Fluir, Momentum, Raíz, Brújula y Oneness comparten metodología y framework. Lo que cambia es la duración, la cadencia, la profundidad y el grado de personalización. Eliges según tu momento y el resultado que buscas.",
+      "Una misma metodología y los mismos frameworks, en distintas cadencias, duraciones y niveles de profundidad. Lo que cambia es cuánto dura, cada cuánto te encuentras con el método y qué tan personalizado es. Eliges según tu momento y el resultado que buscas.",
     experienceEyebrow: "La experiencia de inmersión",
     experienceTitle: "Las actividades cambian. La estructura no.",
     experienceLead:
@@ -147,11 +147,11 @@ export const es: Dict = {
       "Inmersiones presenciales de día completo en entornos naturales seleccionados. Cupo limitado a 15 líderes.",
     testimonialsEyebrow: "Voces del programa",
     testimonialsTitle: "Lo que dicen quienes ya pasaron.",
-    companiesEyebrow: "Para organizaciones",
+    companiesEyebrow: "Para líderes y organizaciones",
     companiesTitle:
       "El nivel de resultados de una empresa no supera el nivel de claridad mental de quien la dirige.",
     companiesLead:
-      "Origin — retiros corporativos diseñados a la medida alrededor de inmersiones de equipo, desarrollo de cultura de liderazgo y transformación organizacional.",
+      "El mismo método, diseñado a la medida del equipo: inmersiones conjuntas, desarrollo de cultura de liderazgo y transformación organizacional.",
     companiesCta: "Iniciar conversación",
     logosEyebrow: "Han trabajado con nosotros",
   },
@@ -165,19 +165,19 @@ export const es: Dict = {
     eyebrow: "Programas",
     title: "Elige tu Camino.",
     lead:
-      "Fluir, Momentum, Raíz, Brújula y Oneness comparten metodología y framework. Lo que cambia es la duración, la cadencia, la profundidad y el grado de personalización.",
+      "Una misma metodología y los mismos frameworks, en distintas cadencias, duraciones y niveles de profundidad. Lo que cambia es cuánto dura, cada cuánto te encuentras con el método y qué tan personalizado es.",
   },
   method: {
     eyebrow: "El Método",
-    title: "Cinco elementos. Un Núcleo. Múltiples métodos que te conectan con tu estado interno.",
+    title: "Cuatro elementos. Un Núcleo. Múltiples métodos que te conectan con tu estado interno.",
     lead:
-      "La mayoría intenta cambiar sus resultados sin transformar el sistema interno desde donde los producen. Elements interviene ese sistema usando los cinco elementos —Agua, Fuego, Aire, Tierra y el Éter que los integra— como base, la naturaleza como entorno interno y externo, y metodologías que integran neurociencia, psicología y un liderazgo expansivo, adaptativo y humano. Todo en búsqueda de tus mejores resultados.",
+      "La mayoría intenta cambiar sus resultados sin transformar el sistema interno desde donde los producen. Elements interviene ese sistema usando los cuatro elementos —Agua, Fuego, Aire y Tierra— como base, y a ti, el Núcleo, como el centro que los integra. La naturaleza es el entorno, interno y externo. Y las metodologías integran neurociencia, neuroliderazgo, PNL, psicología, coaching y liderazgo ejecutivo en una práctica expansiva, adaptativa y humana. Todo en búsqueda de tus mejores resultados.",
   },
   companies: {
-    eyebrow: "Organizaciones",
-    title: "Origin — Retiros corporativos hechos a la medida.",
+    eyebrow: "Para líderes y organizaciones",
+    title: "Programas a la medida para líderes y organizaciones.",
     lead:
-      "Elements Method ofrece programas organizacionales hechos a la medida, diseñados alrededor de inmersiones de equipo, desarrollo de cultura de liderazgo y transformación organizacional. Un programa puede llevar a un equipo directivo completo a través del marco de los Cinco Elementos.",
+      "El producto es el mismo para una persona que lidera y para el equipo que dirige: programas enfocados en el Self Mastery, diseñados alrededor de inmersiones en la naturaleza. Cuando lo contrata una organización, el método se diseña a la medida del equipo — inmersiones conjuntas, cultura de liderazgo y transformación organizacional — y lleva a todo el equipo directivo por el marco de los Cuatro Elementos.",
     benefits: [
       {
         title: "Mejora medible en confianza de equipo y seguridad psicológica",
@@ -204,9 +204,9 @@ export const es: Dict = {
   },
   retreats: {
     eyebrow: "La experiencia",
-    title: "Cuatro inmersiones por elemento.",
+    title: "Cuatro elementos. Seis fases.",
     lead:
-      "Cada inmersión sigue el mismo arco de seis fases: Liberación, Encuentro, Metodología, Reflexión, Diálogo, Integración. Las actividades cambian — la estructura no.",
+      "Cada inmersión sigue el mismo arco de seis fases: Liberación, Encuentro, Metodología, Reflexión, Diálogo, Integración. Las actividades cambian y la cantidad de inmersiones depende del programa — la estructura no cambia.",
     status: {
       open: "Abierto",
       lowSeats: "{n} cupos disponibles",
@@ -218,15 +218,15 @@ export const es: Dict = {
     eyebrow: "Artículos",
     title: "Artículos de interés.",
     lead:
-      "Lecturas breves desde las inmersiones, las sesiones de coaching y las conversaciones de descubrimiento. Próximamente.",
+      "Profundización en la metodología, casos de nuestras inmersiones, estudios de neurociencia, PNL y psicología aplicados al liderazgo del ser.",
     readMore: "Leer artículo",
   },
   footer: {
     tagline:
-      "Leadership Immersion Programs. La naturaleza no gestiona. La naturaleza lidera.",
+      "Programas de liderazgo inmersivos en la naturaleza. La naturaleza no gestiona. La naturaleza lidera.",
     newsletterTitle: "Notas del campo",
     newsletterCopy:
-      "Notas ocasionales desde las inmersiones y las próximas fechas. Cuando haya algo que valga la pena escribir.",
+      "Casos de éxito de nuestras inmersiones, los datos y estudios que sostienen la metodología, y artículos de neurociencia, PNL y psicología aplicados al liderazgo del ser. Una nota al mes, sin ruido.",
     nav: {
       explore: "Explorar",
       services: "Programas",
@@ -277,21 +277,21 @@ export const en: Dict = {
     eyebrow: "Leadership Immersion Programs · Water · Fire · Air · Earth",
     title: "Lead from your true nature",
     subtitle:
-      "Elements Method is a leadership development program built on nature immersions, designed to return leaders to their essential source of power — and in that process, transform not only the individuals, but the organizations they lead.",
-    primaryCta: "Discover your element",
+      "Elements Method is a development program with personal and professional impact, built on nature immersions. It is designed to return people —especially those who lead— to their essential source of power, so they don't only transform themselves: so that impact shows up in their environments, their teams and the organizations around them.",
+    primaryCta: "Discover your dominant element",
     secondaryCta: "Explore programs",
     philosophyEyebrow: "The philosophy",
     philosophyTitle: "Nature doesn't manage. Nature leads.",
     philosophyBody:
       "Nature doesn't have a leadership crisis. We do. Perhaps because we stopped learning from it.",
-    elementsEyebrow: "The five elements",
-    elementsTitle: "Five forces. One integrated leader.",
+    elementsEyebrow: "The four elements",
+    elementsTitle: "Four forces. One integrated leader.",
     elementsLead:
-      "When a leader reconnects with their own nature — when they find their Water, their Fire, their Air and their Earth, and learn to integrate them in Ether — they don't need more tools. They reconnect with their complete being.",
+      "When a leader reconnects with their own nature — when they find their Water, their Fire, their Air and their Earth, and learn to integrate them in their core — they don't need more tools. They reconnect with their complete being.",
     programsEyebrow: "Choose your Journey",
     programsTitle: "Different depths. One method.",
     programsLead:
-      "Flow, Momentum, Root, Compass and Oneness share methodology and framework. What changes is duration, cadence, depth, and the degree of personalization. You choose by your moment and the result you're after.",
+      "One methodology and the same frameworks, in different cadences, durations and depths. What changes is how long it lasts, how often you meet the method, and how personalized it is. You choose by your moment and the result you're after.",
     experienceEyebrow: "The immersion experience",
     experienceTitle: "Activities change. The structure doesn't.",
     experienceLead:
@@ -302,11 +302,11 @@ export const en: Dict = {
       "Full-day in-person immersions in curated natural environments. Capacity capped at 15 leaders.",
     testimonialsEyebrow: "Program voices",
     testimonialsTitle: "What those who walked through say.",
-    companiesEyebrow: "For organizations",
+    companiesEyebrow: "For leaders and organizations",
     companiesTitle:
       "An organization's results do not exceed the mental clarity of the person who leads it.",
     companiesLead:
-      "Origin — bespoke corporate retreats designed around team immersions, leadership culture development, and organizational transformation.",
+      "The same method, built to fit the team: joint immersions, leadership-culture development and organizational transformation.",
     companiesCta: "Begin the conversation",
     logosEyebrow: "Have worked with us",
   },
@@ -320,19 +320,19 @@ export const en: Dict = {
     eyebrow: "Programs",
     title: "Choose your Journey.",
     lead:
-      "Flow, Momentum, Root, Compass and Oneness share methodology and framework. What changes is duration, cadence, depth and the degree of personalization.",
+      "One methodology and the same frameworks, in different cadences, durations and depths. What changes is how long it lasts, how often you meet the method, and how personalized it is.",
   },
   method: {
     eyebrow: "The Method",
-    title: "Five elements. One Nucleus. Multiple methods that connect you to your inner state.",
+    title: "Four elements. One Core. Multiple methods that connect you to your inner state.",
     lead:
-      "Most try to change their results without transforming the inner system that produces them. Elements intervenes in that system using the five elements —Water, Fire, Air, Earth and the Ether that integrates them— as its base, nature as both inner and outer environment, and methodologies that integrate neuroscience, psychology and an expansive, adaptive, human leadership. All in pursuit of your best results.",
+      "Most try to change their results without transforming the inner system that produces them. Elements intervenes in that system using the four elements —Water, Fire, Air and Earth— as its base, and you, the Core, as the centre that integrates them. Nature is the environment, inner and outer. And the methodologies bring together neuroscience, neuroleadership, NLP, psychology, coaching and executive leadership in an expansive, adaptive, human practice. All in pursuit of your best results.",
   },
   companies: {
-    eyebrow: "Organizations",
-    title: "Origin — Bespoke corporate retreats.",
+    eyebrow: "For leaders and organizations",
+    title: "Bespoke programs for leaders and organizations.",
     lead:
-      "Elements Method offers bespoke organizational programs designed around team immersions, leadership culture development, and organizational transformation. A single program can bring an entire leadership team through the Five Elements framework.",
+      "The product is the same for the person who leads and for the team they lead: programs focused on Self Mastery, designed around nature immersions. When an organization commissions it, the method is built to fit the team — joint immersions, leadership culture and organizational transformation — and takes the whole leadership team through the Four Elements framework.",
     benefits: [
       {
         title: "Measurable improvement in team trust and psychological safety",
@@ -359,9 +359,9 @@ export const en: Dict = {
   },
   retreats: {
     eyebrow: "The experience",
-    title: "Four immersions per element.",
+    title: "Four elements. Six phases.",
     lead:
-      "Each immersion follows the same six-phase arc: Release, Encounter, Methodology, Reflection, Dialogue, Integration. The activities change — the structure does not.",
+      "Each immersion follows the same six-phase arc: Release, Encounter, Methodology, Reflection, Dialogue, Integration. The activities change and the number of immersions depends on the program — the structure does not change.",
     status: {
       open: "Open",
       lowSeats: "{n} seats left",
@@ -373,7 +373,7 @@ export const en: Dict = {
     eyebrow: "Articles",
     title: "Articles worth your time.",
     lead:
-      "Short reads from immersions, coaching sessions and discovery conversations. Coming soon.",
+      "Deep dives into the methodology, cases from our immersions, and studies in neuroscience, NLP and psychology applied to the leadership of the self.",
     readMore: "Read article",
   },
   footer: {
@@ -381,7 +381,7 @@ export const en: Dict = {
       "Leadership Immersion Programs. Nature doesn't manage. Nature leads.",
     newsletterTitle: "Field notes",
     newsletterCopy:
-      "Occasional notes from the immersions and upcoming dates. When there's something worth writing.",
+      "Success stories from our immersions, the data and studies behind the methodology, and articles on neuroscience, NLP and psychology applied to the leadership of the self. One note a month, no noise.",
     nav: {
       explore: "Explore",
       services: "Programs",

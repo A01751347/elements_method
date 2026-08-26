@@ -37,7 +37,7 @@ export function StatsBand({
           <div className="eyebrow text-[var(--color-gold-soft)] mb-5">
             {es ? "La evidencia" : "The evidence"}
           </div>
-          <h2 className="font-[family-name:var(--font-display)] text-[clamp(1.75rem,3.5vw,2.75rem)] leading-[1.1] tracking-tight text-balance">
+          <h2 className="font-[family-name:var(--font-display)] text-[clamp(1.75rem,3.5vw,2.75rem)] leading-[1.1] tracking-tight text-balance text-[var(--color-paper)]">
             {es
               ? "No es intuición. Es lo que la ciencia ya documentó."
               : "Not intuition. What the science already documented."}

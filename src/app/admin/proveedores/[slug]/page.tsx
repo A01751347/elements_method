@@ -56,7 +56,7 @@ export default async function AdminProviderEditPage({
               <option value="fuego">Fuego</option>
               <option value="agua">Agua</option>
               <option value="aire">Aire</option>
-              <option value="eter">Éter</option>
+              <option value="eter">Núcleo</option>
             </Select>
           </FormRow>
           <FormRow label="Descripción ES">

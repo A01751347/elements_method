@@ -13,7 +13,8 @@ import {
   Flame,
   Wind,
   Mountain,
-  Sparkles,
+  Atom,
+  Clock,
   type LucideIcon,
 } from "lucide-react";
 import type { Locale } from "@/i18n/config";
@@ -29,12 +30,13 @@ import { Eyebrow } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
 import { formatDate, cn } from "@/lib/utils";
 
+// The legacy `eter` key is the Núcleo — the leader, not a fifth element.
 const ELEMENT_ICONS: Record<ElementKey, LucideIcon> = {
   agua: Droplets,
   fuego: Flame,
   aire: Wind,
   tierra: Mountain,
-  eter: Sparkles,
+  eter: Atom,
 };
 
 export function RetreatsShowcase({
@@ -145,7 +147,7 @@ function RetreatCard({
         {/* Top metadata */}
         <div className="absolute top-5 left-5 right-5 flex items-start justify-between">
           <span className="inline-flex items-center gap-2 bg-[var(--color-paper)]/90 backdrop-blur-sm px-3 py-1.5 text-[0.7rem] tracking-[0.18em] uppercase text-[var(--color-ink)]">
-            {String(idx + 1).padStart(2, "0")} · {modality}
+            {locale === "es" ? r.programEs : r.programEn}
           </span>
           <StatusBadge status={status} dict={dict} />
         </div>
@@ -206,15 +208,18 @@ function RetreatCard({
                   : "Date TBD"
             }
           />
+          <Row icon={Clock} text={modality} />
         </div>
 
         <div className="flex items-end justify-between gap-4 pt-5 border-t border-[var(--color-line)]">
           <div>
             <div className="text-[0.65rem] uppercase tracking-wide text-[var(--color-muted)]">
-              {locale === "es" ? "Experiencia" : "Experience"}
+              {locale === "es" ? "Actividades" : "Activities"}
             </div>
-            <div className="font-[family-name:var(--font-display)] text-lg italic mt-0.5">
-              {locale === "es" ? r.experienceEs : r.experienceEn}
+            <div className="font-[family-name:var(--font-display)] text-lg italic mt-0.5 leading-snug">
+              {locale === "es"
+                ? "Diseñadas a la medida del venue"
+                : "Designed around the venue"}
             </div>
             <div className="text-[0.65rem] uppercase tracking-wide text-[var(--color-muted)] mt-0.5">
               {locale === "es" ? "Inversión a confirmar" : "Investment TBD"}
@@ -222,12 +227,12 @@ function RetreatCard({
           </div>
 
           <Button
-            href={`/${locale}/${locale === "es" ? "los-caminos" : "paths"}`}
+            href={`/${locale}/${locale === "es" ? "los-caminos" : "paths"}/${r.programSlug}`}
             size="sm"
             trailingArrow
             variant="primary"
           >
-            {locale === "es" ? "Ver programas" : "See programs"}
+            {locale === "es" ? "Ver programa" : "See program"}
           </Button>
         </div>
       </div>

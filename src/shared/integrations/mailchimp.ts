@@ -12,6 +12,8 @@ export interface SubscribeParams {
   email: string;
   firstName?: string;
   lastName?: string;
+  /** Optional; written to the PHONE merge field when the audience has one. */
+  phone?: string;
   source?: string;
   locale?: "es" | "en";
   tags?: string[];
@@ -42,6 +44,7 @@ export async function subscribeToMailchimp(
           LNAME: params.lastName ?? "",
           SOURCE: params.source ?? "site",
           LOCALE: params.locale ?? "es",
+          ...(params.phone ? { PHONE: params.phone } : {}),
         },
         tags: params.tags ?? [],
       }),

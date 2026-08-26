@@ -9,15 +9,16 @@ import {
   Flame,
   Wind,
   Mountain,
-  Sparkles,
+  Atom,
   ArrowUpRight,
   type LucideIcon,
 } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import type { Dict } from "@/i18n/dictionaries";
 import {
-  elements as staticElements,
+  fourElements as staticFourElements,
   elementImages,
+  onlyElements,
   type ElementKey,
   type ElementInfo,
 } from "@/data/content";
@@ -25,12 +26,13 @@ import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Section";
 import { cn } from "@/lib/utils";
 
+// The legacy `eter` key is the Núcleo — never rendered in this section.
 const ICONS: Record<ElementKey, LucideIcon> = {
   agua: Droplets,
   fuego: Flame,
   aire: Wind,
   tierra: Mountain,
-  eter: Sparkles,
+  eter: Atom,
 };
 
 export function ElementsShowcase({
@@ -42,11 +44,12 @@ export function ElementsShowcase({
   dict: Dict;
   elements?: ElementInfo[];
 }) {
-  // All five elements are shown — the four trainable ones plus Éter, the
-  // integrating fifth. Éter always appears last (it closes the arc).
-  const elementsList =
-    elementsProp && elementsProp.length > 0 ? elementsProp : staticElements;
-  const shown = elementsList;
+  // Four elements. The Núcleo is the leader who integrates them, not a fifth
+  // tab in the strip (client feedback #7 #21).
+  const shown =
+    elementsProp && elementsProp.length > 0
+      ? onlyElements(elementsProp)
+      : staticFourElements;
   const [active, setActive] = React.useState<ElementKey>("agua");
   const current = shown.find((e) => e.key === active) ?? shown[0];
 
@@ -66,7 +69,7 @@ export function ElementsShowcase({
         </div>
 
         {/* Element tabs */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-px bg-[var(--color-line)] mb-px">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-[var(--color-line)] mb-px">
           {shown.map((el, idx) => {
             const Icon = ICONS[el.key];
             const isActive = active === el.key;

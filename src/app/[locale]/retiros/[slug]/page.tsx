@@ -11,6 +11,7 @@ import {
   Wind,
   Mountain,
   Sparkles,
+  Atom,
   Clock,
   type LucideIcon,
 } from "lucide-react";
@@ -38,7 +39,7 @@ const ICONS: Record<ElementKey, LucideIcon> = {
   fuego: Flame,
   aire: Wind,
   tierra: Mountain,
-  eter: Sparkles,
+  eter: Atom, // legacy `eter` key = the Núcleo
 };
 
 const PHASE_LABEL: Record<
@@ -166,7 +167,8 @@ export default async function RetreatDetailPage({
                     className="text-xs uppercase tracking-[0.22em] font-medium"
                     style={{ color: el?.accentSoft ?? "#C9A96E" }}
                   >
-                    {el?.framework}
+                    {el?.framework ??
+                      (locale === "es" ? "Integración" : "Integration")}
                   </span>
                 </div>
                 <dl className="space-y-3 text-sm">

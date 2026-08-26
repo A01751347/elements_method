@@ -17,7 +17,8 @@ export type BuilderFieldType =
   | "date"
   | "email"
   | "number"
-  | "rating";
+  | "rating"
+  | "section";
 
 export interface BuilderField {
   key: string;
@@ -29,6 +30,16 @@ export interface BuilderField {
   scaleMin?: number;
   scaleMax?: number;
   shareablePhrase?: boolean;
+  /** Supporting text under the question — or the intro prose of a section. */
+  helpEs?: string;
+  helpEn?: string;
+  /** Captions for the ends of a scale ("1 = …" / "10 = …"). */
+  minLabelEs?: string;
+  minLabelEn?: string;
+  maxLabelEs?: string;
+  maxLabelEn?: string;
+  /** "prompt" renders a multi-line question in reading type. */
+  style?: "label" | "prompt";
 }
 
 export interface BuilderInitial {
@@ -52,6 +63,7 @@ const TYPE_LABELS: Record<BuilderFieldType, string> = {
   email: "Email",
   number: "Número",
   rating: "Rating (1–5)",
+  section: "── Bloque (sin respuesta)",
 };
 
 const CHOICE_TYPES: BuilderFieldType[] = ["single_choice", "multi_choice"];
@@ -146,6 +158,7 @@ export function FormBuilder({
         key,
         labelEs: f.labelEs.trim(),
         labelEn: f.labelEn.trim(),
+        required: f.type === "section" ? false : f.required,
         options: CHOICE_TYPES.includes(f.type) ? f.options : undefined,
         scaleMin: SCALE_TYPES.includes(f.type) ? f.scaleMin : undefined,
         scaleMax: SCALE_TYPES.includes(f.type) ? f.scaleMax : undefined,
@@ -268,15 +281,17 @@ export function FormBuilder({
                   </option>
                 ))}
               </select>
-              <label className="flex items-center gap-1.5 text-xs text-zinc-600">
-                <input
-                  type="checkbox"
-                  checked={f.required}
-                  onChange={(e) => patch(i, { required: e.target.checked })}
-                  className="h-3.5 w-3.5 rounded border-zinc-300"
-                />
-                Obligatoria
-              </label>
+              {f.type !== "section" && (
+                <label className="flex items-center gap-1.5 text-xs text-zinc-600">
+                  <input
+                    type="checkbox"
+                    checked={f.required}
+                    onChange={(e) => patch(i, { required: e.target.checked })}
+                    className="h-3.5 w-3.5 rounded border-zinc-300"
+                  />
+                  Obligatoria
+                </label>
+              )}
               {TEXT_TYPES.includes(f.type) && (
                 <label
                   className="flex items-center gap-1.5 text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded px-2 py-1"
@@ -310,22 +325,74 @@ export function FormBuilder({
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              <Labeled label="Pregunta (ES) *">
-                <input
+              <Labeled
+                label={f.type === "section" ? "Título del bloque (ES) *" : "Pregunta (ES) *"}
+              >
+                <textarea
                   value={f.labelEs}
                   onChange={(e) => patch(i, { labelEs: e.target.value })}
+                  rows={f.labelEs.length > 90 ? 4 : 2}
                   className={inputCls}
                   placeholder="¿Qué te llevas de la experiencia?"
                 />
               </Labeled>
-              <Labeled label="Pregunta (EN)">
-                <input
+              <Labeled
+                label={f.type === "section" ? "Título del bloque (EN)" : "Pregunta (EN)"}
+              >
+                <textarea
                   value={f.labelEn}
                   onChange={(e) => patch(i, { labelEn: e.target.value })}
+                  rows={f.labelEs.length > 90 ? 4 : 2}
                   className={inputCls}
                   placeholder="Se usa la versión ES si queda vacío"
                 />
               </Labeled>
+
+              <Labeled
+                label={
+                  f.type === "section"
+                    ? "Texto introductorio del bloque (ES)"
+                    : "Texto de apoyo bajo la pregunta (ES)"
+                }
+              >
+                <textarea
+                  value={f.helpEs ?? ""}
+                  onChange={(e) => patch(i, { helpEs: e.target.value || undefined })}
+                  rows={2}
+                  className={inputCls}
+                  placeholder="Opcional"
+                />
+              </Labeled>
+              <Labeled label="Texto de apoyo (EN)">
+                <textarea
+                  value={f.helpEn ?? ""}
+                  onChange={(e) => patch(i, { helpEn: e.target.value || undefined })}
+                  rows={2}
+                  className={inputCls}
+                  placeholder="Opcional"
+                />
+              </Labeled>
+
+              {SCALE_TYPES.concat("nps").includes(f.type) && (
+                <>
+                  <Labeled label="Texto del extremo mínimo (ES)">
+                    <input
+                      value={f.minLabelEs ?? ""}
+                      onChange={(e) => patch(i, { minLabelEs: e.target.value || undefined })}
+                      className={inputCls}
+                      placeholder="1 = …"
+                    />
+                  </Labeled>
+                  <Labeled label="Texto del extremo máximo (ES)">
+                    <input
+                      value={f.maxLabelEs ?? ""}
+                      onChange={(e) => patch(i, { maxLabelEs: e.target.value || undefined })}
+                      className={inputCls}
+                      placeholder="10 = …"
+                    />
+                  </Labeled>
+                </>
+              )}
 
               {CHOICE_TYPES.includes(f.type) && (
                 <Labeled label="Opciones (una por línea)" wide>

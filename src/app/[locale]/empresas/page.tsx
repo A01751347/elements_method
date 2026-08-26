@@ -16,7 +16,11 @@ import { getDictionary } from "@/i18n/dictionaries";
 import { Container } from "@/components/ui/Container";
 import { Section, Eyebrow } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
-import { testimonials as staticTestimonials } from "@/data/content";
+import {
+  testimonials as staticTestimonials,
+  clientProfilesEs,
+  clientProfilesEn,
+} from "@/data/content";
 import { getTestimonials } from "@/modules/content/testimonials";
 
 export const revalidate = 60;
@@ -122,19 +126,19 @@ export default async function CompaniesPage({
           <div className="lg:col-span-6">
             <Eyebrow className="mb-6 flex items-center gap-3">
               <Users className="h-3.5 w-3.5" strokeWidth={1.5} />
-              {locale === "es" ? "Para qué organizaciones" : "For which organizations"}
+              {locale === "es" ? "Para quién trabajamos" : "Who we work with"}
             </Eyebrow>
             <h2 className="display-2 text-balance">
               {locale === "es"
-                ? "Cinco perfiles organizacionales que llegan a Origin."
-                : "Five organizational profiles that come to Origin."}
+                ? "Cinco perfiles organizacionales que llegan a Elements Method."
+                : "Five organizational profiles that come to Elements Method."}
             </h2>
           </div>
           <div className="lg:col-span-6 lg:pt-4">
             <p className="lead text-pretty">
               {locale === "es"
-                ? "Diseñamos Origin para organizaciones donde el liderazgo es palanca, no solo gestión."
-                : "We design Origin for organizations where leadership is leverage, not just management."}
+                ? "Diseñamos estos programas para organizaciones donde el liderazgo es palanca, no solo gestión."
+                : "We design these programs for organizations where leadership is leverage, not just management."}
             </p>
           </div>
         </div>
@@ -177,6 +181,47 @@ export default async function CompaniesPage({
               </div>
             );
           })}
+        </div>
+      </Section>
+
+      {/* OUR CLIENTS — by role, not by company name. Client feedback #81:
+       *  "quizás sí debemos poner quiénes son nuestros principales clientes…
+       *  no necesariamente los nombres de las empresas, sino los puestos". */}
+      <Section spacing="default" tone="ink">
+        <div className="grid lg:grid-cols-12 gap-12 items-start">
+          <div className="lg:col-span-5">
+            <Eyebrow inverted className="mb-6 flex items-center gap-3">
+              <Users className="h-3.5 w-3.5" strokeWidth={1.5} />
+              {locale === "es" ? "Quiénes nos contratan" : "Who hires us"}
+            </Eyebrow>
+            <h2 className="display-2 text-[var(--color-paper)] text-balance">
+              {locale === "es"
+                ? "El mismo método, para la persona que lidera y para el equipo que dirige."
+                : "The same method, for the person who leads and the team they lead."}
+            </h2>
+            <p className="mt-6 text-[var(--color-paper)]/90 leading-relaxed max-w-xl">
+              {locale === "es"
+                ? "No separamos «programas para líderes» de «programas para organizaciones». Todo aplica a ambos: lo que cambia es quién contrata y cómo se diseña la inmersión."
+                : "We don't split \u2018programs for leaders\u2019 from \u2018programs for organizations\u2019. It all applies to both: what changes is who commissions it and how the immersion is designed."}
+            </p>
+          </div>
+          <div className="lg:col-span-7">
+            <ul className="border-y border-[var(--color-paper)]/15 divide-y divide-[var(--color-paper)]/15">
+              {(locale === "es" ? clientProfilesEs : clientProfilesEn).map((row, idx) => (
+                <li
+                  key={row}
+                  className="py-5 grid grid-cols-[64px_1fr] gap-6 items-baseline"
+                >
+                  <span className="font-[family-name:var(--font-display)] text-2xl text-[var(--color-gold-soft)] tabular-nums">
+                    {String(idx + 1).padStart(2, "0")}
+                  </span>
+                  <span className="text-[var(--color-paper)] leading-relaxed text-lg">
+                    {row}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </Section>
 

@@ -2,14 +2,14 @@
 
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
-import { Droplets, Flame, Wind, Mountain, Sparkles } from "lucide-react";
+import { Droplets, Flame, Wind, Mountain } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import { mantraEs, mantraEn } from "@/data/content";
 import { Container } from "@/components/ui/Container";
 
 /**
  * Mantra divider — purely typographic, no imagery.
- * A slowly rotating compass with the five elements anchors the bottom.
+ * A slowly rotating compass with the four elements anchors the bottom.
  * Differentiated from Hero and FinalCta (both full-bleed photo + parallax).
  */
 export function MantraDivider({
@@ -113,12 +113,6 @@ export function MantraDivider({
               <Wind className="h-4 w-4 text-[var(--color-air-ink)] anim-air" strokeWidth={1.5} />
               <span className="text-[0.72rem] tracking-[0.22em] uppercase text-[var(--color-muted)]">
                 Aire · CLEAR
-              </span>
-            </div>
-            <div className="flex items-center gap-3">
-              <Sparkles className="h-4 w-4 text-[var(--color-eter-ink)] anim-eter" strokeWidth={1.5} />
-              <span className="text-[0.72rem] tracking-[0.22em] uppercase text-[var(--color-muted)]">
-                Éter · ECOS
               </span>
             </div>
           </motion.div>

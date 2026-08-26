@@ -1,0 +1,24 @@
+allowBuilds:
+  esbuild: set this to true or false
+  sharp: set this to true or false
+  unrs-resolver: set this to true or false
+
+# pnpm 10+ no longer reads the "pnpm" field from package.json — every setting
+# lives here now. See https://pnpm.io/settings
+
+# Dependencies allowed to run install scripts. Without this pnpm refuses to run
+# any package script (ERR_PNPM_IGNORED_BUILDS).
+#   esbuild        — needed by tsx / drizzle-kit to compile the seed scripts
+#   sharp          — Next.js image optimization in production builds
+#   unrs-resolver  — used by eslint's module resolution
+onlyBuiltDependencies:
+  - esbuild
+  - sharp
+  - unrs-resolver
+
+# Security pins. These used to live in package.json under "pnpm.overrides";
+# pnpm silently stopped applying them, which let esbuild 0.18.20 and
+# postcss 8.4.31 back into the tree.
+overrides:
+  postcss@<8.5.10: '>=8.5.10'
+  esbuild@<=0.24.2: '>=0.25.0'

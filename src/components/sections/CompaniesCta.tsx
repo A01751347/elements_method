@@ -77,7 +77,7 @@ export function CompaniesCta({
           </motion.div>
         </div>
 
-        {/* Bottom rule with the 5 element badges as visual signature */}
+        {/* Bottom rule with the four element badges as visual signature */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -93,8 +93,6 @@ export function CompaniesCta({
             <span>Air</span>
             <span aria-hidden>·</span>
             <span>Earth</span>
-            <span aria-hidden>·</span>
-            <span>Ether</span>
           </div>
           <span className="text-[0.72rem] tracking-[0.22em] uppercase text-[var(--color-muted)]">
             Leadership Immersion Programs

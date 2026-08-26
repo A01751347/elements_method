@@ -17,7 +17,6 @@ import {
   Flame,
   Wind,
   Mountain,
-  Sparkles,
 } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import type { Dict } from "@/i18n/dictionaries";
@@ -85,7 +84,7 @@ export function HeroSection({
         className="absolute top-28 right-6 hidden md:flex items-center gap-3 text-[0.7rem] tracking-[0.22em] uppercase text-[var(--color-paper)]/90 rotate-90 origin-right translate-x-8"
       >
         <span aria-hidden className="h-px w-10 bg-[var(--color-paper)]/40" />
-        {locale === "es" ? "Agua · Fuego · Aire · Tierra · Éter" : "Water · Fire · Air · Earth · Ether"}
+        {locale === "es" ? "Agua · Fuego · Aire · Tierra" : "Water · Fire · Air · Earth"}
       </motion.div>
 
       <Container className="relative pb-16 md:pb-24 z-10">
@@ -149,29 +148,38 @@ export function HeroSection({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.05 }}
-            className="mt-16 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-px max-w-4xl border-t border-[var(--color-paper)]/15"
+            className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-px max-w-4xl border-t border-[var(--color-paper)]/15"
           >
             {[
-              { icon: Droplets, label: locale === "es" ? "Agua" : "Water", anim: "anim-water" },
-              { icon: Flame, label: locale === "es" ? "Fuego" : "Fire", anim: "anim-fire" },
-              { icon: Wind, label: locale === "es" ? "Aire" : "Air", anim: "anim-air" },
-              { icon: Mountain, label: locale === "es" ? "Tierra" : "Earth", anim: "anim-earth" },
-              { icon: Sparkles, label: "Éter", anim: "anim-eter" },
+              // `tint` is the element's own colour in its light variant — the
+              // saturated brand value is too dark to read over the hero photo,
+              // the soft tint keeps the element identifiable (feedback #5).
+              { icon: Droplets, label: locale === "es" ? "Agua" : "Water", anim: "anim-water", tint: "var(--color-water-soft)" },
+              { icon: Flame, label: locale === "es" ? "Fuego" : "Fire", anim: "anim-fire", tint: "var(--color-fire-soft)" },
+              { icon: Wind, label: locale === "es" ? "Aire" : "Air", anim: "anim-air", tint: "var(--color-air-soft)" },
+              { icon: Mountain, label: locale === "es" ? "Tierra" : "Earth", anim: "anim-earth", tint: "var(--color-earth-soft)" },
             ].map((el, idx) => {
               const Icon = el.icon;
               return (
                 <Link
                   key={el.label}
                   href={`${base}/${locale === "es" ? "el-metodo" : "method"}`}
-                  className="group flex items-center gap-3 py-5 px-4 border-r last:border-r-0 border-[var(--color-paper)]/15 hover:bg-[var(--color-paper)]/5 transition-colors"
+                  className="group relative flex items-center gap-3 py-5 px-4 border-r last:border-r-0 border-[var(--color-paper)]/15 hover:bg-[var(--color-paper)]/5 transition-colors"
                 >
                   <Icon
-                    className={`h-4 w-4 text-[var(--color-paper)]/90 group-hover:text-[var(--color-paper)] transition-colors ${el.anim}`}
-                    strokeWidth={1.5}
+                    className={`h-4 w-4 transition-opacity opacity-90 group-hover:opacity-100 ${el.anim}`}
+                    strokeWidth={1.6}
+                    style={{ color: el.tint, filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.45))" }}
                   />
                   <span className="text-[0.78rem] tracking-[0.2em] uppercase text-[var(--color-paper)]/95 group-hover:text-[var(--color-paper)] transition-colors">
                     {String(idx + 1).padStart(2, "0")} {el.label}
                   </span>
+                  {/* element-coloured rail, revealed on hover */}
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-0 bottom-0 h-0.5 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"
+                    style={{ background: el.tint }}
+                  />
                 </Link>
               );
             })}

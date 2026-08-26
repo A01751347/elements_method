@@ -13,6 +13,15 @@ export interface InscriptionFormProps {
   retreatSlug?: string;
   pathSlug?: string;
   showOrganization?: boolean;
+  /**
+   * Render the qualification questionnaire: how many participants, individual
+   * or group, who is contracting, leadership topics of interest, and the two
+   * contacts (decision-maker + participating leader).
+   * Added for client feedback #46 — "más información" should lead to a
+   * questionnaire, not a mailto. Answers ride along in `details` and land in
+   * `inscriptions.metadata`, so no schema migration is needed.
+   */
+  questionnaire?: boolean;
   submitLabel?: string;
   successHeadlineEs?: string;
   successHeadlineEn?: string;
@@ -34,6 +43,16 @@ const COPY = {
       "Un miembro del equipo te responderá personalmente en las próximas 48 horas. Mientras tanto, revisa tu bandeja de entrada — te enviamos confirmación.",
     error: "Algo salió mal. Intenta de nuevo o escríbenos a hello@elementsmethod.com.",
     required: "Este campo es obligatorio",
+    qGroup: "Sobre el programa que buscas",
+    participants: "¿Cuántas personas participarían?",
+    format: "¿Individual o grupal?",
+    formatOptions: ["Individual", "Grupal"],
+    contractor: "¿Quién contrata el programa?",
+    contractorOptions: ["Una persona", "Una organización"],
+    topics: "Temas de liderazgo que te interesan",
+    decisionMaker: "Contacto de quien toma la decisión (nombre y correo)",
+    participantLead: "Contacto del líder que participará (nombre y correo)",
+    choose: "Selecciona…",
   },
   en: {
     name: "Full name",
@@ -49,6 +68,16 @@ const COPY = {
       "A team member will respond personally within 48 hours. In the meantime, check your inbox — we sent confirmation.",
     error: "Something went wrong. Try again or email hello@elementsmethod.com.",
     required: "This field is required",
+    qGroup: "About the program you're looking for",
+    participants: "How many people would take part?",
+    format: "Individual or group?",
+    formatOptions: ["Individual", "Group"],
+    contractor: "Who is commissioning the program?",
+    contractorOptions: ["An individual", "An organization"],
+    topics: "Leadership topics you're interested in",
+    decisionMaker: "Decision-maker contact (name and email)",
+    participantLead: "Participating leader contact (name and email)",
+    choose: "Select…",
   },
 } as const;
 
@@ -58,6 +87,7 @@ export function InscriptionForm({
   retreatSlug,
   pathSlug,
   showOrganization,
+  questionnaire,
   submitLabel,
   className = "",
 }: InscriptionFormProps) {
@@ -86,6 +116,16 @@ export function InscriptionForm({
       message: String(fd.get("message") ?? "").trim() || undefined,
       locale,
       honeypot: String(fd.get("company_url") ?? ""),
+      details: questionnaire
+        ? pruneEmpty({
+            participants: String(fd.get("participants") ?? "").trim(),
+            format: String(fd.get("format") ?? "").trim(),
+            contractor: String(fd.get("contractor") ?? "").trim(),
+            topics: String(fd.get("topics") ?? "").trim(),
+            decisionMaker: String(fd.get("decisionMaker") ?? "").trim(),
+            participantLead: String(fd.get("participantLead") ?? "").trim(),
+          })
+        : undefined,
     };
 
     try {
@@ -147,6 +187,38 @@ export function InscriptionForm({
           <Field name="role" label={t.role} />
         </>
       )}
+
+      {questionnaire && (
+        <fieldset className="pt-4 mt-2 border-t border-[var(--color-line)] space-y-5">
+          <legend className="text-[0.65rem] uppercase tracking-[0.2em] text-[var(--color-muted)] pb-2">
+            {t.qGroup}
+          </legend>
+          <Field
+            name="participants"
+            label={t.participants}
+            type="number"
+            required
+          />
+          <SelectField
+            name="format"
+            label={t.format}
+            placeholder={t.choose}
+            options={t.formatOptions}
+            required
+          />
+          <SelectField
+            name="contractor"
+            label={t.contractor}
+            placeholder={t.choose}
+            options={t.contractorOptions}
+            required
+          />
+          <Field name="topics" label={t.topics} textarea />
+          <Field name="decisionMaker" label={t.decisionMaker} />
+          <Field name="participantLead" label={t.participantLead} />
+        </fieldset>
+      )}
+
       <Field name="message" label={t.message} textarea />
 
       {state === "error" && (
@@ -179,6 +251,51 @@ export function InscriptionForm({
         )}
       </button>
     </form>
+  );
+}
+
+/** Strip empty strings so `details` only carries answers the user actually gave. */
+function pruneEmpty(obj: Record<string, string>): Record<string, string> | undefined {
+  const out: Record<string, string> = {};
+  for (const [k, v] of Object.entries(obj)) if (v) out[k] = v;
+  return Object.keys(out).length > 0 ? out : undefined;
+}
+
+function SelectField({
+  name,
+  label,
+  options,
+  placeholder,
+  required,
+}: {
+  name: string;
+  label: string;
+  options: readonly string[];
+  placeholder: string;
+  required?: boolean;
+}) {
+  return (
+    <label className="block">
+      <span className="block text-[0.65rem] uppercase tracking-[0.2em] text-[var(--color-muted)] mb-2">
+        {label}
+        {required && <span className="ml-1 text-[var(--color-fire-ink)]">*</span>}
+      </span>
+      <select
+        name={name}
+        required={required}
+        defaultValue=""
+        className="w-full rounded-none border-0 border-b border-[var(--color-line)] bg-transparent px-1 py-3 text-sm focus:outline-none focus:border-[var(--color-ink)] transition-colors"
+      >
+        <option value="" disabled>
+          {placeholder}
+        </option>
+        {options.map((o) => (
+          <option key={o} value={o}>
+            {o}
+          </option>
+        ))}
+      </select>
+    </label>
   );
 }
 

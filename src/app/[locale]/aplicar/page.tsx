@@ -40,15 +40,15 @@ export default async function ApplyPage({
                 <span aria-hidden className="h-px w-10 bg-[var(--color-line)]" />
                 {locale === "es" ? "Aplicación" : "Application"}
               </Eyebrow>
-              <h1 className="display-1 text-balance">
+              <h1 className="display-1 text-balance max-w-[16ch]">
                 {locale === "es"
-                  ? "Aplica al programa."
-                  : "Apply to the program."}
+                  ? "Cuéntanos qué necesitas."
+                  : "Tell us what you need."}
               </h1>
               <p className="lead mt-6 text-pretty max-w-2xl">
                 {locale === "es"
-                  ? "Empezamos por una conversación. Esta no es una compra automática — leemos cada aplicación y te respondemos personalmente en menos de 48 horas."
-                  : "We begin with a conversation. This is not an automatic purchase — we read each application and respond personally within 48 hours."}
+                  ? "Empezamos por una conversación. Este cuestionario nos permite entender a cuántas personas acompañaríamos, qué temas de liderazgo les interesan y en qué formato — para responderte con una propuesta real, no con un folleto. Leemos cada respuesta y contestamos personalmente en menos de 48 horas."
+                  : "We begin with a conversation. This questionnaire lets us understand how many people we'd be working with, which leadership topics matter to them and in what format — so we can reply with a real proposal, not a brochure. We read every response and answer personally within 48 hours."}
               </p>
             </div>
 
@@ -118,7 +118,8 @@ export default async function ApplyPage({
               retreatSlug={retreat?.slug}
               pathSlug={pathSlug}
               showOrganization
-              submitLabel={locale === "es" ? "Enviar aplicación" : "Submit application"}
+              questionnaire
+              submitLabel={locale === "es" ? "Enviar solicitud" : "Send request"}
             />
           </div>
         </div>

@@ -19,6 +19,7 @@ import {
   Atom,
   Sparkles,
   Users,
+  ArrowUpRight,
   Droplets,
   Flame,
   Wind,
@@ -29,6 +30,7 @@ import { isLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import {
   elements,
+  fourElements,
   elementImages,
   frameworkImages,
   shadowProfile,
@@ -38,6 +40,7 @@ import {
   resultsEn,
   dailyScanEs,
   dailyScanEn,
+  bibliography,
   type ElementInfo,
   type ElementKey,
 } from "@/data/content";
@@ -54,8 +57,10 @@ export default function MethodPage({
   const { locale } = use(params);
   if (!isLocale(locale)) notFound();
   const dict = getDictionary(locale);
+  // Only the four elements get a framework card — the Núcleo is the leader,
+  // not a fifth tab (client feedback #7 #21).
   const [activeIdx, setActiveIdx] = useState(0);
-  const active = elements[activeIdx];
+  const active = fourElements[activeIdx];
 
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -137,8 +142,8 @@ export default function MethodPage({
             </p>
             <p>
               {locale === "es"
-                ? "En la física, el núcleo es la masa densa y energética desde la que todo lo demás se organiza. En liderazgo, la persona, expresándose desde su autenticidad y naturaleza, es el núcleo desde el que radían todas las dinámicas del equipo, la cultura y los resultados organizacionales."
-                : "In physics, the nucleus is the dense, energetic mass from which everything else is organized. In leadership, the person, expressing themselves from their authenticity and nature, is the nucleus from which all team dynamics, culture and organizational results radiate."}
+                ? "En la física, el núcleo es la masa densa y energética desde la que todo lo demás se organiza. En liderazgo, la persona, expresándose desde su autenticidad y naturaleza, es el núcleo desde el que todo se crea y se expande: las dinámicas del equipo, la cultura y los resultados de la organización."
+                : "In physics, the nucleus is the dense, energetic mass from which everything else is organized. In leadership, the person, expressing themselves from their authenticity and nature, is the nucleus from which everything is created and expands: team dynamics, culture and the organization's results."}
             </p>
             <p className="italic text-[var(--color-ink)]">
               {locale === "es"
@@ -222,19 +227,19 @@ export default function MethodPage({
               {(locale === "es"
                 ? [
                     "Claridad y quietud interior",
-                    "Decisiones arraigadas en valores",
+                    "Decisiones arraigadas en valores, creencias e identidad",
                     "Energía y presencia sostenibles",
                     "Sentido auténtico de propósito",
                     "Auto-consciencia encarnada",
-                    "Identidad fuerte y estable",
+                    "Una identidad auténtica, humana y coherente",
                   ]
                 : [
                     "Clarity and inner quiet",
-                    "Grounded, values-led choices",
+                    "Choices rooted in values, beliefs and identity",
                     "Sustainable energy and presence",
                     "Authentic sense of purpose",
                     "Embodied self-awareness",
-                    "Strong, stable identity",
+                    "An authentic, human and coherent identity",
                   ]
               ).map((item) => (
                 <li key={item} className="flex items-start gap-3">
@@ -247,19 +252,19 @@ export default function MethodPage({
         </div>
       </Section>
 
-      {/* THE NUCLEUS + ÉTER — the leader at the center, and Ether as the fifth
-       *  element that integrates the other four (per elements-web-content.docx). */}
+      {/* THE NÚCLEO — the leader at the centre, the one who integrates the four
+       *  elements. There is no fifth element (client feedback #12 #14 #15). */}
       <Section spacing="default" tone="warm" className="paper-grain">
         <div className="grid lg:grid-cols-12 gap-12 items-end mb-16">
           <div className="lg:col-span-6">
             <Eyebrow className="mb-6 flex items-center gap-3">
               <Atom className="h-3.5 w-3.5" strokeWidth={1.5} />
-              {locale === "es" ? "El Núcleo · Éter" : "The Nucleus · Ether"}
+              {locale === "es" ? "El Núcleo" : "The Core"}
             </Eyebrow>
             <h2 className="display-2 text-balance">
               {locale === "es"
-                ? "Al centro de los cuatro elementos: tú."
-                : "At the center of the four elements: you."}
+                ? "Al centro de los cuatro elementos: Tú."
+                : "At the centre of the four elements: You."}
             </h2>
           </div>
           <div className="lg:col-span-6 lg:pt-4">
@@ -288,8 +293,8 @@ export default function MethodPage({
             </div>
             <p className="text-[var(--color-ink-soft)] leading-relaxed">
               {locale === "es"
-                ? "Elements Method trabaja de adentro hacia afuera. Éter es el quinto elemento: el espacio que contiene a los otros cuatro. Cuando el Núcleo está sano y el Éter integra Agua, Fuego, Aire y Tierra, todo lo demás se reorganiza."
-                : "Elements Method works from the inside out. Ether is the fifth element: the space that contains the other four. When the Nucleus is healthy and Ether integrates Water, Fire, Air and Earth, everything else reorganizes."}
+                ? "Elements Method trabaja de adentro hacia afuera. Tú, como núcleo, eres el centro que balancea y armoniza los cuatro elementos. Un líder sano no elige entre ellos: los integra. Y al integrarlos, todo lo demás se organiza a su alrededor."
+                : "Elements Method works from the inside out. You, as the core, are the centre that balances and harmonizes the four elements. A healthy leader doesn't choose between them: they integrate them. And as they integrate them, everything else organizes around them."}
             </p>
           </div>
         </div>
@@ -301,26 +306,27 @@ export default function MethodPage({
           <div className="mb-16 grid lg:grid-cols-12 gap-12">
             <div className="lg:col-span-7">
               <Eyebrow className="mb-6">
-                {locale === "es" ? "Cinco elementos, cinco frameworks" : "Five elements, five frameworks"}
+                {locale === "es" ? "Cuatro elementos, cuatro frameworks" : "Four elements, four frameworks"}
               </Eyebrow>
               <h2 className="display-2 text-balance">
-                ROOTS · IGNITE · FLOW · CLEAR · ECOS
+                ROOTS · IGNITE · FLOW · CLEAR
               </h2>
             </div>
             <div className="lg:col-span-5">
               <p className="lead text-pretty">
                 {locale === "es"
-                  ? "Cada elemento tiene un framework operativo con competencias específicas que se entrenan y observan. El quinto, ECOS, es el del Éter: el que integra a los otros cuatro."
-                  : "Each element has an operational framework with specific competencies that are trained and observed. The fifth, ECOS, belongs to Ether: the one that integrates the other four."}
+                  ? "Cada elemento tiene un framework operativo con competencias específicas que se entrenan y se observan. El líder, que es el núcleo de todo, aprende a identificarlas en sí mismo y a integrarlas."
+                  : "Each element has an operational framework with specific competencies that are trained and observed. The leader, who is the core of it all, learns to identify them within and to integrate them."}
               </p>
             </div>
           </div>
 
-          {/* All five elements, Éter included. Each card surfaces the
-           *  framework's hero module image (Éter falls back to its element
-           *  image) with a scrim that intensifies on the active tab. */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 mb-16">
-            {elements.map((el, idx) => {
+          {/* The four elements. Each card surfaces the element's own photograph
+           *  — fire for Fuego, a river for Agua, moving air for Aire, forest
+           *  floor for Tierra (client feedback #18 #19 #20) — with a scrim that
+           *  lifts on the active tab. */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 mb-16">
+            {fourElements.map((el, idx) => {
               const isActive = activeIdx === idx;
               const name = locale === "es" ? el.nameEs : el.nameEn;
               const moduleImg = frameworkImages[el.key] ?? elementImages[el.key];
@@ -504,9 +510,9 @@ export default function MethodPage({
         </div>
       </Section>
 
-      {/* THE INTEGRATED LEADER — verbatim from master doc §18.
-       *  Closes the Shadow Profile: knowing your profile is step one — the
-       *  goal is fluid access to all four, and the wisdom of the fifth. */}
+      {/* THE INTEGRATED LEADER — closes the Shadow Profile: knowing your
+       *  profile is step one; the goal is fluid access to all four, held and
+       *  managed from your own núcleo. */}
       <Section spacing="default">
         <div className="grid lg:grid-cols-12 gap-12 items-end mb-12">
           <div className="lg:col-span-6">
@@ -516,20 +522,25 @@ export default function MethodPage({
             </Eyebrow>
             <h2 className="display-2 text-balance">
               {locale === "es"
-                ? "El objetivo no es ser un líder de un elemento. Es tener acceso fluido a los cuatro."
-                : "The goal is not to be a leader of one element. It is to have fluid access to all four."}
+                ? "Todos tenemos los cuatro elementos. El trabajo es tener acceso fluido a todos."
+                : "We all carry the four elements. The work is having fluid access to all of them."}
             </h2>
           </div>
           <div className="lg:col-span-6 lg:pt-3 space-y-5">
             <p className="lead text-pretty">
               {locale === "es"
-                ? "El objetivo no es ser un líder de Agua, o de Fuego, o de Tierra. El objetivo es tener acceso fluido a los cuatro — y la sabiduría del quinto para identificar cuál requiere el momento."
-                : "The goal is not to be a Water leader, or a Fire leader, or an Earth leader. The goal is to have fluid access to all four — and the wisdom of the fifth to identify which one the moment requires."}
+                ? "El objetivo no es ser un líder de Agua, de Fuego, de Aire o de Tierra. El objetivo es tener acceso fluido a los cuatro dentro de ti, para identificar y gestionar el que cada momento requiere."
+                : "The goal is not to be a Water, Fire, Air or Earth leader. The goal is to have fluid access to all four within you, so you can identify and manage the one each moment requires."}
             </p>
             <p className="text-[var(--color-ink-soft)] leading-relaxed text-pretty">
               {locale === "es"
-                ? "La integración elemental no es la eliminación de la preferencia o fortaleza natural. Es la expansión del rango. El líder de Agua que puede acceder al Fuego cuando la visión es necesaria. El líder de Tierra que puede subir al Aire cuando el equipo necesita perspectiva estratégica. El líder de Fuego que puede encontrar el Agua cuando la situación pide escucha."
-                : "Elemental integration is not the elimination of natural preference or strength. It is the expansion of range. The Water leader who can access Fire when vision is needed. The Earth leader who can rise into Air when the team needs strategic perspective. The Fire leader who can find Water when the situation calls for listening."}
+                ? "La integración de los elementos conserva íntegra tu preferencia y tu fortaleza natural, y expande tu rango. Es el líder de Agua que además accede al Fuego cuando hace falta visión. El de Tierra que sube al Aire cuando el equipo necesita perspectiva estratégica. El de Fuego que encuentra el Agua cuando la situación pide escucha."
+                : "Integrating the elements keeps your natural preference and strength fully intact, and expands your range. It is the Water leader who can also reach Fire when vision is needed. The Earth leader who rises into Air when the team needs strategic perspective. The Fire leader who finds Water when the situation calls for listening."}
+            </p>
+            <p className="text-[var(--color-ink-soft)] leading-relaxed text-pretty">
+              {locale === "es"
+                ? "Y al ser consciente de cuál predomina en ti — y de cómo gestionar cada elemento dentro de ti — tu impacto en las demás personas se vuelve mucho más significativo."
+                : "And as you become aware of which one predominates in you — and of how to manage each element within yourself — your impact on the people around you becomes far more significant."}
             </p>
           </div>
         </div>
@@ -574,39 +585,39 @@ export default function MethodPage({
             },
             {
               icon: Sparkles,
-              k: locale === "es" ? "20 min en naturaleza" : "20 min in nature",
-              v: locale === "es" ? "Aumento medible en la resolución creativa de problemas" : "Measurable increase in creative problem-solving",
-              ref: "University of Michigan",
+              k: locale === "es" ? "4 días en naturaleza" : "4 days in nature",
+              v: locale === "es" ? "+50% en desempeño de resolución creativa de problemas" : "+50% on creative problem-solving performance",
+              ref: "Atchley et al. · PLoS ONE · 2012",
             },
             {
               icon: TestTube,
-              k: locale === "es" ? "2h Shinrin-yoku" : "2h Shinrin-yoku",
-              v: locale === "es" ? "Aumenta células NK del sistema inmune 50% (efecto 30 días)" : "Increases NK immune cells 50% (30-day effect)",
-              ref: "Li · 2008",
+              k: locale === "es" ? "2h de Shinrin-yoku (baño de bosque)" : "2h of Shinrin-yoku (forest bathing)",
+              v: locale === "es" ? "Aumenta células NK del sistema inmune ~50% (efecto hasta 30 días)" : "Raises NK immune cells ~50% (effect lasting up to 30 days)",
+              ref: "Li et al. · 2008",
             },
             {
               icon: Activity,
-              k: locale === "es" ? "Líderes auto-conscientes" : "Self-aware leaders",
-              v: locale === "es" ? "3× mayor engagement del equipo" : "3× higher team engagement",
-              ref: "Eurich · Harvard Business Review",
+              k: locale === "es" ? "Auto-consciencia real" : "Genuine self-awareness",
+              v: locale === "es" ? "Solo 10–15% de las personas la tienen, aunque ~95% cree tenerla" : "Only 10–15% of people have it, though ~95% believe they do",
+              ref: "Eurich · Harvard Business Review · 2018",
             },
             {
               icon: HeartPulse,
               k: locale === "es" ? "Sistema nervioso regulado" : "Regulated nervous system",
-              v: locale === "es" ? "Decisiones más rápidas y precisas" : "Faster, more accurate decisions",
-              ref: "van der Kolk · 2014",
+              v: locale === "es" ? "El estado del cuerpo condiciona la calidad del pensamiento y de la decisión" : "The state of the body conditions the quality of thought and decision",
+              ref: "van der Kolk · The Body Keeps the Score · 2014",
             },
             {
               icon: Shield,
               k: locale === "es" ? "Seguridad psicológica" : "Psychological safety",
-              v: locale === "es" ? "27% más crecimiento de ingresos" : "27% higher revenue growth",
-              ref: "Google · Project Aristotle",
+              v: locale === "es" ? "El factor nº1 de los equipos de alto desempeño en Google" : "The #1 factor in Google's high-performing teams",
+              ref: "Google · Project Aristotle · 2015",
             },
             {
               icon: Brain,
-              k: locale === "es" ? "8 semanas de MBSR" : "8 weeks MBSR",
-              v: locale === "es" ? "Cambios medibles en materia gris del córtex prefrontal" : "Measurable changes in prefrontal cortex gray matter",
-              ref: "Holzel et al. · 2011",
+              k: locale === "es" ? "8 semanas de MBSR (Mindfulness-Based Stress Reduction)" : "8 weeks of MBSR (Mindfulness-Based Stress Reduction)",
+              v: locale === "es" ? "Cambios medibles en la materia gris del córtex prefrontal" : "Measurable changes in prefrontal cortex gray matter",
+              ref: "Hölzel et al. · 2011",
             },
           ].map((row, idx) => {
             const Icon = row.icon;
@@ -633,6 +644,64 @@ export default function MethodPage({
             );
           })}
         </div>
+      </Section>
+
+      {/* BIBLIOGRAPHY — client feedback #33: "¿tienes bibliografía de esto?
+       *  ¿algún estudio, reseña que podamos compartir?". Every figure quoted
+       *  above traces to a real, linkable paper here. */}
+      <Section spacing="default">
+        <div className="grid lg:grid-cols-12 gap-12 items-start mb-12">
+          <div className="lg:col-span-5">
+            <Eyebrow className="mb-6 flex items-center gap-3">
+              <BookMarked className="h-3.5 w-3.5" strokeWidth={1.5} />
+              {locale === "es" ? "Bibliografía" : "Bibliography"}
+            </Eyebrow>
+            <h2 className="display-2 text-balance">
+              {locale === "es"
+                ? "Cada dato de esta página tiene una fuente."
+                : "Every figure on this page has a source."}
+            </h2>
+          </div>
+          <div className="lg:col-span-7 lg:pt-3">
+            <p className="lead text-pretty">
+              {locale === "es"
+                ? "La metodología se apoya en investigación publicada y revisada por pares. Esta es la lista completa, con enlace directo a cada estudio — para leerla, verificarla o compartirla con tu equipo."
+                : "The methodology rests on published, peer-reviewed research. This is the full list, with a direct link to every study — to read, to verify, or to share with your team."}
+            </p>
+          </div>
+        </div>
+
+        <ol className="border-t border-[var(--color-line)]">
+          {bibliography.map((ref, idx) => (
+            <li
+              key={ref.url}
+              className="border-b border-[var(--color-line)] grid grid-cols-[2.5rem_1fr] md:grid-cols-[3.5rem_1fr_minmax(0,22rem)] gap-x-5 md:gap-x-10 gap-y-2 py-6"
+            >
+              <span className="font-[family-name:var(--font-display)] text-2xl md:text-3xl text-[var(--color-ink)]/20 tabular-nums leading-none pt-1">
+                {String(idx + 1).padStart(2, "0")}
+              </span>
+              <div className="col-span-1">
+                <a
+                  href={ref.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-flex items-start gap-1.5 font-[family-name:var(--font-display)] text-lg md:text-xl leading-snug text-[var(--color-ink)] hover:text-[var(--color-gold-deep)] transition-colors"
+                >
+                  <span className="underline decoration-[var(--color-line)] underline-offset-4 group-hover:decoration-[var(--color-gold-deep)]">
+                    {ref.title}
+                  </span>
+                  <ArrowUpRight className="h-4 w-4 mt-1.5 shrink-0" strokeWidth={1.5} />
+                </a>
+                <p className="mt-2 text-sm text-[var(--color-ink-soft)]">
+                  {ref.authors} ({ref.year}). <em>{ref.venue}</em>.
+                </p>
+              </div>
+              <p className="col-span-2 md:col-span-1 text-sm text-[var(--color-muted)] leading-relaxed md:text-right">
+                {locale === "es" ? ref.claimEs : ref.claimEn}
+              </p>
+            </li>
+          ))}
+        </ol>
       </Section>
 
       {/* WHO IT'S FOR */}
@@ -686,8 +755,8 @@ export default function MethodPage({
           <div className="lg:col-span-7 lg:pt-3">
             <p className="lead text-pretty">
               {locale === "es"
-                ? "Para cualquier desafío de liderazgo que enfrentas ahora mismo, los cuatro elementos te dan cuatro preguntas concretas — y el Éter, una quinta que las integra. Con el tiempo, acceder a los cuatro e integrarlos en el Éter se vuelve instintivo: la marca del líder integrado."
-                : "For any leadership challenge you face right now, the four elements give you four concrete questions — and Ether a fifth that integrates them. Over time, accessing all four and integrating them in Ether becomes instinctive: the mark of the integrated leader."}
+                ? "Para cualquier desafío de liderazgo que enfrentas ahora mismo, los cuatro elementos te dan cuatro preguntas concretas — y tú, como núcleo, una quinta: la que integra cada aspecto de la naturaleza dentro de ti. Con el tiempo, integrarlos se vuelve instintivo: la marca del líder integrado."
+                : "For any leadership challenge you face right now, the four elements give you four concrete questions — and you, as the core, a fifth: the one that integrates every aspect of nature within you. Over time, integrating them becomes instinctive: the mark of the integrated leader."}
             </p>
           </div>
         </div>
@@ -750,7 +819,12 @@ function ElementDetail({
   el: ElementInfo;
   locale: "es" | "en";
 }) {
-  const layers = [
+  const layers: {
+    label: string;
+    body: string;
+    /** When present the card typesets the acronym instead of a paragraph. */
+    acronym?: ElementInfo["frameworkItems"];
+  }[] = [
     {
       label: locale === "es" ? "En la naturaleza" : "In nature",
       body: locale === "es" ? el.natureEs : el.natureEn,
@@ -762,6 +836,7 @@ function ElementDetail({
     {
       label: `Framework · ${el.framework}`,
       body: locale === "es" ? el.methodEs : el.methodEn,
+      acronym: el.frameworkItems,
     },
     {
       label: locale === "es" ? "Modalidades aliadas" : "Aligned modalities",
@@ -838,9 +913,39 @@ function ElementDetail({
                   {l.label}
                 </h3>
               </div>
-              <p className="text-[var(--color-ink-soft)] leading-relaxed">
-                {l.body}
-              </p>
+              {l.acronym ? (
+                /* The acronym reads down the left edge — one big letter per
+                 *  competency — so ROOTS / IGNITE / FLOW / CLEAR is legible as
+                 *  an acronym and not buried in a sentence (feedback #23). */
+                <ul className="divide-y divide-[var(--color-line)]">
+                  {l.acronym.map((item, n) => (
+                    <li
+                      key={`${item.letter}-${n}`}
+                      className="grid grid-cols-[2rem_1fr] gap-x-4 py-2.5 first:pt-0 last:pb-0 items-baseline"
+                    >
+                      <span
+                        aria-hidden
+                        className="font-[family-name:var(--font-display)] text-2xl leading-none"
+                        style={{ color: el.accentInk }}
+                      >
+                        {item.letter}
+                      </span>
+                      <span className="text-[var(--color-ink-soft)] leading-snug">
+                        <strong className="font-medium text-[var(--color-ink)]">
+                          {locale === "es" ? item.nameEs : item.nameEn}
+                        </strong>
+                        <span className="block text-sm">
+                          {locale === "es" ? item.glossEs : item.glossEn}
+                        </span>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-[var(--color-ink-soft)] leading-relaxed">
+                  {l.body}
+                </p>
+              )}
             </div>
           ))}
         </div>
@@ -926,7 +1031,8 @@ const DAILY_ICONS: Record<ElementKey, LucideIcon> = {
   fuego: Flame,
   aire: Wind,
   tierra: Mountain,
-  eter: Sparkles,
+  // legacy `eter` key = the Núcleo (see ElementKey in @/data/content)
+  eter: Atom,
 };
 
 function DailyScanGrid({ locale }: { locale: "es" | "en" }) {
@@ -954,7 +1060,8 @@ function DailyScanGrid({ locale }: { locale: "es" | "en" }) {
                 className="text-[0.65rem] tracking-[0.22em] uppercase font-medium"
                 style={{ color: el?.accent }}
               >
-                {locale === "es" ? el?.nameEs : el?.nameEn} · {el?.framework}
+                {locale === "es" ? el?.nameEs : el?.nameEn} ·{" "}
+                {el?.framework ?? (locale === "es" ? "Integración" : "Integration")}
               </span>
             </div>
             <p className="font-[family-name:var(--font-display)] text-lg leading-snug text-[var(--color-ink-soft)] flex-1">

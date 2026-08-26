@@ -12,6 +12,7 @@ import {
   Wind,
   Mountain,
   Sparkles,
+  Atom,
   type LucideIcon,
 } from "lucide-react";
 import type { Locale } from "@/i18n/config";
@@ -24,7 +25,7 @@ const ICONS: Record<ElementKey, LucideIcon> = {
   fuego: Flame,
   aire: Wind,
   tierra: Mountain,
-  eter: Sparkles,
+  eter: Atom, // legacy `eter` key = the Núcleo
 };
 
 const STATUS_LABEL: Record<

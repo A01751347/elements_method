@@ -1,7 +1,8 @@
 /**
  * Seed — Elements editorial content.
  *
- * Writes the five elements (Tierra, Fuego, Agua, Aire, Éter) and their
+ * Writes the four elements (Tierra, Fuego, Agua, Aire) plus the Núcleo row
+ * (stored under the legacy key `eter`) and their
  * "Key Components of X Leadership" child rows from the canonical static source
  * (`src/data/content.ts`) into the normalized `elements_content` /
  * `element_components` tables.

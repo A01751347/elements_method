@@ -49,7 +49,8 @@ const ELEMENT_COLOR: Record<ElementKey, string> = {
   fuego: "var(--color-fire)",
   aire: "var(--color-air)",
   tierra: "var(--color-earth)",
-  eter: "var(--color-eter)",
+  // legacy `eter` key = the Núcleo (see ElementKey in @/data/content)
+  eter: "var(--color-gold-deep)",
 };
 
 const ELEMENT_LABEL: Record<ElementKey, { es: string; en: string }> = {
@@ -57,7 +58,7 @@ const ELEMENT_LABEL: Record<ElementKey, { es: string; en: string }> = {
   fuego: { es: "Fuego · IGNITE", en: "Fire · IGNITE" },
   aire: { es: "Aire · CLEAR", en: "Air · CLEAR" },
   tierra: { es: "Tierra · ROOTS", en: "Earth · ROOTS" },
-  eter: { es: "Éter · ECOS", en: "Ether · ECOS" },
+  eter: { es: "Núcleo · Integración", en: "Core · Integration" },
 };
 
 /**
@@ -86,8 +87,8 @@ export function PracticesGallery({ locale }: { locale: Locale }) {
             </Eyebrow>
             <h2 className="display-2 text-balance">
               {locale === "es"
-                ? "Ocho prácticas con protocolo, entorno y duración."
-                : "Eight practices with protocol, environment and duration."}
+                ? "Doce prácticas con protocolo, entorno y duración."
+                : "Twelve practices with protocol, environment and duration."}
             </h2>
           </div>
           <div className="lg:col-span-5">

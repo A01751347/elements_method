@@ -44,7 +44,7 @@ export function RetreatForm({ retreat }: { retreat?: CalendarRetreat }) {
             <option value="fuego">Fuego</option>
             <option value="agua">Agua</option>
             <option value="aire">Aire</option>
-            <option value="eter">Éter</option>
+            <option value="eter">Núcleo</option>
           </Select>
         </Row>
         <Row label="Resumen (ES)">

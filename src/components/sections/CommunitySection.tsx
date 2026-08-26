@@ -41,7 +41,7 @@ export function CommunitySection({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.8 }}
-            className="font-[family-name:var(--font-display)] text-[clamp(2rem,4.5vw,3.5rem)] leading-[1.1] tracking-tight text-balance"
+            className="font-[family-name:var(--font-display)] text-[clamp(2rem,4.5vw,3.5rem)] leading-[1.1] tracking-tight text-balance text-[var(--color-paper)]"
           >
             {es ? s.headlineEs : s.headlineEn}
           </motion.h2>

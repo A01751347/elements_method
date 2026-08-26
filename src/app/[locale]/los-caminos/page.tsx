@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   Check,
@@ -6,7 +7,8 @@ import {
   Flame,
   Wind,
   Mountain,
-  Sparkles,
+  Atom,
+  ArrowUpRight,
   type LucideIcon,
 } from "lucide-react";
 import { isLocale } from "@/i18n/config";
@@ -33,12 +35,13 @@ export async function generateMetadata({
   return { title: locale === "en" ? "Programs" : "Programas" };
 }
 
+// The legacy `eter` key is the Núcleo — the leader, not a fifth element.
 const ELEMENT_ICONS: Record<string, LucideIcon> = {
   agua: Droplets,
   fuego: Flame,
   aire: Wind,
   tierra: Mountain,
-  eter: Sparkles,
+  eter: Atom,
 };
 
 const ELEMENT_COLORS: Record<string, string> = {
@@ -46,7 +49,7 @@ const ELEMENT_COLORS: Record<string, string> = {
   fuego: "#C4622D",
   aire: "#7A9BAD",
   tierra: "#3D5A3E",
-  eter: "#6B5B95",
+  eter: "#8A6F3C",
 };
 
 export default async function PathsPage({
@@ -176,31 +179,34 @@ export default async function PathsPage({
                         <div className="text-xs text-[var(--color-muted)] uppercase tracking-wide">
                           {locale === "es" ? "Inversión" : "Investment"}
                         </div>
-                        <div className="mt-2 font-[family-name:var(--font-display)] text-xl italic text-[var(--color-muted)]">
+                        <p className="mt-2 text-sm text-[var(--color-ink-soft)] leading-relaxed">
                           {locale === "es"
-                            ? "A confirmar · contactar"
-                            : "TBD · contact us"}
-                        </div>
+                            ? "Cada programa se cotiza según el número de participantes, el formato y el grado de personalización. Cuéntanos qué necesitas y te enviamos una propuesta."
+                            : "Each program is quoted by number of participants, format and degree of personalization. Tell us what you need and we'll send a proposal."}
+                        </p>
                       </div>
 
                       <div className="mt-6 space-y-2">
                         <Button
-                          href={`/${locale}/${locale === "es" ? "los-caminos" : "paths"}/${p.slug}`}
+                          href={`/${locale}/${locale === "es" ? "aplicar" : "apply"}?path=${p.slug}`}
                           size="sm"
                           variant="primary"
                           trailingArrow
                           className="w-full"
                         >
-                          {locale === "es" ? "Ver detalle" : "View details"}
+                          {locale === "es" ? "Más información" : "More information"}
                         </Button>
                         <Button
-                          href="mailto:hello@elementsmethod.com"
+                          href={`/${locale}/${locale === "es" ? "los-caminos" : "paths"}/${p.slug}`}
                           size="sm"
                           variant="secondary"
                           className="w-full"
                         >
-                          {cta}
+                          {locale === "es" ? "Ver detalle del programa" : "View program details"}
                         </Button>
+                        <p className="pt-1 text-center text-[0.7rem] text-[var(--color-muted)]">
+                          {cta}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -211,7 +217,9 @@ export default async function PathsPage({
         </div>
       </Section>
 
-      {/* ROOTS ARC — the 5-month journey breakdown */}
+      {/* THE ELEMENTAL ARC — four elements, closing in the Núcleo. Links out to
+       *  /el-metodo so the elements get explained in full on their own page
+       *  (client feedback #58 #59). */}
       <Section spacing="default" tone="warm" className="paper-grain">
         <div className="grid lg:grid-cols-12 gap-12 mb-12">
           <div className="lg:col-span-6">
@@ -220,16 +228,25 @@ export default async function PathsPage({
             </Eyebrow>
             <h2 className="display-2 text-balance">
               {locale === "es"
-                ? "Cinco elementos. Un núcleo."
-                : "Five elements. One core."}
+                ? "Cuatro elementos. Un núcleo: tú."
+                : "Four elements. One core: you."}
             </h2>
           </div>
           <div className="lg:col-span-6 lg:pt-3">
             <p className="lead text-pretty">
               {locale === "es"
-                ? "Todos los programas atraviesan los cuatro elementos en orden secuenciado — Tierra por arraigo, Fuego por activación, Agua por claridad, Aire por perspectiva — y siempre cierran con Éter, la integración que devuelve el aprendizaje al núcleo que eres tú. Cada programa recorre este arco en una duración distinta."
-                : "Every program traverses the four elements in sequenced order — Earth for grounding, Fire for activation, Water for clarity, Air for perspective — and always closes with Ether, the integration that returns the learning to the core that is you. Each program travels this arc over a different duration."}
+                ? "Todos los programas atraviesan los cuatro elementos en orden secuenciado — Tierra por arraigo, Fuego por activación, Agua por claridad, Aire por perspectiva — y siempre terminan con la integración de todos ellos en el núcleo, que es el líder mismo. Cada programa recorre este arco en una duración distinta."
+                : "Every program traverses the four elements in sequenced order — Earth for grounding, Fire for activation, Water for clarity, Air for perspective — and always ends by integrating all of them into the core, which is the leader themselves. Each program travels this arc over a different duration."}
             </p>
+            <Link
+              href={`/${locale}/${locale === "es" ? "el-metodo" : "method"}`}
+              className="group mt-6 inline-flex items-center gap-2 text-sm text-[var(--color-ink)] border-b border-[var(--color-ink)]/30 pb-1 hover:border-[var(--color-ink)] transition-colors"
+            >
+              {locale === "es"
+                ? "Conocer los elementos y el método a fondo"
+                : "Explore the elements and the method in depth"}
+              <ArrowUpRight className="h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+            </Link>
           </div>
         </div>
 
@@ -249,7 +266,7 @@ export default async function PathsPage({
                 <span className="font-[family-name:var(--font-display)] text-xl tracking-tight">
                   {locale === "es"
                     ? row.elementKey === "eter"
-                      ? "Éter · Integración"
+                      ? "Núcleo · Integración"
                       : row.elementKey === "tierra"
                         ? "Tierra"
                         : row.elementKey === "fuego"
@@ -258,7 +275,7 @@ export default async function PathsPage({
                             ? "Agua"
                             : "Aire"
                     : row.elementKey === "eter"
-                      ? "Ether · Integration"
+                      ? "Core · Integration"
                       : row.elementKey === "tierra"
                         ? "Earth"
                         : row.elementKey === "fuego"
@@ -276,12 +293,12 @@ export default async function PathsPage({
         </div>
       </Section>
 
-      {/* ORIGIN — corporate program */}
+      {/* BESPOKE — the same method, designed around a team */}
       <Section spacing="default" tone="ink">
         <div className="grid lg:grid-cols-12 gap-12 items-end">
           <div className="lg:col-span-7">
             <Eyebrow inverted className="mb-6">
-              {locale === "es" ? "Para organizaciones" : "For organizations"}
+              {locale === "es" ? "Para líderes y organizaciones" : "For leaders and organizations"}
             </Eyebrow>
             <h2 className="display-2 text-[var(--color-paper)] text-balance mb-3">
               {locale === "es" ? originProgram.nameEs : originProgram.nameEn}

@@ -10,6 +10,7 @@ export const runtime = "nodejs";
 const Schema = z.object({
   email: z.string().email().max(200),
   firstName: z.string().max(80).optional(),
+  phone: z.string().max(40).optional(),
   source: z.string().max(40).optional(),
   locale: z.enum(["es", "en"]).default("es"),
   honeypot: z.string().max(0).optional(),
@@ -34,7 +35,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true, accepted: false });
   }
 
-  const { email, firstName, source, locale } = parsed.data;
+  const { email, firstName, phone, source, locale } = parsed.data;
 
   // Upsert in DB (subscribers table). Don't crash if table missing in dev.
   try {
@@ -47,12 +48,17 @@ export async function POST(req: Request) {
       await db.insert(subscribers).values({
         email,
         name: firstName ?? null,
+        phone: phone ?? null,
         source: source ?? "footer",
         language: locale,
         mailchimpStatus: "pending",
       });
-    } else {
-      // Already subscribed — that's a success path, not an error.
+    } else if (phone) {
+      // Already subscribed — top up the phone if they gave us one this time.
+      await db
+        .update(subscribers)
+        .set({ phone })
+        .where(eq(subscribers.email, email));
     }
   } catch (e) {
     console.error("[newsletter] DB upsert failed", e);
@@ -62,6 +68,7 @@ export async function POST(req: Request) {
   const mc = await subscribeToMailchimp({
     email,
     firstName,
+    phone,
     source: source ?? "footer",
     locale,
     tags: source ? [source] : undefined,

@@ -9,6 +9,7 @@ import {
   Wind,
   Mountain,
   Sparkles,
+  Atom,
   type LucideIcon,
 } from "lucide-react";
 import type { Locale } from "@/i18n/config";
@@ -21,7 +22,7 @@ const ICONS: Record<ElementKey, LucideIcon> = {
   fuego: Flame,
   aire: Wind,
   tierra: Mountain,
-  eter: Sparkles,
+  eter: Atom, // legacy `eter` key = the Núcleo
 };
 
 const STATUS_LABEL: Record<
@@ -48,7 +49,7 @@ const ELEMENT_FILTERS: { key: ElementKey | "all"; es: string; en: string }[] = [
   { key: "fuego", es: "Fuego", en: "Fire" },
   { key: "agua", es: "Agua", en: "Water" },
   { key: "aire", es: "Aire", en: "Air" },
-  { key: "eter", es: "Éter", en: "Ether" },
+  { key: "eter", es: "Núcleo", en: "Core" },
 ];
 
 export function ProvidersInventory({
@@ -76,8 +77,8 @@ export function ProvidersInventory({
           </Eyebrow>
           <h2 className="display-2 text-balance">
             {locale === "es"
-              ? "Dieciséis disciplinas curadas alrededor de los cinco elementos."
-              : "Sixteen disciplines curated around the five elements."}
+              ? "Dieciséis disciplinas curadas alrededor de los cuatro elementos y su integración."
+              : "Sixteen disciplines curated around the four elements and their integration."}
           </h2>
         </div>
         <div className="lg:col-span-6 lg:pt-3">

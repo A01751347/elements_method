@@ -1,10 +1,14 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Droplets, Flame, Wind, Mountain, Sparkles } from "lucide-react";
+import { Droplets, Flame, Wind, Mountain, Atom } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import type { Dict } from "@/i18n/dictionaries";
-import { elements as staticElements, type ElementInfo } from "@/data/content";
+import {
+  fourElements as staticFourElements,
+  onlyElements,
+  type ElementInfo,
+} from "@/data/content";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Section";
 
@@ -32,7 +36,7 @@ export function ImmersionExperiences({
   elements?: ElementInfo[];
 }) {
   const effectiveElements =
-    elements && elements.length > 0 ? elements : staticElements;
+    elements && elements.length > 0 ? onlyElements(elements) : staticFourElements;
   return (
     <section className="py-24 md:py-36 bg-[var(--color-paper-warm)] paper-grain relative overflow-hidden">
       <Container>
@@ -48,7 +52,7 @@ export function ImmersionExperiences({
           </div>
         </div>
 
-        {/* Vertical stacked entries with element accent — all five elements */}
+        {/* Vertical stacked entries with element accent — the four elements */}
         <div className="border-y-2 border-[var(--color-ink)]/15">
           {effectiveElements.map((el, idx) => {
             const Icon =
@@ -60,10 +64,8 @@ export function ImmersionExperiences({
                     ? Wind
                     : el.key === "tierra"
                       ? Mountain
-                      : Sparkles;
+                      : Atom;
             const name = locale === "es" ? el.nameEs : el.nameEn;
-            const experience =
-              locale === "es" ? el.experienceEs : el.experienceEn;
             const quote = locale === "es" ? el.quoteEs : el.quoteEn;
             return (
               <motion.article
@@ -98,8 +100,8 @@ export function ImmersionExperiences({
                       {locale === "es" ? `Elemento ${name}` : `${name} Element`}
                     </span>
                   </div>
-                  <h3 className="font-[family-name:var(--font-display)] text-[clamp(1.5rem,2.5vw,2.25rem)] tracking-tight leading-tight italic">
-                    {experience}
+                  <h3 className="font-[family-name:var(--font-display)] text-[clamp(1.5rem,2.5vw,2.25rem)] tracking-tight leading-tight">
+                    {locale === "es" ? el.qualityEs : el.qualityEn}
                   </h3>
                 </div>
 
