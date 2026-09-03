@@ -55,9 +55,9 @@ export const calendarRetreats: CalendarRetreat[] = [
     dateLabelEs: "Martes 22 de septiembre de 2026 · 9:00–19:00",
     dateLabelEn: "Tuesday, September 22, 2026 · 9:00–19:00",
     venueState: "tbd",
-    venueLabelEs: "Ciudad de México · por confirmar",
-    venueLabelEn: "Mexico City · TBD",
-    venueNote: "Venue e indicaciones de llegada se confirman antes de la experiencia",
+    venueLabelEs: "Ciudad de México · dirección exacta 7 días antes",
+    venueLabelEn: "Mexico City · exact address 7 days before",
+    venueNote: "Sede en Ciudad de México. La dirección e indicaciones de llegada se envían por correo 7 días antes de la experiencia.",
     summaryEs:
       "Una experiencia de transformación humana de un día, inspirada en el equinoccio de septiembre, para observar, soltar, reconfigurar, realinear y emerger. Neurociencia, coaching, movimiento, naturaleza, arte y prácticas contemplativas para entrar conscientemente en tu próxima etapa.",
     summaryEn:
@@ -91,8 +91,8 @@ export const calendarRetreats: CalendarRetreat[] = [
     status: "open",
     capacity: 15,
     seatsLeft: 15,
-    investmentLabelEs: "Inversión por confirmar · Solicita tu invitación",
-    investmentLabelEn: "Investment TBD · Request an invitation",
+    investmentLabelEs: "Por invitación · la inversión se comparte en la conversación de acceso",
+    investmentLabelEn: "By invitation · investment shared in the access conversation",
     isPlaceholder: true,
     placeholderFields: ["capacity", "seatsLeft", "investment"],
   },
@@ -107,9 +107,9 @@ export const calendarRetreats: CalendarRetreat[] = [
     dateLabelEs: "Viernes 20 de noviembre de 2026",
     dateLabelEn: "Friday, November 20, 2026",
     venueState: "tbd",
-    venueLabelEs: "Por confirmar",
-    venueLabelEn: "TBD",
-    venueNote: "Sede en proceso de selección",
+    venueLabelEs: "Ciudad de México · dirección exacta 7 días antes",
+    venueLabelEn: "Mexico City · exact address 7 days before",
+    venueNote: "Sede en Ciudad de México. La dirección e indicaciones de llegada se envían por correo 7 días antes de la experiencia.",
     summaryEs:
       "Workshop intensivo de un día de autoconocimiento aplicado al personal branding. Explora tu historia, talentos, patrones y valores, y conviértelos en tu SOUL PRINT: un primer mapa estratégico de identidad, diferenciación y posicionamiento personal.",
     summaryEn:

@@ -61,7 +61,7 @@ export function Footer({
   const exploreLinks = [
     { href: `${base}`, label: dict.nav.home },
     { href: `${base}/${locale === "es" ? "el-metodo" : "method"}`, label: dict.nav.method },
-    { href: `${base}/${locale === "es" ? "los-caminos" : "paths"}`, label: dict.nav.paths },
+    { href: `${base}/${locale === "es" ? "retiros" : "retreats"}`, label: dict.nav.retreats },
     { href: `${base}/${locale === "es" ? "quienes-somos" : "who-we-are"}`, label: dict.nav.about },
     { href: `${base}/${locale === "es" ? "blog" : "journal"}`, label: dict.nav.blog },
   ];

@@ -1,1 +1,1 @@
-export { default, generateMetadata } from "../los-caminos/page";
+export { default } from "../los-caminos/page";

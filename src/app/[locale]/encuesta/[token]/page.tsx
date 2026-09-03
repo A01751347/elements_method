@@ -67,7 +67,7 @@ export default async function SurveyPage({
 
   return (
     <>
-      <section className="-mt-20 pt-32 pb-8 bg-[var(--color-paper-warm)] paper-grain">
+      <section className="-mt-20 pt-36 md:pt-44 pb-8 bg-[var(--color-paper-warm)] paper-grain">
         <Container>
           <div className="max-w-3xl">
             <Eyebrow className="mb-6 flex items-center gap-3">

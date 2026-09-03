@@ -130,7 +130,7 @@ export default async function RetreatDetailPage({
     <>
       {/* HERO */}
       <section
-        className="relative min-h-[80vh] flex items-end overflow-hidden -mt-20 pt-20 text-[var(--color-paper)]"
+        className="relative min-h-[80vh] flex items-end overflow-hidden -mt-20 pt-36 md:pt-44 text-[var(--color-paper)]"
         style={{
           background: `linear-gradient(135deg, ${el?.accentInk ?? "#2C2C2A"} 0%, var(--color-ink) 60%)`,
         }}

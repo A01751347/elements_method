@@ -70,6 +70,8 @@ export interface Experience {
   duration: L;
   location: L;
   modality: L;
+  /** Lugares reales del grupo — el número que se comunica en todo el sitio. */
+  seats: number;
   /** Official price in MXN. null = investment TBD. */
   priceMxn: number | null;
   earlyPriceMxn?: number;
@@ -123,6 +125,7 @@ const elementsAwakening: Experience = {
     es: "Presencial · Grupo reducido",
     en: "In person · Small group",
   },
+  seats: 15,
   priceMxn: null,
   includes: {
     es: "Hospedaje, alimentos, materiales y actividades",
@@ -538,10 +541,11 @@ const equinox: Experience = {
   },
   duration: { es: "Un día", en: "One day" },
   location: {
-    es: "Ciudad de México · sede por confirmar",
-    en: "Mexico City · venue to be confirmed",
+    es: "Ciudad de México · dirección exacta 7 días antes",
+    en: "Mexico City · exact address 7 days before",
   },
-  modality: { es: "Presencial · Cupo limitado", en: "In person · Limited seats" },
+  modality: { es: "Presencial · 20 lugares", en: "In person · 20 seats" },
+  seats: 20,
   priceMxn: 7500,
   earlyPriceMxn: 5900,
   earlyDeadlineIso: "2026-09-06",
@@ -1015,8 +1019,12 @@ const soulDiscovery: Experience = {
     en: "November 20, 2026",
   },
   duration: { es: "Un día intensivo", en: "One intensive day" },
-  location: { es: "Sede por confirmar", en: "Venue to be confirmed" },
-  modality: { es: "Presencial · Grupo reducido", en: "In person · Small group" },
+  location: {
+    es: "Ciudad de México · dirección exacta 7 días antes",
+    en: "Mexico City · exact address 7 days before",
+  },
+  modality: { es: "Presencial · 20 lugares", en: "In person · 20 seats" },
+  seats: 20,
   priceMxn: 7500,
   earlyPriceMxn: 5900,
   earlyDeadlineIso: "2026-10-11",

@@ -35,7 +35,7 @@ export default async function ContactPage({
 
   return (
     <>
-      <section className="-mt-20 pt-32 pb-12 bg-[var(--color-paper-warm)] paper-grain">
+      <section className="-mt-20 pt-36 md:pt-44 pb-12 bg-[var(--color-paper-warm)] paper-grain">
         <Container>
           <div className="grid lg:grid-cols-12 gap-12 items-end">
             <div className="lg:col-span-8">

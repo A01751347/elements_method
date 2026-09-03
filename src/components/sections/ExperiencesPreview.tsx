@@ -8,6 +8,7 @@ import {
   CalendarDays,
   Clock,
   MapPin,
+  Users,
   Droplets,
   Flame,
   Wind,
@@ -139,6 +140,19 @@ export function ExperiencesPreview({
                     <Fact icon={CalendarDays} text={t(e.dateLabel)} isHovered={isHovered} />
                     <Fact icon={Clock} text={t(e.duration)} isHovered={isHovered} />
                     <Fact icon={MapPin} text={t(e.location)} isHovered={isHovered} />
+                    <Fact
+                      icon={Users}
+                      text={
+                        e.ctaMode === "checkout"
+                          ? locale === "es"
+                            ? `${e.seats} lugares · compra directa`
+                            : `${e.seats} seats · direct purchase`
+                          : locale === "es"
+                            ? `${e.seats} lugares · por invitación`
+                            : `${e.seats} seats · by invitation`
+                      }
+                      isHovered={isHovered}
+                    />
                   </ul>
 
                   <p
@@ -217,11 +231,11 @@ export function ExperiencesPreview({
 
         <div className="mt-12 flex justify-center">
           <Button
-            href={`/${locale}/${locale === "es" ? "los-caminos" : "paths"}`}
+            href={`/${locale}/${locale === "es" ? "retiros" : "retreats"}`}
             variant="secondary"
             trailingArrow
           >
-            {locale === "es" ? "Comparar las experiencias" : "Compare experiences"}
+            {locale === "es" ? "Ver el calendario completo" : "See the full calendar"}
           </Button>
         </div>
       </Container>

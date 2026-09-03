@@ -62,7 +62,7 @@ export default async function RetreatsPage({
   return (
     <>
       {/* HERO */}
-      <section className="relative min-h-[70vh] flex items-end overflow-hidden -mt-20 pt-20 text-[var(--color-paper)]">
+      <section className="relative min-h-[70vh] flex items-end overflow-hidden -mt-20 pt-36 md:pt-44 text-[var(--color-paper)]">
         <div className="absolute inset-0 -z-20">
           <Image
             src="/images/heroes/retiros.jpg"
@@ -318,7 +318,7 @@ export default async function RetreatsPage({
           <div className="lg:col-span-5">
             <div className="space-y-3">
               <Button
-                href={`/${locale}/${locale === "es" ? "los-caminos" : "paths"}`}
+                href={`/${locale}/${locale === "es" ? "el-metodo" : "method"}`}
                 size="lg"
                 trailingArrow
                 className="bg-[var(--color-paper)] text-[var(--color-ink)] hover:bg-[var(--color-paper-warm)] w-full"

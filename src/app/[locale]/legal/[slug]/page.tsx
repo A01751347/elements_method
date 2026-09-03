@@ -68,7 +68,7 @@ export default async function LegalDocPage({
       </div>
 
       {/* HERO */}
-      <section className="print:hidden -mt-20 pt-32 pb-12 bg-[var(--color-paper-warm)]">
+      <section className="print:hidden -mt-20 pt-36 md:pt-44 pb-12 bg-[var(--color-paper-warm)]">
         <Container>
           <div className="grid lg:grid-cols-12 gap-10">
             <div className="lg:col-span-7">

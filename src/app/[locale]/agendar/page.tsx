@@ -32,8 +32,9 @@ export default async function ScheduleDiscoveryPage({
   const sp = await searchParams;
   if (!isLocale(locale)) notFound();
 
-  // Two live Cal.com events: diagnostico (individual) and empresas.
-  // Legacy ?type=diagnostico and the individual default land on the same one.
+  // Dos eventos vivos en Cal: el individual (30min) y empresas. Los slugs
+  // salen de CAL_EVENT_TYPES, que se puede reapuntar por variable de entorno
+  // cuando exista un evento propio de diagnóstico en la cuenta.
   const type = sp.type === "empresa" ? "enterprise" : "diagnostic";
 
   const eventType =
@@ -54,7 +55,7 @@ export default async function ScheduleDiscoveryPage({
 
   return (
     <>
-      <section className="-mt-20 pt-32 pb-8 bg-[var(--color-paper-warm)] paper-grain">
+      <section className="-mt-20 pt-36 md:pt-44 pb-8 bg-[var(--color-paper-warm)] paper-grain">
         <Container>
           <div className="grid lg:grid-cols-12 gap-12 items-end">
             <div className="lg:col-span-8">

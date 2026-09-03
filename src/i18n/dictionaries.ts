@@ -27,22 +27,15 @@ export interface Dict {
     title: string;
     subtitle: string;
     primaryCta: string;
-    secondaryCta: string;
     philosophyEyebrow: string;
     philosophyTitle: string;
     philosophyBody: string;
     elementsEyebrow: string;
     elementsTitle: string;
     elementsLead: string;
-    programsEyebrow: string;
-    programsTitle: string;
-    programsLead: string;
     experienceEyebrow: string;
     experienceTitle: string;
     experienceLead: string;
-    retreatsEyebrow: string;
-    retreatsTitle: string;
-    retreatsLead: string;
     testimonialsEyebrow: string;
     testimonialsTitle: string;
     companiesEyebrow: string;
@@ -103,7 +96,7 @@ export const es: Dict = {
     paths: "Programas",
     method: "El Método",
     companies: "Organizaciones",
-    retreats: "Experiencia",
+    retreats: "Experiencias",
     blog: "Artículos",
     cta: "Reservar",
   },
@@ -124,7 +117,6 @@ export const es: Dict = {
     subtitle:
       "Elements Method es un programa de desarrollo con impacto personal y profesional, basado en inmersiones en la naturaleza. Está diseñado para devolver a las personas —especialmente a quienes lideran— a su fuente esencial de poder, para que no solo se transformen a sí mismas: para que ese impacto se refleje en sus entornos, en sus equipos y en las organizaciones que las rodean.",
     primaryCta: "Descubre tu elemento dominante",
-    secondaryCta: "Explorar programas",
     philosophyEyebrow: "La filosofía",
     philosophyTitle: "La naturaleza no gestiona. La naturaleza lidera.",
     philosophyBody:
@@ -133,18 +125,10 @@ export const es: Dict = {
     elementsTitle: "Cuatro fuerzas. Un líder integrado.",
     elementsLead:
       "Cuando un líder se reconecta con su propia naturaleza — cuando encuentra su Agua, su Fuego, su Aire y su Tierra, y aprende a integrarlos en su núcleo — no necesita más herramientas. Se reconecta con su ser completo.",
-    programsEyebrow: "Elige tu Camino",
-    programsTitle: "Distintos niveles de profundidad. Un mismo método.",
-    programsLead:
-      "Una misma metodología y los mismos frameworks, en distintas cadencias, duraciones y niveles de profundidad. Lo que cambia es cuánto dura, cada cuánto te encuentras con el método y qué tan personalizado es. Eliges según tu momento y el resultado que buscas.",
     experienceEyebrow: "La experiencia de inmersión",
     experienceTitle: "Las actividades cambian. La estructura no.",
     experienceLead:
       "Cada generación de retiro es irrepetible. Cada inmersión sigue el mismo arco: presencia, contacto con el elemento, metodología, reflexión, diálogo, integración.",
-    retreatsEyebrow: "Calendario",
-    retreatsTitle: "Inmersiones por elemento.",
-    retreatsLead:
-      "Inmersiones presenciales de día completo en entornos naturales seleccionados. Cupo limitado a 15 líderes.",
     testimonialsEyebrow: "Voces del programa",
     testimonialsTitle: "Lo que dicen quienes ya pasaron.",
     companiesEyebrow: "Para líderes y organizaciones",
@@ -258,7 +242,7 @@ export const en: Dict = {
     paths: "Programs",
     method: "The Method",
     companies: "Organizations",
-    retreats: "Experience",
+    retreats: "Experiences",
     blog: "Articles",
     cta: "Reserve",
   },
@@ -279,7 +263,6 @@ export const en: Dict = {
     subtitle:
       "Elements Method is a development program with personal and professional impact, built on nature immersions. It is designed to return people —especially those who lead— to their essential source of power, so they don't only transform themselves: so that impact shows up in their environments, their teams and the organizations around them.",
     primaryCta: "Discover your dominant element",
-    secondaryCta: "Explore programs",
     philosophyEyebrow: "The philosophy",
     philosophyTitle: "Nature doesn't manage. Nature leads.",
     philosophyBody:
@@ -288,18 +271,10 @@ export const en: Dict = {
     elementsTitle: "Four forces. One integrated leader.",
     elementsLead:
       "When a leader reconnects with their own nature — when they find their Water, their Fire, their Air and their Earth, and learn to integrate them in their core — they don't need more tools. They reconnect with their complete being.",
-    programsEyebrow: "Choose your Journey",
-    programsTitle: "Different depths. One method.",
-    programsLead:
-      "One methodology and the same frameworks, in different cadences, durations and depths. What changes is how long it lasts, how often you meet the method, and how personalized it is. You choose by your moment and the result you're after.",
     experienceEyebrow: "The immersion experience",
     experienceTitle: "Activities change. The structure doesn't.",
     experienceLead:
       "Every retreat generation is unrepeatable. Each immersion follows the same arc: presence, contact with the element, methodology, reflection, dialogue, integration.",
-    retreatsEyebrow: "Calendar",
-    retreatsTitle: "Immersions by element.",
-    retreatsLead:
-      "Full-day in-person immersions in curated natural environments. Capacity capped at 15 leaders.",
     testimonialsEyebrow: "Program voices",
     testimonialsTitle: "What those who walked through say.",
     companiesEyebrow: "For leaders and organizations",

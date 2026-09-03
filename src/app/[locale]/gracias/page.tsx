@@ -65,7 +65,7 @@ export default async function ThankYouPage({
           transactionId={order.folio}
         />
       )}
-      <section className="-mt-20 pt-32 pb-12 bg-[var(--color-paper-warm)] paper-grain">
+      <section className="-mt-20 pt-36 md:pt-44 pb-12 bg-[var(--color-paper-warm)] paper-grain">
         <Container>
           <div className="max-w-3xl">
             <div className="inline-flex items-center justify-center h-14 w-14 rounded-full bg-emerald-100 mb-8">

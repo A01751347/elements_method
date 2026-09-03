@@ -8,8 +8,8 @@ const BASE = process.env.NEXT_PUBLIC_APP_URL || "https://elementsmethod.com";
 const STATIC_ROUTES: { es: string; en: string; priority: number }[] = [
   { es: "", en: "", priority: 1 },
   { es: "el-metodo", en: "method", priority: 0.9 },
-  { es: "los-caminos", en: "paths", priority: 0.9 },
   { es: "retiros", en: "retreats", priority: 0.9 },
+  { es: "test", en: "test", priority: 0.8 },
   { es: "empresas", en: "companies", priority: 0.8 },
   { es: "empresas/cotizar", en: "companies/cotizar", priority: 0.7 },
   { es: "quienes-somos", en: "who-we-are", priority: 0.7 },

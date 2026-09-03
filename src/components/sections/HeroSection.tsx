@@ -22,6 +22,7 @@ import type { Locale } from "@/i18n/config";
 import type { Dict } from "@/i18n/dictionaries";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
+import { getNextExperience } from "@/data/experiences";
 
 // Home hero image. Nature-first per client feedback (was a luxury resort
 // terrace, home.jpg — replaced with a forest trail that echoes the
@@ -36,6 +37,12 @@ export function HeroSection({
   dict: Dict;
 }) {
   const base = `/${locale}`;
+  // El botón principal del hero vende la experiencia más próxima; el
+  // secundario lleva al test de elemento dominante (la promesa que hace el
+  // copy del hero desde el día uno).
+  const next = getNextExperience();
+  const experiencesBase = `${base}/${locale === "es" ? "retiros" : "retreats"}`;
+  const nextHref = next ? `${experiencesBase}/${next.slug}` : experiencesBase;
   const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
 
@@ -52,7 +59,7 @@ export function HeroSection({
   return (
     <section
       ref={ref}
-      className="relative min-h-[100svh] flex items-end overflow-hidden -mt-20 pt-20 text-[var(--color-paper)]"
+      className="relative min-h-[100svh] flex items-end overflow-hidden -mt-20 pt-36 md:pt-44 text-[var(--color-paper)]"
     >
       {/* Background image with parallax */}
       <motion.div
@@ -126,20 +133,23 @@ export function HeroSection({
             transition={{ duration: 0.7, delay: 0.85 }}
             className="mt-10 flex flex-wrap gap-3"
           >
+            {next ? (
+              <Button href={nextHref} size="lg" variant="solidLight" trailingArrow>
+                {locale === "es"
+                  ? `${next.ctaMode === "checkout" ? "Reserva tu lugar" : "Solicita tu invitación"} · ${next.title}`
+                  : `${next.ctaMode === "checkout" ? "Reserve your seat" : "Request an invitation"} · ${next.title}`}
+              </Button>
+            ) : (
+              <Button href={experiencesBase} size="lg" variant="solidLight" trailingArrow>
+                {locale === "es" ? "Ver experiencias" : "See experiences"}
+              </Button>
+            )}
             <Button
-              href={`${base}/${locale === "es" ? "el-metodo" : "method"}`}
-              size="lg"
-              variant="solidLight"
-              trailingArrow
-            >
-              {dict.home.primaryCta}
-            </Button>
-            <Button
-              href={`${base}/${locale === "es" ? "los-caminos" : "paths"}`}
+              href={`${base}/${locale === "es" ? "test" : "test"}`}
               size="lg"
               variant="outlineLight"
             >
-              {dict.home.secondaryCta}
+              {dict.home.primaryCta}
             </Button>
           </motion.div>
 

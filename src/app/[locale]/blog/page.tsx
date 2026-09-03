@@ -33,7 +33,7 @@ export default async function BlogPage({
   return (
     <>
       {/* HERO */}
-      <section className="relative min-h-[60vh] flex items-end overflow-hidden -mt-20 pt-20 text-[var(--color-paper)]">
+      <section className="relative min-h-[60vh] flex items-end overflow-hidden -mt-20 pt-36 md:pt-44 text-[var(--color-paper)]">
         <div className="absolute inset-0 -z-20">
           <Image
             src="/images/heroes/blog.jpg"

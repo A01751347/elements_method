@@ -33,9 +33,12 @@ interface NavLink {
 export function Header({
   locale,
   dict,
+  belowBar,
 }: {
   locale: Locale;
   dict: Dict;
+  /** True when the announcement bar is on screen — the header sits under it. */
+  belowBar?: boolean;
 }) {
   const pathname = usePathname() || "";
   const [scrolled, setScrolled] = React.useState(false);
@@ -94,10 +97,9 @@ export function Header({
   // from-[var(--color-ink)]` pattern in each page's HERO section.
   const DARK_HERO_PATHS = [
     "",
+    "/test",
     "/el-metodo",
     "/method",
-    "/los-caminos",
-    "/paths",
     "/retiros",
     "/retreats",
     "/quienes-somos",
@@ -115,7 +117,6 @@ export function Header({
   const inverted = hasDarkHero && !scrolled;
   const links: NavLink[] = [
     { href: `${base}/${locale === "es" ? "el-metodo" : "method"}`, label: dict.nav.method },
-    { href: `${base}/${locale === "es" ? "los-caminos" : "paths"}`, label: dict.nav.paths },
     { href: `${base}/${locale === "es" ? "retiros" : "retreats"}`, label: dict.nav.retreats },
     { href: `${base}/${locale === "es" ? "quienes-somos" : "who-we-are"}`, label: dict.nav.about },
     { href: `${base}/${locale === "es" ? "empresas" : "companies"}`, label: dict.nav.companies },
@@ -138,7 +139,8 @@ export function Header({
        *    · light page at top → paper band, slightly lighter               */}
       <header
         className={cn(
-          "fixed top-0 inset-x-0 z-50 transition-all duration-500 print:hidden",
+          "fixed inset-x-0 z-50 transition-all duration-500 print:hidden",
+          belowBar ? "top-10" : "top-0",
           scrolled
             ? "bg-[var(--color-paper)]/92 backdrop-blur-md border-b border-[var(--color-line)]/60"
             : inverted
@@ -323,7 +325,10 @@ export function Header({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-40 lg:hidden bg-[var(--color-paper)] pt-20"
+            className={cn(
+              "fixed inset-0 z-40 lg:hidden bg-[var(--color-paper)]",
+              belowBar ? "pt-[7.5rem]" : "pt-20",
+            )}
           >
             <nav className="container-page flex flex-col gap-1 pt-8 pb-12">
               {links.map((l, idx) => (

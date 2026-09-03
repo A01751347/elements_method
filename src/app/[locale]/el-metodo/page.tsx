@@ -48,6 +48,7 @@ import { Container } from "@/components/ui/Container";
 import { Section, Eyebrow } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
 import { getNextExperience, isEarlyAccessActive } from "@/data/experiences";
+import { NextExperienceBand } from "@/components/sections/NextExperienceBand";
 import { cn } from "@/lib/utils";
 
 export default function MethodPage({
@@ -82,7 +83,7 @@ export default function MethodPage({
       {/* HERO */}
       <section
         ref={heroRef}
-        className="relative min-h-[80vh] flex items-end overflow-hidden -mt-20 pt-20 text-[var(--color-paper)]"
+        className="relative min-h-[80vh] flex items-end overflow-hidden -mt-20 pt-36 md:pt-44 text-[var(--color-paper)]"
       >
         <motion.div
           style={{ y: heroY }}
@@ -147,50 +148,7 @@ export default function MethodPage({
       </section>
 
       {/* NEXT EXPERIENCE — promo band (fast sales path, no scrolling needed) */}
-      {next && (
-        <section className="bg-[var(--color-ink)] text-[var(--color-paper)] border-t border-[var(--color-paper)]/10">
-          <Container className="py-6 md:py-7">
-            <div className="flex flex-col md:flex-row md:items-center gap-5 md:gap-8">
-              <div className="flex items-center gap-3 shrink-0">
-                <Sparkles className="h-4 w-4 text-[var(--color-gold-soft)]" strokeWidth={1.5} />
-                <span className="text-[0.65rem] tracking-[0.22em] uppercase font-medium text-[var(--color-gold-soft)]">
-                  {locale === "es" ? "Próxima experiencia" : "Next experience"}
-                </span>
-              </div>
-              <div className="flex-1 min-w-0">
-                <span className="font-[family-name:var(--font-display)] text-lg md:text-xl">
-                  {next.title}
-                </span>
-                <span className="text-sm text-[var(--color-paper)]/80 ml-3">
-                  {locale === "es" ? next.dateLabel.es : next.dateLabel.en}
-                  {" · "}
-                  {locale === "es" ? next.location.es : next.location.en}
-                </span>
-                {nextEarly && next.earlyLabel && (
-                  <span className="ml-3 inline-block align-middle bg-[var(--color-gold)]/20 text-[var(--color-gold-soft)] px-2 py-1 text-[0.6rem] tracking-[0.14em] uppercase font-medium">
-                    {locale === "es" ? next.earlyLabel.es : next.earlyLabel.en}
-                  </span>
-                )}
-              </div>
-              <Button
-                href={nextHref}
-                size="sm"
-                variant="solidLight"
-                trailingArrow
-                className="shrink-0"
-              >
-                {locale === "es"
-                  ? next.ctaMode === "checkout"
-                    ? "Reserva tu lugar"
-                    : "Solicitar invitación"
-                  : next.ctaMode === "checkout"
-                    ? "Reserve your seat"
-                    : "Request an invitation"}
-              </Button>
-            </div>
-          </Container>
-        </section>
-      )}
+      <NextExperienceBand locale={locale} />
 
       {/* CORE INSIGHT — golden_circle.md + master doc */}
       <Section spacing="default">
@@ -863,7 +821,7 @@ export default function MethodPage({
             </ul>
             <div className="mt-10 flex flex-wrap gap-3">
               <Button
-                href={`/${locale}/${locale === "es" ? "los-caminos" : "paths"}`}
+                href={`/${locale}/${locale === "es" ? "retiros" : "retreats"}`}
                 trailingArrow
                 className="bg-[var(--color-paper)] text-[var(--color-ink)] hover:bg-[var(--color-paper-warm)]"
               >
