@@ -796,32 +796,26 @@ export const coachingSection = {
   eyebrowEn: "The coaching",
   headlineEs: "Una inmersión abre la puerta. El acompañamiento sostenido es lo que asegura que el líder cruce — y se quede del otro lado.",
   headlineEn: "An immersion opens the door. Sustained coaching is what ensures the leader crosses — and stays on the other side.",
-  bodyEs: "Cada programa grupal — Raíz, Momentum, Fluir y Brújula — incluye la opción de continuar con 6 meses de coaching individual quincenal. Lo guía un coach certificado del Elements Method que conoce el programa exacto que completaste. No es coaching genérico. Es la continuación natural del programa: lo que viviste en la naturaleza se traduce, semana tras semana, en tu práctica diaria de liderazgo.",
-  bodyEn: "Every group program — Root, Momentum, Flow and Compass — includes the option to continue with 6 months of individual bi-weekly coaching. It's led by a certified Elements Method coach who knows the exact program you completed. This is not generic coaching. It's the natural continuation of the program: what you lived in nature translates, week after week, into your daily leadership practice.",
+  bodyEs: "Cada Executive Experience — EQUINOX, ELEMENTS AWAKENING y SOUL Discovery — incluye la opción de continuar con 6 meses de coaching individual quincenal. Lo guía un coach certificado del Elements Method que estuvo en la experiencia que viviste. No es coaching genérico. Es la continuación natural de la inmersión: lo que viviste en la naturaleza se traduce, semana tras semana, en tu práctica diaria de liderazgo.",
+  bodyEn: "Every Executive Experience — EQUINOX, ELEMENTS AWAKENING and SOUL Discovery — includes the option to continue with 6 months of individual bi-weekly coaching. It's led by a certified Elements Method coach who was in the experience you lived. This is not generic coaching. It's the natural continuation of the immersion: what you lived in nature translates, week after week, into your daily leadership practice.",
   items: [
     {
-      titleEs: "Raíz",
-      titleEn: "Root",
-      bodyEs: "Comienza cuando cierra el retiro de 3 días. El foco: llevar el intensivo a tu práctica diaria, para que lo vivido no se quede en el fin de semana.\n\nSesiones de 50–60 min quincenales · presenciales o virtuales · 6 meses · tarifa preferencial para participantes.",
-      bodyEn: "Begins when the 3-day retreat closes. The focus: integrate the intensive into your daily practice, so what you lived doesn't stay in the weekend.\n\n50–60 min sessions, bi-weekly · in person or virtual · 6 months · preferential rate for participants.",
+      titleEs: "EQUINOX",
+      titleEn: "EQUINOX",
+      bodyEs: "Comienza cuando cierra la jornada del equinoccio. El foco: sostener la transición que abriste — que soltar, realinear y emerger se vuelva práctica y no un día aislado.\n\nSesiones de 50–60 min quincenales · presenciales o virtuales · 6 meses · tarifa preferencial para participantes.",
+      bodyEn: "Begins when the equinox day closes. The focus: sustain the transition you opened — so releasing, realigning and emerging becomes practice, not an isolated day.\n\n50–60 min sessions, bi-weekly · in person or virtual · 6 months · preferential rate for participants.",
     },
     {
-      titleEs: "Momentum",
-      titleEn: "Momentum",
-      bodyEs: "Comienza durante el programa y se extiende 3 meses más allá. El foco: sostener en el tiempo la intensidad del trimestre, para que el impulso no se apague al terminar.\n\nSesiones de 50–60 min quincenales · presenciales o virtuales · 6 meses · tarifa preferencial para participantes.",
-      bodyEn: "Begins during the program and extends 3 months beyond it. The focus: sustain the quarter's intensity over time, so the momentum doesn't fade once it ends.\n\n50–60 min sessions, bi-weekly · in person or virtual · 6 months · preferential rate for participants.",
+      titleEs: "ELEMENTS AWAKENING",
+      titleEn: "ELEMENTS AWAKENING",
+      bodyEs: "Comienza cuando cierra el retiro de 2.5 días. El foco: llevar la integración de los cinco elementos a tu práctica diaria de liderazgo, para que lo vivido en Morelos no se quede en el fin de semana.\n\nSesiones de 50–60 min quincenales · presenciales o virtuales · 6 meses · tarifa preferencial para participantes.",
+      bodyEn: "Begins when the 2.5-day retreat closes. The focus: bring the integration of the five elements into your daily leadership practice, so what you lived in Morelos doesn't stay in the weekend.\n\n50–60 min sessions, bi-weekly · in person or virtual · 6 months · preferential rate for participants.",
     },
     {
-      titleEs: "Fluir",
-      titleEn: "Flow",
-      bodyEs: "Comienza durante el programa y continúa después del cierre. El foco: profundizar la aplicación de cada elemento trabajado, mes a mes, en tu día a día.\n\nSesiones de 50–60 min quincenales · presenciales o virtuales · 6 meses · tarifa preferencial para participantes.",
-      bodyEn: "Begins during the program and continues after it closes. The focus: deepen the application of each element worked, month by month, in your everyday practice.\n\n50–60 min sessions, bi-weekly · in person or virtual · 6 months · preferential rate for participants.",
-    },
-    {
-      titleEs: "Brújula",
-      titleEn: "Compass",
-      bodyEs: "Comienza después del taller de 1 día. El foco: profundizar el elemento que tu equipo eligió, para que la jornada se vuelva práctica sostenida.\n\nSesiones de 50–60 min quincenales · presenciales o virtuales · 6 meses · tarifa preferencial para participantes.",
-      bodyEn: "Begins after the 1-day workshop. The focus: deepen the element your team chose, so the day becomes sustained practice.\n\n50–60 min sessions, bi-weekly · in person or virtual · 6 months · preferential rate for participants.",
+      titleEs: "SOUL Discovery",
+      titleEn: "SOUL Discovery",
+      bodyEs: "Comienza después del workshop. El foco: convertir tu SOUL PRINT en decisiones concretas de identidad, posicionamiento y presencia, mes a mes.\n\nSesiones de 50–60 min quincenales · presenciales o virtuales · 6 meses · tarifa preferencial para participantes.",
+      bodyEn: "Begins after the workshop. The focus: turn your SOUL PRINT into concrete decisions of identity, positioning and presence, month by month.\n\n50–60 min sessions, bi-weekly · in person or virtual · 6 months · preferential rate for participants.",
     },
   ],
 };
@@ -831,8 +825,8 @@ export const communitySection = {
   eyebrowEn: "The community",
   headlineEs: "Una comunidad de líderes que se descubren un poco más cada día — para liderar mejor en su vida y en la de quienes lideran.",
   headlineEn: "A community of leaders who discover themselves a little more every day — to lead better in their lives and in the lives of those they lead.",
-  bodyEs: "Cuando terminas cualquier camino — Brújula, Raíz, Momentum, Fluir u Oneness — no entras a una lista de egresados. Entras a una comunidad viva, comprometida con la misma práctica: seguir descubriéndote, cada día, como forma de vida y no como un evento aislado.\n\nSe accede a un grupo de participantes por WhatsApp y al grupo de coaches, a una newsletter mensual y a los artículos que escribimos a partir de la metodología. La comunidad existe porque el trabajo real nunca termina: sigue haciéndote las preguntas, sigue escuchando qué elemento necesita cada situación y sigue afinando tu ritmo entre Agua, Fuego, Aire y Tierra, integrándolos en tu núcleo.",
-  bodyEn: "When you complete any path — Compass, Root, Momentum, Flow or Oneness — you don't just join an alumni list. You join a living community committed to the same practice: continuous self-discovery, every day, as a way of life and not an isolated event.\n\nYou get a participant group on WhatsApp and access to the coaches' group, a monthly newsletter, and the articles we write from the methodology. The community exists because the real work never ends: keep asking the questions, keep listening for the element each situation needs, and keep refining your rhythm between Water, Fire, Air and Earth, integrating them in your core.",
+  bodyEs: "Cuando terminas cualquier Executive Experience — EQUINOX, ELEMENTS AWAKENING o SOUL Discovery — no entras a una lista de egresados. Entras a una comunidad viva, comprometida con la misma práctica: seguir descubriéndote, cada día, como forma de vida y no como un evento aislado.\n\nSe accede a un grupo de participantes por WhatsApp y al grupo de coaches, a una newsletter mensual y a los artículos que escribimos a partir de la metodología. La comunidad existe porque el trabajo real nunca termina: sigue haciéndote las preguntas, sigue escuchando qué elemento necesita cada situación y sigue afinando tu ritmo entre Agua, Fuego, Aire y Tierra, integrándolos en tu núcleo.",
+  bodyEn: "When you complete any Executive Experience — EQUINOX, ELEMENTS AWAKENING or SOUL Discovery — you don't just join an alumni list. You join a living community committed to the same practice: continuous self-discovery, every day, as a way of life and not an isolated event.\n\nYou get a participant group on WhatsApp and access to the coaches' group, a monthly newsletter, and the articles we write from the methodology. The community exists because the real work never ends: keep asking the questions, keep listening for the element each situation needs, and keep refining your rhythm between Water, Fire, Air and Earth, integrating them in your core.",
 };
 
 export const rootsArc = [
@@ -1776,9 +1770,9 @@ export const faqs = [
     qEs: "¿Qué programas ofrecen?",
     qEn: "What programs do you offer?",
     aEs:
-      "Cinco caminos, ordenados de mayor a menor duración: Fluir (5 meses, grupal), Momentum (3 meses intensivo grupal), Raíz (retiro de 3 días), Brújula (taller de 1 día a la medida) y Oneness (inmersión individual). Para organizaciones existe Origin — retiros corporativos hechos a la medida.",
+      "Tres Executive Experiences presenciales para 2026: EQUINOX (22 de septiembre · un día — el arte de la transición interior), ELEMENTS AWAKENING (16–18 de octubre · retiro inmersivo de liderazgo de 2.5 días en Misión del Sol, Morelos) y SOUL Discovery (20 de noviembre · workshop intensivo de un día de identidad y marca personal). Para organizaciones existe Origin — retiros corporativos hechos a la medida.",
     aEn:
-      "Five paths, from longest to shortest: Flow (5 months, group), Momentum (3-month intensive group), Root (3-day retreat), Compass (custom 1-day workshop) and Oneness (individual immersion). For organizations there is Origin — bespoke corporate retreats.",
+      "Three in-person Executive Experiences for 2026: EQUINOX (September 22 · one day — the art of inner transition), ELEMENTS AWAKENING (October 16–18 · a 2.5-day immersive leadership retreat at Misión del Sol, Morelos) and SOUL Discovery (November 20 · a one-day intensive workshop on identity and personal branding). For organizations there is Origin — bespoke corporate retreats.",
   },
   {
     qEs: "¿Qué resultados puedo esperar?",

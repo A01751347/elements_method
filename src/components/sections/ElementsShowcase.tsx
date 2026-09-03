@@ -22,6 +22,7 @@ import {
   type ElementKey,
   type ElementInfo,
 } from "@/data/content";
+import { getNextExperience, isEarlyAccessActive } from "@/data/experiences";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Section";
 import { cn } from "@/lib/utils";
@@ -52,6 +53,13 @@ export function ElementsShowcase({
       : staticFourElements;
   const [active, setActive] = React.useState<ElementKey>("agua");
   const current = shown.find((e) => e.key === active) ?? shown[0];
+
+  // Ruta de venta directa: la experiencia más próxima se lleva el CTA de esta
+  // sección (antes apuntaba a "Estudiar el método completo").
+  const next = getNextExperience();
+  const nextEarly = next ? isEarlyAccessActive(next) : false;
+  const experiencesBase = `/${locale}/${locale === "es" ? "retiros" : "retreats"}`;
+  const nextHref = next ? `${experiencesBase}/${next.slug}` : experiencesBase;
 
   return (
     <section className="bg-[var(--color-paper-warm)] py-24 md:py-36 relative paper-grain overflow-hidden">
@@ -212,13 +220,35 @@ export function ElementsShowcase({
                   />
                 </div>
 
-                <Link
-                  href={`/${locale}/${locale === "es" ? "el-metodo" : "method"}`}
-                  className="group mt-10 inline-flex items-center gap-2 text-sm text-[var(--color-paper)] border-b border-[var(--color-paper)]/30 pb-1 hover:border-[var(--color-paper)] transition-colors"
-                >
-                  {locale === "es" ? "Estudiar el método completo" : "Study the full method"}
-                  <ArrowUpRight className="h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                </Link>
+                <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-4">
+                  <Link
+                    href={nextHref}
+                    className="group inline-flex items-center gap-2 bg-[var(--color-paper)] text-[var(--color-ink)] px-5 py-3 text-sm tracking-wide hover:bg-[var(--color-paper-warm)] transition-colors"
+                  >
+                    {next
+                      ? locale === "es"
+                        ? next.ctaMode === "checkout"
+                          ? `Reserva tu lugar · ${next.title}`
+                          : `Solicitar invitación · ${next.title}`
+                        : next.ctaMode === "checkout"
+                          ? `Reserve your seat · ${next.title}`
+                          : `Request an invitation · ${next.title}`
+                      : locale === "es"
+                        ? "Ver próximas experiencias"
+                        : "See upcoming experiences"}
+                    <ArrowUpRight className="h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  </Link>
+                  {next && (
+                    <span className="text-[0.7rem] tracking-[0.18em] uppercase text-[var(--color-paper)]/80">
+                      {locale === "es" ? next.dateLabel.es : next.dateLabel.en}
+                      {nextEarly && next.earlyLabel && (
+                        <span className="ml-3 inline-block align-middle bg-[var(--color-gold)]/20 text-[var(--color-gold-soft)] px-2 py-1 text-[0.6rem] tracking-[0.14em] uppercase font-medium">
+                          {locale === "es" ? next.earlyLabel.es : next.earlyLabel.en}
+                        </span>
+                      )}
+                    </span>
+                  )}
+                </div>
               </div>
             </motion.div>
           </AnimatePresence>

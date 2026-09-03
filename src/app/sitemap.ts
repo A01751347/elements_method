@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getCalendarRetreats } from "@/modules/content/calendarRetreats";
 import { getBlogPosts } from "@/modules/content/blog";
-import { getPaths } from "@/modules/content/paths";
 
 const BASE = process.env.NEXT_PUBLIC_APP_URL || "https://elementsmethod.com";
 
@@ -39,20 +38,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
   }
 
-  // Dynamic: retreats, paths, blog posts (best-effort — safeRead in each query).
-  const [retreats, paths, posts] = await Promise.all([
+  // Dynamic: retreats (the three Executive Experiences) + blog posts
+  // (best-effort — safeRead in each query).
+  const [retreats, posts] = await Promise.all([
     getCalendarRetreats(),
-    getPaths(),
     getBlogPosts(),
   ]);
 
   for (const rt of retreats) {
     entries.push({ url: `${BASE}/es/retiros/${rt.slug}`, lastModified: now, priority: 0.7 });
     entries.push({ url: `${BASE}/en/retreats/${rt.slug}`, lastModified: now, priority: 0.6 });
-  }
-  for (const p of paths) {
-    entries.push({ url: `${BASE}/es/los-caminos/${p.slug}`, lastModified: now, priority: 0.7 });
-    entries.push({ url: `${BASE}/en/paths/${p.slug}`, lastModified: now, priority: 0.6 });
   }
   for (const post of posts) {
     const last = post.publishedAt ? new Date(post.publishedAt) : now;

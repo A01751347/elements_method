@@ -9,6 +9,7 @@ import { Container } from "@/components/ui/Container";
 import { LangSwitcher } from "./LangSwitcher";
 import { LogoMark } from "@/components/brand/Logo";
 import { contactInfo as staticContactInfo, type ContactInfo } from "@/data/launchData";
+import { experiences } from "@/data/experiences";
 
 export function Footer({
   locale,
@@ -65,14 +66,15 @@ export function Footer({
     { href: `${base}/${locale === "es" ? "blog" : "journal"}`, label: dict.nav.blog },
   ];
 
-  const caminosBase = `${base}/${locale === "es" ? "los-caminos" : "paths"}`;
-  // Same order as /los-caminos: the two entry-point offers first.
+  const retreatsBase = `${base}/${locale === "es" ? "retiros" : "retreats"}`;
+  // Las tres Executive Experiences 2026, en orden de calendario. Cada link va a
+  // su landing en /retiros/[slug], que es donde vive el checkout.
   const programLinks = [
-    { href: `${caminosBase}/brujula`, label: locale === "es" ? "Brújula" : "Compass" },
-    { href: `${caminosBase}/fuente`, label: locale === "es" ? "Raíz" : "Root" },
-    { href: `${caminosBase}/corriente`, label: "Momentum" },
-    { href: `${caminosBase}/raices`, label: locale === "es" ? "Fluir" : "Flow" },
-    { href: `${caminosBase}/soulfull`, label: "Oneness" },
+    ...experiences.map((e) => ({ href: `${retreatsBase}/${e.slug}`, label: e.title })),
+    {
+      href: retreatsBase,
+      label: locale === "es" ? "Calendario" : "Calendar",
+    },
     {
       href: `${base}/${locale === "es" ? "empresas" : "companies"}`,
       label: locale === "es" ? "A la medida" : "Bespoke",

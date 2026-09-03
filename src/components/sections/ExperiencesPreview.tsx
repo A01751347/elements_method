@@ -3,32 +3,64 @@
 import * as React from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
-import { ArrowUpRight, Check, Sparkles, Clock, Compass, Waves, User } from "lucide-react";
+import {
+  ArrowUpRight,
+  CalendarDays,
+  Clock,
+  MapPin,
+  Droplets,
+  Flame,
+  Wind,
+  Mountain,
+  Atom,
+  type LucideIcon,
+} from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import type { Dict } from "@/i18n/dictionaries";
-import { paths as staticPaths, type PathInfo } from "@/data/content";
+import type { ElementKey } from "@/data/content";
+import {
+  experiences as staticExperiences,
+  isEarlyAccessActive,
+  type Experience,
+  type L,
+} from "@/data/experiences";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 
-// One icon per program, in display order (Fluir, Momentum, Raíz, Brújula, Oneness).
-// `?? Sparkles` guards against any future program with no assigned icon.
-const PATH_ICONS = [Waves, Sparkles, Clock, Compass, User];
+const ELEMENT_ICONS: Record<ElementKey, LucideIcon> = {
+  agua: Droplets,
+  fuego: Flame,
+  aire: Wind,
+  tierra: Mountain,
+  eter: Atom,
+};
 
-export function PathsPreview({
+const mxn = (n: number) => `$${n.toLocaleString("es-MX")} MXN`;
+
+/**
+ * Executive Experiences preview — the three real 2026 experiences
+ * (EQUINOX · ELEMENTS AWAKENING · SOUL Discovery). Replaces the legacy
+ * five-"caminos" preview: those programs no longer exist. Cards link to the
+ * landing at /retiros/[slug], which is where the checkout lives.
+ */
+export function ExperiencesPreview({
   locale,
   dict,
-  paths: pathsProp,
+  experiences: experiencesProp,
 }: {
   locale: Locale;
   dict: Dict;
-  paths?: PathInfo[];
+  experiences?: Experience[];
 }) {
-  // Home preview shows the three group programs (the grid is 3-wide); the full
-  // five-program list lives on /los-caminos. An explicit prop overrides this.
-  const paths = pathsProp && pathsProp.length > 0 ? pathsProp : staticPaths.slice(0, 3);
+  const list =
+    experiencesProp && experiencesProp.length > 0
+      ? experiencesProp
+      : staticExperiences;
   const [hovered, setHovered] = React.useState<number | null>(null);
+  const t = (l: L) => (locale === "en" ? l.en : l.es);
+  const detailBase = `/${locale}/${locale === "es" ? "retiros" : "retreats"}`;
 
   return (
     <section className="py-24 md:py-36 bg-[var(--color-paper-warm)] paper-grain relative">
@@ -47,18 +79,15 @@ export function PathsPreview({
           className="grid md:grid-cols-3 gap-px bg-[var(--color-line)] border border-[var(--color-line)]"
           onMouseLeave={() => setHovered(null)}
         >
-          {paths.map((p, idx) => {
-            const name = locale === "es" ? p.nameEs : p.nameEn;
-            const short = locale === "es" ? p.shortEs : p.shortEn;
-            const includes = locale === "es" ? p.includesEs : p.includesEn;
-            const duration = locale === "es" ? p.durationEs : p.durationEn;
-            const Icon = PATH_ICONS[idx] ?? Sparkles;
+          {list.map((e, idx) => {
+            const Icon = ELEMENT_ICONS[e.elementKey] ?? Atom;
+            const earlyActive = isEarlyAccessActive(e);
             const isHovered = hovered === idx;
             const isDim = hovered !== null && hovered !== idx;
 
             return (
               <motion.article
-                key={p.slug}
+                key={e.slug}
                 onMouseEnter={() => setHovered(idx)}
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -95,7 +124,7 @@ export function PathsPreview({
                       isHovered ? "text-[var(--color-paper)]" : "text-[var(--color-ink)]",
                     )}
                   >
-                    {name}
+                    {e.title}
                   </h3>
                   <p
                     className={cn(
@@ -103,29 +132,23 @@ export function PathsPreview({
                       isHovered ? "text-[var(--color-paper)]/90" : "text-[var(--color-ink-soft)]",
                     )}
                   >
-                    {short}
+                    {t(e.tagline)}
                   </p>
 
                   <ul className="space-y-2.5">
-                    {includes.slice(0, 4).map((item) => (
-                      <li
-                        key={item}
-                        className={cn(
-                          "flex items-start gap-2 text-sm leading-relaxed transition-colors",
-                          isHovered ? "text-[var(--color-paper)]/95" : "text-[var(--color-ink-soft)]",
-                        )}
-                      >
-                        <Check
-                          className={cn(
-                            "h-4 w-4 mt-0.5 shrink-0",
-                            isHovered ? "text-[var(--color-paper-warm)]" : "text-[var(--color-moss-500)]",
-                          )}
-                          strokeWidth={1.5}
-                        />
-                        <span>{item}</span>
-                      </li>
-                    ))}
+                    <Fact icon={CalendarDays} text={t(e.dateLabel)} isHovered={isHovered} />
+                    <Fact icon={Clock} text={t(e.duration)} isHovered={isHovered} />
+                    <Fact icon={MapPin} text={t(e.location)} isHovered={isHovered} />
                   </ul>
+
+                  <p
+                    className={cn(
+                      "mt-6 text-sm leading-relaxed",
+                      isHovered ? "text-[var(--color-paper)]/90" : "text-[var(--color-ink-soft)]",
+                    )}
+                  >
+                    {t(e.lead)}
+                  </p>
                 </div>
 
                 <div
@@ -141,23 +164,49 @@ export function PathsPreview({
                         isHovered ? "text-[var(--color-paper)]/85" : "text-[var(--color-muted)]",
                       )}
                     >
-                      {duration}
+                      {locale === "es" ? "Inversión" : "Investment"}
                     </div>
-                    <div className="font-[family-name:var(--font-display)] text-xl italic text-[var(--color-muted)]">
-                      {locale === "es" ? "Inversión a confirmar" : "Investment TBD"}
-                    </div>
+                    {e.priceMxn == null ? (
+                      <div className="font-[family-name:var(--font-display)] text-xl italic text-[var(--color-muted)]">
+                        {locale === "es" ? "Por confirmar" : "To be confirmed"}
+                      </div>
+                    ) : earlyActive && e.earlyPriceMxn != null ? (
+                      <div className="flex items-baseline gap-2 flex-wrap">
+                        <span className="font-[family-name:var(--font-display)] text-xl">
+                          {mxn(e.earlyPriceMxn)}
+                        </span>
+                        <span
+                          className={cn(
+                            "text-xs line-through",
+                            isHovered ? "text-[var(--color-paper)]/60" : "text-[var(--color-muted)]",
+                          )}
+                        >
+                          {mxn(e.priceMxn)}
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="font-[family-name:var(--font-display)] text-xl">
+                        {mxn(e.priceMxn)}
+                      </div>
+                    )}
                   </div>
 
                   <Link
-                    href={`/${locale}/${locale === "es" ? "los-caminos" : "paths"}/${p.slug}`}
+                    href={`${detailBase}/${e.slug}`}
                     className={cn(
-                      "inline-flex items-center gap-1.5 text-sm border-b pb-0.5 transition-colors",
+                      "inline-flex items-center gap-1.5 text-sm border-b pb-0.5 transition-colors shrink-0",
                       isHovered
                         ? "text-[var(--color-paper)] border-[var(--color-paper)]/50 hover:border-[var(--color-paper)]"
                         : "text-[var(--color-ink)] border-[var(--color-ink)]/30 hover:border-[var(--color-ink)]",
                     )}
                   >
-                    {locale === "es" ? "Detalle" : "Detail"}
+                    {e.ctaMode === "checkout"
+                      ? locale === "es"
+                        ? "Reservar"
+                        : "Reserve"
+                      : locale === "es"
+                        ? "Aplicar"
+                        : "Apply"}
                     <ArrowUpRight className="h-3.5 w-3.5" />
                   </Link>
                 </div>
@@ -172,10 +221,38 @@ export function PathsPreview({
             variant="secondary"
             trailingArrow
           >
-            {locale === "es" ? "Comparar los caminos" : "Compare paths"}
+            {locale === "es" ? "Comparar las experiencias" : "Compare experiences"}
           </Button>
         </div>
       </Container>
     </section>
+  );
+}
+
+function Fact({
+  icon: I,
+  text,
+  isHovered,
+}: {
+  icon: LucideIcon;
+  text: string;
+  isHovered: boolean;
+}) {
+  return (
+    <li
+      className={cn(
+        "flex items-start gap-2 text-sm leading-relaxed transition-colors",
+        isHovered ? "text-[var(--color-paper)]/95" : "text-[var(--color-ink-soft)]",
+      )}
+    >
+      <I
+        className={cn(
+          "h-4 w-4 mt-0.5 shrink-0",
+          isHovered ? "text-[var(--color-paper-warm)]" : "text-[var(--color-moss-500)]",
+        )}
+        strokeWidth={1.5}
+      />
+      <span>{text}</span>
+    </li>
   );
 }

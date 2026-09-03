@@ -84,7 +84,7 @@ export function CheckoutButton({
         onSubmit={startCheckout}
         className={`bg-[var(--color-paper)] border border-[var(--color-line)] p-5 space-y-4 ${className}`}
       >
-        <div className="text-xs uppercase tracking-[0.2em] text-[var(--color-muted)]">
+        <div className="text-xs uppercase tracking-[0.2em] text-[var(--color-ink)]">
           {locale === "es" ? "Datos para el pago" : "Payment details"}
         </div>
         <input
@@ -92,14 +92,14 @@ export function CheckoutButton({
           name="name"
           required
           placeholder={locale === "es" ? "Nombre completo" : "Full name"}
-          className="w-full border-0 border-b border-[var(--color-line)] bg-transparent px-1 py-2 text-sm focus:outline-none focus:border-[var(--color-ink)]"
+          className="w-full border-0 border-b border-[var(--color-line)] bg-transparent px-1 py-2 text-sm text-[var(--color-ink)] placeholder:text-[var(--color-ink)] focus:outline-none focus:border-[var(--color-ink)]"
         />
         <input
           type="email"
           name="email"
           required
           placeholder="Email"
-          className="w-full border-0 border-b border-[var(--color-line)] bg-transparent px-1 py-2 text-sm focus:outline-none focus:border-[var(--color-ink)]"
+          className="w-full border-0 border-b border-[var(--color-line)] bg-transparent px-1 py-2 text-sm text-[var(--color-ink)] placeholder:text-[var(--color-ink)] focus:outline-none focus:border-[var(--color-ink)]"
         />
         {state === "error" && (
           <div className="text-xs text-red-700 flex items-start gap-2">
