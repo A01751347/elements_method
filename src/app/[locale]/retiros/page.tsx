@@ -1,24 +1,26 @@
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Wind, Flame, Sparkles, Droplets, Mountain, Atom } from "lucide-react";
+import {
+  ArrowUpRight,
+  CalendarDays,
+  Clock,
+  MapPin,
+  Users,
+} from "lucide-react";
 import { isLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { Section, Eyebrow } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
-import { RetreatsShowcase } from "@/components/sections/RetreatsShowcase";
-import { PracticesGallery } from "@/components/sections/PracticesGallery";
-import { RetreatCalendar } from "@/components/sections/RetreatCalendar";
-import { ProvidersInventory } from "@/components/sections/ProvidersInventory";
+import { elements } from "@/data/content";
+import { calendarRetreats as staticCalendarRetreats } from "@/data/launchData";
 import {
-  processSteps as staticProcessSteps,
-  elements as staticElements,
-  onlyElements,
-} from "@/data/content";
-import { getElements } from "@/modules/content/elements";
-import { getProcessSteps } from "@/modules/content/processSteps";
+  findExperienceBySlug,
+  isEarlyAccessActive,
+  type L,
+} from "@/data/experiences";
 import { getCalendarRetreats } from "@/modules/content/calendarRetreats";
-import { getProviders } from "@/modules/content/providers";
 
 export const revalidate = 60;
 
@@ -28,8 +30,10 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  return { title: locale === "en" ? "Experience" : "Experiencia" };
+  return { title: locale === "en" ? "Upcoming experiences" : "Próximas experiencias" };
 }
+
+const mxn = (n: number) => `$${n.toLocaleString("es-MX")} MXN`;
 
 export default async function RetreatsPage({
   params,
@@ -39,17 +43,21 @@ export default async function RetreatsPage({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const dict = getDictionary(locale);
+  const t = (l: L) => (locale === "en" ? l.en : l.es);
+  const localeKey = locale === "es" ? "Es" : "En";
 
-  const [dbElements, dbProcessSteps, calendarRetreatsData, providersData] =
-    await Promise.all([
-      getElements(),
-      getProcessSteps(),
-      getCalendarRetreats(),
-      getProviders(),
-    ]);
-  // Only the four elements — the Núcleo is the leader, not an immersion.
-  const elements = onlyElements(dbElements.length > 0 ? dbElements : staticElements);
-  const processSteps = dbProcessSteps.length > 0 ? dbProcessSteps : staticProcessSteps;
+  // DB first (admin-editable), static calendar as fallback.
+  const dbRetreats = await getCalendarRetreats();
+  const upcoming = dbRetreats.length > 0 ? dbRetreats : staticCalendarRetreats;
+
+  const detailBase = `/${locale}/${locale === "es" ? "retiros" : "retreats"}`;
+
+  const STATUS_LABEL: Record<string, string> = {
+    open: dict.retreats.status.open,
+    waitlist: locale === "es" ? "Lista de espera" : "Waitlist",
+    closed: dict.retreats.status.closed,
+    sold: dict.retreats.status.sold,
+  };
 
   return (
     <>
@@ -82,147 +90,229 @@ export default async function RetreatsPage({
         </Container>
       </section>
 
-      {/* IMMERSION EXPERIENCE — verbatim from pptx slide 5 */}
+      {/* UPCOMING EXECUTIVE EXPERIENCES — driven by the calendar (DB-first),
+       *  enriched with the full landing data when the slug matches an
+       *  experience from docs/productos. */}
       <Section spacing="default">
-        <div className="grid lg:grid-cols-12 gap-12 items-end mb-16">
-          <div className="lg:col-span-7">
-            <Eyebrow className="mb-6 flex items-center gap-3">
-              <Sparkles className="h-3.5 w-3.5" strokeWidth={1.5} />
-              {locale === "es" ? "La experiencia de inmersión" : "The immersion experience"}
-            </Eyebrow>
-            <h2 className="display-2 text-balance">
-              {locale === "es"
-                ? "Múltiples experiencias por elemento."
-                : "Multiple experiences per element."}
-            </h2>
-          </div>
-          <div className="lg:col-span-5">
-            <p className="lead text-pretty italic">
-              {locale === "es"
-                ? "Cada elemento se puede trabajar de muchas maneras. Las actividades se diseñan según el retiro, el grupo y el venue — y son diferentes en cada generación."
-                : "Every element can be worked in many ways. The activities are designed around the retreat, the group and the venue — and differ in every generation."}
-            </p>
-          </div>
+        <div className="mb-12">
+          <Eyebrow className="mb-4 flex items-center gap-3">
+            <CalendarDays className="h-3.5 w-3.5" strokeWidth={1.5} />
+            {locale === "es" ? "Calendario 2026" : "2026 calendar"}
+          </Eyebrow>
+          <h2 className="display-2 text-balance">
+            {locale === "es"
+              ? "Tres experiencias. Tres fechas."
+              : "Three experiences. Three dates."}
+          </h2>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-px bg-[var(--color-line)] border border-[var(--color-line)]">
-          {elements.map((el) => {
-            const Icon =
-              el.key === "agua" ? Droplets
-              : el.key === "fuego" ? Flame
-              : el.key === "aire" ? Wind
-              : el.key === "tierra" ? Mountain
-              : Atom;
+        <div className="space-y-8">
+          {upcoming.map((r) => {
+            const exp = findExperienceBySlug(r.slug);
+            const el = elements.find((x) => x.key === r.elementKey);
+            const accentInk = el?.accentInk ?? "#2C2C2A";
+            const accentSoft = el?.accentSoft ?? "#C9A96E";
+            const earlyActive = exp ? isEarlyAccessActive(exp) : false;
+            const status = STATUS_LABEL[r.status] ?? r.status;
+
             return (
               <article
-                key={el.key}
-                className="bg-[var(--color-paper)] p-7 md:p-8 hover:bg-[var(--color-paper-warm)] transition-colors duration-500 min-h-[260px] flex flex-col"
+                key={r.slug}
+                className="border border-[var(--color-line)] bg-[var(--color-paper)] hover:bg-[var(--color-paper-warm)]/40 transition-colors"
               >
-                <div className="flex items-start justify-between mb-6">
-                  <span
-                    className="inline-flex items-center justify-center h-11 w-11 rounded-full"
-                    style={{ background: el.accentSoft }}
-                  >
-                    <Icon className="h-5 w-5" strokeWidth={1.5} style={{ color: el.accentInk }} />
-                  </span>
-                  <span
-                    className="text-[0.65rem] tracking-[0.22em] uppercase font-medium"
-                    style={{ color: el.accentInk }}
-                  >
-                    {el.framework}
-                  </span>
+                <div
+                  className="h-1.5 w-full"
+                  style={{ background: accentSoft }}
+                  aria-hidden
+                />
+                <div className="grid lg:grid-cols-12 gap-8 p-7 md:p-10">
+                  <div className="lg:col-span-7">
+                    <div className="flex flex-wrap items-center gap-3 mb-4">
+                      <span
+                        className="text-[0.7rem] tracking-[0.22em] uppercase font-medium"
+                        style={{ color: accentInk }}
+                      >
+                        {r[`dateLabel${localeKey}`]}
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 text-[0.65rem] tracking-[0.18em] uppercase text-[var(--color-muted)]">
+                        <span
+                          className="h-1.5 w-1.5 rounded-full"
+                          style={{
+                            background:
+                              r.status === "open" ? "#4C7A4E" : "#A3A097",
+                          }}
+                        />
+                        {status}
+                      </span>
+                    </div>
+
+                    <h3 className="font-[family-name:var(--font-display)] text-3xl md:text-4xl tracking-tight mb-2">
+                      {exp ? exp.title : r[`theme${localeKey}`]}
+                    </h3>
+                    {exp && (
+                      <p
+                        className="font-[family-name:var(--font-display)] text-lg mb-4"
+                        style={{ color: accentInk }}
+                      >
+                        {t(exp.tagline)}
+                      </p>
+                    )}
+                    <p className="text-[var(--color-ink-soft)] leading-relaxed max-w-2xl">
+                      {r[`summary${localeKey}`]}
+                    </p>
+
+                    <div className="mt-8 flex flex-wrap gap-x-8 gap-y-4 text-sm">
+                      <ListingMeta
+                        icon={MapPin}
+                        label={locale === "es" ? "Lugar" : "Venue"}
+                        value={r[`venueLabel${localeKey}`]}
+                      />
+                      {exp && (
+                        <ListingMeta
+                          icon={Clock}
+                          label={locale === "es" ? "Duración" : "Duration"}
+                          value={t(exp.duration)}
+                        />
+                      )}
+                      <ListingMeta
+                        icon={Users}
+                        label={locale === "es" ? "Modalidad" : "Format"}
+                        value={
+                          exp
+                            ? t(exp.modality)
+                            : locale === "es"
+                              ? "Presencial"
+                              : "In person"
+                        }
+                      />
+                    </div>
+                  </div>
+
+                  <div className="lg:col-span-5 flex flex-col justify-between gap-6 lg:border-l lg:border-[var(--color-line)] lg:pl-8">
+                    <div>
+                      <div className="text-[0.65rem] tracking-[0.22em] uppercase text-[var(--color-muted)] mb-2">
+                        {locale === "es" ? "Inversión" : "Investment"}
+                      </div>
+                      {exp && exp.priceMxn != null ? (
+                        earlyActive && exp.earlyPriceMxn != null ? (
+                          <>
+                            <div className="flex items-baseline gap-3">
+                              <span className="font-[family-name:var(--font-display)] text-3xl">
+                                {mxn(exp.earlyPriceMxn)}
+                              </span>
+                              <span className="text-sm text-[var(--color-muted)] line-through">
+                                {mxn(exp.priceMxn)}
+                              </span>
+                            </div>
+                            {exp.earlyLabel && (
+                              <div
+                                className="mt-1 text-[0.7rem] tracking-[0.14em] uppercase font-medium"
+                                style={{ color: accentInk }}
+                              >
+                                {t(exp.earlyLabel)}
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <div className="font-[family-name:var(--font-display)] text-3xl">
+                            {mxn(exp.priceMxn)}
+                          </div>
+                        )
+                      ) : (
+                        <div className="font-[family-name:var(--font-display)] text-xl">
+                          {r[`investmentLabel${localeKey}`]}
+                        </div>
+                      )}
+                      {exp && (
+                        <p className="mt-3 text-sm text-[var(--color-ink-soft)] leading-relaxed">
+                          {locale === "es" ? "Incluye: " : "Includes: "}
+                          {t(exp.includes)}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <Button
+                        href={`${detailBase}/${r.slug}`}
+                        size="sm"
+                        variant="primary"
+                        trailingArrow
+                        className="w-full"
+                      >
+                        {exp
+                          ? exp.ctaMode === "checkout"
+                            ? locale === "es"
+                              ? "Ver experiencia y reservar"
+                              : "View experience & reserve"
+                            : locale === "es"
+                              ? "Ver experiencia y aplicar"
+                              : "View experience & apply"
+                          : locale === "es"
+                            ? "Ver detalle"
+                            : "View details"}
+                      </Button>
+                      <p className="pt-2 text-center text-[0.7rem] text-[var(--color-muted)]">
+                        {locale === "es"
+                          ? "Cupo limitado para preservar una experiencia íntima."
+                          : "Limited seats to preserve an intimate experience."}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <div className="text-[0.65rem] tracking-[0.22em] uppercase text-[var(--color-muted)] mb-2">
-                  {locale === "es" ? `Elemento ${el.nameEs}` : `${el.nameEn} Element`}
-                </div>
-                <h3 className="font-[family-name:var(--font-display)] text-xl tracking-tight mb-3">
-                  {locale === "es" ? el.qualityEs : el.qualityEn}
-                </h3>
-                <p className="text-sm text-[var(--color-ink-soft)] leading-relaxed mt-auto">
-                  {locale === "es"
-                    ? "Varias experiencias posibles. Elegimos las que mejor sirven al grupo y al entorno de cada inmersión."
-                    : "Several possible experiences. We choose the ones that best serve the group and the setting of each immersion."}
-                </p>
               </article>
             );
           })}
         </div>
       </Section>
 
-      {/* GRID OF MODULES */}
-      <RetreatsShowcase locale={locale} dict={dict} hideHeader />
-
-      {/* DISCONNECTION PROTOCOL — 6 phases from master doc */}
+      {/* THE METHOD BEHIND */}
       <Section spacing="default" tone="warm" className="paper-grain">
-        <div className="grid lg:grid-cols-12 gap-12 mb-16">
+        <div className="grid lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-6">
-            <Eyebrow className="mb-6 flex items-center gap-3">
-              <Wind className="h-3.5 w-3.5" strokeWidth={1.5} />
-              {locale === "es" ? "Protocolo de Desconexión" : "Disconnection Protocol"}
+            <Eyebrow className="mb-6">
+              {locale === "es" ? "El método detrás" : "The method behind"}
             </Eyebrow>
             <h2 className="display-2 text-balance">
               {locale === "es"
-                ? "Seis fases por inmersión."
-                : "Six phases per immersion."}
+                ? "Una misma arquitectura elemental."
+                : "One same elemental architecture."}
             </h2>
           </div>
-          <div className="lg:col-span-6 lg:pt-4">
+          <div className="lg:col-span-6">
             <p className="lead text-pretty">
               {locale === "es"
-                ? "Cada experiencia comienza con una entrevista de descubrimiento profunda. A partir de ahí se diseñan las metodologías a aplicar por elemento, las locaciones y el programa de coaching. Cada mes es diferente. Cada inmersión, irrepetible."
-                : "Every experience begins with a deep discovery interview. From there we design the methodologies to apply per element, the locations and the coaching program. Each month is different. Every immersion, unrepeatable."}
+                ? "Cada experiencia está construida sobre Elements Method: los cuatro elementos como dimensiones naturales del ser y su integración en el núcleo — la persona misma. Contenido, entorno y ritmo forman parte de una sola narrativa."
+                : "Every experience is built on Elements Method: the four elements as natural dimensions of being and their integration into the core — the person themselves. Content, environment and rhythm are part of a single narrative."}
             </p>
-          </div>
-        </div>
-
-        <div className="border border-[var(--color-line)] divide-y divide-[var(--color-line)] bg-[var(--color-paper)]">
-          {processSteps.map((step) => (
-            <div
-              key={step.n}
-              className="grid grid-cols-[60px_1fr] md:grid-cols-[80px_220px_120px_1fr] gap-4 md:gap-6 p-5 md:p-7 items-start hover:bg-[var(--color-paper-warm)] transition-colors"
+            <Link
+              href={`/${locale}/${locale === "es" ? "el-metodo" : "method"}`}
+              className="group mt-6 inline-flex items-center gap-2 text-sm text-[var(--color-ink)] border-b border-[var(--color-ink)]/30 pb-1 hover:border-[var(--color-ink)] transition-colors"
             >
-              <span className="font-[family-name:var(--font-display)] text-2xl md:text-3xl text-[var(--color-gold-deep)]">
-                {step.n}
-              </span>
-              <span className="font-[family-name:var(--font-display)] text-lg md:text-xl tracking-tight col-span-1">
-                {locale === "es" ? step.titleEs : step.titleEn}
-              </span>
-              <span className="text-xs uppercase tracking-wide text-[var(--color-muted)] md:text-right tabular-nums col-span-1">
-                {locale === "es" ? step.durationEs : step.durationEn}
-              </span>
-              <p className="text-sm text-[var(--color-ink-soft)] leading-relaxed col-span-2 md:col-span-1">
-                {locale === "es" ? step.bodyEs : step.bodyEn}
-              </p>
-            </div>
-          ))}
+              {locale === "es"
+                ? "Conocer el método a fondo"
+                : "Explore the method in depth"}
+              <ArrowUpRight className="h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+            </Link>
+          </div>
         </div>
       </Section>
 
-      {/* CALENDAR — 9 retreats (Oct 2026 → Q4 2027) */}
-      <RetreatCalendar locale={locale} retreats={calendarRetreatsData} />
-
-      {/* PROVIDERS — 16 field disciplines with element affinity + status */}
-      <ProvidersInventory locale={locale} providers={providersData} />
-
-      {/* PRACTICES GALLERY — editorial index of all documented field practices. */}
-      <PracticesGallery locale={locale} />
-
-      {/* CTA — apply to a program */}
+      {/* CTA */}
       <Section spacing="default" tone="ink">
         <div className="grid lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-7">
             <Eyebrow inverted className="mb-6">
-              {locale === "es" ? "Aplica" : "Apply"}
+              {locale === "es" ? "¿Cuál es para ti?" : "Which one is for you?"}
             </Eyebrow>
             <h2 className="display-2 text-[var(--color-paper)] text-balance">
               {locale === "es"
-                ? "Las inmersiones viven dentro de un programa."
-                : "Immersions live within a program."}
+                ? "Una pausa diseñada para quienes lideran."
+                : "A pause designed for those who lead."}
             </h2>
             <p className="lead mt-6 text-[var(--color-paper)]/90 text-pretty max-w-2xl">
               {locale === "es"
-                ? "No se ofrecen como módulos sueltos. Se acceden a través de Fluir, Momentum, Raíz, Brújula u Oneness — o de Origin para organizaciones."
-                : "They are not offered as standalone modules. You access them through Flow, Momentum, Root, Compass or Oneness — or Origin for organizations."}
+                ? "Si dudas entre EQUINOX, Elements Awakening o SOUL Discovery, escríbenos y te orientamos según tu momento. También diseñamos experiencias a la medida para equipos y organizaciones."
+                : "If you're deciding between EQUINOX, Elements Awakening or SOUL Discovery, write to us and we'll help you choose for your moment. We also design bespoke experiences for teams and organizations."}
             </p>
           </div>
           <div className="lg:col-span-5">
@@ -233,7 +323,7 @@ export default async function RetreatsPage({
                 trailingArrow
                 className="bg-[var(--color-paper)] text-[var(--color-ink)] hover:bg-[var(--color-paper-warm)] w-full"
               >
-                {locale === "es" ? "Ver programas" : "See programs"}
+                {locale === "es" ? "Comparar experiencias" : "Compare experiences"}
               </Button>
               <Button
                 href="mailto:hello@elementsmethod.com"
@@ -248,5 +338,27 @@ export default async function RetreatsPage({
         </div>
       </Section>
     </>
+  );
+}
+
+function ListingMeta({
+  icon: I,
+  label,
+  value,
+}: {
+  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="flex items-start gap-2.5">
+      <I className="h-4 w-4 mt-0.5 text-[var(--color-muted)]" strokeWidth={1.5} />
+      <div>
+        <div className="text-xs text-[var(--color-muted)] uppercase tracking-wide">
+          {label}
+        </div>
+        <div className="mt-1 text-[var(--color-ink)]">{value}</div>
+      </div>
+    </div>
   );
 }

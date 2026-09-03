@@ -47,6 +47,8 @@ async function seedProducts() {
           modality: p.modality ?? null,
           priceMxn: p.priceMxn,
           priceUsd: p.priceUsd ?? null,
+          earlyPriceMxn: p.earlyPriceMxn ?? null,
+          earlyDeadline: p.earlyDeadline ?? null,
           sortOrder: p.sortOrder ?? 0,
           updatedAt: new Date(),
         },

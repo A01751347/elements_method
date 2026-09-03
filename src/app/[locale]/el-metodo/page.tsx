@@ -47,6 +47,7 @@ import {
 import { Container } from "@/components/ui/Container";
 import { Section, Eyebrow } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
+import { getNextExperience, isEarlyAccessActive } from "@/data/experiences";
 import { cn } from "@/lib/utils";
 
 export default function MethodPage({
@@ -68,6 +69,13 @@ export default function MethodPage({
     offset: ["start start", "end start"],
   });
   const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+
+  // Sales path above the fold: the nearest upcoming experience gets a direct
+  // CTA in the hero and a promo band right after it.
+  const next = getNextExperience();
+  const nextEarly = next ? isEarlyAccessActive(next) : false;
+  const experiencesBase = `/${locale}/${locale === "es" ? "retiros" : "retreats"}`;
+  const nextHref = next ? `${experiencesBase}/${next.slug}` : experiencesBase;
 
   return (
     <>
@@ -118,8 +126,71 @@ export default function MethodPage({
           >
             {dict.method.lead}
           </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.45 }}
+            className="mt-10 flex flex-wrap items-center gap-4"
+          >
+            {next && (
+              <Button href={nextHref} size="md" variant="solidLight" trailingArrow>
+                {locale === "es"
+                  ? `Reserva tu lugar · ${next.title}`
+                  : `Reserve your seat · ${next.title}`}
+              </Button>
+            )}
+            <Button href={experiencesBase} size="md" variant="outlineLight">
+              {locale === "es" ? "Ver calendario" : "View calendar"}
+            </Button>
+          </motion.div>
         </Container>
       </section>
+
+      {/* NEXT EXPERIENCE — promo band (fast sales path, no scrolling needed) */}
+      {next && (
+        <section className="bg-[var(--color-ink)] text-[var(--color-paper)] border-t border-[var(--color-paper)]/10">
+          <Container className="py-6 md:py-7">
+            <div className="flex flex-col md:flex-row md:items-center gap-5 md:gap-8">
+              <div className="flex items-center gap-3 shrink-0">
+                <Sparkles className="h-4 w-4 text-[var(--color-gold-soft)]" strokeWidth={1.5} />
+                <span className="text-[0.65rem] tracking-[0.22em] uppercase font-medium text-[var(--color-gold-soft)]">
+                  {locale === "es" ? "Próxima experiencia" : "Next experience"}
+                </span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <span className="font-[family-name:var(--font-display)] text-lg md:text-xl">
+                  {next.title}
+                </span>
+                <span className="text-sm text-[var(--color-paper)]/80 ml-3">
+                  {locale === "es" ? next.dateLabel.es : next.dateLabel.en}
+                  {" · "}
+                  {locale === "es" ? next.location.es : next.location.en}
+                </span>
+                {nextEarly && next.earlyLabel && (
+                  <span className="ml-3 inline-block align-middle bg-[var(--color-gold)]/20 text-[var(--color-gold-soft)] px-2 py-1 text-[0.6rem] tracking-[0.14em] uppercase font-medium">
+                    {locale === "es" ? next.earlyLabel.es : next.earlyLabel.en}
+                  </span>
+                )}
+              </div>
+              <Button
+                href={nextHref}
+                size="sm"
+                variant="solidLight"
+                trailingArrow
+                className="shrink-0"
+              >
+                {locale === "es"
+                  ? next.ctaMode === "checkout"
+                    ? "Reserva tu lugar"
+                    : "Solicitar invitación"
+                  : next.ctaMode === "checkout"
+                    ? "Reserve your seat"
+                    : "Request an invitation"}
+              </Button>
+            </div>
+          </Container>
+        </section>
+      )}
 
       {/* CORE INSIGHT — golden_circle.md + master doc */}
       <Section spacing="default">

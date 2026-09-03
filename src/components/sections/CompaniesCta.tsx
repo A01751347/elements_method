@@ -6,7 +6,7 @@ import type { Locale } from "@/i18n/config";
 import type { Dict } from "@/i18n/dictionaries";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
-import { calLink, CAL_EVENT_TYPES } from "@/shared/integrations/cal";
+import { calLink, CAL_ENTERPRISE_PARAMS, CAL_EVENT_TYPES } from "@/shared/integrations/cal";
 
 /**
  * Companies CTA — narrative band, no imagery.
@@ -60,7 +60,7 @@ export function CompaniesCta({
             className="lg:col-span-3 lg:pt-2"
           >
             <Button
-              href={calLink(CAL_EVENT_TYPES.discoveryEnterprise)}
+              href={calLink(CAL_EVENT_TYPES.discoveryEnterprise, CAL_ENTERPRISE_PARAMS)}
               size="lg"
               trailingArrow
               className="w-full"

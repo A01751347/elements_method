@@ -24,6 +24,10 @@ export const products = pgTable("products", {
   modality: text("modality"),
   priceMxn: decimal("price_mxn", { precision: 10, scale: 2 }).notNull(),
   priceUsd: decimal("price_usd", { precision: 10, scale: 2 }),
+  // Early-access pricing: while `earlyDeadline` has not passed, checkout charges
+  // `earlyPriceMxn` instead of `priceMxn`. Both null = no early-access window.
+  earlyPriceMxn: decimal("early_price_mxn", { precision: 10, scale: 2 }),
+  earlyDeadline: timestamp("early_deadline"),
   stripePriceIdMxn: text("stripe_price_id_mxn"),
   stripePriceIdUsd: text("stripe_price_id_usd"),
   element: elementEnum("element"),

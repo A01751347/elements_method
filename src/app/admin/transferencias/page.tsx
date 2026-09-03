@@ -10,6 +10,19 @@ import {
   Th,
 } from "../_components/admin-ui";
 import { markOrderPaid } from "./actions";
+import { keyFromUrl } from "@/shared/integrations/s3";
+
+/**
+ * Proofs live in a private S3 bucket, so link through the admin-gated route
+ * that mints a short-lived presigned GET instead of the raw object URL.
+ */
+function proofHref(url: string): string {
+  const key = keyFromUrl(url);
+  return key
+    ? `/api/transferencias/comprobante?key=${encodeURIComponent(key)}`
+    : url;
+}
+
 
 async function loadPendingTransfers() {
   try {
@@ -68,7 +81,7 @@ export default async function AdminTransfersPage() {
                 <Td>
                   {o.transferProofUrl ? (
                     <a
-                      href={o.transferProofUrl}
+                      href={proofHref(o.transferProofUrl)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-xs text-blue-700 hover:underline"

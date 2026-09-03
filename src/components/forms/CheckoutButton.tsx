@@ -20,9 +20,8 @@ export interface RequiredDocLite {
 export interface CheckoutButtonProps {
   locale: Locale;
   retreatSlug?: string;
-  pathSlug?: string;
-  productName: string;
-  amountMxn: number;
+  /** Catalog product slug. The server prices it — the amount is never sent. */
+  productSlug: string;
   label?: string;
   className?: string;
   /** Documents the buyer must accept before paying (RF-CMP-02). */
@@ -32,9 +31,7 @@ export interface CheckoutButtonProps {
 export function CheckoutButton({
   locale,
   retreatSlug,
-  pathSlug,
-  productName,
-  amountMxn,
+  productSlug,
   label,
   className = "",
   requiredDocs = [],
@@ -61,11 +58,9 @@ export function CheckoutButton({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           retreatSlug,
-          pathSlug,
+          productSlug,
           email: String(fd.get("email") ?? "").trim(),
           name: String(fd.get("name") ?? "").trim(),
-          amountMxn,
-          productName,
           locale,
           acceptedDocs: requiredDocs
             .filter((d) => accepted[d.slug])

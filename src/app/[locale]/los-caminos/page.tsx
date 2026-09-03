@@ -2,24 +2,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
-  Check,
-  Droplets,
-  Flame,
-  Wind,
-  Mountain,
-  Atom,
   ArrowUpRight,
-  type LucideIcon,
+  CalendarDays,
+  Check,
+  Clock,
+  MapPin,
+  Users,
 } from "lucide-react";
 import { isLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
-import {
-  paths as staticPaths,
-  originProgram as staticOriginProgram,
-  rootsArc as staticRootsArc,
-} from "@/data/content";
-import { getPaths } from "@/modules/content/paths";
-import { getOriginProgram, getRootsArc } from "@/modules/content/siteSections";
+import { originProgram as staticOriginProgram, elements } from "@/data/content";
+import { experiences, isEarlyAccessActive, type L } from "@/data/experiences";
+import { getOriginProgram } from "@/modules/content/siteSections";
 import { Section, Eyebrow } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
@@ -32,25 +26,10 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  return { title: locale === "en" ? "Programs" : "Programas" };
+  return { title: locale === "en" ? "Experiences" : "Experiencias" };
 }
 
-// The legacy `eter` key is the Núcleo — the leader, not a fifth element.
-const ELEMENT_ICONS: Record<string, LucideIcon> = {
-  agua: Droplets,
-  fuego: Flame,
-  aire: Wind,
-  tierra: Mountain,
-  eter: Atom,
-};
-
-const ELEMENT_COLORS: Record<string, string> = {
-  agua: "#2B6B8A",
-  fuego: "#C4622D",
-  aire: "#7A9BAD",
-  tierra: "#3D5A3E",
-  eter: "#8A6F3C",
-};
+const mxn = (n: number) => `$${n.toLocaleString("es-MX")} MXN`;
 
 export default async function PathsPage({
   params,
@@ -60,19 +39,15 @@ export default async function PathsPage({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const dict = getDictionary(locale);
+  const t = (l: L) => (locale === "en" ? l.en : l.es);
 
-  const [dbPaths, dbOriginProgram, dbRootsArc] = await Promise.all([
-    getPaths(),
-    getOriginProgram(),
-    getRootsArc(),
-  ]);
-
-  const paths = dbPaths.length > 0 ? dbPaths : staticPaths;
+  const dbOriginProgram = await getOriginProgram();
   const originProgram =
     dbOriginProgram.nameEs || dbOriginProgram.nameEn
       ? dbOriginProgram
       : staticOriginProgram;
-  const rootsArc = dbRootsArc.length > 0 ? dbRootsArc : staticRootsArc;
+
+  const detailBase = `/${locale}/${locale === "es" ? "retiros" : "retreats"}`;
 
   return (
     <>
@@ -105,23 +80,19 @@ export default async function PathsPage({
         </Container>
       </section>
 
-      {/* PROGRAM DETAILS */}
+      {/* EXECUTIVE EXPERIENCES — fuente: docs/productos (mismo contenido que
+       *  las landings /retiros/[slug], que es donde vive el checkout). */}
       <Section spacing="default" contained={false}>
         <div className="border-t border-[var(--color-line)]">
-          {paths.map((p, idx) => {
-            const name = locale === "es" ? p.nameEs : p.nameEn;
-            const tag = locale === "es" ? p.tagEs : p.tagEn;
-            const headline = locale === "es" ? p.headlineEs : p.headlineEn;
-            const short = locale === "es" ? p.shortEs : p.shortEn;
-            const long = locale === "es" ? p.longEs : p.longEn;
-            const includes = locale === "es" ? p.includesEs : p.includesEn;
-            const modality = locale === "es" ? p.modalityEs : p.modalityEn;
-            const duration = locale === "es" ? p.durationEs : p.durationEn;
-            const cta = locale === "es" ? p.ctaEs : p.ctaEn;
+          {experiences.map((e, idx) => {
+            const el = elements.find((x) => x.key === e.elementKey);
+            const accentInk = el?.accentInk ?? "#2C2C2A";
+            const earlyActive = isEarlyAccessActive(e);
+            const detailHref = `${detailBase}/${e.slug}`;
 
             return (
               <div
-                key={p.slug}
+                key={e.slug}
                 className="border-b border-[var(--color-line)] group hover:bg-[var(--color-paper-warm)]/40 transition-colors"
               >
                 <div className="max-w-7xl mx-auto px-5 sm:px-8 py-16 md:py-20 grid lg:grid-cols-12 gap-10">
@@ -133,27 +104,41 @@ export default async function PathsPage({
 
                   <div className="lg:col-span-6">
                     <div className="eyebrow text-[var(--color-muted)] mb-3">
-                      {tag}
+                      {t(e.brand)}
                     </div>
-                    <h2 className="display-2 mb-3">{name}</h2>
+                    <h2 className="display-2 mb-3">{e.title}</h2>
                     <p className="text-[var(--color-ink-soft)] text-lg italic mb-4">
-                      {headline}
+                      {t(e.tagline)}
                     </p>
                     <p className="text-[var(--color-ink-soft)] leading-relaxed max-w-xl mb-6">
-                      {short}
+                      {t(e.lead)}
                     </p>
-                    <p className="text-[var(--color-ink-soft)] leading-relaxed max-w-xl">
-                      {long}
-                    </p>
+                    {e.about.paragraphs?.[0] && (
+                      <p className="text-[var(--color-ink-soft)] leading-relaxed max-w-xl">
+                        {t(e.about.paragraphs[0])}
+                      </p>
+                    )}
 
                     <div className="mt-10 flex flex-wrap gap-6 text-sm">
                       <Meta
-                        label={locale === "es" ? "Duración" : "Duration"}
-                        value={duration}
+                        icon={CalendarDays}
+                        label={locale === "es" ? "Fecha" : "Date"}
+                        value={t(e.dateLabel)}
                       />
                       <Meta
-                        label={locale === "es" ? "Formato" : "Format"}
-                        value={modality}
+                        icon={Clock}
+                        label={locale === "es" ? "Duración" : "Duration"}
+                        value={t(e.duration)}
+                      />
+                      <Meta
+                        icon={MapPin}
+                        label={locale === "es" ? "Lugar" : "Venue"}
+                        value={t(e.location)}
+                      />
+                      <Meta
+                        icon={Users}
+                        label={locale === "es" ? "Modalidad" : "Format"}
+                        value={t(e.modality)}
                       />
                     </div>
                   </div>
@@ -163,49 +148,71 @@ export default async function PathsPage({
                       <div className="eyebrow text-[var(--color-muted)] mb-5">
                         {locale === "es" ? "Incluye" : "Includes"}
                       </div>
-                      <ul className="space-y-3">
-                        {includes.map((item) => (
-                          <li
-                            key={item}
-                            className="flex items-start gap-2.5 text-sm text-[var(--color-ink-soft)]"
-                          >
-                            <Check className="h-4 w-4 mt-0.5 text-[var(--color-gold-deep)] shrink-0" />
-                            <span>{item}</span>
-                          </li>
-                        ))}
-                      </ul>
+                      <p className="flex items-start gap-2.5 text-sm text-[var(--color-ink-soft)] leading-relaxed">
+                        <Check className="h-4 w-4 mt-0.5 text-[var(--color-gold-deep)] shrink-0" />
+                        <span>{t(e.includes)}</span>
+                      </p>
 
                       <div className="mt-8 pt-6 border-t border-[var(--color-line)]">
                         <div className="text-xs text-[var(--color-muted)] uppercase tracking-wide">
                           {locale === "es" ? "Inversión" : "Investment"}
                         </div>
-                        <p className="mt-2 text-sm text-[var(--color-ink-soft)] leading-relaxed">
-                          {locale === "es"
-                            ? "Cada programa se cotiza según el número de participantes, el formato y el grado de personalización. Cuéntanos qué necesitas y te enviamos una propuesta."
-                            : "Each program is quoted by number of participants, format and degree of personalization. Tell us what you need and we'll send a proposal."}
-                        </p>
+                        {e.priceMxn == null ? (
+                          <p className="mt-2 text-sm text-[var(--color-ink-soft)] leading-relaxed">
+                            {locale === "es"
+                              ? "Por confirmar · acceso por invitación mediante aplicación."
+                              : "To be confirmed · access by invitation via application."}
+                          </p>
+                        ) : (
+                          <div className="mt-2">
+                            {earlyActive && e.earlyPriceMxn != null ? (
+                              <>
+                                <div className="flex items-baseline gap-3">
+                                  <span className="font-[family-name:var(--font-display)] text-2xl">
+                                    {mxn(e.earlyPriceMxn)}
+                                  </span>
+                                  <span className="text-sm text-[var(--color-muted)] line-through">
+                                    {mxn(e.priceMxn)}
+                                  </span>
+                                </div>
+                                {e.earlyLabel && (
+                                  <div
+                                    className="mt-1 text-[0.7rem] tracking-[0.14em] uppercase font-medium"
+                                    style={{ color: accentInk }}
+                                  >
+                                    {t(e.earlyLabel)}
+                                  </div>
+                                )}
+                              </>
+                            ) : (
+                              <div className="font-[family-name:var(--font-display)] text-2xl">
+                                {mxn(e.priceMxn)}
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
 
                       <div className="mt-6 space-y-2">
                         <Button
-                          href={`/${locale}/${locale === "es" ? "aplicar" : "apply"}?path=${p.slug}`}
+                          href={detailHref}
                           size="sm"
                           variant="primary"
                           trailingArrow
                           className="w-full"
                         >
-                          {locale === "es" ? "Más información" : "More information"}
-                        </Button>
-                        <Button
-                          href={`/${locale}/${locale === "es" ? "los-caminos" : "paths"}/${p.slug}`}
-                          size="sm"
-                          variant="secondary"
-                          className="w-full"
-                        >
-                          {locale === "es" ? "Ver detalle del programa" : "View program details"}
+                          {e.ctaMode === "checkout"
+                            ? locale === "es"
+                              ? "Ver experiencia y reservar"
+                              : "View experience & reserve"
+                            : locale === "es"
+                              ? "Ver experiencia y aplicar"
+                              : "View experience & apply"}
                         </Button>
                         <p className="pt-1 text-center text-[0.7rem] text-[var(--color-muted)]">
-                          {cta}
+                          {locale === "es"
+                            ? "Cupo limitado para preservar una experiencia íntima."
+                            : "Limited seats to preserve an intimate experience."}
                         </p>
                       </div>
                     </div>
@@ -217,14 +224,13 @@ export default async function PathsPage({
         </div>
       </Section>
 
-      {/* THE ELEMENTAL ARC — four elements, closing in the Núcleo. Links out to
-       *  /el-metodo so the elements get explained in full on their own page
+      {/* THE METHOD BEHIND — the elements get explained in full on /el-metodo
        *  (client feedback #58 #59). */}
       <Section spacing="default" tone="warm" className="paper-grain">
-        <div className="grid lg:grid-cols-12 gap-12 mb-12">
+        <div className="grid lg:grid-cols-12 gap-12">
           <div className="lg:col-span-6">
             <Eyebrow className="mb-6">
-              {locale === "es" ? "El arco elemental" : "The Elemental Arc"}
+              {locale === "es" ? "El método detrás" : "The method behind"}
             </Eyebrow>
             <h2 className="display-2 text-balance">
               {locale === "es"
@@ -235,8 +241,8 @@ export default async function PathsPage({
           <div className="lg:col-span-6 lg:pt-3">
             <p className="lead text-pretty">
               {locale === "es"
-                ? "Todos los programas atraviesan los cuatro elementos en orden secuenciado — Tierra por arraigo, Fuego por activación, Agua por claridad, Aire por perspectiva — y siempre terminan con la integración de todos ellos en el núcleo, que es el líder mismo. Cada programa recorre este arco en una duración distinta."
-                : "Every program traverses the four elements in sequenced order — Earth for grounding, Fire for activation, Water for clarity, Air for perspective — and always ends by integrating all of them into the core, which is the leader themselves. Each program travels this arc over a different duration."}
+                ? "Cada experiencia está construida sobre Elements Method: los cuatro elementos —Tierra, Agua, Fuego y Aire— como dimensiones naturales del ser, y la integración de todos ellos en el núcleo, que es la persona misma. Lo que cambia entre experiencias es el formato, la profundidad y el enfoque."
+                : "Every experience is built on Elements Method: the four elements —Earth, Water, Fire and Air— as natural dimensions of being, and the integration of them all into the core, which is the person themselves. What changes between experiences is the format, the depth and the focus."}
             </p>
             <Link
               href={`/${locale}/${locale === "es" ? "el-metodo" : "method"}`}
@@ -248,48 +254,6 @@ export default async function PathsPage({
               <ArrowUpRight className="h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </Link>
           </div>
-        </div>
-
-        <div className="border border-[var(--color-line)] divide-y divide-[var(--color-line)] bg-[var(--color-paper)]">
-          {rootsArc.map((row) => {
-            const Icon = ELEMENT_ICONS[row.elementKey];
-            const color = ELEMENT_COLORS[row.elementKey];
-            return (
-              <div
-                key={row.month}
-                className="grid grid-cols-[60px_60px_140px_1fr] md:grid-cols-[80px_80px_220px_1fr] gap-4 md:gap-6 p-5 md:p-7 items-baseline hover:bg-[var(--color-paper-warm)] transition-colors"
-              >
-                <span className="font-[family-name:var(--font-display)] text-3xl text-[var(--color-muted)]/60 tabular-nums">
-                  {String(row.month).padStart(2, "0")}
-                </span>
-                <Icon className="h-5 w-5 mt-1" strokeWidth={1.5} style={{ color }} />
-                <span className="font-[family-name:var(--font-display)] text-xl tracking-tight">
-                  {locale === "es"
-                    ? row.elementKey === "eter"
-                      ? "Núcleo · Integración"
-                      : row.elementKey === "tierra"
-                        ? "Tierra"
-                        : row.elementKey === "fuego"
-                          ? "Fuego"
-                          : row.elementKey === "agua"
-                            ? "Agua"
-                            : "Aire"
-                    : row.elementKey === "eter"
-                      ? "Core · Integration"
-                      : row.elementKey === "tierra"
-                        ? "Earth"
-                        : row.elementKey === "fuego"
-                          ? "Fire"
-                          : row.elementKey === "agua"
-                            ? "Water"
-                            : "Air"}
-                </span>
-                <p className="text-[var(--color-ink-soft)] leading-relaxed">
-                  {locale === "es" ? row.titleEs : row.titleEn}
-                </p>
-              </div>
-            );
-          })}
         </div>
       </Section>
 
@@ -342,13 +306,24 @@ export default async function PathsPage({
   );
 }
 
-function Meta({ label, value }: { label: string; value: string }) {
+function Meta({
+  icon: I,
+  label,
+  value,
+}: {
+  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+  label: string;
+  value: string;
+}) {
   return (
-    <div>
-      <div className="text-xs text-[var(--color-muted)] uppercase tracking-wide">
-        {label}
+    <div className="flex items-start gap-2.5">
+      <I className="h-4 w-4 mt-0.5 text-[var(--color-muted)]" strokeWidth={1.5} />
+      <div>
+        <div className="text-xs text-[var(--color-muted)] uppercase tracking-wide">
+          {label}
+        </div>
+        <div className="mt-1 text-[var(--color-ink)]">{value}</div>
       </div>
-      <div className="mt-1 text-[var(--color-ink)]">{value}</div>
     </div>
   );
 }

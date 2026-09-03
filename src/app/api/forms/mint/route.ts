@@ -83,7 +83,7 @@ export async function POST(req: Request) {
 
   if (doSendEmail) {
     const title = locale === "en" ? form.titleEn ?? form.titleEs : form.titleEs;
-    void sendMail({
+    await sendMail({
       to: recipientEmail,
       subject:
         locale === "en"

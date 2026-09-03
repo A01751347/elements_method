@@ -13,11 +13,12 @@ import {
   Th,
 } from "../_components/admin-ui";
 
-const TYPE_VARIANT: Record<string, "green" | "amber" | "neutral" | "blue"> = {
+const TYPE_VARIANT: Record<string, "green" | "amber" | "neutral" | "blue" | "red"> = {
   elemento: "blue",
   camino: "green",
   retiro_inmersivo: "amber",
   programa_corporativo: "neutral",
+  experiencia: "red",
 };
 
 async function loadProducts() {
@@ -36,7 +37,7 @@ export default async function AdminProductsPage() {
     <>
       <AdminPageHeader
         title="Productos"
-        subtitle="Catálogo de elementos, caminos, retiros inmersivos y programas corporativos."
+        subtitle="Catálogo de elementos, caminos, retiros inmersivos, experiencias y programas corporativos."
         count={list.length}
         action={
           <Link
@@ -53,7 +54,7 @@ export default async function AdminProductsPage() {
       {list.length === 0 ? (
         <EmptyState
           title="Sin productos en DB"
-          body="Corre pnpm db:seed para sembrar los 11 productos del catálogo."
+          body="Corre pnpm db:seed para sembrar el catálogo de productos."
         />
       ) : (
         <AdminTable>

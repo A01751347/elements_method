@@ -57,7 +57,7 @@ export async function POST(req: Request) {
     console.error("[sign] DB update failed", e);
   }
 
-  void sendMail({
+  await sendMail({
     to: OPS_EMAIL,
     subject: "[Firma] Documento aceptado",
     html: emailLayout({

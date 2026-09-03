@@ -30,7 +30,10 @@ import {
   getCalendarRetreats,
   getCalendarRetreatBySlug,
 } from "@/modules/content/calendarRetreats";
+import { getRequiredDocs } from "@/modules/content/requiredDocs";
 import { elements, type ElementKey } from "@/data/content";
+import { findExperienceBySlug } from "@/data/experiences";
+import { ExperienceLanding } from "@/components/sections/ExperienceLanding";
 
 export const revalidate = 60;
 
@@ -64,6 +67,13 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
+  const exp = findExperienceBySlug(slug);
+  if (exp) {
+    return {
+      title: `${exp.title} — Elements Method`,
+      description: locale === "en" ? exp.lead.en : exp.lead.es,
+    };
+  }
   const r = findRetreatBySlug(slug);
   if (!r) return { title: "Retiro" };
   return {
@@ -80,6 +90,27 @@ export default async function RetreatDetailPage({
 }) {
   const { locale, slug } = await params;
   if (!isLocale(locale)) notFound();
+
+  // Executive Experiences (EQUINOX / Elements Awakening / SOUL Discovery)
+  // render their full landing from docs/productos instead of the generic
+  // retreat template.
+  const experience = findExperienceBySlug(slug);
+  if (experience) {
+    const requiredDocs =
+      experience.ctaMode === "checkout" ? await getRequiredDocs("persona") : [];
+    return (
+      <ExperienceLanding
+        experience={experience}
+        locale={locale}
+        requiredDocs={requiredDocs.map((d) => ({
+          slug: d.slug,
+          nameEs: d.nameEs,
+          nameEn: d.nameEn,
+        }))}
+      />
+    );
+  }
+
   const [dbRetreat, dbAll] = await Promise.all([
     getCalendarRetreatBySlug(slug),
     getCalendarRetreats(),

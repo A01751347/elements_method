@@ -506,11 +506,7 @@ export default async function ProgramDetailPage({
                 </div>
                 <CheckoutButton
                   locale={locale}
-                  pathSlug={price.productSlug}
-                  productName={
-                    locale === "es" ? program.nameEs : program.nameEn
-                  }
-                  amountMxn={price.priceMxn}
+                  productSlug={price.productSlug}
                   label={locale === "es" ? "Inscribirme y pagar" : "Enroll and pay"}
                   requiredDocs={requiredDocs.map((d) => ({
                     slug: d.slug,

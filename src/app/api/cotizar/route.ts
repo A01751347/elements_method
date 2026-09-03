@@ -9,7 +9,7 @@ import {
   type QuoteCurrency,
 } from "@/shared/pricing/enterprise";
 import {
-  sendMail,
+  sendAll,
   emailLayout,
   escapeHtml,
   OPS_EMAIL,
@@ -103,8 +103,9 @@ export async function POST(req: Request) {
     console.error("[cotizar] quote insert failed", e);
   }
 
-  // Notify ops.
-  void sendMail({
+  // Notify ops + send the requester their quote.
+  await sendAll([
+    {
     to: OPS_EMAIL,
     subject: `[Cotización] ${data.companyName} · ${data.people} personas · ${number}`,
     html: emailLayout({
@@ -120,10 +121,9 @@ export async function POST(req: Request) {
         ${data.notes ? `<p>Notas: ${escapeHtml(data.notes)}</p>` : ""}
       `,
     }),
-  });
+    },
 
-  // Confirmation to the requester with a link to the quote PDF.
-  void sendMail({
+    {
     to: data.contactEmail,
     subject:
       data.locale === "en"
@@ -136,7 +136,8 @@ export async function POST(req: Request) {
           ? `<p>Thank you, ${escapeHtml(data.contactName)}. Your estimate is <strong>${breakdown.total.toLocaleString("en-US")} ${data.currency}</strong>. A team member will reach out to tailor it. Reference: ${escapeHtml(number)}.</p>`
           : `<p>Gracias, ${escapeHtml(data.contactName)}. Tu estimado es <strong>${breakdown.total.toLocaleString("es-MX")} ${data.currency}</strong>. Un miembro del equipo te contactará para afinarla. Folio: ${escapeHtml(number)}.</p>`,
     }),
-  });
+    },
+  ]);
 
   return NextResponse.json({
     ok: true,

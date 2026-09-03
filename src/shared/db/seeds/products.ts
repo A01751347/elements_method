@@ -182,6 +182,72 @@ export const productSeeds: NewProduct[] = [
     sortOrder: 200,
   },
 
+  // ─── Executive Experiences 2026 (docs/productos/*.docx) ───────────────
+  // Los deadlines de Early Access son fin de día en Ciudad de México
+  // (UTC-6): la fecha impresa en la landing es inclusiva.
+  {
+    slug: "equinox",
+    type: "experiencia",
+    nameEs: "EQUINOX · El arte de la transición interior",
+    nameEn: "EQUINOX · The art of inner transition",
+    descriptionEs:
+      "Experiencia de transformación humana de un día, inspirada en el equinoccio de septiembre. Cinco movimientos —Observa, Suelta, Reconfigura, Realinea, Emerge— que integran neurociencia, coaching, herramientas de NLP, movimiento accesible, naturaleza, arte, reflexión y prácticas contemplativas. 22 de septiembre de 2026 · 9:00–19:00 · Ciudad de México.",
+    descriptionEn:
+      "A one-day human transformation experience inspired by the September equinox. Five movements —Observe, Release, Reconfigure, Realign, Emerge— integrating neuroscience, coaching, NLP tools, accessible movement, nature, art, reflection and contemplative practices. September 22, 2026 · 9:00–19:00 · Mexico City.",
+    includesEs:
+      "Experiencia completa · EQUINOX Transformation Journal · Materiales · Alimentos · Mapa “My Next Season” · Carta del Yo Futuro · Sistema guiado de integración durante 30 días",
+    includesEn:
+      "Full experience · EQUINOX Transformation Journal · Materials · Meals · “My Next Season” map · Future Self letter · Guided 30-day integration system",
+    duration: "1 día · 9:00–19:00",
+    modality: "Presencial · Cupo limitado",
+    priceMxn: "7500.00",
+    priceUsd: String(usd(7500)),
+    earlyPriceMxn: "5900.00",
+    earlyDeadline: new Date("2026-09-07T05:59:59.999Z"), // 6 sep 23:59 CDMX
+    sortOrder: 400,
+  },
+  {
+    slug: "elements-awakening",
+    type: "experiencia",
+    nameEs: "ELEMENTS AWAKENING · Lead Your True Nature",
+    nameEn: "ELEMENTS AWAKENING · Lead Your True Nature",
+    descriptionEs:
+      "Experiencia inmersiva de liderazgo de 2.5 días para quienes han llegado lejos hacia afuera y están listos para ir más profundo hacia adentro. Cinco dimensiones del liderazgo —Tierra, Agua, Fuego, Aire y Éter— exploradas individualmente e integradas en una sola forma de liderar. 16–18 de octubre de 2026 · Misión del Sol, Morelos. Acceso por invitación: se solicita mediante aplicación.",
+    descriptionEn:
+      "A 2.5-day immersive leadership experience for those who have gone far on the outside and are ready to go deeper within. Five dimensions of leadership —Earth, Water, Fire, Air and Ether— explored individually and integrated into a single way of leading. October 16–18, 2026 · Misión del Sol, Morelos. Access by invitation: request via application.",
+    includesEs: "Hospedaje · Alimentos · Materiales · Sesiones y actividades",
+    includesEn: "Lodging · Meals · Materials · Sessions and activities",
+    duration: "2.5 días",
+    modality: "Presencial · Grupo reducido",
+    // Inversión por confirmar — precio 0 mantiene el producto fuera de
+    // checkout (PRODUCT_NOT_PURCHASABLE); el CTA público es "Solicitar
+    // invitación". Al confirmar el precio, actualizarlo aquí y en admin.
+    priceMxn: "0.00",
+    priceUsd: "0",
+    sortOrder: 410,
+  },
+  {
+    slug: "soul-discovery",
+    type: "experiencia",
+    nameEs: "SOUL Discovery · Workshop intensivo",
+    nameEn: "SOUL Discovery · Intensive workshop",
+    descriptionEs:
+      "Workshop intensivo de un día de autoconocimiento aplicado al personal branding. Recolecta, Reconoce, Contrasta, Sintetiza y Proyecta: un proceso para convertir historia, talentos, patrones y valores en tu SOUL PRINT — un primer mapa estratégico de identidad, diferenciación y posicionamiento personal. 20 de noviembre de 2026.",
+    descriptionEn:
+      "A one-day intensive workshop of self-knowledge applied to personal branding. Collect, Recognize, Contrast, Synthesize and Project: a process to turn history, talents, patterns and values into your SOUL PRINT — a first strategic map of identity, differentiation and personal positioning. November 20, 2026.",
+    includesEs:
+      "Experiencia completa · SOUL PRINT (mapa visual de identidad) · Materiales · Alimentación healthy & natural (coffee breaks, buffet, postres y bebidas)",
+    includesEn:
+      "Full experience · SOUL PRINT (visual identity map) · Materials · Healthy & natural food (coffee breaks, buffet, desserts and drinks)",
+    duration: "1 día intensivo",
+    modality: "Presencial · Grupo reducido",
+    priceMxn: "7500.00",
+    priceUsd: String(usd(7500)),
+    earlyPriceMxn: "5900.00",
+    earlyDeadline: new Date("2026-10-12T05:59:59.999Z"), // 11 oct 23:59 CDMX
+    sortOrder: 420,
+  },
+
   // ─── Programa corporativo (cotización a la medida) ────────────────────
   {
     slug: "programa-corporativo",

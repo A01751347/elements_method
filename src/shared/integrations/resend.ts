@@ -14,6 +14,21 @@ const opsAddress = process.env.OPS_EMAIL || "hello@elementsmethod.com";
 
 const client = apiKey ? new Resend(apiKey) : null;
 
+/**
+ * Absolute site URL for links inside emails.
+ *
+ * NEXT_PUBLIC_APP_URL is the source of truth; on Vercel we fall back to the
+ * deployment URL so preview builds still produce clickable links, and finally
+ * to the production domain.
+ */
+export function appUrl(): string {
+  const explicit = process.env.NEXT_PUBLIC_APP_URL;
+  if (explicit) return explicit.replace(/\/$/, "");
+  const vercel = process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL;
+  if (vercel) return `https://${vercel}`;
+  return "https://www.elementsmethod.com";
+}
+
 export interface MailParams {
   to: string | string[];
   subject: string;
@@ -52,6 +67,25 @@ export async function sendMail(params: MailParams): Promise<{
 }
 
 export const OPS_EMAIL = opsAddress;
+
+/**
+ * Send several emails concurrently without letting one failure sink the others
+ * or the request.
+ *
+ * Every send is awaited: on serverless the function can be frozen the moment
+ * the response is returned, so a fire-and-forget `void sendMail(...)` is
+ * routinely killed mid-flight and the mail is silently lost.
+ */
+export async function sendAll(mails: MailParams[]): Promise<void> {
+  const results = await Promise.allSettled(mails.map((m) => sendMail(m)));
+  results.forEach((r, i) => {
+    if (r.status === "rejected") {
+      console.error(`[mail] send threw for "${mails[i].subject}"`, r.reason);
+    } else if (!r.value.ok) {
+      console.error(`[mail] send failed for "${mails[i].subject}": ${r.value.error}`);
+    }
+  });
+}
 
 /**
  * Minimal HTML email template — branded, mobile-friendly, inline styles only.

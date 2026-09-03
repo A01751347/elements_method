@@ -32,25 +32,16 @@ export default async function ScheduleDiscoveryPage({
   const sp = await searchParams;
   if (!isLocale(locale)) notFound();
 
-  const type =
-    sp.type === "empresa"
-      ? "enterprise"
-      : sp.type === "diagnostico"
-        ? "diagnostic"
-        : "individual";
+  // Two live Cal.com events: diagnostico (individual) and empresas.
+  // Legacy ?type=diagnostico and the individual default land on the same one.
+  const type = sp.type === "empresa" ? "enterprise" : "diagnostic";
 
   const eventType =
     type === "enterprise"
       ? CAL_EVENT_TYPES.discoveryEnterprise
-      : type === "diagnostic"
-        ? CAL_EVENT_TYPES.diagnostic
-        : CAL_EVENT_TYPES.discoveryIndividual;
+      : CAL_EVENT_TYPES.diagnostic;
 
   const titles = {
-    individual: {
-      es: "Conversación de discovery individual",
-      en: "Individual discovery conversation",
-    },
     enterprise: {
       es: "Discovery para organizaciones",
       en: "Organization discovery",
@@ -83,19 +74,14 @@ export default async function ScheduleDiscoveryPage({
             <div className="lg:col-span-4">
               <div className="flex flex-wrap gap-2">
                 <TypeChip
-                  active={type === "individual"}
+                  active={type === "diagnostic"}
                   href={`/${locale}/${locale === "es" ? "agendar" : "schedule"}`}
-                  label={locale === "es" ? "Individual" : "Individual"}
+                  label={locale === "es" ? "Diagnóstico individual" : "Individual diagnostic"}
                 />
                 <TypeChip
                   active={type === "enterprise"}
                   href={`/${locale}/${locale === "es" ? "agendar" : "schedule"}?type=empresa`}
-                  label={locale === "es" ? "Empresa" : "Enterprise"}
-                />
-                <TypeChip
-                  active={type === "diagnostic"}
-                  href={`/${locale}/${locale === "es" ? "agendar" : "schedule"}?type=diagnostico`}
-                  label={locale === "es" ? "Diagnóstico" : "Diagnostic"}
+                  label={locale === "es" ? "Empresas" : "Enterprise"}
                 />
               </div>
             </div>
@@ -110,8 +96,8 @@ export default async function ScheduleDiscoveryPage({
               eventType={eventType}
               fallbackLabel={
                 locale === "es"
-                  ? "La agenda está en configuración. Mientras tanto, escríbenos:"
-                  : "Schedule is being set up. In the meantime, write to us:"
+                  ? "Si el calendario no carga aquí, continúa en una nueva pestaña:"
+                  : "If the calendar doesn't load here, continue in a new tab:"
               }
             />
           </div>

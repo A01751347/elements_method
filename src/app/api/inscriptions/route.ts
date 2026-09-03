@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/shared/db/client";
 import { inscriptions } from "@/shared/db/schema/operations";
-import { sendMail, emailLayout, escapeHtml, OPS_EMAIL } from "@/shared/integrations/resend";
+import { sendAll, emailLayout, escapeHtml, OPS_EMAIL, appUrl } from "@/shared/integrations/resend";
 
 export const runtime = "nodejs";
 
@@ -17,7 +17,7 @@ const Schema = z.object({
   role: z.string().max(120).optional(),
   message: z.string().max(2000).optional(),
   locale: z.enum(["es", "en"]).default("es"),
-  honeypot: z.string().max(0).optional(),
+  honeypot: z.string().max(200).optional(),
   /**
    * Qualification questionnaire (client feedback #46). Stored in
    * `inscriptions.metadata` (jsonb) — no column migration needed.
@@ -120,45 +120,49 @@ export async function POST(req: Request) {
     ${data.message ? `<div style="margin-top:18px;padding:14px;background:#F5F0E8;border-left:3px solid #C9A96E;font-style:italic;">${escapeHtml(data.message).replace(/\n/g, "<br />")}</div>` : ""}
     <p style="margin-top:24px;font-size:12px;color:#5A5752;">ID interno: ${inserted.id}</p>
   `;
-  void sendMail({
-    to: OPS_EMAIL,
-    subject: `[Inscripción] ${data.name} · ${data.retreatSlug ?? data.source}`,
-    replyTo: data.email,
-    html: emailLayout({
-      title: "Nueva inscripción",
-      preheader: `${data.name} aplicó desde el sitio · ${data.source}`,
-      body: opsBody,
-    }),
-  });
-
-  // Auto-reply to applicant
+  // Auto-reply to the applicant.
   const replyBody =
     data.locale === "en"
       ? `
         <p>Hi ${escapeHtml(data.name.split(" ")[0])},</p>
         <p>Thank you for reaching out to Elements Method. We received your message and a member of our team will respond personally within 48 hours.</p>
-        <p>In the meantime, you can read more about the method and the upcoming calendar of immersions on <a href="https://www.elementsmethod.com/en/retreats">our retreats page</a>.</p>
+        <p>In the meantime, you can read more about the method and the upcoming calendar of immersions on <a href="${appUrl()}/en/retreats">our retreats page</a>.</p>
         <p>You'll also start receiving our monthly note: cases from our immersions, the research behind the methodology, and articles on neuroscience, NLP and psychology applied to leadership.</p>
         <p style="margin-top:24px;font-style:italic;color:#5A5752;">Nature doesn't manage. Nature leads.</p>
       `
       : `
         <p>Hola ${escapeHtml(data.name.split(" ")[0])},</p>
         <p>Gracias por escribir a Elements Method. Recibimos tu mensaje y un miembro de nuestro equipo te responderá personalmente en las próximas 48 horas.</p>
-        <p>Mientras tanto, puedes leer más sobre el método y el calendario de inmersiones en <a href="https://www.elementsmethod.com/es/retiros">nuestra página de retiros</a>.</p>
+        <p>Mientras tanto, puedes leer más sobre el método y el calendario de inmersiones en <a href="${appUrl()}/es/retiros">nuestra página de retiros</a>.</p>
         <p>También empezarás a recibir nuestra nota mensual: casos de nuestras inmersiones, los estudios que sostienen la metodología y artículos de neurociencia, PNL y psicología aplicados al liderazgo.</p>
         <p style="margin-top:24px;font-style:italic;color:#5A5752;">La naturaleza no gestiona. La naturaleza lidera.</p>
       `;
-  void sendMail({
-    to: data.email,
-    subject:
-      data.locale === "en"
-        ? "We received your message — Elements Method"
-        : "Recibimos tu mensaje — Elements Method",
-    html: emailLayout({
-      title: data.locale === "en" ? "We received your message" : "Recibimos tu mensaje",
-      body: replyBody,
-    }),
-  });
+
+  // Awaited: a fire-and-forget send is routinely killed when the serverless
+  // function freezes on response.
+  await sendAll([
+    {
+      to: OPS_EMAIL,
+      subject: `[Inscripción] ${data.name} · ${data.retreatSlug ?? data.source}`,
+      replyTo: data.email,
+      html: emailLayout({
+        title: "Nueva inscripción",
+        preheader: `${data.name} aplicó desde el sitio · ${data.source}`,
+        body: opsBody,
+      }),
+    },
+    {
+      to: data.email,
+      subject:
+        data.locale === "en"
+          ? "We received your message — Elements Method"
+          : "Recibimos tu mensaje — Elements Method",
+      html: emailLayout({
+        title: data.locale === "en" ? "We received your message" : "Recibimos tu mensaje",
+        body: replyBody,
+      }),
+    },
+  ]);
 
   return NextResponse.json({ ok: true, id: inserted.id });
 }

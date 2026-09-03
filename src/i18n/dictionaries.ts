@@ -105,7 +105,7 @@ export const es: Dict = {
     companies: "Organizaciones",
     retreats: "Experiencia",
     blog: "Artículos",
-    cta: "Cotizar para mi organización",
+    cta: "Reservar",
   },
   common: {
     learnMore: "Conocer más",
@@ -162,10 +162,10 @@ export const es: Dict = {
       "Elements Method nace de un patrón consistente identificado a lo largo de 26 años de trabajo con líderes: los más capaces son aquellos que viven en consciencia, con intención, y priorizan su trabajo interior.",
   },
   paths: {
-    eyebrow: "Programas",
-    title: "Elige tu Camino.",
+    eyebrow: "Executive Experiences",
+    title: "Elige tu experiencia.",
     lead:
-      "Una misma metodología y los mismos frameworks, en distintas cadencias, duraciones y niveles de profundidad. Lo que cambia es cuánto dura, cada cuánto te encuentras con el método y qué tan personalizado es.",
+      "Tres experiencias presenciales diseñadas por Elements Method para 2026: un día para entrar conscientemente en tu próxima etapa, un retiro inmersivo de liderazgo y un workshop intensivo de identidad y marca personal. Grupos reducidos, cupo limitado.",
   },
   method: {
     eyebrow: "El Método",
@@ -203,10 +203,10 @@ export const es: Dict = {
     cta: "Solicitar conversación",
   },
   retreats: {
-    eyebrow: "La experiencia",
-    title: "Cuatro elementos. Seis fases.",
+    eyebrow: "Próximas fechas",
+    title: "Próximas experiencias.",
     lead:
-      "Cada inmersión sigue el mismo arco de seis fases: Liberación, Encuentro, Metodología, Reflexión, Diálogo, Integración. Las actividades cambian y la cantidad de inmersiones depende del programa — la estructura no cambia.",
+      "El calendario 2026 de Elements Method Executive Experiences: EQUINOX en septiembre, Elements Awakening en octubre y SOUL Discovery en noviembre. Experiencias presenciales, de cupo limitado, diseñadas para profundizar sin saturar.",
     status: {
       open: "Abierto",
       lowSeats: "{n} cupos disponibles",
@@ -260,7 +260,7 @@ export const en: Dict = {
     companies: "Organizations",
     retreats: "Experience",
     blog: "Articles",
-    cta: "Quote for my organization",
+    cta: "Reserve",
   },
   common: {
     learnMore: "Learn more",
@@ -317,10 +317,10 @@ export const en: Dict = {
       "Elements Method was born from a consistent pattern identified over 26 years of work with leaders: the most capable are those who live with consciousness, with intention, and who prioritize their inner work.",
   },
   paths: {
-    eyebrow: "Programs",
-    title: "Choose your Journey.",
+    eyebrow: "Executive Experiences",
+    title: "Choose your experience.",
     lead:
-      "One methodology and the same frameworks, in different cadences, durations and depths. What changes is how long it lasts, how often you meet the method, and how personalized it is.",
+      "Three in-person experiences designed by Elements Method for 2026: one day to enter your next season consciously, an immersive leadership retreat, and an intensive identity and personal-branding workshop. Small groups, limited seats.",
   },
   method: {
     eyebrow: "The Method",
@@ -358,10 +358,10 @@ export const en: Dict = {
     cta: "Request a conversation",
   },
   retreats: {
-    eyebrow: "The experience",
-    title: "Four elements. Six phases.",
+    eyebrow: "Upcoming dates",
+    title: "Upcoming experiences.",
     lead:
-      "Each immersion follows the same six-phase arc: Release, Encounter, Methodology, Reflection, Dialogue, Integration. The activities change and the number of immersions depends on the program — the structure does not change.",
+      "The 2026 calendar of Elements Method Executive Experiences: EQUINOX in September, Elements Awakening in October and SOUL Discovery in November. In-person experiences with limited seats, designed to go deep without saturating.",
     status: {
       open: "Open",
       lowSeats: "{n} seats left",

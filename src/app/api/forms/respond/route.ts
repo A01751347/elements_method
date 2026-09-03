@@ -4,7 +4,7 @@ import { and, eq, gt, isNull } from "drizzle-orm";
 import { db } from "@/shared/db/client";
 import { forms, formTokens, formResponses } from "@/shared/db/schema/forms";
 import { testimonials } from "@/shared/db/schema/testimonials";
-import { sendMail, emailLayout, escapeHtml, OPS_EMAIL } from "@/shared/integrations/resend";
+import { sendAll, emailLayout, escapeHtml, OPS_EMAIL } from "@/shared/integrations/resend";
 
 export const runtime = "nodejs";
 
@@ -153,8 +153,9 @@ export async function POST(req: Request) {
     }
   }
 
-  // Notify ops
-  void sendMail({
+  // Notify ops + acknowledge the participant.
+  await sendAll([
+    {
     to: OPS_EMAIL,
     subject: `[Encuesta] ${formSlug} · ${tokenRow.recipientEmail}`,
     html: emailLayout({
@@ -173,10 +174,9 @@ export async function POST(req: Request) {
         ${shareablePhrase ? `<p style="margin-top:14px;font-style:italic;background:#FCF4E1;padding:10px;border-left:3px solid #C9A96E;">${escapeHtml(shareablePhrase)}</p>` : ""}
       `,
     }),
-  });
+    },
 
-  // Acknowledge to participant
-  void sendMail({
+    {
     to: tokenRow.recipientEmail,
     subject:
       locale === "en"
@@ -189,7 +189,8 @@ export async function POST(req: Request) {
           ? `<p>Thank you${tokenRow.recipientName ? `, ${escapeHtml(tokenRow.recipientName)}` : ""}.</p><p>We've recorded your responses and read them carefully before the next step of the process.</p>`
           : `<p>Gracias${tokenRow.recipientName ? `, ${escapeHtml(tokenRow.recipientName)}` : ""}.</p><p>Quedó registrada tu respuesta. La leemos cuidadosamente antes del siguiente paso del proceso.</p>`,
     }),
-  });
+    },
+  ]);
 
   return NextResponse.json({ ok: true });
 }

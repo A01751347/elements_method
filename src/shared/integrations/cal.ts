@@ -6,14 +6,26 @@
 
 const USERNAME = process.env.NEXT_PUBLIC_CAL_USERNAME || "elementsmethod";
 
-export function calLink(eventType?: string): string {
+export function calLink(
+  eventType?: string,
+  params?: Record<string, string>,
+): string {
   const slug = eventType ? `/${eventType}` : "";
-  return `https://cal.com/${USERNAME}${slug}`;
+  const qs = params ? `?${new URLSearchParams(params).toString()}` : "";
+  return `https://cal.com/${USERNAME}${slug}${qs}`;
 }
 
-/** Default event types we expect to configure in Cal.com (RF-CAL-03). */
+/**
+ * Live Cal.com event types (sep 2026). Only two events exist in the
+ * workspace — cal.com/elementsmethod/diagnostico and
+ * cal.com/elementsmethod/empresas — so every individual-flavored CTA
+ * resolves to the diagnostic event.
+ */
 export const CAL_EVENT_TYPES = {
   discoveryEnterprise: "empresas",
-  discoveryIndividual: "exploracion-individual",
+  discoveryIndividual: "diagnostico",
   diagnostic: "diagnostico",
 } as const;
+
+/** Query params the founders use on the public enterprise booking link. */
+export const CAL_ENTERPRISE_PARAMS = { overlayCalendar: "true" } as const;

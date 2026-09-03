@@ -1,8 +1,31 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Copy, Loader2, Check, AlertCircle, Upload } from "lucide-react";
 import type { Locale } from "@/i18n/config";
+
+/** Map API error codes to something a buyer can act on. */
+function errorLabel(code: unknown, locale: Locale): string {
+  const es = locale === "es";
+  switch (code) {
+    case "ORDER_NOT_FOUND":
+      return es
+        ? "No encontramos ese folio. Revísalo en tu correo de confirmación."
+        : "We couldn't find that folio. Check your confirmation email.";
+    case "EMAIL_MISMATCH":
+      return es
+        ? "El email no coincide con el de la orden."
+        : "The email doesn't match the one on the order.";
+    case "UNSUPPORTED_TYPE":
+      return es ? "Formato no admitido (PDF, JPG o PNG)." : "Unsupported format (PDF, JPG or PNG).";
+    case "INVALID_PROOF_URL":
+      return es ? "El comprobante no es válido." : "The proof file is not valid.";
+    case "UPLOAD_UNAVAILABLE":
+      return es ? "La subida no está disponible." : "Upload is unavailable.";
+    default:
+      return "";
+  }
+}
 
 export function TransferProofForm({ locale }: { locale: Locale }) {
   const [state, setState] = useState<"idle" | "uploading" | "submitting" | "success" | "error">(
@@ -10,31 +33,95 @@ export function TransferProofForm({ locale }: { locale: Locale }) {
   );
   const [errorMsg, setErrorMsg] = useState("");
   const [proofUrl, setProofUrl] = useState<string>("");
+  const [fileName, setFileName] = useState<string>("");
+  /** Set when the server has no S3 credentials — we then ask for the proof by email. */
+  const [uploadUnavailable, setUploadUnavailable] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
+  const t = (es: string, en: string) => (locale === "es" ? es : en);
+
+  /**
+   * Two-step upload: ask the server for a presigned S3 PUT (it checks the folio
+   * belongs to this email), then send the file straight to S3. The file never
+   * transits our server, and no AWS credential reaches the browser.
+   */
   async function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    // The folio+email are what authorize the upload, so require them first.
+    const fd = new FormData(formRef.current ?? undefined);
+    const folio = String(fd.get("folio") ?? "").trim();
+    const email = String(fd.get("email") ?? "").trim();
+    if (!folio || !email) {
+      setState("error");
+      setErrorMsg(
+        t(
+          "Escribe primero tu folio y email — con eso verificamos tu orden antes de subir.",
+          "Enter your folio and email first — we verify your order before uploading.",
+        ),
+      );
+      e.target.value = "";
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      setState("error");
+      setErrorMsg(t("El archivo supera 10 MB.", "File exceeds 10 MB."));
+      e.target.value = "";
+      return;
+    }
+
     setState("uploading");
     setErrorMsg("");
-    // Vercel Blob direct upload — falls back to a placeholder URL when no token is set
+    setProofUrl("");
     try {
-      // In a real wire-up: import { upload } from "@vercel/blob/client";
-      // Here we keep a no-Blob fallback so the form is testable end-to-end without setup.
-      const fakeUrl = `https://placeholder.blob.vercel-storage.com/${encodeURIComponent(file.name)}-${Date.now()}`;
-      await new Promise((r) => setTimeout(r, 600));
-      setProofUrl(fakeUrl);
+      const signRes = await fetch("/api/uploads/comprobante", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          folio,
+          email,
+          contentType: file.type,
+          size: file.size,
+        }),
+      });
+      const signed = await signRes.json().catch(() => ({}));
+
+      if (signRes.status === 503) {
+        // No storage configured — degrade honestly instead of faking a URL.
+        setUploadUnavailable(true);
+        setState("idle");
+        e.target.value = "";
+        return;
+      }
+      if (!signRes.ok || !signed.ok) {
+        throw new Error(errorLabel(signed.error, locale) || `HTTP ${signRes.status}`);
+      }
+
+      const put = await fetch(signed.uploadUrl, {
+        method: "PUT",
+        headers: { "Content-Type": signed.contentType },
+        body: file,
+      });
+      if (!put.ok) {
+        throw new Error(t("No se pudo subir el archivo.", "Could not upload the file."));
+      }
+
+      setProofUrl(signed.publicUrl);
+      setFileName(file.name);
       setState("idle");
     } catch (err) {
       setState("error");
-      setErrorMsg(err instanceof Error ? err.message : "Upload failed");
+      setErrorMsg(err instanceof Error ? err.message : t("Falló la subida.", "Upload failed."));
+      e.target.value = "";
     }
   }
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!proofUrl) {
+    if (!proofUrl && !uploadUnavailable) {
       setState("error");
-      setErrorMsg(locale === "es" ? "Sube tu comprobante primero." : "Upload your proof first.");
+      setErrorMsg(t("Sube tu comprobante primero.", "Upload your proof first."));
       return;
     }
     setState("submitting");
@@ -47,7 +134,7 @@ export function TransferProofForm({ locale }: { locale: Locale }) {
         body: JSON.stringify({
           folio: String(fd.get("folio") ?? "").trim(),
           email: String(fd.get("email") ?? "").trim(),
-          proofUrl,
+          proofUrl: proofUrl || undefined,
           amountMxn: fd.get("amountMxn")
             ? Number(fd.get("amountMxn"))
             : undefined,
@@ -55,11 +142,13 @@ export function TransferProofForm({ locale }: { locale: Locale }) {
         }),
       });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok || !data.ok) throw new Error(data.error || `HTTP ${res.status}`);
+      if (!res.ok || !data.ok) {
+        throw new Error(errorLabel(data.error, locale) || `HTTP ${res.status}`);
+      }
       setState("success");
     } catch (err) {
       setState("error");
-      setErrorMsg(err instanceof Error ? err.message : "Unknown");
+      setErrorMsg(err instanceof Error ? err.message : t("Error desconocido.", "Unknown error."));
     }
   }
 
@@ -84,7 +173,7 @@ export function TransferProofForm({ locale }: { locale: Locale }) {
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-5">
+    <form ref={formRef} onSubmit={onSubmit} className="space-y-5">
       <label className="block">
         <span className="block text-[0.65rem] uppercase tracking-[0.2em] text-[var(--color-muted)] mb-2">
           Folio<span className="ml-1 text-[var(--color-fire-ink)]">*</span>
@@ -130,32 +219,52 @@ export function TransferProofForm({ locale }: { locale: Locale }) {
         />
       </label>
 
-      <label className="block">
-        <span className="block text-[0.65rem] uppercase tracking-[0.2em] text-[var(--color-muted)] mb-2">
-          {locale === "es" ? "Comprobante (PDF, JPG, PNG)" : "Proof (PDF, JPG, PNG)"}
-          <span className="ml-1 text-[var(--color-fire-ink)]">*</span>
-        </span>
-        <div className="border border-dashed border-[var(--color-line)] hover:border-[var(--color-ink)] transition-colors px-4 py-6 text-center">
-          <input
-            type="file"
-            accept="image/png,image/jpeg,application/pdf"
-            onChange={onFileChange}
-            className="block mx-auto text-xs text-[var(--color-ink-soft)]"
-          />
-          {state === "uploading" && (
-            <div className="mt-3 inline-flex items-center gap-2 text-xs text-[var(--color-muted)]">
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              {locale === "es" ? "Subiendo…" : "Uploading…"}
+      {uploadUnavailable ? (
+        <div className="border border-amber-200 bg-amber-50 px-4 py-4 text-sm text-amber-900">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
+            <div>
+              <p className="font-medium mb-1">
+                {t("Subida no disponible por ahora", "Upload unavailable right now")}
+              </p>
+              <p className="leading-relaxed">
+                {t(
+                  "Envía tu comprobante a hello@elementsmethod.com con tu folio en el asunto. Puedes mandar este formulario de todos modos y lo conciliamos con tu correo.",
+                  "Email your proof to hello@elementsmethod.com with your folio in the subject. You can still submit this form and we'll match it with your email.",
+                )}
+              </p>
             </div>
-          )}
-          {proofUrl && state === "idle" && (
-            <div className="mt-3 inline-flex items-center gap-2 text-xs text-emerald-700">
-              <Check className="h-3.5 w-3.5" />
-              {locale === "es" ? "Listo para enviar" : "Ready to submit"}
-            </div>
-          )}
+          </div>
         </div>
-      </label>
+      ) : (
+        <label className="block">
+          <span className="block text-[0.65rem] uppercase tracking-[0.2em] text-[var(--color-muted)] mb-2">
+            {t("Comprobante (PDF, JPG, PNG · máx. 10 MB)", "Proof (PDF, JPG, PNG · max 10 MB)")}
+            <span className="ml-1 text-[var(--color-fire-ink)]">*</span>
+          </span>
+          <div className="border border-dashed border-[var(--color-line)] hover:border-[var(--color-ink)] transition-colors px-4 py-6 text-center">
+            <input
+              type="file"
+              accept="image/png,image/jpeg,application/pdf"
+              onChange={onFileChange}
+              disabled={state === "uploading" || state === "submitting"}
+              className="block mx-auto text-xs text-[var(--color-ink-soft)] disabled:opacity-50"
+            />
+            {state === "uploading" && (
+              <div className="mt-3 inline-flex items-center gap-2 text-xs text-[var(--color-muted)]">
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                {t("Subiendo…", "Uploading…")}
+              </div>
+            )}
+            {proofUrl && state !== "uploading" && (
+              <div className="mt-3 inline-flex items-center gap-2 text-xs text-emerald-700">
+                <Check className="h-3.5 w-3.5" />
+                {t("Subido:", "Uploaded:")} <span className="font-mono">{fileName}</span>
+              </div>
+            )}
+          </div>
+        </label>
+      )}
 
       {state === "error" && (
         <div className="border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 flex items-start gap-3">

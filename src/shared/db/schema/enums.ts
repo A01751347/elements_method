@@ -7,6 +7,7 @@ export const productTypeEnum = pgEnum("product_type", [
   "elemento",
   "retiro_inmersivo",
   "programa_corporativo",
+  "experiencia",
 ]);
 
 export const elementEnum = pgEnum("element", ["agua", "fuego", "aire", "tierra", "eter"]);
