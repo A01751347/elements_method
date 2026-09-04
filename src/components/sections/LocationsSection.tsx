@@ -96,7 +96,7 @@ export function LocationsSection({
                   <div className="text-[0.65rem] tracking-[0.22em] uppercase text-[var(--color-muted)] mb-3">
                     {locale === "es" ? axis.taglineEs : axis.taglineEn}
                   </div>
-                  <h3 className="font-[family-name:var(--font-display)] text-[clamp(1.75rem,2.2vw,2.5rem)] tracking-tight leading-tight">
+                  <h3 className="font-[family-name:var(--font-display)] text-[clamp(1.75rem,2.2vw,2.5rem)] tracking-tight leading-tight md:min-h-[2.4em]">
                     {locale === "es" ? axis.nameEs : axis.nameEn}
                   </h3>
                   <p className="mt-6 text-sm text-[var(--color-ink-soft)] leading-relaxed max-w-sm">

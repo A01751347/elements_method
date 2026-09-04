@@ -1,6 +1,8 @@
+import * as React from "react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import {
+  BriefcaseBusiness,
   ClipboardList,
   Layers,
   Target,
@@ -162,18 +164,18 @@ export default async function CompaniesPage({
         <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-px bg-[var(--color-line)] border border-[var(--color-line)]">
           {(locale === "es"
             ? [
+                { icon: BriefcaseBusiness, t: "C-Levels y dueños de empresa", b: "Directivos con alta responsabilidad, donde cada decisión pesa sobre el negocio y sobre la gente." },
                 { icon: Building, t: "Empresas invirtiendo en liderazgo", b: "Que entienden el desarrollo de líderes como prioridad estratégica." },
                 { icon: GraduationCap, t: "RRHH / L&D", b: "Buscando experiencias y programas diferenciados, de alto impacto." },
                 { icon: Users, t: "Equipos directivos", b: "Que necesitan mayor cohesión, conexión y alineación." },
-                { icon: Target, t: "Culturas en reset", b: "Que requieren un nuevo significado o un reset cultural." },
-                { icon: Sparkles, t: "Cambio o crecimiento", b: "Empresas en procesos de transformación, crecimiento acelerado o un inicio poderoso." },
+                { icon: Sparkles, t: "Culturas en reset o en crecimiento", b: "Que requieren un nuevo significado o un reset cultural, o atraviesan transformación, crecimiento acelerado o un inicio poderoso." },
               ]
             : [
+                { icon: BriefcaseBusiness, t: "C-Levels and business owners", b: "Executives carrying high responsibility, where every decision weighs on the business and on people." },
                 { icon: Building, t: "Companies investing in leadership", b: "That understand leader development as strategic priority." },
                 { icon: GraduationCap, t: "HR / L&D", b: "Looking for differentiated, high-impact experiences and programs." },
                 { icon: Users, t: "Executive teams", b: "That need greater cohesion, connection and alignment." },
-                { icon: Target, t: "Cultures in reset", b: "That require new meaning or a cultural reset." },
-                { icon: Sparkles, t: "Change or growth", b: "Companies in transformation, accelerated growth or a powerful beginning." },
+                { icon: Sparkles, t: "Cultures in reset or in growth", b: "That require new meaning or a cultural reset, or are going through transformation, accelerated growth or a powerful beginning." },
               ]
           ).map((row, idx) => {
             const Icon = row.icon;
@@ -349,21 +351,24 @@ export default async function CompaniesPage({
               />
             </div>
             <div className="lg:col-span-10">
-              <blockquote className="font-[family-name:var(--font-display)] text-[clamp(1.5rem,3.5vw,2.75rem)] leading-snug text-balance">
+              {/* Los testimonios reales llegan a 450 caracteres: a 2.75rem se
+               *  convertían en un muro. Tamaño moderado y text-pretty. */}
+              <blockquote className="font-[family-name:var(--font-display)] text-[clamp(1.25rem,2vw,1.8rem)] leading-[1.45] text-pretty">
                 “{locale === "es" ? testimonial.quoteEs : testimonial.quoteEn}”
               </blockquote>
               <div className="mt-8 flex flex-wrap items-center gap-3 text-sm tracking-wide">
                 <span className="text-[var(--color-ink)]">
                   {testimonial.authorName}
                 </span>
-                <span className="text-[var(--color-muted)]">·</span>
-                <span className="text-[var(--color-muted)]">
-                  {testimonial.authorRole}
-                </span>
-                <span className="text-[var(--color-muted)]">·</span>
-                <span className="text-[var(--color-muted)]">
-                  {testimonial.company}
-                </span>
+                {/* Sin cargo o sin empresa no debe quedar un · colgando. */}
+                {[testimonial.authorRole, testimonial.company]
+                  .filter(Boolean)
+                  .map((part) => (
+                    <React.Fragment key={part}>
+                      <span className="text-[var(--color-muted)]">·</span>
+                      <span className="text-[var(--color-muted)]">{part}</span>
+                    </React.Fragment>
+                  ))}
               </div>
             </div>
           </div>

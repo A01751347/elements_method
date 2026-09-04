@@ -79,7 +79,7 @@ export function FacilitatorsBand({
                 <h3 className="font-[family-name:var(--font-display)] text-2xl md:text-3xl leading-tight">
                   {f.name}
                 </h3>
-                <div className="mt-2.5 text-[0.7rem] tracking-[0.16em] uppercase text-[var(--color-muted)] leading-relaxed">
+                <div className="mt-2.5 text-[0.7rem] tracking-[0.16em] uppercase text-[var(--color-muted)] leading-relaxed sm:min-h-[3em]">
                   {es ? f.roleEs : f.roleEn}
                 </div>
                 <p className="mt-6 pt-6 border-t border-[var(--color-line)] text-[var(--color-ink-soft)] leading-relaxed italic">

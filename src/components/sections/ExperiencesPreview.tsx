@@ -146,7 +146,7 @@ export function ExperiencesPreview({
 
                   <h3
                     className={cn(
-                      "font-[family-name:var(--font-display)] text-3xl md:text-4xl tracking-tight mb-3",
+                      "font-[family-name:var(--font-display)] text-3xl md:text-4xl tracking-tight leading-[1.06] mb-3 min-h-[2.12em]",
                       isHovered ? "text-[var(--color-paper)]" : "text-[var(--color-ink)]",
                     )}
                   >
@@ -154,7 +154,7 @@ export function ExperiencesPreview({
                   </h3>
                   <p
                     className={cn(
-                      "italic mb-8 text-pretty",
+                      "italic mb-8 text-pretty min-h-[3em]",
                       isHovered ? "text-[var(--color-paper)]/90" : "text-[var(--color-ink-soft)]",
                     )}
                   >

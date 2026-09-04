@@ -87,7 +87,7 @@ export function ProcessSteps({
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{ duration: 0.6, delay: idx * 0.08 }}
-                className="group bg-[var(--color-paper)] p-8 md:p-10 min-h-[280px] flex flex-col justify-between hover:bg-[var(--color-paper-warm)] transition-colors duration-500"
+                className="group bg-[var(--color-paper)] p-8 md:p-10 min-h-[280px] flex flex-col hover:bg-[var(--color-paper-warm)] transition-colors duration-500"
               >
                 <div className="flex items-start justify-between">
                   <span className="font-[family-name:var(--font-display)] text-5xl text-[var(--color-ink)]/15 group-hover:text-[var(--color-moss-700)]/40 transition-colors">
@@ -97,7 +97,7 @@ export function ProcessSteps({
                 </div>
 
                 <div className="mt-8">
-                  <h3 className="font-[family-name:var(--font-display)] text-xl md:text-2xl mb-3 tracking-tight">
+                  <h3 className="font-[family-name:var(--font-display)] text-xl md:text-2xl leading-tight mb-3 tracking-tight min-h-[1.5em]">
                     {locale === "es" ? step.titleEs : step.titleEn}
                   </h3>
                   <p className="text-[var(--color-ink-soft)] text-sm leading-relaxed">
