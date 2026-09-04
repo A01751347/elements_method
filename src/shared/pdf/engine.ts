@@ -69,7 +69,7 @@ export class PdfBuilder {
       color: GOLD,
     });
     this.y -= 26;
-    this.page.drawText(meta.title, {
+    this.page.drawText(toWinAnsi(meta.title), {
       x: MARGIN,
       y: this.y,
       size: 20,
@@ -78,7 +78,7 @@ export class PdfBuilder {
     });
     this.y -= 20;
     if (meta.subtitle) {
-      this.page.drawText(meta.subtitle, {
+      this.page.drawText(toWinAnsi(meta.subtitle), {
         x: MARGIN,
         y: this.y,
         size: 10,
@@ -105,7 +105,7 @@ export class PdfBuilder {
   heading(text: string) {
     this.ensure(30);
     this.y -= 8;
-    this.page.drawText(text, {
+    this.page.drawText(toWinAnsi(text), {
       x: MARGIN,
       y: this.y,
       size: 12,
@@ -119,7 +119,7 @@ export class PdfBuilder {
   private wrap(text: string, font: PDFFont, size: number): string[] {
     const maxWidth = A4.width - MARGIN * 2;
     const out: string[] = [];
-    for (const rawLine of text.split("\n")) {
+    for (const rawLine of toWinAnsi(text).split("\n")) {
       if (rawLine.trim() === "") {
         out.push("");
         continue;
@@ -162,14 +162,14 @@ export class PdfBuilder {
   /** A label: value row (e.g. "Folio: EM-2607-0042"). */
   kv(label: string, value: string) {
     this.ensure(18);
-    this.page.drawText(label, {
+    this.page.drawText(toWinAnsi(label), {
       x: MARGIN,
       y: this.y,
       size: 9,
       font: this.bold,
       color: MUTED,
     });
-    this.page.drawText(value, {
+    this.page.drawText(toWinAnsi(value), {
       x: MARGIN + 150,
       y: this.y,
       size: 10.5,
@@ -184,15 +184,16 @@ export class PdfBuilder {
     this.ensure(20);
     const font = opts.bold ? this.bold : this.font;
     const size = opts.bold ? 12 : 10.5;
-    this.page.drawText(label, {
+    this.page.drawText(toWinAnsi(label), {
       x: MARGIN,
       y: this.y,
       size,
       font,
       color: opts.bold ? INK : INK_SOFT,
     });
-    const amtWidth = font.widthOfTextAtSize(amount, size);
-    this.page.drawText(amount, {
+    const safeAmount = toWinAnsi(amount);
+    const amtWidth = font.widthOfTextAtSize(safeAmount, size);
+    this.page.drawText(safeAmount, {
       x: A4.width - MARGIN - amtWidth,
       y: this.y,
       size,
@@ -205,7 +206,7 @@ export class PdfBuilder {
   footer(text: string) {
     const pages = this.doc.getPages();
     pages.forEach((p) => {
-      p.drawText(text, {
+      p.drawText(toWinAnsi(text), {
         x: MARGIN,
         y: MARGIN - 24,
         size: 7.5,
@@ -236,7 +237,7 @@ export function fillTokens(
   template: string,
   values: Record<string, string | number | null | undefined>,
 ): string {
-  return template.replace(/\{\{\s*([A-Z0-9_]+)\s*\}\}/g, (_m, key: string) => {
+  return template.replace(/\{\{\s*([A-Za-z0-9_]+)\s*\}\}/g, (_m, key: string) => {
     const v = values[key];
     if (v === undefined || v === null || v === "") return `‹${key}›`;
     return String(v);
@@ -268,4 +269,93 @@ export function markdownToBlocks(
     }
   }
   return blocks.filter((b) => b.text !== "" || b.type === "para");
+}
+
+/**
+ * Helvetica estándar solo codifica WinAnsi: un carácter fuera de esa tabla
+ * (una flecha, un guion largo raro, un emoji pegado por el abogado) hace que
+ * pdf-lib lance y el documento devuelva 500. Se traduce lo traducible y el
+ * resto cae a un espacio.
+ */
+const WIN_ANSI_MAP: Record<string, string> = {
+  "\u2018": "'", "\u2019": "'", "\u201A": ",", "\u201C": '"', "\u201D": '"',
+  "\u201E": '"', "\u2013": "-", "\u2014": "\u2014", "\u2026": "...",
+  "\u2022": "\u2022", "\u00A0": " ", "\u2192": "->", "\u2190": "<-",
+  "\u2264": "<=", "\u2265": ">=", "\u00D7": "x", "\u2713": "-", "\u2714": "-",
+  "\u200B": "", "\uFEFF": "", "\u2039": "<", "\u203A": ">",
+};
+
+export function toWinAnsi(text: string): string {
+  let out = "";
+  for (const char of text) {
+    const mapped = WIN_ANSI_MAP[char];
+    if (mapped !== undefined) {
+      out += mapped;
+      continue;
+    }
+    const code = char.codePointAt(0) ?? 0;
+    // ASCII imprimible, salto de línea y Latin-1 pasan tal cual.
+    out += code === 10 || (code >= 32 && code <= 126) || (code >= 160 && code <= 255)
+      ? char
+      : " ";
+  }
+  return out;
+}
+
+const ENTITIES: Record<string, string> = {
+  amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " ",
+  aacute: "\u00E1", eacute: "\u00E9", iacute: "\u00ED", oacute: "\u00F3",
+  uacute: "\u00FA", ntilde: "\u00F1", Ntilde: "\u00D1", uuml: "\u00FC",
+  Aacute: "\u00C1", Eacute: "\u00C9", Iacute: "\u00CD", Oacute: "\u00D3",
+  Uacute: "\u00DA", laquo: "\u00AB", raquo: "\u00BB", hellip: "...",
+  mdash: "\u2014", ndash: "-", rsquo: "'", lsquo: "'", ldquo: '"', rdquo: '"',
+  deg: "\u00B0", middot: "\u00B7", euro: "\u20AC", copy: "\u00A9", reg: "\u00AE",
+};
+
+function decodeEntities(text: string): string {
+  return text
+    .replace(/&#(\d+);/g, (_m, n: string) => String.fromCodePoint(Number(n)))
+    .replace(/&#x([0-9a-f]+);/gi, (_m, n: string) => String.fromCodePoint(parseInt(n, 16)))
+    .replace(/&([a-zA-Z]+);/g, (m, name: string) => ENTITIES[name] ?? m);
+}
+
+/**
+ * Convierte el HTML de una plantilla legal en los bloques que sabe pintar el
+ * renderizador. Las plantillas se guardan como HTML (`template_html_es`), pero
+ * el PDF las trataba como markdown: cada <p>, <h1> y <strong> salía impreso
+ * como texto en el documento que descarga el comprador.
+ */
+export function htmlToBlocks(
+  html: string,
+): { type: "heading" | "para"; text: string }[] {
+  let s = html
+    .replace(/<!--[\s\S]*?-->/g, "")
+    .replace(/<(script|style)[\s\S]*?<\/\1>/gi, "");
+
+  s = s
+    .replace(/<li[^>]*>/gi, "\n\u2022 ")
+    .replace(/<\/li>/gi, "\n")
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<h([1-6])[^>]*>/gi, (_m, n: string) => `\n\n${"#".repeat(Number(n))} `)
+    .replace(/<\/h[1-6]>/gi, "\n\n")
+    .replace(/<\/(p|div|section|article|ul|ol|table|tr|blockquote)>/gi, "\n\n")
+    .replace(/<(p|div|section|article|ul|ol|table|tr|blockquote)[^>]*>/gi, "\n")
+    .replace(/<[^>]+>/g, "");
+
+  s = decodeEntities(s)
+    .split("\n")
+    .map((line) => line.replace(/[ \t\u00A0]+/g, " ").trimEnd())
+    .join("\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+
+  return markdownToBlocks(s);
+}
+
+/** Una plantilla viene en HTML o en markdown; se detecta y se usa la correcta. */
+export function templateToBlocks(
+  body: string,
+): { type: "heading" | "para"; text: string }[] {
+  const looksHtml = /<\/?(p|h[1-6]|ul|ol|li|br|div|strong|em|span|table)\b/i.test(body);
+  return looksHtml ? htmlToBlocks(body) : markdownToBlocks(body);
 }

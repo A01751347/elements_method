@@ -1,6 +1,6 @@
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { db } from "@/shared/db/client";
-import { documentTemplates, orders } from "@/shared/db/schema";
+import { documentTemplates, orders, products } from "@/shared/db/schema";
 import { buildLegalDocPdf } from "@/shared/pdf/legalDoc";
 
 export const runtime = "nodejs";
@@ -47,6 +47,23 @@ export async function GET(
   const templateMarkdown =
     lang === "en" ? tpl.templateHtmlEn ?? tpl.templateHtmlEs : tpl.templateHtmlEs;
 
+  // Nombres de lo comprado, para {{product_names}}.
+  let productNames = "";
+  if (order?.productIds?.length) {
+    const rows = await db
+      .select({ nameEs: products.nameEs, nameEn: products.nameEn })
+      .from(products)
+      .where(inArray(products.id, order.productIds));
+    productNames = rows
+      .map((r) => (lang === "en" ? r.nameEn ?? r.nameEs : r.nameEs))
+      .join(", ");
+  }
+
+  const money = (v: unknown) =>
+    v === undefined || v === null
+      ? undefined
+      : `$${Number(v).toLocaleString("es-MX", { minimumFractionDigits: 2 })}`;
+
   const tokens: Record<string, string | number | null | undefined> = {
     // Organizer / company (from env; blank → visible ‹TOKEN›)
     ORGANIZADOR_RAZON_SOCIAL: process.env.LEGAL_ORG_NAME,
@@ -70,6 +87,27 @@ export async function GET(
       day: "numeric",
     }),
     CIUDAD_FIRMA: process.env.LEGAL_CITY ?? "Ciudad de México",
+
+    // Los mismos datos con los nombres que usan las plantillas sembradas
+    // ({{buyer_name}}, {{order_folio}}…). Sin esto salían impresos tal cual
+    // en el PDF que descarga el comprador antes de pagar.
+    buyer_name: order?.buyerName,
+    buyer_email: order?.buyerEmail,
+    buyer_phone: order?.buyerPhone,
+    buyer_company: order?.buyerCompany,
+    buyer_rfc: order?.buyerRfc,
+    buyer_address: order?.buyerAddress,
+    order_folio: order?.folio ?? folio,
+    order_date: order?.createdAt
+      ? new Date(order.createdAt).toLocaleDateString(
+          lang === "en" ? "en-US" : "es-MX",
+          { year: "numeric", month: "long", day: "numeric" },
+        )
+      : undefined,
+    product_names: productNames || undefined,
+    total_amount: money(order?.total),
+    currency: order?.currency ?? "MXN",
+    language: lang === "en" ? "Inglés" : "Español",
   };
 
   const { bytes } = await buildLegalDocPdf({

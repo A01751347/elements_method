@@ -1,5 +1,5 @@
 import "server-only";
-import { PdfBuilder, fillTokens, markdownToBlocks } from "./engine";
+import { PdfBuilder, fillTokens, templateToBlocks } from "./engine";
 
 export interface LegalDocInput {
   /** Document display name, e.g. "Contrato de Participación". */
@@ -22,7 +22,7 @@ export async function buildLegalDocPdf(
   input: LegalDocInput,
 ): Promise<{ bytes: Uint8Array; hash: string }> {
   const filled = fillTokens(input.templateMarkdown, input.tokens);
-  const blocks = markdownToBlocks(filled);
+  const blocks = templateToBlocks(filled);
 
   const pdf = await PdfBuilder.create({
     title: input.name,
