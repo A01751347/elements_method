@@ -212,18 +212,20 @@ export const productSeeds: NewProduct[] = [
     nameEs: "ELEMENTS AWAKENING · Lead Your True Nature",
     nameEn: "ELEMENTS AWAKENING · Lead Your True Nature",
     descriptionEs:
-      "Experiencia inmersiva de liderazgo de 2.5 días para quienes han llegado lejos hacia afuera y están listos para ir más profundo hacia adentro. Cinco dimensiones del liderazgo —Tierra, Agua, Fuego, Aire y Éter— exploradas individualmente e integradas en una sola forma de liderar. 16–18 de octubre de 2026 · Misión del Sol, Morelos. Acceso por invitación: se solicita mediante aplicación.",
+      "Experiencia inmersiva de liderazgo de 2.5 días para quienes han llegado lejos hacia afuera y están listos para ir más profundo hacia adentro. Cinco dimensiones del liderazgo —Tierra, Agua, Fuego, Aire y Éter— exploradas individualmente e integradas en una sola forma de liderar. 14–16 de octubre de 2026 · Misión del Sol, Morelos. Acceso por invitación: se solicita mediante aplicación.",
     descriptionEn:
-      "A 2.5-day immersive leadership experience for those who have gone far on the outside and are ready to go deeper within. Five dimensions of leadership —Earth, Water, Fire, Air and Ether— explored individually and integrated into a single way of leading. October 16–18, 2026 · Misión del Sol, Morelos. Access by invitation: request via application.",
+      "A 2.5-day immersive leadership experience for those who have gone far on the outside and are ready to go deeper within. Five dimensions of leadership —Earth, Water, Fire, Air and Ether— explored individually and integrated into a single way of leading. October 14–16, 2026 · Misión del Sol, Morelos. Access by invitation: request via application.",
     includesEs: "Hospedaje · Alimentos · Materiales · Sesiones y actividades",
     includesEn: "Lodging · Meals · Materials · Sessions and activities",
     duration: "2.5 días",
     modality: "Presencial · Grupo reducido",
-    // Inversión por confirmar — precio 0 mantiene el producto fuera de
-    // checkout (PRODUCT_NOT_PURCHASABLE); el CTA público es "Solicitar
-    // invitación". Al confirmar el precio, actualizarlo aquí y en admin.
-    priceMxn: "0.00",
-    priceUsd: "0",
+    // El CTA público sigue siendo "Solicitar invitación" (acceso por
+    // aplicación), pero el producto ya es cobrable vía checkout/transferencia
+    // una vez aprobada la invitación.
+    priceMxn: "35000.00",
+    priceUsd: String(usd(35000)),
+    earlyPriceMxn: "30000.00",
+    earlyDeadline: new Date("2026-10-01T05:59:59.999Z"), // 30 sep 23:59 CDMX
     sortOrder: 410,
   },
   {

@@ -98,7 +98,7 @@ export interface Experience {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
-// ELEMENTS AWAKENING — retiro ejecutivo · 16-18 octubre 2026
+// ELEMENTS AWAKENING — retiro ejecutivo · 14-16 octubre 2026
 // ────────────────────────────────────────────────────────────────────────────
 
 const elementsAwakening: Experience = {
@@ -106,7 +106,7 @@ const elementsAwakening: Experience = {
   image: "/images/heroes/awakening.jpg",
   productSlug: null,
   ctaMode: "apply",
-  startDateIso: "2026-10-16",
+  startDateIso: "2026-10-14",
   elementKey: "eter",
   brand: {
     es: "An Elements Method Executive Experience",
@@ -119,8 +119,8 @@ const elementsAwakening: Experience = {
     en: "An immersive leadership experience for those who have gone far on the outside and are ready to go deeper within.",
   },
   dateLabel: {
-    es: "16, 17 y 18 de octubre de 2026",
-    en: "October 16, 17 & 18, 2026",
+    es: "14, 15 y 16 de octubre de 2026",
+    en: "October 14, 15 & 16, 2026",
   },
   duration: { es: "2.5 días", en: "2.5 days" },
   location: { es: "Misión del Sol · Morelos", en: "Misión del Sol · Morelos" },
@@ -129,7 +129,13 @@ const elementsAwakening: Experience = {
     en: "In person · Small group",
   },
   seats: 15,
-  priceMxn: null,
+  priceMxn: 35000,
+  earlyPriceMxn: 30000,
+  earlyDeadlineIso: "2026-09-30",
+  earlyLabel: {
+    es: "Early Access $30,000 MXN hasta el 30 de septiembre",
+    en: "Early Access MX$30,000 through September 30",
+  },
   includes: {
     es: "Hospedaje, alimentos, materiales y actividades",
     en: "Lodging, meals, materials and activities",
@@ -421,8 +427,8 @@ const elementsAwakening: Experience = {
     {
       label: { es: "Fecha", en: "Date" },
       value: {
-        es: "16, 17 y 18 de octubre de 2026",
-        en: "October 16, 17 & 18, 2026",
+        es: "14, 15 y 16 de octubre de 2026",
+        en: "October 14, 15 & 16, 2026",
       },
     },
     { label: { es: "Duración", en: "Duration" }, value: { es: "2.5 días", en: "2.5 days" } },
@@ -439,7 +445,10 @@ const elementsAwakening: Experience = {
     },
     {
       label: { es: "Inversión", en: "Investment" },
-      value: { es: "Por confirmar", en: "To be confirmed" },
+      value: {
+        es: "$35,000 MXN · Early Access $30,000 hasta el 30 de septiembre",
+        en: "MX$35,000 · Early Access MX$30,000 through September 30",
+      },
     },
     {
       label: { es: "Incluye", en: "Includes" },
