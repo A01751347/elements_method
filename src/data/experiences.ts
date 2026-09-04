@@ -569,6 +569,14 @@ const equinox: Experience = {
     },
     paragraphs: [
       {
+        es: "Todo cambia. La naturaleza cambia constantemente. Cambia la luz. Cambia la temperatura. Las hojas caen. Las semillas descansan. Los sistemas se reorganizan. Nosotros también cambiamos, pero con frecuencia interpretamos la transición como pérdida de control, incertidumbre o fracaso.",
+        en: "Everything changes. Nature changes constantly. The light changes. The temperature changes. Leaves fall. Seeds rest. Systems reorganize. We change too, yet we often read transition as a loss of control, as uncertainty, as failure.",
+      },
+      {
+        es: "EQUINOX propone otra mirada: la transición como información y como invitación a observar qué termina, qué emerge y qué necesita práctica deliberada — para convertirnos en quien queremos ser, personal y profesionalmente.",
+        en: "EQUINOX offers another way of seeing it: transition as information, and as an invitation to observe what is ending, what is emerging and what needs deliberate practice — so we can become who we want to be, personally and professionally.",
+      },
+      {
         es: "Hay momentos en los que la vida cambia antes de que encontremos palabras para explicarlo. Tal vez estás creciendo, tomando decisiones, cerrando una etapa, comenzando otra, redefiniendo tu liderazgo o simplemente sintiendo que algo dentro de ti pide evolucionar.",
         en: "There are moments when life changes before we find words to explain it. Maybe you are growing, making decisions, closing one chapter, beginning another, redefining your leadership — or simply feeling that something inside you is asking to evolve.",
       },
