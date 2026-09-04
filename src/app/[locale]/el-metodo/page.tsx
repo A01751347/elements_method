@@ -83,7 +83,7 @@ export default function MethodPage({
       {/* HERO */}
       <section
         ref={heroRef}
-        className="relative min-h-[80vh] flex items-end overflow-hidden -mt-20 pt-36 md:pt-44 text-[var(--color-paper)]"
+        className="relative min-h-[92svh] flex items-end overflow-hidden -mt-20 pt-32 md:pt-40 text-[var(--color-paper)]"
       >
         <motion.div
           style={{ y: heroY }}
@@ -101,12 +101,12 @@ export default function MethodPage({
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[var(--color-ink)]/40 via-[var(--color-ink)]/55 to-[var(--color-ink)]" />
         <div className="absolute inset-0 -z-10 film-grain pointer-events-none" />
 
-        <Container className="relative pb-16 md:pb-24 z-10">
+        <Container className="relative pb-12 md:pb-14 z-10">
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
-            className="eyebrow text-[var(--color-paper)]/95 mb-8 flex items-center gap-3"
+            className="eyebrow text-[var(--color-paper)]/95 mb-6 flex items-center gap-3"
           >
             <span aria-hidden className="h-px w-12 bg-[var(--color-paper)]/40" />
             {dict.method.eyebrow}
@@ -115,7 +115,7 @@ export default function MethodPage({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1 }}
-            className="display-1 text-balance text-[var(--color-paper)] max-w-[18ch]"
+            className="display-hero text-balance text-[var(--color-paper)]"
           >
             {dict.method.title}
           </motion.h1>
@@ -123,7 +123,7 @@ export default function MethodPage({
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.3 }}
-            className="lead mt-8 max-w-2xl text-[var(--color-paper)]/95"
+            className="lead mt-7 max-w-xl text-[var(--color-paper)]/95"
           >
             {dict.method.lead}
           </motion.p>
@@ -131,7 +131,7 @@ export default function MethodPage({
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.45 }}
-            className="mt-10 flex flex-wrap items-center gap-4"
+            className="mt-9 flex flex-wrap items-center gap-4"
           >
             {next && (
               <Button href={nextHref} size="md" variant="solidLight" trailingArrow>
@@ -173,6 +173,11 @@ export default function MethodPage({
               {locale === "es"
                 ? "En la física, el núcleo es la masa densa y energética desde la que todo lo demás se organiza. En liderazgo, la persona, expresándose desde su autenticidad y naturaleza, es el núcleo desde el que todo se crea y se expande: las dinámicas del equipo, la cultura y los resultados de la organización."
                 : "In physics, the nucleus is the dense, energetic mass from which everything else is organized. In leadership, the person, expressing themselves from their authenticity and nature, is the nucleus from which everything is created and expands: team dynamics, culture and the organization's results."}
+            </p>
+            <p>
+              {locale === "es"
+                ? "La naturaleza es el entorno, interno y externo. Y las metodologías integran neurociencia, neuroliderazgo, PNL, psicología, coaching y liderazgo ejecutivo en una práctica expansiva, adaptativa y humana. Todo en búsqueda de tus mejores resultados."
+                : "Nature is the environment, inner and outer. And the methodologies bring together neuroscience, neuroleadership, NLP, psychology, coaching and executive leadership in an expansive, adaptive, human practice. All in pursuit of your best results."}
             </p>
             <p className="italic text-[var(--color-ink)]">
               {locale === "es"
@@ -365,7 +370,7 @@ export default function MethodPage({
                   type="button"
                   onClick={() => setActiveIdx(idx)}
                   className={cn(
-                    "group relative aspect-[4/5] md:aspect-[3/4] text-left overflow-hidden transition-all duration-500",
+                    "group relative aspect-[4/5] md:aspect-[5/4] text-left overflow-hidden transition-all duration-500",
                     isActive ? "ring-2" : "ring-0 hover:ring-1",
                   )}
                   style={
@@ -378,7 +383,7 @@ export default function MethodPage({
                   {moduleImg && (
                     <Image
                       src={moduleImg}
-                      alt={`${el.framework} · ${name}`}
+                      alt=""
                       fill
                       sizes="(min-width: 768px) 25vw, 50vw"
                       className={cn(
@@ -841,6 +846,15 @@ export default function MethodPage({
   );
 }
 
+/**
+ * Ficha del elemento activo — versión de dos columnas.
+ *
+ * Antes era una sola columna kilométrica: cuatro tarjetas numeradas, luego la
+ * paradoja, luego cuatro componentes apilados, luego la invitación — y una
+ * columna izquierda que se quedaba vacía a la tercera pantalla. Ahora la
+ * identidad (foto, cita, tríada) queda fija a la izquierda mientras el
+ * argumento avanza a la derecha, y el nombre del elemento aparece UNA vez.
+ */
 function ElementDetail({
   el,
   locale,
@@ -848,185 +862,99 @@ function ElementDetail({
   el: ElementInfo;
   locale: "es" | "en";
 }) {
-  const layers: {
-    label: string;
-    body: string;
-    /** When present the card typesets the acronym instead of a paragraph. */
-    acronym?: ElementInfo["frameworkItems"];
-  }[] = [
-    {
-      label: locale === "es" ? "En la naturaleza" : "In nature",
-      body: locale === "es" ? el.natureEs : el.natureEn,
-    },
-    {
-      label: locale === "es" ? "En el líder" : "In the leader",
-      body: locale === "es" ? el.cultivaEs : el.cultivaEn,
-    },
-    {
-      label: `Framework · ${el.framework}`,
-      body: locale === "es" ? el.methodEs : el.methodEn,
-      acronym: el.frameworkItems,
-    },
-    {
-      label: locale === "es" ? "Modalidades aliadas" : "Aligned modalities",
-      body: locale === "es" ? el.bodyEs : el.bodyEn,
-    },
-  ];
-
+  const es = locale === "es";
+  const name = es ? el.nameEs : el.nameEn;
   const elImage = elementImages[el.key];
+
   return (
-    <div className="grid lg:grid-cols-12 gap-10">
-      <div className="lg:col-span-4">
-        <div
-          className={cn(
-            "aspect-square w-full max-w-md mx-auto relative overflow-hidden",
-            el.animClass,
-          )}
-        >
+    <div className="grid lg:grid-cols-12 gap-10 lg:gap-14">
+      {/* ── Identidad, fija mientras se lee lo demás ────────────────────── */}
+      <aside className="lg:col-span-4 lg:sticky lg:top-32 lg:self-start">
+        <div className={cn("relative aspect-[4/5] w-full overflow-hidden", el.animClass)}>
           {elImage && (
             <Image
               src={elImage}
-              alt={`${locale === "es" ? el.nameEs : el.nameEn} — ${el.framework}`}
+              alt=""
               fill
-              sizes="(min-width: 1024px) 360px, 90vw"
+              sizes="(min-width: 1024px) 380px, 90vw"
               className="object-cover"
             />
           )}
-          {/* Color wash to integrate the photo with the brand element palette */}
           <div
             aria-hidden
-            className="absolute inset-0 mix-blend-multiply opacity-40"
+            className="absolute inset-0 mix-blend-multiply opacity-35"
             style={{
               background: `linear-gradient(160deg, ${el.accent}33 0%, ${el.accentInk}66 100%)`,
             }}
           />
-          {/* Bottom scrim so the label is always readable */}
-          <div
-            aria-hidden
-            className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-[var(--color-ink)]/85 via-[var(--color-ink)]/30 to-transparent"
-          />
-          <div className="absolute bottom-6 left-6 text-[var(--color-paper)]" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
-            <div className="eyebrow" style={{ color: el.accentSoft }}>
-              {el.framework}
-            </div>
-            <div className="font-[family-name:var(--font-display)] text-3xl mt-1">
-              {locale === "es" ? el.nameEs : el.nameEn}
-            </div>
-          </div>
         </div>
 
-        <p className="mt-6 italic font-[family-name:var(--font-display)] text-xl text-[var(--color-ink)] max-w-md">
-          “{locale === "es" ? el.quoteEs : el.quoteEn}”
+        <p className="mt-7 italic font-[family-name:var(--font-display)] text-xl leading-snug text-[var(--color-ink)]">
+          “{es ? el.quoteEs : el.quoteEn}”
         </p>
-
-        <p className="mt-4 text-sm uppercase tracking-[0.2em] text-[var(--color-muted)]">
-          {locale === "es" ? el.qualityEs : el.qualityEn}
+        <p className="mt-4 text-[0.7rem] uppercase tracking-[0.2em] text-[var(--color-muted)]">
+          {es ? el.qualityEs : el.qualityEn}
         </p>
-      </div>
+      </aside>
 
-      <div className="lg:col-span-8 space-y-8">
-        <div className="grid sm:grid-cols-2 gap-8">
-          {layers.map((l, i) => (
-            <div
-              key={l.label}
-              className="bg-[var(--color-paper)] border border-[var(--color-line)] p-7"
-            >
-              <div className="flex items-center gap-3 mb-4">
-                <span
-                  className="font-[family-name:var(--font-display)] text-2xl"
-                  style={{ color: el.accentInk }}
-                >
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <h3 className="text-sm uppercase tracking-[0.18em] text-[var(--color-muted)]">
-                  {l.label}
-                </h3>
-              </div>
-              {l.acronym ? (
-                /* The acronym reads down the left edge — one big letter per
-                 *  competency — so ROOTS / IGNITE / FLOW / CLEAR is legible as
-                 *  an acronym and not buried in a sentence (feedback #23). */
-                <ul className="divide-y divide-[var(--color-line)]">
-                  {l.acronym.map((item, n) => (
-                    <li
-                      key={`${item.letter}-${n}`}
-                      className="grid grid-cols-[2rem_1fr] gap-x-4 py-2.5 first:pt-0 last:pb-0 items-baseline"
-                    >
-                      <span
-                        aria-hidden
-                        className="font-[family-name:var(--font-display)] text-2xl leading-none"
-                        style={{ color: el.accentInk }}
-                      >
-                        {item.letter}
-                      </span>
-                      <span className="text-[var(--color-ink-soft)] leading-snug">
-                        <strong className="font-medium text-[var(--color-ink)]">
-                          {locale === "es" ? item.nameEs : item.nameEn}
-                        </strong>
-                        <span className="block text-sm">
-                          {locale === "es" ? item.glossEs : item.glossEn}
-                        </span>
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="text-[var(--color-ink-soft)] leading-relaxed">
-                  {l.body}
-                </p>
-              )}
-            </div>
-          ))}
-        </div>
-
-        {/* PARADOX — verbatim from presentation. Surfaces the central tension
-         *  of each element so the reader meets it before the competencies. */}
-        {el.paradoxEs && el.paradoxEn && (
-          <div
-            className="relative border-l-2 pl-7 py-4"
-            style={{ borderColor: el.accent }}
+      {/* ── El argumento ───────────────────────────────────────────────── */}
+      <div className="lg:col-span-8">
+        {/* El nombre y el framework, una sola vez en toda la ficha. */}
+        <div className="flex flex-wrap items-baseline gap-x-5 gap-y-2 pb-6 border-b border-[var(--color-line)]">
+          <h3 className="display-3">{name}</h3>
+          <span
+            className="text-[0.7rem] tracking-[0.28em] uppercase font-medium"
+            style={{ color: el.accentInk }}
           >
-            <div
-              className="eyebrow mb-3"
-              style={{ color: el.accentInk }}
-            >
-              {locale === "es"
-                ? `La paradoja del liderazgo de ${el.nameEs}`
-                : `The ${el.nameEn} Leadership Paradox`}
-            </div>
-            <p className="font-[family-name:var(--font-display)] text-xl md:text-2xl leading-[1.4] text-[var(--color-ink)] text-pretty">
-              {locale === "es" ? el.paradoxEs : el.paradoxEn}
-            </p>
-          </div>
+            {el.framework}
+          </span>
+        </div>
+
+        {/* La paradoja abre: es la tensión que hace interesante al elemento. */}
+        {el.paradoxEs && el.paradoxEn && (
+          <p className="mt-8 font-[family-name:var(--font-display)] text-xl md:text-2xl leading-[1.42] text-pretty text-[var(--color-ink)]">
+            {es ? el.paradoxEs : el.paradoxEn}
+          </p>
         )}
 
-        {/* KEY COMPONENTS — 4 named competencies per element from presentation. */}
-        {el.components && (
-          <div>
+        {/* Naturaleza y líder, en paralelo y sin cajas ni numeración. */}
+        <div className="mt-10 grid md:grid-cols-2 gap-8 md:gap-10">
+          <Layer
+            label={es ? "En la naturaleza" : "In nature"}
+            body={es ? el.natureEs : el.natureEn}
+            accent={el.accentInk}
+          />
+          <Layer
+            label={es ? "En el líder" : "In the leader"}
+            body={es ? el.cultivaEs : el.cultivaEn}
+            accent={el.accentInk}
+          />
+        </div>
+
+        {/* El acrónimo, en horizontal: se lee como acrónimo, no como lista. */}
+        {el.frameworkItems && (
+          <div className="mt-12">
             <div className="eyebrow text-[var(--color-muted)] mb-5">
-              {locale === "es"
-                ? `Componentes clave del liderazgo de ${el.nameEs}`
-                : `Key Components of ${el.nameEn} Leadership`}
+              {es ? "El framework" : "The framework"}
             </div>
-            <div className="border border-[var(--color-line)] divide-y divide-[var(--color-line)] bg-[var(--color-paper)]">
-              {el.components.map((c, i) => (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-px bg-[var(--color-line)] border border-[var(--color-line)]">
+              {el.frameworkItems.map((item, n) => (
                 <div
-                  key={c.nameEn}
-                  className="grid grid-cols-[44px_1fr] gap-5 p-5 md:p-6"
+                  key={`${item.letter}-${n}`}
+                  className="bg-[var(--color-paper)] p-5"
                 >
                   <span
-                    className="font-[family-name:var(--font-display)] text-2xl tabular-nums"
+                    aria-hidden
+                    className="font-[family-name:var(--font-display)] text-4xl leading-none block mb-3"
                     style={{ color: el.accentInk }}
                   >
-                    {String(i + 1).padStart(2, "0")}
+                    {item.letter}
                   </span>
-                  <div>
-                    <h4 className="font-[family-name:var(--font-display)] text-lg mb-1.5 text-[var(--color-ink)]">
-                      {locale === "es" ? c.nameEs : c.nameEn}
-                    </h4>
-                    <p className="text-sm text-[var(--color-ink-soft)] leading-relaxed">
-                      {locale === "es" ? c.bodyEs : c.bodyEn}
-                    </p>
+                  <div className="text-sm font-medium text-[var(--color-ink)] leading-snug">
+                    {es ? item.nameEs : item.nameEn}
+                  </div>
+                  <div className="mt-1 text-[0.8rem] text-[var(--color-ink-soft)] leading-snug">
+                    {es ? item.glossEs : item.glossEn}
                   </div>
                 </div>
               ))}
@@ -1034,21 +962,78 @@ function ElementDetail({
           </div>
         )}
 
-        {/* INVITATION — closing question verbatim from master doc media script. */}
-        {el.invitationEs && el.invitationEn && (
-          <div
-            className="text-center py-8 border-t border-b"
-            style={{ borderColor: el.accentSoft }}
-          >
-            <p
-              className="font-[family-name:var(--font-display)] text-2xl md:text-3xl italic leading-snug"
-              style={{ color: el.accentInk }}
-            >
-              {locale === "es" ? el.invitationEs : el.invitationEn}
-            </p>
+        {/* Los cuatro componentes, en cuadrícula: antes eran cuatro filas. */}
+        {el.components && (
+          <div className="mt-12">
+            <div className="eyebrow text-[var(--color-muted)] mb-5">
+              {es ? "Qué se entrena" : "What gets trained"}
+            </div>
+            <div className="grid sm:grid-cols-2 gap-px bg-[var(--color-line)] border border-[var(--color-line)]">
+              {el.components.map((c, i) => (
+                <div key={c.nameEn} className="bg-[var(--color-paper)] p-6">
+                  <div className="flex items-baseline gap-3 mb-2">
+                    <span
+                      className="text-[0.65rem] tracking-[0.2em] tabular-nums"
+                      style={{ color: el.accentInk }}
+                    >
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <h4 className="font-[family-name:var(--font-display)] text-lg text-[var(--color-ink)] leading-tight">
+                      {es ? c.nameEs : c.nameEn}
+                    </h4>
+                  </div>
+                  <p className="text-[0.88rem] text-[var(--color-ink-soft)] leading-relaxed">
+                    {es ? c.bodyEs : c.bodyEn}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         )}
+
+        {/* Las modalidades son una lista: letra pequeña al pie, sin tarjeta. */}
+        <div className="mt-10 pt-6 border-t border-[var(--color-line)]">
+          <div className="eyebrow text-[var(--color-muted)] mb-2.5">
+            {es ? "Modalidades aliadas" : "Aligned modalities"}
+          </div>
+          <p className="text-[0.85rem] leading-relaxed text-[var(--color-ink-soft)]">
+            {es ? el.bodyEs : el.bodyEn}
+          </p>
+        </div>
+
+        {el.invitationEs && el.invitationEn && (
+          <p
+            className="mt-10 font-[family-name:var(--font-display)] text-2xl md:text-3xl italic leading-snug"
+            style={{ color: el.accentInk }}
+          >
+            {es ? el.invitationEs : el.invitationEn}
+          </p>
+        )}
       </div>
+    </div>
+  );
+}
+
+function Layer({
+  label,
+  body,
+  accent,
+}: {
+  label: string;
+  body: string;
+  accent: string;
+}) {
+  return (
+    <div>
+      <div className="flex items-center gap-3 mb-3">
+        <span aria-hidden className="h-px w-6" style={{ background: accent }} />
+        <span className="text-[0.65rem] tracking-[0.18em] uppercase text-[var(--color-muted)]">
+          {label}
+        </span>
+      </div>
+      <p className="text-[var(--color-ink-soft)] leading-relaxed text-pretty">
+        {body}
+      </p>
     </div>
   );
 }

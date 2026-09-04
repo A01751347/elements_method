@@ -6,7 +6,7 @@ import { eq } from "drizzle-orm";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
-import { contactInfo } from "@/data/launchData";
+import { contactInfo, hasRealContact } from "@/data/launchData";
 import { db } from "@/shared/db/client";
 import { orders } from "@/shared/db/schema";
 import { safeRead } from "@/modules/content/safe";
@@ -181,20 +181,24 @@ export default async function ThankYouPage({
                 {locale === "es" ? "Contacto directo" : "Direct contact"}
               </div>
               <div className="space-y-3 text-sm">
-                <a
-                  href={`tel:${contactInfo.phoneE164}`}
-                  className="block hover:text-[var(--color-gold-deep)]"
-                >
-                  {contactInfo.phoneDisplayMx}
-                </a>
-                <a
-                  href={contactInfo.whatsappLink}
-                  className="block hover:text-[var(--color-gold-deep)]"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  WhatsApp
-                </a>
+                {hasRealContact(contactInfo, "phoneDisplayMx") && (
+                  <a
+                    href={`tel:${contactInfo.phoneE164}`}
+                    className="block hover:text-[var(--color-gold-deep)]"
+                  >
+                    {contactInfo.phoneDisplayMx}
+                  </a>
+                )}
+                {hasRealContact(contactInfo, "whatsappLink") && (
+                  <a
+                    href={contactInfo.whatsappLink}
+                    className="block hover:text-[var(--color-gold-deep)]"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    WhatsApp
+                  </a>
+                )}
                 <a
                   href="mailto:hello@elementsmethod.com"
                   className="block hover:text-[var(--color-gold-deep)]"

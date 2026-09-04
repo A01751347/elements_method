@@ -12,6 +12,7 @@ import type { Locale } from "@/i18n/config";
 import { modalityAxes } from "@/data/content";
 import type { ModalityAxis } from "@/data/content";
 import { Container } from "@/components/ui/Container";
+import Image from "next/image";
 import { Eyebrow } from "@/components/ui/Section";
 
 const AXIS_ICONS = [Brain, Heart, Activity];
@@ -52,6 +53,17 @@ export function LocationsSection({
                 : "Integration of neuroscience, NLP, psychology and somatic practice in every session. Working from the inside out — the leader first, the tools after."}
             </p>
           </div>
+        </div>
+
+        {/* Cuatro terrenos en un mismo cuadro: dónde ocurre el trabajo. */}
+        <div className="relative aspect-[16/9] md:aspect-[3/1] mb-16 overflow-hidden bg-[var(--color-paper-warm)]">
+          <Image
+            src="/images/sections/locaciones.jpg"
+            alt=""
+            fill
+            sizes="(max-width: 1024px) 100vw, 1200px"
+            className="object-cover"
+          />
         </div>
 
         <div className="grid md:grid-cols-3 gap-0 relative">

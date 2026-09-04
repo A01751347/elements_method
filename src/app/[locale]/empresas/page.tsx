@@ -50,7 +50,7 @@ export default async function CompaniesPage({
   return (
     <>
       {/* HERO */}
-      <section className="relative min-h-[70vh] flex items-end overflow-hidden -mt-20 pt-36 md:pt-44 text-[var(--color-paper)]">
+      <section className="relative min-h-[92svh] flex items-end overflow-hidden -mt-20 pt-32 md:pt-40 text-[var(--color-paper)]">
         <div className="absolute inset-0 -z-20">
           <Image
             src="/images/heroes/empresas.jpg"
@@ -64,14 +64,14 @@ export default async function CompaniesPage({
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[var(--color-ink)]/40 via-[var(--color-ink)]/55 to-[var(--color-ink)]" />
         <div className="absolute inset-0 -z-10 film-grain" />
 
-        <Container className="relative pb-16 md:pb-24">
+        <Container className="relative pb-12 md:pb-14">
           <div className="grid lg:grid-cols-12 gap-12 items-end">
             <div className="lg:col-span-8">
-              <div className="eyebrow text-[var(--color-paper)]/95 mb-8 flex items-center gap-3">
+              <div className="eyebrow text-[var(--color-paper)]/95 mb-6 flex items-center gap-3">
                 <span aria-hidden className="h-px w-12 bg-[var(--color-paper)]/40" />
                 {dict.companies.eyebrow}
               </div>
-              <h1 className="display-1 text-balance text-[var(--color-paper)] max-w-[22ch]">
+              <h1 className="display-hero text-balance text-[var(--color-paper)]">
                 {dict.companies.title}
               </h1>
             </div>
@@ -113,12 +113,28 @@ export default async function CompaniesPage({
             </p>
             <p>
               {locale === "es"
+                ? "El producto es el mismo para una persona que lidera y para el equipo que dirige: programas enfocados en el Self Mastery, diseñados alrededor de inmersiones en la naturaleza. Cuando lo contrata una organización, el método lleva a todo el equipo directivo por el marco de los Cuatro Elementos."
+                : "The product is the same for the person who leads and for the team they lead: programs focused on Self Mastery, designed around nature immersions. When an organization commissions it, the method takes the whole leadership team through the Four Elements framework."}
+            </p>
+            <p>
+              {locale === "es"
                 ? "Elements Method es un programa de inmersión de liderazgo basado en naturaleza, diseñado para devolver a los líderes a su naturaleza esencial — y, al hacerlo, desbloquear el tipo de presencia, claridad y propósito que transforma no solo a los individuos, sino las organizaciones que lideran."
                 : "Elements Method is a nature-based leadership immersion program designed to return leaders to their essential nature — and in doing so, unlock the kind of presence, clarity, and purpose that transforms not just individuals, but the organizations they lead."}
             </p>
           </div>
         </div>
       </Section>
+
+      {/* Una sesión real de equipo directivo: la página solo tenía portada. */}
+      <div className="relative aspect-[16/9] md:aspect-[21/8] overflow-hidden bg-[var(--color-paper-warm)]">
+        <Image
+          src="/images/sections/empresas.jpg"
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover"
+        />
+      </div>
 
       {/* WHO THIS IS FOR */}
       <Section spacing="default" tone="warm" className="paper-grain">

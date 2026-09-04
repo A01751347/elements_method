@@ -22,11 +22,14 @@ export function ImageInterlude({
   eyebrow,
   quote,
   height = "tall",
+  scrim = "normal",
 }: {
   image: string;
   eyebrow?: string;
   quote: string;
   height?: "tall" | "medium";
+  /** "strong" para fotos muy claras (un mar de nubes se come el texto blanco). */
+  scrim?: "normal" | "strong";
 }) {
   const ref = useRef<HTMLElement>(null);
   const reduce = useReducedMotion();
@@ -62,12 +65,20 @@ export function ImageInterlude({
 
       {/* AAA scrim — uniform base + center-weighted radial so large text clears
           contrast while the photo still breathes at the edges */}
-      <div className="absolute inset-0 -z-10 bg-[var(--color-ink)]/55" />
+      <div
+        className={cn(
+          "absolute inset-0 -z-10",
+          scrim === "strong"
+            ? "bg-[var(--color-ink)]/70"
+            : "bg-[var(--color-ink)]/55",
+        )}
+      />
       <div
         className="absolute inset-0 -z-10"
         style={{
-          background:
-            "radial-gradient(ellipse 80% 65% at 50% 50%, color-mix(in srgb, var(--color-ink) 55%, transparent) 0%, transparent 72%)",
+          background: `radial-gradient(ellipse 80% 65% at 50% 50%, color-mix(in srgb, var(--color-ink) ${
+            scrim === "strong" ? 60 : 55
+          }%, transparent) 0%, transparent 72%)`,
         }}
       />
       <div className="absolute inset-0 -z-10 film-grain pointer-events-none" />

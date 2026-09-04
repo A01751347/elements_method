@@ -14,6 +14,7 @@ import type { Locale } from "@/i18n/config";
 import { processSteps } from "@/data/content";
 import type { ProcessStep } from "@/data/content";
 import { Container } from "@/components/ui/Container";
+import Image from "next/image";
 import { Eyebrow } from "@/components/ui/Section";
 
 // Disconnection Protocol icons:
@@ -56,6 +57,18 @@ export function ProcessSteps({
                 : "Each immersion follows the same arc: release, encounter, methodology, reflection, dialogue, integration. The sequence isn't decorative — it's designed with neuroscience."}
             </p>
           </div>
+        </div>
+
+        {/* Lo que se suelta antes de empezar: la retícula de seis fases era
+         *  puro texto y este es el tramo más largo del home sin una imagen. */}
+        <div className="relative aspect-[21/9] md:aspect-[3/1] mb-12 md:mb-16 overflow-hidden bg-[var(--color-paper-warm)]">
+          <Image
+            src="/images/sections/protocolo.jpg"
+            alt=""
+            fill
+            sizes="(max-width: 1024px) 100vw, 1200px"
+            className="object-cover"
+          />
         </div>
 
         <div ref={ref} className="relative grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-px bg-[var(--color-line)] border border-[var(--color-line)]">

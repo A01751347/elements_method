@@ -4,7 +4,7 @@ import { isLocale } from "@/i18n/config";
 import { Section, Eyebrow } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
 import { InscriptionForm } from "@/components/forms/InscriptionForm";
-import { calendarRetreats, findRetreatBySlug, contactInfo } from "@/data/launchData";
+import { calendarRetreats, findRetreatBySlug, contactInfo, hasRealContact } from "@/data/launchData";
 
 export async function generateMetadata({
   params,
@@ -103,10 +103,14 @@ export default async function ApplyPage({
                 <a href="mailto:hello@elementsmethod.com" className="text-[var(--color-gold-deep)] hover:underline">
                   hello@elementsmethod.com
                 </a>
-                <br />
-                <a href={contactInfo.whatsappLink} className="text-[var(--color-gold-deep)] hover:underline">
-                  WhatsApp · {contactInfo.phoneDisplayMx}
-                </a>
+                {hasRealContact(contactInfo, "whatsappLink") && (
+                  <>
+                    <br />
+                    <a href={contactInfo.whatsappLink} className="text-[var(--color-gold-deep)] hover:underline">
+                      WhatsApp · {contactInfo.phoneDisplayMx}
+                    </a>
+                  </>
+                )}
               </p>
             </div>
           </div>

@@ -75,14 +75,14 @@ export function ExperienceLanding({
     <>
       {/* HERO */}
       <section
-        className="relative min-h-[85vh] flex items-end overflow-hidden -mt-20 pt-36 md:pt-44 text-[var(--color-paper)]"
+        className="relative min-h-[92svh] flex items-end overflow-hidden -mt-20 pt-32 md:pt-40 text-[var(--color-paper)]"
         style={{
           background: `linear-gradient(135deg, ${accentInk} 0%, var(--color-ink) 60%)`,
         }}
       >
         <div className="absolute inset-0 -z-10 opacity-30">
           <Image
-            src="/images/heroes/retiros.jpg"
+            src={e.image}
             alt=""
             fill
             priority
@@ -92,7 +92,7 @@ export function ExperienceLanding({
         </div>
         <div className="absolute inset-0 -z-10 film-grain pointer-events-none" />
 
-        <Container className="relative pb-16 md:pb-24">
+        <Container className="relative pb-12 md:pb-14">
           <div className="grid lg:grid-cols-12 gap-10 items-end">
             <div className="lg:col-span-7">
               <div className="flex items-center gap-3 mb-6">
@@ -116,7 +116,7 @@ export function ExperienceLanding({
                 {t(e.dateLabel)}
               </div>
 
-              <h1 className="display-1 text-balance text-[var(--color-paper)]">
+              <h1 className="display-hero text-balance text-[var(--color-paper)]">
                 {e.title}
               </h1>
               <p
@@ -126,7 +126,7 @@ export function ExperienceLanding({
                 {t(e.tagline)}
               </p>
 
-              <p className="lead mt-8 max-w-2xl text-[var(--color-paper)]/95 text-pretty">
+              <p className="lead mt-7 max-w-xl text-[var(--color-paper)]/95 text-pretty">
                 {t(e.lead)}
               </p>
             </div>

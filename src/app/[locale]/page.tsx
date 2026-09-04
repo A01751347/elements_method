@@ -15,6 +15,7 @@ import { getFounders } from "@/modules/content/founders";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { NextExperienceBand } from "@/components/sections/NextExperienceBand";
 import { FacilitatorsBand } from "@/components/sections/FacilitatorsBand";
+import { ElementsTexture } from "@/components/sections/ElementsTexture";
 import { ImageInterlude } from "@/components/sections/ImageInterlude";
 // Léxico del método — sección desactivada (se comenta, no se borra).
 // import { NatureLexicon } from "@/components/sections/NatureLexicon";
@@ -96,7 +97,7 @@ export default async function HomePage({
       <PhilosophyStrip locale={locale} />
       <ElementsShowcase locale={locale} dict={dict} elements={elements} />
       <ImageInterlude
-        image={images.tierra}
+        image="/images/interludes/nucleo.jpg"
         eyebrow={locale === "es" ? "El Núcleo" : "The Nucleus"}
         quote={locale === "es" ? eter.quoteEs : eter.quoteEn}
       />
@@ -107,7 +108,8 @@ export default async function HomePage({
       <FacilitatorsBand locale={locale} founders={founders} />
       <TestimonialsCarousel locale={locale} dict={dict} testimonials={testimonials} />
       <ImageInterlude
-        image={images.aire}
+        image="/images/interludes/perspectiva.jpg"
+        scrim="strong"
         eyebrow={locale === "es" ? "Perspectiva" : "Perspective"}
         quote={locale === "es" ? air.quoteEs : air.quoteEn}
         height="medium"
@@ -115,6 +117,7 @@ export default async function HomePage({
       <CommunitySection locale={locale} section={community} />
 
       {/* ── 4. Profundidad y cierre ─────────────────────────────────────── */}
+      <ElementsTexture locale={locale} />
       <LocationsSection locale={locale} axes={modalityAxes} />
       <CoachingSection locale={locale} section={coaching} />
       <CompaniesCta locale={locale} dict={dict} />

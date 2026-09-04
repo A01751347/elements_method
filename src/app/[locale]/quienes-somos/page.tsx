@@ -66,7 +66,7 @@ export default async function AboutPage({
   return (
     <>
       {/* HERO — about Elements Method */}
-      <section className="relative min-h-[70vh] flex items-end overflow-hidden -mt-20 pt-36 md:pt-44 text-[var(--color-paper)]">
+      <section className="relative min-h-[92svh] flex items-end overflow-hidden -mt-20 pt-32 md:pt-40 text-[var(--color-paper)]">
         <div className="absolute inset-0 -z-20">
           <Image
             src="/images/heroes/quienes-somos.jpg"
@@ -80,17 +80,17 @@ export default async function AboutPage({
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[var(--color-ink)]/40 via-[var(--color-ink)]/55 to-[var(--color-ink)]" />
         <div className="absolute inset-0 -z-10 film-grain" />
 
-        <Container className="relative pb-16 md:pb-24">
-          <div className="eyebrow text-[var(--color-paper)]/95 mb-8 flex items-center gap-3">
+        <Container className="relative pb-12 md:pb-14">
+          <div className="eyebrow text-[var(--color-paper)]/95 mb-6 flex items-center gap-3">
             <span aria-hidden className="h-px w-12 bg-[var(--color-paper)]/40" />
             {dict.about.eyebrow}
           </div>
-          <h1 className="display-1 text-balance text-[var(--color-paper)] max-w-[18ch]">
+          <h1 className="display-hero text-balance text-[var(--color-paper)]">
             {es
               ? "Nacimos de una convicción: el liderazgo se transforma desde adentro."
               : "We were born from one conviction: leadership transforms from within."}
           </h1>
-          <p className="lead mt-8 max-w-2xl text-[var(--color-paper)]/95">
+          <p className="lead mt-7 max-w-xl text-[var(--color-paper)]/95">
             {es
               ? "Elements Method existe para devolver a las personas —y a quienes lideran— a su fuente esencial de poder, usando los cuatro elementos de la naturaleza como espejo y maestro."
               : "Elements Method exists to return people — and those who lead — to their essential source of power, using the four elements of nature as mirror and teacher."}

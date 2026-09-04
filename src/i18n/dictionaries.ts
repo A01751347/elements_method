@@ -115,7 +115,7 @@ export const es: Dict = {
     eyebrow: "Programas inmersivos basados en la naturaleza",
     title: "Tu camino hacia la maestría de tu ser",
     subtitle:
-      "Elements Method es un programa de desarrollo con impacto personal y profesional, basado en inmersiones en la naturaleza. Está diseñado para devolver a las personas —especialmente a quienes lideran— a su fuente esencial de poder, para que no solo se transformen a sí mismas: para que ese impacto se refleje en sus entornos, en sus equipos y en las organizaciones que las rodean.",
+      "Un programa de desarrollo con impacto personal y profesional, basado en inmersiones en la naturaleza: devuelve a quienes lideran a su fuente esencial de poder.",
     primaryCta: "Descubre tu elemento dominante",
     philosophyEyebrow: "La filosofía",
     philosophyTitle: "La naturaleza no gestiona. La naturaleza lidera.",
@@ -155,13 +155,13 @@ export const es: Dict = {
     eyebrow: "El Método",
     title: "Cuatro elementos. Un Núcleo. Múltiples métodos que te conectan con tu estado interno.",
     lead:
-      "La mayoría intenta cambiar sus resultados sin transformar el sistema interno desde donde los producen. Elements interviene ese sistema usando los cuatro elementos —Agua, Fuego, Aire y Tierra— como base, y a ti, el Núcleo, como el centro que los integra. La naturaleza es el entorno, interno y externo. Y las metodologías integran neurociencia, neuroliderazgo, PNL, psicología, coaching y liderazgo ejecutivo en una práctica expansiva, adaptativa y humana. Todo en búsqueda de tus mejores resultados.",
+      "La mayoría intenta cambiar sus resultados sin transformar el sistema interno desde donde los producen. Elements interviene ese sistema: los cuatro elementos como base, y tú, el Núcleo, como el centro que los integra.",
   },
   companies: {
     eyebrow: "Para líderes y organizaciones",
     title: "Programas a la medida para líderes y organizaciones.",
     lead:
-      "El producto es el mismo para una persona que lidera y para el equipo que dirige: programas enfocados en el Self Mastery, diseñados alrededor de inmersiones en la naturaleza. Cuando lo contrata una organización, el método se diseña a la medida del equipo — inmersiones conjuntas, cultura de liderazgo y transformación organizacional — y lleva a todo el equipo directivo por el marco de los Cuatro Elementos.",
+      "El mismo método que transforma a una persona que lidera, diseñado a la medida del equipo que dirige: inmersiones conjuntas, cultura de liderazgo y transformación organizacional.",
     benefits: [
       {
         title: "Mejora medible en confianza de equipo y seguridad psicológica",
@@ -261,7 +261,7 @@ export const en: Dict = {
     eyebrow: "Leadership Immersion Programs · Water · Fire · Air · Earth",
     title: "Lead from your true nature",
     subtitle:
-      "Elements Method is a development program with personal and professional impact, built on nature immersions. It is designed to return people —especially those who lead— to their essential source of power, so they don't only transform themselves: so that impact shows up in their environments, their teams and the organizations around them.",
+      "A development program with personal and professional impact, built on nature immersions: it returns those who lead to their essential source of power.",
     primaryCta: "Discover your dominant element",
     philosophyEyebrow: "The philosophy",
     philosophyTitle: "Nature doesn't manage. Nature leads.",
@@ -301,13 +301,13 @@ export const en: Dict = {
     eyebrow: "The Method",
     title: "Four elements. One Core. Multiple methods that connect you to your inner state.",
     lead:
-      "Most try to change their results without transforming the inner system that produces them. Elements intervenes in that system using the four elements —Water, Fire, Air and Earth— as its base, and you, the Core, as the centre that integrates them. Nature is the environment, inner and outer. And the methodologies bring together neuroscience, neuroleadership, NLP, psychology, coaching and executive leadership in an expansive, adaptive, human practice. All in pursuit of your best results.",
+      "Most try to change their results without transforming the inner system that produces them. Elements intervenes in that system: the four elements as its base, and you, the Core, as the centre that integrates them.",
   },
   companies: {
     eyebrow: "For leaders and organizations",
     title: "Bespoke programs for leaders and organizations.",
     lead:
-      "The product is the same for the person who leads and for the team they lead: programs focused on Self Mastery, designed around nature immersions. When an organization commissions it, the method is built to fit the team — joint immersions, leadership culture and organizational transformation — and takes the whole leadership team through the Four Elements framework.",
+      "The same method that transforms the person who leads, built to fit the team they lead: joint immersions, leadership culture and organizational transformation.",
     benefits: [
       {
         title: "Measurable improvement in team trust and psychological safety",

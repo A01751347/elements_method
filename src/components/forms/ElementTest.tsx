@@ -214,7 +214,9 @@ function Result({
                 {es ? "Tu elemento dominante" : "Your dominant element"}
               </span>
             </div>
-            <h1 className="display-1 mb-6">{es ? dom.nameEs : dom.nameEn}</h1>
+            <h1 className="display-1 mb-6 text-[var(--color-paper)]">
+              {es ? dom.nameEs : dom.nameEn}
+            </h1>
             <p className="text-xl md:text-2xl font-[family-name:var(--font-display)] italic mb-8">
               {es ? dom.qualityEs : dom.qualityEn}
             </p>

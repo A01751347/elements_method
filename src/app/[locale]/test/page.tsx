@@ -39,10 +39,10 @@ export default async function ElementTestPage({
 
   return (
     <>
-      <section className="relative flex items-end overflow-hidden -mt-20 pt-36 md:pt-44 text-[var(--color-paper)] min-h-[52vh]">
+      <section className="relative min-h-[92svh] flex items-end overflow-hidden -mt-20 pt-32 md:pt-40 text-[var(--color-paper)]">
         <div className="absolute inset-0 -z-20">
           <Image
-            src="/images/heroes/metodo.jpg"
+            src="/images/heroes/test.jpg"
             alt=""
             fill
             priority
@@ -53,12 +53,12 @@ export default async function ElementTestPage({
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[var(--color-ink)]/45 via-[var(--color-ink)]/65 to-[var(--color-ink)]" />
         <div className="absolute inset-0 -z-10 film-grain" />
 
-        <Container className="relative pb-14 md:pb-20">
-          <div className="eyebrow text-[var(--color-paper)]/95 mb-7 flex items-center gap-3">
+        <Container className="relative pb-12 md:pb-14">
+          <div className="eyebrow text-[var(--color-paper)]/95 mb-6 flex items-center gap-3">
             <span aria-hidden className="h-px w-12 bg-[var(--color-paper)]/40" />
             {es ? "9 preguntas · 3 minutos" : "9 questions · 3 minutes"}
           </div>
-          <h1 className="display-1 text-balance text-[var(--color-paper)] max-w-[16ch]">
+          <h1 className="display-hero text-balance text-[var(--color-paper)]">
             {es ? (
               <>
                 Descubre tu{" "}

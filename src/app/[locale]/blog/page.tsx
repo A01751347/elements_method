@@ -5,6 +5,7 @@ import { BookOpen, Mail } from "lucide-react";
 import { isLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { Section, Eyebrow } from "@/components/ui/Section";
+import { blogCover } from "@/lib/blogCover";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { getBlogPosts } from "@/modules/content/blog";
@@ -33,7 +34,7 @@ export default async function BlogPage({
   return (
     <>
       {/* HERO */}
-      <section className="relative min-h-[60vh] flex items-end overflow-hidden -mt-20 pt-36 md:pt-44 text-[var(--color-paper)]">
+      <section className="relative min-h-[92svh] flex items-end overflow-hidden -mt-20 pt-32 md:pt-40 text-[var(--color-paper)]">
         <div className="absolute inset-0 -z-20">
           <Image
             src="/images/heroes/blog.jpg"
@@ -47,64 +48,105 @@ export default async function BlogPage({
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[var(--color-ink)]/40 via-[var(--color-ink)]/55 to-[var(--color-ink)]" />
         <div className="absolute inset-0 -z-10 film-grain" />
 
-        <Container className="relative pb-16 md:pb-24">
-          <div className="eyebrow text-[var(--color-paper)]/95 mb-8 flex items-center gap-3">
+        <Container className="relative pb-12 md:pb-14">
+          <div className="eyebrow text-[var(--color-paper)]/95 mb-6 flex items-center gap-3">
             <span aria-hidden className="h-px w-12 bg-[var(--color-paper)]/40" />
             {dict.blog.eyebrow}
           </div>
-          <h1 className="display-1 text-balance text-[var(--color-paper)] max-w-[16ch]">
+          <h1 className="display-hero text-balance text-[var(--color-paper)]">
             {dict.blog.title}
           </h1>
-          <p className="lead mt-8 max-w-2xl text-[var(--color-paper)]/95">
+          <p className="lead mt-7 max-w-xl text-[var(--color-paper)]/95">
             {dict.blog.lead}
           </p>
         </Container>
       </section>
 
       {posts.length > 0 ? (
-        /* REAL POSTS — published from the admin */
-        <Section spacing="loose">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {posts.map((p) => {
-              const title = locale === "es" ? p.titleEs : p.titleEn;
-              const excerpt = locale === "es" ? p.excerptEs : p.excerptEn;
-              return (
+        /* ÍNDICE EDITORIAL — un destacado con imagen y el resto en lista.
+         *  Antes eran once tarjetas iguales apiladas: una página larguísima
+         *  donde además cada portada repetía una foto del propio sitio. */
+        <Section spacing="default">
+          {(() => {
+            const [featured, ...rest] = posts;
+            const href = (slug: string) =>
+              `/${locale}/${locale === "es" ? "blog" : "journal"}/${slug}`;
+            const fmt = (iso: string | null) =>
+              iso
+                ? new Date(iso).toLocaleDateString(
+                    locale === "es" ? "es-MX" : "en-US",
+                    { year: "numeric", month: "long", day: "numeric" },
+                  )
+                : "";
+
+            return (
+              <>
+                {/* Destacado */}
                 <Link
-                  key={p.slug}
-                  href={`/${locale}/${locale === "es" ? "blog" : "journal"}/${p.slug}`}
-                  className="group flex flex-col border border-[var(--color-line)] bg-[var(--color-paper)] hover:bg-[var(--color-paper-warm)] transition-colors"
+                  href={href(featured.slug)}
+                  className="group grid lg:grid-cols-12 gap-8 lg:gap-12 items-center pb-14 mb-14 border-b border-[var(--color-line)]"
                 >
-                  {p.coverImageUrl && (
-                    <div className="relative aspect-[16/10] overflow-hidden">
-                      <Image
-                        src={p.coverImageUrl}
-                        alt=""
-                        fill
-                        sizes="(min-width:1024px) 33vw, (min-width:768px) 50vw, 100vw"
-                        className="object-cover"
-                      />
+                  <div className="lg:col-span-7 relative aspect-[16/10] overflow-hidden bg-[var(--color-paper-warm)]">
+                    <Image
+                      src={blogCover(featured)}
+                      alt=""
+                      fill
+                      priority
+                      sizes="(min-width:1024px) 58vw, 100vw"
+                      className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105"
+                    />
+                  </div>
+                  <div className="lg:col-span-5">
+                    <div className="eyebrow text-[var(--color-muted)] mb-4">
+                      {locale === "es" ? "Lo más reciente" : "Latest"}
                     </div>
-                  )}
-                  <div className="p-6 flex flex-col flex-1">
-                    <h2 className="font-[family-name:var(--font-display)] text-xl tracking-tight mb-3 group-hover:text-[var(--color-gold-deep)] transition-colors">
-                      {title}
+                    <h2 className="font-[family-name:var(--font-display)] text-3xl md:text-4xl leading-[1.1] tracking-tight text-balance group-hover:text-[var(--color-gold-deep)] transition-colors">
+                      {locale === "es" ? featured.titleEs : featured.titleEn}
                     </h2>
-                    <p className="text-sm text-[var(--color-ink-soft)] leading-relaxed line-clamp-3">
-                      {excerpt}
+                    <p className="mt-5 text-[var(--color-ink-soft)] leading-relaxed line-clamp-4">
+                      {locale === "es" ? featured.excerptEs : featured.excerptEn}
                     </p>
-                    <div className="mt-auto pt-4 text-xs text-[var(--color-muted)]">
-                      {p.author}
-                      {p.publishedAt &&
-                        ` · ${new Date(p.publishedAt).toLocaleDateString(
-                          locale === "es" ? "es-MX" : "en-US",
-                          { year: "numeric", month: "long", day: "numeric" },
-                        )}`}
+                    <div className="mt-6 text-xs text-[var(--color-muted)]">
+                      {featured.author}
+                      {featured.publishedAt && ` · ${fmt(featured.publishedAt)}`}
                     </div>
                   </div>
                 </Link>
-              );
-            })}
-          </div>
+
+                {/* El resto, en índice tipográfico de dos columnas */}
+                <div className="grid md:grid-cols-2 gap-x-12">
+                  {rest.map((p) => (
+                    <Link
+                      key={p.slug}
+                      href={href(p.slug)}
+                      className="group grid grid-cols-[76px_1fr] sm:grid-cols-[104px_1fr] gap-5 py-6 border-b border-[var(--color-line)] items-start"
+                    >
+                      <div className="relative aspect-square overflow-hidden bg-[var(--color-paper-warm)]">
+                        <Image
+                          src={blogCover(p)}
+                          alt=""
+                          fill
+                          sizes="104px"
+                          className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                      </div>
+                      <div className="min-w-0">
+                        <h3 className="font-[family-name:var(--font-display)] text-xl leading-snug tracking-tight text-balance group-hover:text-[var(--color-gold-deep)] transition-colors">
+                          {locale === "es" ? p.titleEs : p.titleEn}
+                        </h3>
+                        <p className="mt-2 text-sm text-[var(--color-ink-soft)] leading-relaxed line-clamp-2">
+                          {locale === "es" ? p.excerptEs : p.excerptEn}
+                        </p>
+                        <div className="mt-3 text-[0.7rem] tracking-[0.14em] uppercase text-[var(--color-muted)]">
+                          {p.publishedAt ? fmt(p.publishedAt) : p.author}
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </>
+            );
+          })()}
         </Section>
       ) : (
         /* FALLBACK — no published posts yet */

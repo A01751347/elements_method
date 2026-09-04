@@ -5,6 +5,7 @@ import type { Locale } from "@/i18n/config";
 import { coachingSection } from "@/data/content";
 import type { CoachingSection as CoachingSectionData } from "@/modules/content/siteSections";
 import { Container } from "@/components/ui/Container";
+import Image from "next/image";
 import { Eyebrow } from "@/components/ui/Section";
 
 /**
@@ -36,6 +37,17 @@ export function CoachingSection({
               {es ? s.bodyEs : s.bodyEn}
             </p>
           </div>
+        </div>
+
+        {/* La conversación que sostiene lo vivido: dos personas caminando. */}
+        <div className="relative aspect-[16/9] md:aspect-[21/8] mb-16 overflow-hidden bg-[var(--color-paper-warm)]">
+          <Image
+            src="/images/sections/coaching.jpg"
+            alt=""
+            fill
+            sizes="(max-width: 1024px) 100vw, 1200px"
+            className="object-cover object-center"
+          />
         </div>
 
         <div className="border-t border-[var(--color-line)]">

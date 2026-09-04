@@ -8,7 +8,11 @@ import type { Dict } from "@/i18n/dictionaries";
 import { Container } from "@/components/ui/Container";
 import { LangSwitcher } from "./LangSwitcher";
 import { LogoMark } from "@/components/brand/Logo";
-import { contactInfo as staticContactInfo, type ContactInfo } from "@/data/launchData";
+import {
+  contactInfo as staticContactInfo,
+  hasRealContact,
+  type ContactInfo,
+} from "@/data/launchData";
 import { experiences } from "@/data/experiences";
 
 export function Footer({
@@ -200,22 +204,28 @@ export function Footer({
 
             {/* Direct contact rail — phone + WhatsApp + email */}
             <div className="mt-8 space-y-2.5 text-sm">
-              <a
-                href={`tel:${contactInfo.phoneE164}`}
-                className="flex items-center gap-3 text-[var(--color-paper)]/90 hover:text-[var(--color-paper)] transition-colors"
-              >
-                <Phone className="h-3.5 w-3.5" strokeWidth={1.5} />
-                {contactInfo.phoneDisplayMx}
-              </a>
-              <a
-                href={contactInfo.whatsappLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 text-[var(--color-paper)]/90 hover:text-[var(--color-paper)] transition-colors"
-              >
-                <MessageCircle className="h-3.5 w-3.5" strokeWidth={1.5} />
-                WhatsApp
-              </a>
+              {/* El teléfono semilla ("+52 55 0000 0000") no se publica: un
+               *  número falso hace más daño que su ausencia. */}
+              {hasRealContact(contactInfo, "phoneDisplayMx") && (
+                <a
+                  href={`tel:${contactInfo.phoneE164}`}
+                  className="flex items-center gap-3 text-[var(--color-paper)]/90 hover:text-[var(--color-paper)] transition-colors"
+                >
+                  <Phone className="h-3.5 w-3.5" strokeWidth={1.5} />
+                  {contactInfo.phoneDisplayMx}
+                </a>
+              )}
+              {hasRealContact(contactInfo, "whatsappLink") && (
+                <a
+                  href={contactInfo.whatsappLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 text-[var(--color-paper)]/90 hover:text-[var(--color-paper)] transition-colors"
+                >
+                  <MessageCircle className="h-3.5 w-3.5" strokeWidth={1.5} />
+                  WhatsApp
+                </a>
+              )}
               <a
                 href="mailto:hello@elementsmethod.com"
                 className="flex items-center gap-3 text-[var(--color-paper)]/90 hover:text-[var(--color-paper)] transition-colors"

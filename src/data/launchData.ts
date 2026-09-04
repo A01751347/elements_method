@@ -1049,6 +1049,30 @@ export interface ContactInfo {
   placeholderFields: string[];
 }
 
+/**
+ * ¿Este campo de contacto es real o sigue siendo relleno?
+ *
+ * El teléfono semilla es "+52 55 0000 0000": publicarlo es peor que no
+ * mostrarlo, así que la UI pregunta antes de pintar un número o un WhatsApp.
+ *
+ * Dos comprobaciones, porque una sola no basta: la lista `placeholderFields`
+ * (que la fila de la BD puede venir sin ella) y el valor mismo — una cadena de
+ * seis ceros seguidos no es un teléfono de nadie.
+ */
+const SEED_PHONE = /0{6,}/;
+
+export function hasRealContact(
+  contact: Partial<ContactInfo>,
+  field: keyof ContactInfo,
+): boolean {
+  if ((contact.placeholderFields ?? []).includes(field)) return false;
+  if (field === "phoneDisplayMx" || field === "phoneE164" || field === "whatsappLink") {
+    const digits = String(contact[field] ?? "").replace(/\D/g, "");
+    if (!digits || SEED_PHONE.test(digits)) return false;
+  }
+  return true;
+}
+
 export const contactInfo: ContactInfo = {
   "phoneDisplayMx": "+52 55 0000 0000",
   "phoneE164": "+525500000000",

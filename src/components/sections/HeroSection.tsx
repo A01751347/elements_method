@@ -27,7 +27,7 @@ import { getNextExperience } from "@/data/experiences";
 // Home hero image. Nature-first per client feedback (was a luxury resort
 // terrace, home.jpg — replaced with a forest trail that echoes the
 // "Tu camino / Your path" headline). Swap here to update the home hero.
-const HERO_IMAGE = "/images/heroes/caminos.jpg";
+const HERO_IMAGE = "/images/heroes/home.jpg";
 
 export function HeroSection({
   locale,
@@ -59,7 +59,7 @@ export function HeroSection({
   return (
     <section
       ref={ref}
-      className="relative min-h-[100svh] flex items-end overflow-hidden -mt-20 pt-36 md:pt-44 text-[var(--color-paper)]"
+      className="relative min-h-[92svh] flex items-end overflow-hidden -mt-20 pt-32 md:pt-40 text-[var(--color-paper)]"
     >
       {/* Background image with parallax */}
       <motion.div
@@ -94,7 +94,7 @@ export function HeroSection({
         {locale === "es" ? "Agua · Fuego · Aire · Tierra" : "Water · Fire · Air · Earth"}
       </motion.div>
 
-      <Container className="relative pb-16 md:pb-24 z-10">
+      <Container className="relative pb-12 md:pb-14 z-10">
         <motion.div style={{ y: contentY, opacity: contentOpacity }}>
           <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -106,7 +106,7 @@ export function HeroSection({
             {dict.home.eyebrow}
           </motion.div>
 
-          <h1 className="display-1 text-balance text-[var(--color-paper)] max-w-[18ch]">
+          <h1 className="display-hero text-balance text-[var(--color-paper)]">
             <WordReveal
               words={
                 locale === "es"

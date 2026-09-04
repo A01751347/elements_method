@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { motion } from "motion/react";
 import {
@@ -101,6 +102,30 @@ export function ExperiencesPreview({
                 )}
               >
                 <div>
+                  {/* Cada experiencia trae su propia portada: antes las tres
+                   *  tarjetas eran solo texto y las tres landings compartían
+                   *  una misma foto genérica. */}
+                  <div className="relative -mx-8 -mt-8 md:-mx-10 md:-mt-10 mb-8 aspect-[16/10] overflow-hidden bg-[var(--color-paper-warm)]">
+                    <Image
+                      src={e.image}
+                      alt=""
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className={cn(
+                        "object-cover transition-transform duration-[1.2s] ease-out",
+                        isHovered ? "scale-105" : "scale-100",
+                      )}
+                    />
+                    <div
+                      aria-hidden
+                      className={cn(
+                        "absolute inset-0 transition-opacity duration-500",
+                        isHovered ? "opacity-0" : "opacity-100",
+                      )}
+                      style={{ background: "var(--color-ink)", opacity: isHovered ? 0 : 0.12 }}
+                    />
+                  </div>
+
                   <div className="flex items-start justify-between mb-10">
                     <span
                       className={cn(

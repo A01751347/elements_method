@@ -24,6 +24,7 @@ import {
   findRetreatBySlug,
   sampleItinerary,
   contactInfo,
+  hasRealContact,
   type CalendarRetreat,
 } from "@/data/launchData";
 import {
@@ -130,7 +131,7 @@ export default async function RetreatDetailPage({
     <>
       {/* HERO */}
       <section
-        className="relative min-h-[80vh] flex items-end overflow-hidden -mt-20 pt-36 md:pt-44 text-[var(--color-paper)]"
+        className="relative min-h-[92svh] flex items-end overflow-hidden -mt-20 pt-32 md:pt-40 text-[var(--color-paper)]"
         style={{
           background: `linear-gradient(135deg, ${el?.accentInk ?? "#2C2C2A"} 0%, var(--color-ink) 60%)`,
         }}
@@ -147,7 +148,7 @@ export default async function RetreatDetailPage({
         </div>
         <div className="absolute inset-0 -z-10 film-grain pointer-events-none" />
 
-        <Container className="relative pb-16 md:pb-24">
+        <Container className="relative pb-12 md:pb-14">
           <div className="grid lg:grid-cols-12 gap-10 items-end">
             <div className="lg:col-span-8">
               <div className="flex items-center gap-3 mb-6">
@@ -172,11 +173,11 @@ export default async function RetreatDetailPage({
                 {el ? (locale === "es" ? el.nameEs : el.nameEn) : ""}
               </div>
 
-              <h1 className="display-1 text-balance text-[var(--color-paper)] max-w-[18ch]">
+              <h1 className="display-hero text-balance text-[var(--color-paper)]">
                 {retreat[`theme${localeKey}`]}
               </h1>
 
-              <p className="lead mt-8 max-w-2xl text-[var(--color-paper)]/95 text-pretty">
+              <p className="lead mt-7 max-w-xl text-[var(--color-paper)]/95 text-pretty">
                 {retreat[`summary${localeKey}`]}
               </p>
             </div>
@@ -237,14 +238,25 @@ export default async function RetreatDetailPage({
                   >
                     {locale === "es" ? "Aplicar ahora" : "Apply now"}
                   </Button>
-                  <Button
-                    href={contactInfo.whatsappLink}
-                    size="sm"
-                    variant="outlineLight"
-                    className="w-full"
-                  >
-                    WhatsApp · {contactInfo.phoneDisplayMx}
-                  </Button>
+                  {hasRealContact(contactInfo, "whatsappLink") ? (
+                    <Button
+                      href={contactInfo.whatsappLink}
+                      size="sm"
+                      variant="outlineLight"
+                      className="w-full"
+                    >
+                      WhatsApp · {contactInfo.phoneDisplayMx}
+                    </Button>
+                  ) : (
+                    <Button
+                      href="mailto:hello@elementsmethod.com"
+                      size="sm"
+                      variant="outlineLight"
+                      className="w-full"
+                    >
+                      hello@elementsmethod.com
+                    </Button>
+                  )}
                 </div>
               </div>
             </div>

@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import type { Locale } from "@/i18n/config";
 import { communitySection } from "@/data/content";
+import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Section";
 
@@ -23,6 +24,20 @@ export function CommunitySection({
   const paragraphs = (es ? s.bodyEs : s.bodyEn).split("\n\n");
   return (
     <section className="bg-[var(--color-ink)] text-[var(--color-paper)] py-28 md:py-40 relative overflow-hidden">
+      {/* Un círculo real de gente al fondo: la sección hablaba de comunidad
+       *  sin mostrar una sola persona. La foto se queda a la derecha y muy
+       *  velada — el texto sigue cayendo sobre tinta casi plena. */}
+      <div aria-hidden className="absolute inset-y-0 right-0 w-full lg:w-[62%] pointer-events-none">
+        <Image
+          src="/images/sections/comunidad.jpg"
+          alt=""
+          fill
+          sizes="(max-width: 1024px) 100vw, 62vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-[var(--color-ink)]/86" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-ink)] via-[var(--color-ink)]/70 to-transparent" />
+      </div>
       <div
         aria-hidden
         className="absolute inset-0 opacity-40 pointer-events-none"

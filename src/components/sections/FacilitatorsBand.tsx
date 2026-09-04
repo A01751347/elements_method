@@ -54,25 +54,35 @@ export function FacilitatorsBand({
           {founders.slice(0, 2).map((f) => (
             <article
               key={f.slug}
-              className="bg-[var(--color-paper)] p-7 md:p-9 flex flex-col sm:flex-row gap-7"
+              className="bg-[var(--color-paper)] grid sm:grid-cols-[38%_1fr] items-start"
             >
-              <div className="relative h-32 w-32 sm:h-36 sm:w-36 shrink-0 overflow-hidden bg-[var(--color-paper-warm)]">
+              {/* Las dos fotos son verticales 2:3 y de mundos distintos (una de
+               *  estudio a cuerpo completo, otra de exterior a medio cuerpo).
+               *  Encuadre idéntico y anclado arriba: es lo que las hace leer
+               *  como una pareja. La caja es SIEMPRE 3:4 (más ancha que el
+               *  2:3 del original), así el recorte solo puede ocurrir arriba y
+               *  abajo — y `object-top` deja la cara dentro pase lo que pase
+               *  con el largo del texto. Estirarla a la altura de la tarjeta
+               *  hacía que la proporción dependiera de la cita y empezara a
+               *  cortar por los lados; el cuadrado centrado del inicio
+               *  directamente las decapitaba. */}
+              <div className="relative self-start w-full aspect-[3/4] overflow-hidden bg-[var(--color-paper-warm)]">
                 <Image
                   src={f.image}
                   alt={f.name}
                   fill
-                  sizes="144px"
-                  className="object-cover"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 45vw, 300px"
+                  className="object-cover object-top"
                 />
               </div>
-              <div className="min-w-0">
-                <h3 className="font-[family-name:var(--font-display)] text-2xl leading-tight">
+              <div className="p-7 md:p-9 flex flex-col justify-center">
+                <h3 className="font-[family-name:var(--font-display)] text-2xl md:text-3xl leading-tight">
                   {f.name}
                 </h3>
-                <div className="mt-2 text-[0.7rem] tracking-[0.16em] uppercase text-[var(--color-muted)]">
+                <div className="mt-2.5 text-[0.7rem] tracking-[0.16em] uppercase text-[var(--color-muted)] leading-relaxed">
                   {es ? f.roleEs : f.roleEn}
                 </div>
-                <p className="mt-5 text-[var(--color-ink-soft)] leading-relaxed italic">
+                <p className="mt-6 pt-6 border-t border-[var(--color-line)] text-[var(--color-ink-soft)] leading-relaxed italic">
                   “{es ? f.quoteEs : f.quoteEn}”
                 </p>
               </div>

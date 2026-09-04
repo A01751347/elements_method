@@ -2,213 +2,198 @@
 
 import { useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion, useScroll, useTransform } from "motion/react";
-import { ArrowUpRight, Calendar, MessageSquare, Phone } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { calLink, CAL_EVENT_TYPES } from "@/shared/integrations/cal";
-import { experiences, getNextExperience } from "@/data/experiences";
-import { contactInfo as staticContactInfo, type ContactInfo } from "@/data/launchData";
+import {
+  experiences,
+  getNextExperience,
+  isEarlyAccessActive,
+} from "@/data/experiences";
+import { type ContactInfo } from "@/data/launchData";
 
 const CTA_IMAGE = "/images/heroes/final-cta.jpg";
 
+/** Fecha corta para la fila: "22 SEP", "16–18 OCT". */
+function shortDate(startIso: string, locale: Locale) {
+  const d = new Date(`${startIso}T12:00:00-06:00`);
+  const month = d
+    .toLocaleDateString(locale === "es" ? "es-MX" : "en-US", { month: "short" })
+    .replace(".", "")
+    .toUpperCase();
+  return { day: String(d.getDate()), month };
+}
+
+/**
+ * Cierre del home.
+ *
+ * Antes era un manifiesto a 80vh con tres pastillas de contacto que repetían
+ * el footer que viene justo debajo — largo y sin nada que hacer. Ahora cierra
+ * con lo único que importa a esta altura de la página: las tres fechas reales,
+ * con precio y modo de acceso, en filas que se pueden leer de un vistazo.
+ */
 export function FinalCta({
   locale,
-  contact,
+  contact: _contact,
 }: {
   locale: Locale;
   contact?: ContactInfo;
 }) {
-  const contactInfo = contact ?? staticContactInfo;
+  const es = locale === "es";
   const next = getNextExperience();
-  const experiencesBase = `/${locale}/${locale === "es" ? "retiros" : "retreats"}`;
+  const experiencesBase = `/${locale}/${es ? "retiros" : "retreats"}`;
   const nextHref = next ? `${experiencesBase}/${next.slug}` : experiencesBase;
-  // Una sola regla, derivada de los datos: qué se compra y qué se solicita.
-  const list = (mode: "checkout" | "apply") =>
-    experiences.filter((e) => e.ctaMode === mode);
-  const direct = list("checkout");
-  const invite = list("apply");
-  const join = (names: string[], and: string) =>
-    names.length <= 1
-      ? (names[0] ?? "")
-      : `${names.slice(0, -1).join(", ")} ${and} ${names[names.length - 1]}`;
+
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
   });
-  const y = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1.08, 1]);
+  const y = useTransform(scrollYProgress, [0, 1], ["-8%", "8%"]);
+
+  const mxn = (n: number) => `$${n.toLocaleString("es-MX")}`;
 
   return (
     <section
       ref={ref}
-      className="relative min-h-[80vh] flex items-center text-[var(--color-paper)] overflow-hidden"
+      className="relative py-20 md:py-24 text-[var(--color-paper)] overflow-hidden"
     >
-      <motion.div
-        style={{ y, scale }}
-        className="absolute inset-0 -z-10 will-change-transform"
-      >
-        <Image
-          src={CTA_IMAGE}
-          alt=""
-          fill
-          sizes="100vw"
-          className="object-cover"
-        />
+      <motion.div style={{ y }} className="absolute inset-0 -z-10 will-change-transform">
+        <Image src={CTA_IMAGE} alt="" fill sizes="100vw" className="object-cover" />
       </motion.div>
-
-      {/* Bottom-weighted scrim — keeps the sky visible up top while reaching
-       * ink@92% where the heading + body sit, so all text clears AAA. */}
-      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[var(--color-ink)]/45 via-[var(--color-ink)]/80 to-[var(--color-ink)]/92" />
+      {/* Tinta casi plena: el texto de esta sección es todo el contenido. */}
+      <div className="absolute inset-0 -z-10 bg-[var(--color-ink)]/88" />
       <div className="absolute inset-0 -z-10 film-grain pointer-events-none" />
 
-      <Container className="relative py-24 md:py-32">
-        <div className="grid lg:grid-cols-12 gap-12 items-end">
+      <Container className="relative">
+        <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+          {/* Izquierda: la idea, en una sola frase */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8 }}
-            className="lg:col-span-8"
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.7 }}
+            className="lg:col-span-5"
           >
             <div className="eyebrow text-[var(--color-paper)]/95 mb-6 flex items-center gap-3">
-              <span aria-hidden className="h-px w-12 bg-[var(--color-paper)]/40" />
-              {locale === "es" ? "Reserva tu lugar" : "Reserve your seat"}
+              <span aria-hidden className="h-px w-10 bg-[var(--color-paper)]/40" />
+              {es ? "Reserva tu lugar" : "Reserve your seat"}
             </div>
-            <h2 className="display-1 text-balance text-[var(--color-paper)] max-w-4xl">
-              {locale === "es" ? (
+            <h2 className="display-2 text-balance text-[var(--color-paper)]">
+              {es ? (
                 <>
-                  No necesitamos más líderes con mejores frameworks. Necesitamos líderes que se{" "}
+                  Tu próxima etapa{" "}
                   <span className="italic font-light text-[var(--color-paper-warm)]">
-                    hayan encontrado a sí mismos
-                  </span>{" "}
-                  — y se hayan dado cuenta de que son suficientes.
+                    ya tiene fecha
+                  </span>
+                  .
                 </>
               ) : (
                 <>
-                  We don&apos;t need more leaders with better frameworks. We need leaders who have{" "}
+                  Your next season{" "}
                   <span className="italic font-light text-[var(--color-paper-warm)]">
-                    met themselves
-                  </span>{" "}
-                  — and found that they are enough.
+                    already has a date
+                  </span>
+                  .
                 </>
               )}
             </h2>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8, delay: 0.15 }}
-            className="lg:col-span-4 lg:pb-4 space-y-5"
-          >
-            <p className="text-[var(--color-paper)]/90 leading-relaxed">
-              {direct.length > 0 && (
-                <>
-                  {locale === "es"
-                    ? `${join(direct.map((e) => e.title), "y")} se reservan directamente — ${direct[0].seats} lugares.`
-                    : `${join(direct.map((e) => e.title), "and")} are booked directly — ${direct[0].seats} seats.`}{" "}
-                </>
-              )}
-              {invite.length > 0 &&
-                (locale === "es"
-                  ? `${join(invite.map((e) => e.title), "y")} es por invitación — ${invite[0].seats} lugares.`
-                  : `${join(invite.map((e) => e.title), "and")} is by invitation — ${invite[0].seats} seats.`)}
+            <p className="mt-6 text-[var(--color-paper)]/90 leading-relaxed max-w-md">
+              {es
+                ? "Tres experiencias en 2026, grupos pequeños y una sola condición: llegar dispuesto a mirarte. Elige la tuya."
+                : "Three experiences in 2026, small groups and a single condition: come willing to look at yourself. Choose yours."}
             </p>
-            <div className="flex flex-wrap gap-3">
+            <div className="mt-8 flex flex-wrap gap-3">
               {next && (
-                <Button href={nextHref} size="lg" variant="solidLight" trailingArrow>
-                  {locale === "es"
-                    ? next.ctaMode === "checkout"
+                <Button href={nextHref} size="md" variant="solidLight" trailingArrow>
+                  {next.ctaMode === "checkout"
+                    ? es
                       ? `Reserva tu lugar · ${next.title}`
-                      : `Solicita tu invitación · ${next.title}`
-                    : next.ctaMode === "checkout"
-                      ? `Reserve your seat · ${next.title}`
+                      : `Reserve your seat · ${next.title}`
+                    : es
+                      ? `Solicita tu invitación · ${next.title}`
                       : `Request an invitation · ${next.title}`}
                 </Button>
               )}
               <Button
                 href={calLink(CAL_EVENT_TYPES.discoveryIndividual)}
-                size="lg"
+                size="md"
                 variant="outlineLight"
               >
-                {locale === "es" ? "Agendar una llamada" : "Schedule a call"}
+                {es ? "Agendar una llamada" : "Schedule a call"}
               </Button>
             </div>
           </motion.div>
-        </div>
 
-        {/* Bottom contact rail */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="mt-20 pt-8 border-t border-[var(--color-paper)]/20 grid sm:grid-cols-3 gap-6"
-        >
-          <ContactPill
-            icon={Calendar}
-            label={locale === "es" ? "Próximas inmersiones" : "Upcoming immersions"}
-            value={locale === "es" ? "Calendario por confirmar" : "Calendar TBD"}
-          />
-          <ContactPill
-            icon={Phone}
-            label="WhatsApp"
-            value={contactInfo.phoneDisplayMx}
-            href={contactInfo.whatsappLink}
-            external
-          />
-          <ContactPill
-            icon={MessageSquare}
-            label={locale === "es" ? "Contacto directo" : "Direct contact"}
-            value="hello@elementsmethod.com"
-            href="mailto:hello@elementsmethod.com"
-          />
-        </motion.div>
+          {/* Derecha: las tres fechas, escaneables */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.7, delay: 0.12 }}
+            className="lg:col-span-7 border-t border-[var(--color-paper)]/20"
+          >
+            {experiences.map((e) => {
+              const { day, month } = shortDate(e.startDateIso, locale);
+              const early = isEarlyAccessActive(e);
+              const price =
+                e.priceMxn == null
+                  ? es
+                    ? "Por invitación"
+                    : "By invitation"
+                  : early && e.earlyPriceMxn != null
+                    ? mxn(e.earlyPriceMxn)
+                    : mxn(e.priceMxn);
+
+              return (
+                <Link
+                  key={e.slug}
+                  href={`${experiencesBase}/${e.slug}`}
+                  className="group grid grid-cols-[68px_1fr_auto] items-center gap-5 py-6 border-b border-[var(--color-paper)]/20 hover:bg-[var(--color-paper)]/[0.06] transition-colors"
+                >
+                  <div className="text-center">
+                    <div className="font-[family-name:var(--font-display)] text-3xl leading-none tabular-nums">
+                      {day}
+                    </div>
+                    <div className="mt-1 text-[0.6rem] tracking-[0.22em] text-[var(--color-paper)]/75">
+                      {month}
+                    </div>
+                  </div>
+
+                  <div className="min-w-0">
+                    <div className="font-[family-name:var(--font-display)] text-xl md:text-2xl leading-tight">
+                      {e.title}
+                    </div>
+                    <div className="mt-1 text-sm text-[var(--color-paper)]/80 truncate">
+                      {es ? e.duration.es : e.duration.en} ·{" "}
+                      {es ? e.location.es : e.location.en} ·{" "}
+                      {es ? `${e.seats} lugares` : `${e.seats} seats`}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-4 shrink-0">
+                    <div className="text-right">
+                      <div className="font-[family-name:var(--font-display)] text-lg">
+                        {price}
+                      </div>
+                      {early && e.priceMxn != null && (
+                        <div className="text-[0.6rem] tracking-[0.14em] uppercase text-[var(--color-gold-soft)]">
+                          {es ? "Early access" : "Early access"}
+                        </div>
+                      )}
+                    </div>
+                    <ArrowUpRight className="h-5 w-5 text-[var(--color-paper)]/70 group-hover:text-[var(--color-paper)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                  </div>
+                </Link>
+              );
+            })}
+          </motion.div>
+        </div>
       </Container>
     </section>
   );
-}
-
-function ContactPill({
-  icon: Icon,
-  label,
-  value,
-  href,
-  external,
-}: {
-  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
-  label: string;
-  value: string;
-  href?: string;
-  external?: boolean;
-}) {
-  const content = (
-    <div className="flex items-center gap-4 group">
-      <Icon className="h-5 w-5 text-[var(--color-paper)]/85 group-hover:text-[var(--color-paper)] transition-colors" strokeWidth={1.5} />
-      <div>
-        <div className="text-[0.7rem] tracking-[0.22em] uppercase text-[var(--color-paper)]/85">
-          {label}
-        </div>
-        <div className="text-[var(--color-paper)] text-sm group-hover:text-[var(--color-paper-warm)] transition-colors">
-          {value}
-        </div>
-      </div>
-    </div>
-  );
-  if (href) {
-    return (
-      <a
-        href={href}
-        target={external ? "_blank" : undefined}
-        rel={external ? "noopener noreferrer" : undefined}
-      >
-        {content}
-      </a>
-    );
-  }
-  return content;
 }

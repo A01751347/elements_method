@@ -4,7 +4,7 @@ import { isLocale } from "@/i18n/config";
 import { Section, Eyebrow } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
 import { InscriptionForm } from "@/components/forms/InscriptionForm";
-import { contactInfo as staticContactInfo } from "@/data/launchData";
+import { contactInfo as staticContactInfo, hasRealContact } from "@/data/launchData";
 import { getContactInfo } from "@/modules/content/contact";
 
 export const revalidate = 60;
@@ -72,13 +72,15 @@ export default async function ContactPage({
               value={contactInfo.phoneDisplayMx}
               href={`tel:${contactInfo.phoneE164}`}
             />
-            <ContactItem
-              icon={MessageCircle}
-              label="WhatsApp"
-              value={locale === "es" ? "Conversación directa" : "Direct chat"}
-              href={contactInfo.whatsappLink}
-              external
-            />
+            {hasRealContact(contactInfo, "whatsappLink") && (
+              <ContactItem
+                icon={MessageCircle}
+                label="WhatsApp"
+                value={locale === "es" ? "Conversación directa" : "Direct chat"}
+                href={contactInfo.whatsappLink}
+                external
+              />
+            )}
             <ContactItem
               icon={MapPin}
               label={locale === "es" ? "Sede operativa" : "Base"}

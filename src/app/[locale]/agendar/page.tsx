@@ -5,7 +5,7 @@ import { Section, Eyebrow } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
 import { CalEmbed } from "@/components/integrations/CalEmbed";
 import { CAL_EVENT_TYPES } from "@/shared/integrations/cal";
-import { contactInfo } from "@/data/launchData";
+import { contactInfo, hasRealContact } from "@/data/launchData";
 
 export async function generateMetadata({
   params,
@@ -108,14 +108,16 @@ export default async function ScheduleDiscoveryPage({
                 {locale === "es" ? "Contacto directo" : "Direct contact"}
               </h3>
               <div className="space-y-2 text-[var(--color-ink-soft)]">
-                <a
-                  href={contactInfo.whatsappLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block hover:text-[var(--color-gold-deep)]"
-                >
-                  WhatsApp · {contactInfo.phoneDisplayMx}
-                </a>
+                {hasRealContact(contactInfo, "whatsappLink") && (
+                  <a
+                    href={contactInfo.whatsappLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block hover:text-[var(--color-gold-deep)]"
+                  >
+                    WhatsApp · {contactInfo.phoneDisplayMx}
+                  </a>
+                )}
                 <a
                   href="mailto:hello@elementsmethod.com"
                   className="block hover:text-[var(--color-gold-deep)]"

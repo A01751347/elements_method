@@ -62,7 +62,7 @@ export default async function RetreatsPage({
   return (
     <>
       {/* HERO */}
-      <section className="relative min-h-[70vh] flex items-end overflow-hidden -mt-20 pt-36 md:pt-44 text-[var(--color-paper)]">
+      <section className="relative min-h-[92svh] flex items-end overflow-hidden -mt-20 pt-32 md:pt-40 text-[var(--color-paper)]">
         <div className="absolute inset-0 -z-20">
           <Image
             src="/images/heroes/retiros.jpg"
@@ -76,15 +76,15 @@ export default async function RetreatsPage({
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[var(--color-ink)]/40 via-[var(--color-ink)]/55 to-[var(--color-ink)]" />
         <div className="absolute inset-0 -z-10 film-grain" />
 
-        <Container className="relative pb-16 md:pb-24">
-          <div className="eyebrow text-[var(--color-paper)]/95 mb-8 flex items-center gap-3">
+        <Container className="relative pb-12 md:pb-14">
+          <div className="eyebrow text-[var(--color-paper)]/95 mb-6 flex items-center gap-3">
             <span aria-hidden className="h-px w-12 bg-[var(--color-paper)]/40" />
             {dict.retreats.eyebrow}
           </div>
-          <h1 className="display-1 text-balance text-[var(--color-paper)] max-w-[15ch]">
+          <h1 className="display-hero text-balance text-[var(--color-paper)]">
             {dict.retreats.title}
           </h1>
-          <p className="lead mt-8 max-w-2xl text-[var(--color-paper)]/95">
+          <p className="lead mt-7 max-w-xl text-[var(--color-paper)]/95">
             {dict.retreats.lead}
           </p>
         </Container>
@@ -125,6 +125,17 @@ export default async function RetreatsPage({
                   style={{ background: accentSoft }}
                   aria-hidden
                 />
+                {exp && (
+                  <div className="relative aspect-[21/9] md:aspect-[24/7] overflow-hidden bg-[var(--color-paper-warm)]">
+                    <Image
+                      src={exp.image}
+                      alt=""
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 1100px"
+                      className="object-cover"
+                    />
+                  </div>
+                )}
                 <div className="grid lg:grid-cols-12 gap-8 p-7 md:p-10">
                   <div className="lg:col-span-7">
                     <div className="flex flex-wrap items-center gap-3 mb-4">

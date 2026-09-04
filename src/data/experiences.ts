@@ -61,6 +61,8 @@ export interface Experience {
   ctaMode: "checkout" | "apply";
   /** ISO start date (YYYY-MM-DD) — drives "next upcoming" promos site-wide. */
   startDateIso: string;
+  /** Portada propia: hero de su landing, tarjeta del home y fila del calendario. */
+  image: string;
   elementKey: ElementKey;
   brand: L;
   title: string;
@@ -101,6 +103,7 @@ export interface Experience {
 
 const elementsAwakening: Experience = {
   slug: "elements-awakening",
+  image: "/images/heroes/awakening.jpg",
   productSlug: null,
   ctaMode: "apply",
   startDateIso: "2026-10-16",
@@ -518,6 +521,7 @@ const elementsAwakening: Experience = {
 
 const equinox: Experience = {
   slug: "equinox",
+  image: "/images/heroes/equinox.jpg",
   productSlug: "equinox",
   ctaMode: "checkout",
   startDateIso: "2026-09-22",
@@ -997,6 +1001,7 @@ const equinox: Experience = {
 
 const soulDiscovery: Experience = {
   slug: "soul-discovery",
+  image: "/images/heroes/soul.jpg",
   productSlug: "soul-discovery",
   ctaMode: "checkout",
   startDateIso: "2026-11-20",
