@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { Banknote, AlertCircle, Check, Mail, Clock } from "lucide-react";
 import { eq } from "drizzle-orm";
 import { isLocale } from "@/i18n/config";
+import { pageMetadata, ROUTES } from "@/lib/seo";
 import { Section, Eyebrow } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
 import { db } from "@/shared/db/client";
@@ -16,12 +17,18 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  return {
-    title:
+  if (!isLocale(locale)) return {};
+  // Instrucciones de pago de una orden concreta: nunca se indexa.
+  return pageMetadata({
+    locale,
+    route: ROUTES.transfer,
+    title: locale === "en" ? "Bank transfer" : "Transferencia",
+    description:
       locale === "en"
-        ? "Bank transfer · Elements Method"
-        : "Transferencia · Elements Method",
-  };
+        ? "Bank transfer instructions for your Elements Method order."
+        : "Instrucciones de pago por transferencia para tu orden de Elements Method.",
+    noIndex: true,
+  });
 }
 
 interface OrderSummary {

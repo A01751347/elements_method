@@ -1,10 +1,13 @@
 import { notFound } from "next/navigation";
 import { isLocale } from "@/i18n/config";
+import { pageMetadata, ROUTES, SITE_TITLE, SITE_DESCRIPTION } from "@/lib/seo";
 import { getDictionary } from "@/i18n/dictionaries";
 import { elements as staticElements, elementImages as staticElementImages } from "@/data/content";
 import { getElements, getElementImages } from "@/modules/content/elements";
 import { getStats } from "@/modules/content/stats";
 import { getFaqs } from "@/modules/content/faqs";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { faqPageJsonLd } from "@/lib/structuredData";
 import { getProcessSteps } from "@/modules/content/processSteps";
 import { getModalityAxes } from "@/modules/content/modalityAxes";
 // import { getLexicon } from "@/modules/content/lexicon";
@@ -36,6 +39,22 @@ import { FinalCta } from "@/components/sections/FinalCta";
 /** Revalidate at most once per minute; admin edits also trigger on-demand
  *  revalidation via revalidatePath, so changes surface immediately. */
 export const revalidate = 60;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  if (!isLocale(locale)) return {};
+  return pageMetadata({
+    locale,
+    route: ROUTES.home,
+    title: SITE_TITLE[locale],
+    absoluteTitle: true,
+    description: SITE_DESCRIPTION[locale],
+  });
+}
 
 export default async function HomePage({
   params,
@@ -121,6 +140,16 @@ export default async function HomePage({
       <LocationsSection locale={locale} axes={modalityAxes} />
       <CoachingSection locale={locale} section={coaching} />
       <CompaniesCta locale={locale} dict={dict} />
+      {faqs.length > 0 && (
+        <JsonLd
+          data={faqPageJsonLd(
+            faqs.map((f) => ({
+              q: locale === "en" ? f.qEn : f.qEs,
+              a: locale === "en" ? f.aEn : f.aEs,
+            })),
+          )}
+        />
+      )}
       <FAQ locale={locale} faqs={faqs} />
       <FinalCta locale={locale} contact={contact ?? undefined} />
     </>

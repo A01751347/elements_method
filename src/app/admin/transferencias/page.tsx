@@ -1,38 +1,43 @@
 import { and, desc, eq, or } from "drizzle-orm";
 import { db } from "@/shared/db/client";
-import { orders } from "@/shared/db/schema/orders";
+import { orders } from "@/shared/db/schema";
 import {
-  AdminPageHeader,
-  AdminTable,
-  EmptyState,
-  StatusPill,
-  Td,
+  PageHeader,
+  Banner,
+  Conteo,
+  Tabla,
   Th,
-} from "../_components/admin-ui";
-import { markOrderPaid } from "./actions";
+  Td,
+  FilaEnlace,
+  EnlaceFila,
+  Insignia,
+  EstadoVacio,
+} from "../_components/ui";
+import { ConfirmarAccion } from "../_components/client";
+import { mxn, fechaCorta } from "../_lib/format";
+import { marcarPagada } from "./actions";
 import { keyFromUrl } from "@/shared/integrations/s3";
 import { getBankDetails } from "@/shared/payments/bank";
 
+export const dynamic = "force-dynamic";
+
 /**
- * Proofs live in a private S3 bucket, so link through the admin-gated route
- * that mints a short-lived presigned GET instead of the raw object URL.
+ * Los comprobantes viven en un bucket privado; se pasa por la ruta admin-gated
+ * que firma un GET corto en vez de enlazar la URL cruda del objeto.
  */
 function proofHref(url: string): string {
   const key = keyFromUrl(url);
-  return key
-    ? `/api/transferencias/comprobante?key=${encodeURIComponent(key)}`
-    : url;
+  return key ? `/api/transferencias/comprobante?key=${encodeURIComponent(key)}` : url;
 }
 
 /**
- * Two kinds of row share this queue:
- *  - `pending_transfer_validation`: the buyer uploaded a proof → validate it.
- *  - `transferencia` + `pending_payment`: the buyer chose deposit at checkout
- *    and no proof has arrived yet → send them the bank details if BANK_* isn't
- *    configured, then wait for the money.
- * Proofs to validate are listed first since they're the actionable ones.
+ * Dos tipos de fila comparten esta cola:
+ *  - `pending_transfer_validation`: subieron comprobante → hay que validarlo.
+ *  - `transferencia` + `pending_payment`: eligieron depósito en el checkout y
+ *    todavía no llega comprobante → esperando el dinero.
+ * Los comprobantes por validar van primero por ser los accionables.
  */
-async function loadTransferQueue() {
+async function cargarColaTransferencias() {
   try {
     const rows = await db
       .select()
@@ -40,10 +45,7 @@ async function loadTransferQueue() {
       .where(
         or(
           eq(orders.status, "pending_transfer_validation"),
-          and(
-            eq(orders.paymentMethod, "transferencia"),
-            eq(orders.status, "pending_payment"),
-          ),
+          and(eq(orders.paymentMethod, "transferencia"), eq(orders.status, "pending_payment")),
         ),
       )
       .orderBy(desc(orders.createdAt));
@@ -58,104 +60,100 @@ async function loadTransferQueue() {
   }
 }
 
-export default async function AdminTransfersPage() {
-  const list = await loadTransferQueue();
+export default async function TransferenciasPage() {
+  const list = await cargarColaTransferencias();
   const bank = getBankDetails();
   const awaiting = list.filter((o) => o.status === "pending_payment").length;
 
   return (
-    <>
-      <AdminPageHeader
+    <div className="flex flex-col gap-8">
+      <PageHeader
         title="Transferencias"
-        subtitle="Órdenes con pago por depósito / SPEI: comprobantes por validar y reservas que aún esperan el depósito."
-        count={list.length}
+        subtitle="Órdenes con pago por depósito o SPEI: comprobantes por validar y reservas que aún esperan el depósito."
       />
 
       {!bank.configured && awaiting > 0 && (
-        <div className="mb-6 border-l-4 border-amber-500 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-          <strong>Datos bancarios sin configurar.</strong> A {awaiting === 1 ? "esta reserva se le prometió" : `estas ${awaiting} reservas se les prometió`}{" "}
-          la liga / datos de depósito <em>por correo</em>: hay que enviárselos manualmente (llegó un aviso
-          &ldquo;[Depósito solicitado]&rdquo; al inbox de operaciones). Llena las variables{" "}
-          <code className="font-mono text-xs">BANK_*</code> para que el sitio y el correo los muestren solos.
-        </div>
+        <Banner tone="aviso">
+          Datos bancarios sin configurar. A {awaiting === 1 ? "esta reserva se le prometió" : `estas ${awaiting} reservas se les prometió`}{" "}
+          la liga / datos de depósito <em>por correo</em>: hay que enviárselos manualmente (llegó un aviso «[Depósito
+          solicitado]» al inbox de operaciones). Llena las variables <code>BANK_*</code> para que el sitio y el
+          correo los muestren solos.
+        </Banner>
       )}
 
       {list.length === 0 ? (
-        <EmptyState
-          title="Sin transferencias pendientes"
+        <EstadoVacio
+          title="Nada pendiente por validar."
           body="Cuando alguien elija pago por depósito en el checkout o suba un comprobante en /transferencia, aparecerá aquí."
         />
       ) : (
-        <AdminTable>
-          <thead>
-            <tr>
-              <Th>Folio</Th>
-              <Th>Fecha</Th>
-              <Th>Comprador</Th>
-              <Th>Total</Th>
-              <Th>Comprobante</Th>
-              <Th>Status</Th>
-              <Th className="text-right">Acciones</Th>
-            </tr>
-          </thead>
-          <tbody>
-            {list.map((o) => {
-              const validating = o.status === "pending_transfer_validation";
-              return (
-                <tr key={o.id} className="hover:bg-zinc-50">
-                  <Td className="font-mono text-xs">{o.folio}</Td>
-                  <Td className="text-xs tabular-nums whitespace-nowrap">
-                    {new Date(o.createdAt).toLocaleDateString("es-MX")}
-                  </Td>
-                  <Td>
-                    <div className="font-medium">{o.buyerName}</div>
-                    <div className="text-xs text-zinc-500">{o.buyerEmail}</div>
-                  </Td>
-                  <Td className="tabular-nums text-sm">${Number(o.total).toLocaleString("es-MX")} MXN</Td>
-                  <Td>
-                    {o.transferProofUrl ? (
-                      <a
-                        href={proofHref(o.transferProofUrl)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs text-blue-700 hover:underline"
-                      >
-                        Ver →
-                      </a>
-                    ) : (
-                      <span className="text-xs text-zinc-400">Sin comprobante</span>
-                    )}
-                  </Td>
-                  <Td>
-                    {validating ? (
-                      <StatusPill status="Validar" variant="blue" />
-                    ) : (
-                      <StatusPill status="Esperando depósito" variant="amber" />
-                    )}
-                  </Td>
-                  <Td className="text-right">
-                    <form action={markOrderPaid.bind(null, o.id)} className="inline">
-                      <button
-                        type="submit"
-                        className="bg-emerald-600 text-white px-3 py-1.5 text-xs hover:bg-emerald-700"
-                        title={
-                          validating
-                            ? "Confirmar que el comprobante es válido"
-                            : "Usar solo si el depósito ya se ve reflejado en el banco"
-                        }
-                      >
-                        Marcar paid
-                      </button>
-                    </form>
-                  </Td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </AdminTable>
+        <div className="flex flex-col gap-4">
+          <Conteo n={list.length} singular="orden en la cola" plural="órdenes en la cola" />
+          <Tabla>
+            <thead>
+              <tr>
+                <Th>Folio</Th>
+                <Th>Fecha</Th>
+                <Th>Comprador</Th>
+                <Th align="right">Total</Th>
+                <Th>Comprobante</Th>
+                <Th>Estado</Th>
+                <Th align="right">Acción</Th>
+              </tr>
+            </thead>
+            <tbody>
+              {list.map((o) => {
+                const validando = o.status === "pending_transfer_validation";
+                return (
+                  <FilaEnlace key={o.id}>
+                    <Td>
+                      <EnlaceFila href={`/admin/pagos/${o.folio}`}>{o.folio}</EnlaceFila>
+                    </Td>
+                    <Td>{fechaCorta(o.createdAt)}</Td>
+                    <Td secondary>
+                      {o.buyerName}
+                      <br />
+                      {o.buyerEmail}
+                    </Td>
+                    <Td numeric>{mxn(o.total, o.currency)}</Td>
+                    <Td>
+                      {o.transferProofUrl ? (
+                        <a href={proofHref(o.transferProofUrl)} target="_blank" rel="noreferrer" className="sobre-fila">
+                          Ver ↗
+                        </a>
+                      ) : (
+                        <span className="texto-sutil">Sin comprobante</span>
+                      )}
+                    </Td>
+                    <Td>
+                      {validando ? (
+                        <Insignia tone="acento">Comprobante enviado</Insignia>
+                      ) : (
+                        <Insignia tone="alerta">Esperando depósito</Insignia>
+                      )}
+                    </Td>
+                    <Td align="right">
+                      <span className="sobre-fila">
+                        <ConfirmarAccion
+                          trigger="Marcar como pagada"
+                          title="Confirmar pago"
+                          body="La orden queda «pagada», se registra tu correo como validador y el comprador recibe su comprobante por correo."
+                          confirmLabel="Sí, marcar como pagada"
+                          pendingLabel="Registrando el pago…"
+                          action={marcarPagada}
+                          tone="tinta"
+                          size="chico"
+                          hidden={[{ name: "orderId", value: o.id }]}
+                        />
+                      </span>
+                    </Td>
+                  </FilaEnlace>
+                );
+              })}
+            </tbody>
+          </Tabla>
+        </div>
       )}
-    </>
+    </div>
   );
 }
-
-export const dynamic = "force-dynamic";

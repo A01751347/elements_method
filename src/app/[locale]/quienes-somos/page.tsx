@@ -8,6 +8,7 @@ import {
   Quote,
 } from "lucide-react";
 import { isLocale } from "@/i18n/config";
+import { pageMetadata, ROUTES } from "@/lib/seo";
 import { getDictionary } from "@/i18n/dictionaries";
 import { Section, Eyebrow } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
@@ -35,7 +36,17 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  return { title: locale === "en" ? "Who we are" : "Quiénes somos" };
+  if (!isLocale(locale)) return {};
+  return pageMetadata({
+    locale,
+    route: ROUTES.about,
+    title: locale === "en" ? "Who we are" : "Quiénes somos",
+    description:
+      locale === "en"
+        ? "Meet the founders and facilitators of Elements Method and the philosophy behind the method: nature doesn't manage, nature leads."
+        : "Conoce a los fundadores y facilitadores de Elements Method y la filosofía detrás del método: la naturaleza no gestiona, la naturaleza lidera.",
+    image: "/images/heroes/quienes-somos.jpg",
+  });
 }
 
 export default async function AboutPage({

@@ -128,11 +128,15 @@ export async function updateForm(formId: string, fd: FormData) {
   redirect(`/admin/formularios/${row.slug}`);
 }
 
-export async function toggleFormActive(formId: string, next: boolean) {
+/** Inline toggle of a form's active flag, driven by a ConfirmarAccion form. */
+export async function alternarActivo(fd: FormData) {
   await requireAdmin();
-  await db
-    .update(forms)
-    .set({ active: next, updatedAt: new Date() })
-    .where(eq(forms.id, formId));
+  const formId = str(fd, "id");
+  const next = str(fd, "next") === "true";
+
+  const [row] = await db.select({ slug: forms.slug }).from(forms).where(eq(forms.id, formId)).limit(1);
+
+  await db.update(forms).set({ active: next, updatedAt: new Date() }).where(eq(forms.id, formId));
   revalidatePath("/admin/formularios");
+  if (row) revalidatePath(`/admin/formularios/${row.slug}`);
 }

@@ -1,14 +1,18 @@
-import { AdminPageHeader } from "../../_components/admin-ui";
+import { PageHeader, Tarjeta } from "../../_components/ui";
 import { LogoForm } from "../LogoForm";
+
+export const dynamic = "force-dynamic";
 
 export default function AdminLogoNewPage() {
   return (
-    <>
-      <AdminPageHeader
-        title="Subir logo"
-        subtitle="Agrega un logo de cliente. Aparecerá en el marquee del home al guardar."
+    <div className="flex flex-col gap-8">
+      <PageHeader
+        title="Nuevo logo"
+        subtitle="Agrega un logo de cliente. Aparecerá en el carrusel de la portada al guardar."
       />
-      <LogoForm />
-    </>
+      <Tarjeta>
+        <LogoForm />
+      </Tarjeta>
+    </div>
   );
 }

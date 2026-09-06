@@ -4,32 +4,38 @@ import { revalidatePath } from "next/cache";
 import { eq } from "drizzle-orm";
 import { db } from "@/shared/db/client";
 import { inscriptions } from "@/shared/db/schema/operations";
-import { requireAdmin, str } from "@/shared/admin/action";
+import { requireAdmin, str, strOrNull } from "@/shared/admin/action";
 
-/** Allowed lead statuses (mirrors the inscriptions.status comment in schema). */
-const ALLOWED_STATUS = new Set([
-  "new",
-  "contacted",
-  "qualified",
-  "converted",
-  "archived",
-]);
+const ALLOWED_STATUS = new Set(["new", "contacted", "qualified", "converted", "archived"]);
 
-/**
- * Inline status change for a single lead/inscription. Reads `status` from the
- * submitted row form and updates the matching row. This is an inline toggle, so
- * it only revalidates the admin surfaces — no redirect.
- */
-export async function updateInscriptionStatus(id: string, fd: FormData) {
+function revalidateInscriptionSurfaces(id?: string) {
+  revalidatePath("/admin");
+  revalidatePath("/admin/inscripciones");
+  if (id) revalidatePath(`/admin/inscripciones/${id}`);
+}
+
+/** Update status + internal notes from the ficha's "Seguimiento" form. */
+export async function actualizarSeguimiento(id: string, fd: FormData) {
   await requireAdmin();
   const status = str(fd, "status");
   if (!ALLOWED_STATUS.has(status)) {
-    throw new Error(`Status inválido: ${status}`);
+    throw new Error(`Estado inválido: ${status}`);
   }
+  const notes = strOrNull(fd, "notes");
   await db
     .update(inscriptions)
-    .set({ status, updatedAt: new Date() })
+    .set({ status, notes, updatedAt: new Date() })
     .where(eq(inscriptions.id, id));
-  revalidatePath("/admin/inscripciones");
-  revalidatePath("/admin");
+  revalidateInscriptionSurfaces(id);
+}
+
+/** Archive a lead. Receives FormData (hidden `id`) for ConfirmarAccion. */
+export async function archivar(fd: FormData) {
+  await requireAdmin();
+  const id = str(fd, "id");
+  await db
+    .update(inscriptions)
+    .set({ status: "archived", updatedAt: new Date() })
+    .where(eq(inscriptions.id, id));
+  revalidateInscriptionSurfaces(id);
 }

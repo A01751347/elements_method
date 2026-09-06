@@ -1,16 +1,11 @@
 import { asc } from "drizzle-orm";
 import { db } from "@/shared/db/client";
 import { clientLogos } from "@/shared/db/schema/testimonials";
-import {
-  AdminPageHeader,
-  AdminTable,
-  AdminPrimaryButton,
-  EmptyState,
-  StatusPill,
-  Td,
-  Th,
-} from "../_components/admin-ui";
+import { Boton, Conteo, EstadoVacio, Insignia, PageHeader, Tabla, Td, Th } from "../_components/ui";
+import { BotonPendiente, ConfirmarAccion } from "../_components/client";
 import { deleteLogo, toggleLogoActive } from "./actions";
+
+export const dynamic = "force-dynamic";
 
 async function loadLogos() {
   try {
@@ -25,80 +20,85 @@ export default async function AdminLogosPage() {
   const list = await loadLogos();
 
   return (
-    <>
-      <AdminPageHeader
+    <div className="flex flex-col gap-6">
+      <PageHeader
         title="Logos de clientes"
-        subtitle="Logotipos de organizaciones que han trabajado con Elements Method (marquee en la home)."
-        count={list.length}
-        action={
-          <AdminPrimaryButton href="/admin/logos/nuevo">+ Subir logo</AdminPrimaryButton>
+        subtitle="Organizaciones que han trabajado con Elements Method, en el carrusel de la portada."
+        actions={
+          <Boton tone="primario" href="/admin/logos/nuevo">
+            + Nuevo logo
+          </Boton>
         }
       />
 
+      <Conteo n={list.length} singular="logo encontrado" plural="logos encontrados" />
+
       {list.length === 0 ? (
-        <EmptyState
-          title="Sin logos"
-          body="Cuando subas logos de clientes corporativos, aparecerán aquí y en la sección de logos del home."
+        <EstadoVacio
+          title="Todavía no hay logos."
+          body="Cuando subas logos de clientes corporativos, aparecerán aquí y en el carrusel de la portada."
+          action={
+            <Boton tone="secundario" href="/admin/logos/nuevo">
+              + Nuevo logo
+            </Boton>
+          }
         />
       ) : (
-        <AdminTable>
+        <Tabla>
           <thead>
             <tr>
               <Th>Empresa</Th>
               <Th>Logo</Th>
-              <Th>Activo</Th>
+              <Th>Estado</Th>
               <Th>Acciones</Th>
             </tr>
           </thead>
           <tbody>
             {list.map((l) => (
-              <tr key={l.id} className="hover:bg-zinc-50">
-                <Td className="font-medium">{l.companyName}</Td>
+              <tr key={l.id}>
                 <Td>
-                  {l.logoUrl ? (
-                    /* eslint-disable-next-line @next/next/no-img-element */
-                    <img
-                      src={l.logoUrl}
-                      alt={l.companyName}
-                      className="h-8 max-w-[160px] object-contain bg-white border border-zinc-100 px-2"
-                    />
-                  ) : (
-                    "—"
-                  )}
+                  {l.companyName}
+                  {l.websiteUrl && <p className="pista">{l.websiteUrl}</p>}
                 </Td>
                 <Td>
-                  <StatusPill
-                    status={l.active ? "Activo" : "Inactivo"}
-                    variant={l.active ? "green" : "neutral"}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={l.logoUrl}
+                    alt={l.companyName}
+                    className="h-8 max-w-[160px] object-contain"
+                    style={{ background: "var(--tarjeta)", border: "1px solid var(--hair)", padding: "4px 8px" }}
                   />
                 </Td>
                 <Td>
-                  <div className="flex items-center gap-4">
-                    <form action={toggleLogoActive.bind(null, l.id, !l.active)}>
-                      <button
-                        type="submit"
-                        className="text-sm text-zinc-600 hover:text-zinc-900 hover:underline"
-                      >
+                  <Insignia tone={l.active ? "ok" : "neutra"}>{l.active ? "Activo" : "Inactivo"}</Insignia>
+                </Td>
+                <Td>
+                  <div className="flex items-center gap-2 sobre-fila">
+                    <form action={toggleLogoActive}>
+                      <input type="hidden" name="id" value={l.id} />
+                      <input type="hidden" name="next" value={(!l.active).toString()} />
+                      <BotonPendiente tone="secundario" className="boton-chico" pendingLabel="Guardando…">
                         {l.active ? "Desactivar" : "Activar"}
-                      </button>
+                      </BotonPendiente>
                     </form>
-                    <form action={deleteLogo.bind(null, l.id)}>
-                      <button
-                        type="submit"
-                        className="text-sm text-red-700 hover:text-red-900 hover:underline"
-                      >
-                        Eliminar
-                      </button>
-                    </form>
+                    <ConfirmarAccion
+                      trigger="Eliminar"
+                      title="Eliminar logo"
+                      body="El logo desaparece del carrusel de la portada."
+                      confirmLabel="Sí, eliminar el logo"
+                      pendingLabel="Eliminando…"
+                      action={deleteLogo}
+                      tone="peligro"
+                      size="chico"
+                      hidden={[{ name: "id", value: l.id }]}
+                    />
                   </div>
                 </Td>
               </tr>
             ))}
           </tbody>
-        </AdminTable>
+        </Tabla>
       )}
-    </>
+    </div>
   );
 }
-
-export const dynamic = "force-dynamic";

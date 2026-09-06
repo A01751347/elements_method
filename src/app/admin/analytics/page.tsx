@@ -1,154 +1,170 @@
-import { BarChart3, CheckCircle2, Circle, ExternalLink } from "lucide-react";
-import {
-  getSiteSettingsRow,
-  getTrackingConfig,
-} from "@/shared/integrations/siteConfig";
-import { AdminPageHeader } from "../_components/admin-ui";
-import { FormSection, FormRow, Input } from "../_components/form";
-import { AdminPrimaryButton } from "../_components/admin-ui";
+import { getSiteSettingsRow, getTrackingConfig } from "@/shared/integrations/siteConfig";
+import { PageHeader, Banner, Tarjeta, SeccionEtiqueta, Campo, Input, Boton } from "../_components/ui";
+import { BotonPendiente } from "../_components/client";
 import { saveTrackingSettings } from "./actions";
 
 export const dynamic = "force-dynamic";
 
-const FIELDS: {
+interface CampoTracking {
   name:
     | "gaMeasurementId"
+    | "gtmContainerId"
     | "metaPixelId"
     | "googleAdsId"
     | "googleAdsPurchaseLabel"
-    | "linkedinPartnerId"
-    | "gtmContainerId";
+    | "linkedinPartnerId";
   label: string;
   placeholder: string;
   hint: string;
-  category: "Analítica" | "Marketing" | "Opcional";
-}[] = [
+}
+
+const ANALITICA: CampoTracking[] = [
   {
     name: "gaMeasurementId",
     label: "Google Analytics 4",
     placeholder: "G-XXXXXXXXXX",
     hint: "Measurement ID de tu propiedad GA4 (Admin → Flujos de datos).",
-    category: "Analítica",
   },
+  {
+    name: "gtmContainerId",
+    label: "Google Tag Manager",
+    placeholder: "GTM-XXXXXXX",
+    hint: "Opcional: úsalo solo si prefieres administrar todo el tracking desde un contenedor único.",
+  },
+];
+
+const MARKETING: CampoTracking[] = [
   {
     name: "metaPixelId",
     label: "Meta Pixel (Facebook/Instagram)",
     placeholder: "123456789012345",
     hint: "ID numérico del Pixel en Meta Events Manager.",
-    category: "Marketing",
   },
   {
     name: "googleAdsId",
     label: "Google Ads",
     placeholder: "AW-XXXXXXXXX",
     hint: "ID de conversión de Google Ads (Herramientas → Conversiones).",
-    category: "Marketing",
   },
   {
     name: "googleAdsPurchaseLabel",
     label: "Google Ads — etiqueta de compra",
     placeholder: "AbC-D_efG-h12_34-567",
-    hint: "Conversion label de la acción 'Compra' (se combina con el ID de Ads).",
-    category: "Marketing",
+    hint: "Conversion label de la acción «Compra» (se combina con el ID de Ads).",
   },
   {
     name: "linkedinPartnerId",
     label: "LinkedIn Insight Tag",
     placeholder: "1234567",
     hint: "Partner ID del Insight Tag (Campaign Manager → Insight Tag).",
-    category: "Marketing",
-  },
-  {
-    name: "gtmContainerId",
-    label: "Google Tag Manager (opcional)",
-    placeholder: "GTM-XXXXXXX",
-    hint: "Si usas GTM como contenedor único. Opcional.",
-    category: "Opcional",
   },
 ];
 
-export default async function AdminAnalyticsPage() {
-  const [row, effective] = await Promise.all([
-    getSiteSettingsRow(),
-    getTrackingConfig(),
-  ]);
+const TODOS = [...ANALITICA, ...MARKETING];
 
-  const activeCount = Object.values(effective).filter(
-    (v) => typeof v === "string" && v.length > 0,
-  ).length;
+function EstadoCampo({ dbValue, effectiveValue }: { dbValue: string; effectiveValue: string }) {
+  if (dbValue) {
+    return (
+      <span
+        className="texto-ok"
+        style={{ fontSize: 12, fontWeight: 400, textTransform: "none", letterSpacing: "normal" }}
+      >
+        ✓ Activo
+      </span>
+    );
+  }
+  if (effectiveValue) {
+    return (
+      <span
+        className="texto-alerta"
+        style={{ fontSize: 12, fontWeight: 400, textTransform: "none", letterSpacing: "normal" }}
+      >
+        Activo por variable de entorno
+      </span>
+    );
+  }
+  return (
+    <span
+      className="texto-sutil"
+      style={{ fontSize: 12, fontWeight: 400, textTransform: "none", letterSpacing: "normal" }}
+    >
+      Sin configurar
+    </span>
+  );
+}
+
+export default async function AdminAnalyticsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ ok?: string }>;
+}) {
+  const { ok } = await searchParams;
+  const [row, effective] = await Promise.all([getSiteSettingsRow(), getTrackingConfig()]);
+
+  const activeCount = TODOS.filter((f) => (effective[f.name] ?? "").length > 0).length;
+
+  function renderGrupo(fields: CampoTracking[]) {
+    return (
+      <div className="flex flex-col gap-5">
+        {fields.map((f) => {
+          const dbValue = (row?.[f.name] as string | null | undefined) ?? "";
+          const effectiveValue = effective[f.name] ?? "";
+          return (
+            <Campo
+              key={f.name}
+              htmlFor={f.name}
+              hint={f.hint}
+              label={
+                <span className="flex items-center gap-2">
+                  {f.label}
+                  <EstadoCampo dbValue={dbValue} effectiveValue={effectiveValue} />
+                </span>
+              }
+            >
+              <Input id={f.name} name={f.name} defaultValue={dbValue} placeholder={f.placeholder} />
+            </Campo>
+          );
+        })}
+      </div>
+    );
+  }
 
   return (
-    <>
-      <AdminPageHeader
-        title="Analytics & Pixeles"
-        subtitle="Registra aquí los IDs de tracking. Se aplican en runtime (sin re-deploy) y solo se cargan con el consentimiento de cookies del visitante. Si dejas un campo vacío, se usa la variable de entorno correspondiente como respaldo."
-        action={
-          <a
-            href="https://tagassistant.google.com/"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-2 text-sm text-zinc-600 hover:text-zinc-900"
-          >
-            <ExternalLink className="h-4 w-4" />
+    <div className="flex flex-col gap-8">
+      <PageHeader
+        title="Analytics"
+        subtitle="Registra aquí los IDs de tracking. Se aplican de inmediato y solo se cargan con el consentimiento de cookies del visitante."
+        actions={
+          <Boton tone="secundario" href="https://tagassistant.google.com/" external>
             Tag Assistant
-          </a>
+          </Boton>
         }
       />
 
-      <div className="mb-6 rounded-lg border border-zinc-200 bg-zinc-50 p-4 flex items-center gap-3 text-sm text-zinc-700">
-        <BarChart3 className="h-4 w-4 text-zinc-500 shrink-0" strokeWidth={1.5} />
-        <span>
-          <strong className="text-zinc-900">{activeCount}</strong> de {FIELDS.length}{" "}
-          proveedores configurados (valor en DB o variable de entorno).
-        </span>
-      </div>
+      {ok === "1" && <Banner tone="info">Ajustes guardados.</Banner>}
 
-      <form action={saveTrackingSettings} className="space-y-6 max-w-3xl">
-        <FormSection title="Identificadores de tracking">
-          {FIELDS.map((f) => {
-            const dbValue = (row?.[f.name] as string | null | undefined) ?? "";
-            const effectiveValue = effective[f.name] ?? "";
-            const active = effectiveValue.length > 0;
-            return (
-              <FormRow
-                key={f.name}
-                label={
-                  <span className="flex items-center gap-2">
-                    {active ? (
-                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
-                    ) : (
-                      <Circle className="h-3.5 w-3.5 text-zinc-300" />
-                    )}
-                    {f.label}
-                  </span>
-                }
-              >
-                <Input
-                  name={f.name}
-                  defaultValue={dbValue}
-                  placeholder={f.placeholder}
-                />
-                <p className="mt-1.5 text-xs text-zinc-500">
-                  {f.hint}
-                  {!dbValue && effectiveValue && (
-                    <span className="text-amber-700">
-                      {" "}
-                      · Actualmente activo vía variable de entorno.
-                    </span>
-                  )}
-                </p>
-              </FormRow>
-            );
-          })}
-        </FormSection>
+      <Banner tone="info">
+        <strong>{activeCount}</strong> de {TODOS.length} proveedores configurados (en DB o por variable de entorno).
+      </Banner>
 
-        <div className="flex items-center gap-3 pt-2">
-          <AdminPrimaryButton type="submit">Guardar</AdminPrimaryButton>
-          <span className="text-xs text-zinc-500">
-            Los cambios se reflejan en el sitio público de inmediato.
-          </span>
-        </div>
-      </form>
-    </>
+      <Tarjeta>
+        <form action={saveTrackingSettings} className="flex flex-col gap-8">
+          <div>
+            <SeccionEtiqueta>Analítica</SeccionEtiqueta>
+            {renderGrupo(ANALITICA)}
+          </div>
+          <div>
+            <SeccionEtiqueta>Marketing</SeccionEtiqueta>
+            {renderGrupo(MARKETING)}
+          </div>
+          <div className="flex items-center gap-4 flex-wrap">
+            <BotonPendiente pendingLabel="Guardando…">Guardar</BotonPendiente>
+            <p className="pista" style={{ marginTop: 0 }}>
+              Se aplican en el sitio público de inmediato, solo con consentimiento de cookies.
+            </p>
+          </div>
+        </form>
+      </Tarjeta>
+    </div>
   );
 }

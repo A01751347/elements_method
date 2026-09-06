@@ -1,108 +1,158 @@
-import { desc, sql } from "drizzle-orm";
+import { count, desc, ilike, or, sql } from "drizzle-orm";
 import { db } from "@/shared/db/client";
-import { orders } from "@/shared/db/schema/orders";
+import { orders } from "@/shared/db/schema";
 import {
-  AdminPageHeader,
-  AdminTable,
-  EmptyState,
-  StatusPill,
-  Td,
+  PageHeader,
+  Filtros,
+  Conteo,
+  Tabla,
   Th,
-} from "../_components/admin-ui";
+  Td,
+  FilaEnlace,
+  EnlaceFila,
+  Insignia,
+  EstadoVacio,
+  Input,
+  Boton,
+} from "../_components/ui";
+import { mxn, fechaCorta } from "../_lib/format";
 
-const STATUS_VARIANT: Record<string, "green" | "amber" | "neutral" | "red" | "blue"> = {
-  pending_documents: "amber",
-  pending_payment: "amber",
-  pending_transfer_validation: "blue",
-  paid: "green",
-  cancelled: "red",
-  refunded: "neutral",
-};
+export const dynamic = "force-dynamic";
 
-async function loadBuyers() {
+type TipoFiltro = "todas" | "persona" | "empresa";
+function esTipoFiltro(v: string | undefined): v is TipoFiltro {
+  return v === "persona" || v === "empresa";
+}
+
+function buildHref(base: string, params: Record<string, string | undefined>): string {
+  const search = new URLSearchParams();
+  for (const [k, v] of Object.entries(params)) {
+    if (v) search.set(k, v);
+  }
+  const qs = search.toString();
+  return qs ? `${base}?${qs}` : base;
+}
+
+async function cargarCompradores(q: string) {
   try {
-    const rows = await db
+    const condicion = q
+      ? or(ilike(orders.buyerName, `%${q}%`), ilike(orders.buyerEmail, `%${q}%`), ilike(orders.buyerCompany, `%${q}%`))
+      : undefined;
+    return await db
       .select({
         email: orders.buyerEmail,
         name: orders.buyerName,
         type: orders.buyerType,
-        phone: orders.buyerPhone,
         company: orders.buyerCompany,
-        ordersCount: sql<number>`count(${orders.id})`.mapWith(Number),
-        totalSpent: sql<string>`sum(${orders.total})`.mapWith(String),
+        ordersCount: count(),
+        totalPaid: sql<string>`coalesce(sum(case when ${orders.status} = 'paid' then ${orders.total} else 0 end), 0)`.mapWith(
+          String,
+        ),
         lastOrderAt: sql<Date>`max(${orders.createdAt})`,
       })
       .from(orders)
-      .groupBy(orders.buyerEmail, orders.buyerName, orders.buyerType, orders.buyerPhone, orders.buyerCompany)
+      .where(condicion)
+      .groupBy(orders.buyerEmail, orders.buyerName, orders.buyerType, orders.buyerCompany)
       .orderBy(desc(sql`max(${orders.createdAt})`));
-    return rows;
   } catch (e) {
     console.error("[admin/compradores] DB read failed", e);
     return [];
   }
 }
 
-export default async function AdminBuyersPage() {
-  const list = await loadBuyers();
+export default async function CompradoresPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; tipo?: string }>;
+}) {
+  const sp = await searchParams;
+  const q = (sp.q ?? "").trim();
+  const tipoFiltro: TipoFiltro = esTipoFiltro(sp.tipo) ? sp.tipo : "todas";
+
+  const listaCompleta = await cargarCompradores(q);
+  const conteos = {
+    todas: listaCompleta.length,
+    persona: listaCompleta.filter((c) => c.type === "persona").length,
+    empresa: listaCompleta.filter((c) => c.type === "empresa").length,
+  };
+  const filtrada = tipoFiltro === "todas" ? listaCompleta : listaCompleta.filter((c) => c.type === tipoFiltro);
+
+  const hrefFor = (tipo: TipoFiltro) =>
+    buildHref("/admin/compradores", { tipo: tipo === "todas" ? undefined : tipo, q: q || undefined });
 
   return (
-    <>
-      <AdminPageHeader
+    <div className="flex flex-col gap-8">
+      <PageHeader
         title="Compradores"
-        subtitle="Personas y organizaciones que han generado al menos una orden."
-        count={list.length}
+        subtitle="Personas y organizaciones con al menos una orden. Cada fila abre su historial."
       />
 
-      {list.length === 0 ? (
-        <EmptyState
-          title="Sin compradores"
+      <div className="flex flex-col gap-4">
+        <Filtros
+          items={[
+            { href: hrefFor("todas"), label: "Todos", count: conteos.todas, active: tipoFiltro === "todas" },
+            { href: hrefFor("persona"), label: "Persona", count: conteos.persona, active: tipoFiltro === "persona" },
+            { href: hrefFor("empresa"), label: "Empresa", count: conteos.empresa, active: tipoFiltro === "empresa" },
+          ]}
+        />
+
+        <form action="/admin/compradores" method="get" className="flex flex-wrap items-center gap-2">
+          {tipoFiltro !== "todas" && <input type="hidden" name="tipo" value={tipoFiltro} />}
+          <Input
+            type="search"
+            name="q"
+            defaultValue={q}
+            placeholder="Nombre, correo o empresa…"
+            aria-label="Buscar compradores"
+            className="max-w-xs"
+          />
+          <Boton tone="secundario" type="submit">
+            Buscar
+          </Boton>
+        </form>
+      </div>
+
+      {listaCompleta.length === 0 ? (
+        <EstadoVacio
+          title="Todavía no hay compradores."
           body="Cuando alguien complete un checkout o suba un comprobante de transferencia, aparecerá aquí."
         />
+      ) : filtrada.length === 0 ? (
+        <EstadoVacio title="Nadie coincide con este filtro." body="Prueba con otra búsqueda o cambia de pestaña." />
       ) : (
-        <AdminTable>
-          <thead>
-            <tr>
-              <Th>Nombre</Th>
-              <Th>Email</Th>
-              <Th>Tipo</Th>
-              <Th>Organización</Th>
-              <Th>Órdenes</Th>
-              <Th>Total gastado</Th>
-              <Th>Última orden</Th>
-            </tr>
-          </thead>
-          <tbody>
-            {list.map((b) => (
-              <tr key={b.email} className="hover:bg-zinc-50">
-                <Td className="font-medium">{b.name}</Td>
-                <Td className="text-xs">
-                  <a href={`mailto:${b.email}`} className="hover:text-zinc-900">
-                    {b.email}
-                  </a>
-                </Td>
-                <Td>
-                  <StatusPill
-                    status={b.type === "empresa" ? "Empresa" : "Persona"}
-                    variant={b.type === "empresa" ? "blue" : "neutral"}
-                  />
-                </Td>
-                <Td className="text-xs">{b.company ?? "—"}</Td>
-                <Td className="tabular-nums text-sm">{b.ordersCount}</Td>
-                <Td className="tabular-nums text-sm">
-                  ${Number(b.totalSpent ?? 0).toLocaleString("es-MX")} MXN
-                </Td>
-                <Td className="text-xs">
-                  {b.lastOrderAt ? new Date(b.lastOrderAt).toLocaleDateString("es-MX") : "—"}
-                </Td>
+        <div className="flex flex-col gap-4">
+          <Conteo n={filtrada.length} singular="comprador encontrado" plural="compradores encontrados" />
+          <Tabla>
+            <thead>
+              <tr>
+                <Th>Nombre</Th>
+                <Th>Tipo</Th>
+                <Th>Empresa</Th>
+                <Th align="right">Órdenes</Th>
+                <Th align="right">Total pagado</Th>
+                <Th>Última orden</Th>
               </tr>
-            ))}
-          </tbody>
-        </AdminTable>
+            </thead>
+            <tbody>
+              {filtrada.map((c) => (
+                <FilaEnlace key={c.email}>
+                  <Td>
+                    <EnlaceFila href={`/admin/compradores/${encodeURIComponent(c.email)}`}>{c.name}</EnlaceFila>
+                    <span className="celda-secundaria">{c.email}</span>
+                  </Td>
+                  <Td>
+                    <Insignia tone="contorno">{c.type === "empresa" ? "Empresa" : "Persona"}</Insignia>
+                  </Td>
+                  <Td>{c.company || "—"}</Td>
+                  <Td numeric>{c.ordersCount}</Td>
+                  <Td numeric>{mxn(c.totalPaid)}</Td>
+                  <Td>{fechaCorta(c.lastOrderAt)}</Td>
+                </FilaEnlace>
+              ))}
+            </tbody>
+          </Tabla>
+        </div>
       )}
-    </>
+    </div>
   );
 }
-
-export const dynamic = "force-dynamic";
-const _STATUS_VARIANT = STATUS_VARIANT; // keep eslint quiet for unused-export style
-void _STATUS_VARIANT;

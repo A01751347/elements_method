@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { signIn } from "@/shared/auth/config";
-import { LOGO_PNG } from "@/components/brand/Logo";
+import { Banner, Campo, Input } from "../_components/ui";
+import { BotonPendiente } from "../_components/client";
 
 export default function SignInPage({
   searchParams,
@@ -8,26 +8,16 @@ export default function SignInPage({
   searchParams: Promise<{ next?: string; error?: string }>;
 }) {
   return (
-    <div className="min-h-screen bg-zinc-50 flex items-center justify-center px-4">
-      <div className="w-full max-w-sm">
-        <div className="flex flex-col items-center mb-10">
-          <Image
-            src={LOGO_PNG}
-            width={64}
-            height={64}
-            alt="Elements Method"
-            priority
-          />
-          <h1 className="mt-5 text-xl font-semibold tracking-tight text-zinc-900">
-            Elements Method
-          </h1>
-          <p className="mt-1 text-xs uppercase tracking-[0.18em] text-zinc-500 font-medium">
-            Admin
-          </p>
+    <div className="login-envoltorio">
+      <div className="login-hoja">
+        <div className="login-marca-fila">
+          <span className="marca-nombre">
+            Elements <span className="acento">Method</span>
+          </span>
+          <span className="marca-sub">Liderazgo · Operación</span>
         </div>
-        <p className="text-sm text-zinc-700 leading-relaxed">
-          Te enviamos un magic link a tu correo. El enlace expira en 15 minutos.
-        </p>
+        <h1 className="login-tagline">La naturaleza no gestiona. La naturaleza lidera.</h1>
+        <p>Te enviamos un enlace de acceso a tu correo. Expira en 15 minutos.</p>
 
         <SignInForm searchParams={searchParams} />
       </div>
@@ -54,30 +44,20 @@ async function SignInForm({
           redirectTo: params.next ?? "/admin",
         });
       }}
-      className="mt-6 space-y-3"
+      className="login-form"
     >
-      <label htmlFor="email" className="block text-xs uppercase tracking-[0.16em] text-zinc-500">
-        Email
-      </label>
-      <input
-        id="email"
-        name="email"
-        type="email"
-        required
-        autoComplete="email"
-        className="w-full rounded border border-zinc-300 bg-white px-3 py-2 text-sm focus:outline-none focus:border-zinc-900"
-      />
-      <button
-        type="submit"
-        className="w-full rounded bg-zinc-900 px-3 py-2 text-sm text-white hover:bg-zinc-800"
-      >
-        Enviarme el magic link
-      </button>
+      <Campo label="Correo" htmlFor="email" required>
+        <Input id="email" name="email" type="email" required autoComplete="email" />
+      </Campo>
+      <BotonPendiente pendingLabel="Enviando el enlace…" className="w-full">
+        Enviarme el enlace de acceso
+      </BotonPendiente>
       {error && (
-        <p className="text-xs text-red-600">
-          No pudimos enviarte el enlace. Verifica que tu email está en la lista de admins.
-        </p>
+        <Banner tone="error">
+          No pudimos enviarte el enlace. Verifica que tu correo esté en la lista de administradores.
+        </Banner>
       )}
+      <p className="login-nota">Solo los correos autorizados pueden entrar al panel.</p>
     </form>
   );
 }

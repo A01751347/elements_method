@@ -12,3 +12,4 @@ export * from "./integrations";
 export * from "./operations";
 export * from "./content";
 export * from "./site";
+export * from "./privacy";

@@ -1,14 +1,18 @@
-import { AdminPageHeader } from "../../_components/admin-ui";
+import { PageHeader, Tarjeta } from "../../_components/ui";
 import { BlogForm } from "../BlogForm";
+
+export const dynamic = "force-dynamic";
 
 export default function AdminBlogNewPage() {
   return (
-    <>
-      <AdminPageHeader
-        title="Nuevo post"
-        subtitle="Crea una publicación del blog. Aparecerá en el listado al guardar."
+    <div className="flex flex-col gap-8">
+      <PageHeader
+        title="Nuevo artículo"
+        subtitle="Se guarda como borrador hasta que lo marques como publicado."
       />
-      <BlogForm />
-    </>
+      <Tarjeta>
+        <BlogForm />
+      </Tarjeta>
+    </div>
   );
 }

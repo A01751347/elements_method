@@ -32,6 +32,8 @@ function readForm(fd: FormData) {
       : null,
     coverImageUrl: strOrNull(fd, "coverImageUrl"),
     author: strOrNull(fd, "author"),
+    metaDescriptionEs: strOrNull(fd, "metaDescriptionEs"),
+    metaDescriptionEn: strOrNull(fd, "metaDescriptionEn"),
     status: status as "draft" | "published",
   };
 }
@@ -80,12 +82,14 @@ export async function updatePost(originalSlug: string, fd: FormData) {
     })
     .where(eq(blogPosts.slug, originalSlug));
   revalidateBlogSurfaces();
-  redirect("/admin/blog");
+  redirect(`/admin/blog/${v.slug}`);
 }
 
-/** Delete a blog post by slug. */
-export async function deletePost(slug: string) {
+/** Delete a blog post. Triggered from `ConfirmarAccion`, so it reads the id
+ * (here, the slug) from the hidden field of the confirmation form. */
+export async function deletePost(fd: FormData) {
   await requireAdmin();
+  const slug = str(fd, "slug");
   await db.delete(blogPosts).where(eq(blogPosts.slug, slug));
   revalidateBlogSurfaces();
   redirect("/admin/blog");

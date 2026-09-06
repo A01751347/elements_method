@@ -1,7 +1,9 @@
 import { notFound } from "next/navigation";
 import { isLocale } from "@/i18n/config";
+import { pageMetadata, ROUTES } from "@/lib/seo";
 import { Container } from "@/components/ui/Container";
 import { Section, Eyebrow } from "@/components/ui/Section";
+import { ArcoRightLinks } from "@/components/legal/ArcoRightLinks";
 import { getContactInfo } from "@/modules/content/contact";
 import { contactInfo as staticContact } from "@/data/launchData";
 
@@ -13,12 +15,23 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  return { title: locale === "en" ? "Privacy Notice" : "Aviso de Privacidad" };
+  if (!isLocale(locale)) return {};
+  return pageMetadata({
+    locale,
+    route: ROUTES.privacy,
+    title: locale === "en" ? "Privacy Notice" : "Aviso de Privacidad",
+    description:
+      locale === "en"
+        ? "Elements Method privacy notice under Mexican data protection law (LFPDPPP): what data we collect, what we use it for and how to exercise your rights."
+        : "Aviso de privacidad de Elements Method conforme a la LFPDPPP: qué datos recabamos, para qué los usamos y cómo ejercer tus derechos ARCO.",
+  });
 }
 
 interface Block {
   h: string;
   p: string[];
+  /** Muestra los botones para ejercer cada derecho ARCO (sección 5). */
+  arco?: boolean;
 }
 
 function contentEs(email: string): { intro: string; blocks: Block[] } {
@@ -56,8 +69,9 @@ function contentEs(email: string): { intro: string; blocks: Block[] } {
         h: "5. Derechos ARCO",
         p: [
           "Usted tiene derecho a Acceder, Rectificar, Cancelar u Oponerse al tratamiento de sus datos personales (derechos ARCO), así como a revocar su consentimiento.",
-          `Para ejercer estos derechos, envíe su solicitud a ${email}, indicando su nombre, los datos sobre los que desea ejercer el derecho y una descripción clara de su solicitud. Responderemos en los plazos que marca la ley.`,
+          `Para ejercer estos derechos, use el formulario en línea (botones a continuación) o envíe su solicitud a ${email}, indicando su nombre, los datos sobre los que desea ejercer el derecho y una descripción clara de su solicitud. Le pediremos una identificación oficial para acreditar su identidad. Responderemos en un plazo máximo de 20 días hábiles y, si procede, la solicitud se hará efectiva dentro de los 15 días hábiles siguientes.`,
         ],
+        arco: true,
       },
       {
         h: "6. Uso de cookies y tecnologías de rastreo",
@@ -110,8 +124,9 @@ function contentEn(email: string): { intro: string; blocks: Block[] } {
         h: "5. ARCO rights",
         p: [
           "You have the right to Access, Rectify, Cancel or Object to the processing of your personal data (ARCO rights), and to revoke your consent.",
-          `To exercise these rights, send your request to ${email} with your name, the data concerned and a clear description of your request. We will respond within legal timeframes.`,
+          `To exercise these rights, use the online form (buttons below) or send your request to ${email} with your name, the data concerned and a clear description of your request. We will ask for an official ID to verify your identity. We will respond within 20 business days and, if granted, the request will take effect within the following 15 business days.`,
         ],
+        arco: true,
       },
       {
         h: "6. Cookies and tracking",
@@ -166,6 +181,7 @@ export default async function PrivacyPage({
                   <p key={i}>{para}</p>
                 ))}
               </div>
+              {b.arco && <ArcoRightLinks locale={locale} />}
             </section>
           ))}
         </div>

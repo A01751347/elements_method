@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { Mail, Phone, MessageCircle, MapPin } from "lucide-react";
 import { isLocale } from "@/i18n/config";
+import { pageMetadata, ROUTES } from "@/lib/seo";
 import { Section, Eyebrow } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
 import { InscriptionForm } from "@/components/forms/InscriptionForm";
@@ -15,12 +16,16 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  return {
-    title:
+  if (!isLocale(locale)) return {};
+  return pageMetadata({
+    locale,
+    route: ROUTES.contact,
+    title: locale === "en" ? "Contact" : "Contacto",
+    description:
       locale === "en"
-        ? "Contact · Elements Method"
-        : "Contacto · Elements Method",
-  };
+        ? "Write to us to learn more about our leadership experiences, programs for companies, or to schedule a discovery call."
+        : "Escríbenos para conocer más sobre nuestras experiencias de liderazgo, los programas para empresas o para agendar una llamada de descubrimiento.",
+  });
 }
 
 export default async function ContactPage({

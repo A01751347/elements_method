@@ -1,10 +1,7 @@
-import Link from "next/link";
 import type { BlogPost } from "@/shared/db/schema/blog";
-import {
-  AdminPrimaryButton,
-  AdminSecondaryButton,
-} from "../_components/admin-ui";
-import { createPost, updatePost, deletePost } from "./actions";
+import { Boton, Campo, Input, Select, SeccionEtiqueta, Textarea } from "../_components/ui";
+import { BotonPendiente } from "../_components/client";
+import { createPost, updatePost } from "./actions";
 
 /** Pull the plain-text body out of a jsonb content column ({ text }-wrapped). */
 function contentText(value: unknown): string {
@@ -26,171 +23,106 @@ export function BlogForm({ post }: { post?: BlogPost }) {
   const action = isEdit ? updatePost.bind(null, post!.slug) : createPost;
 
   return (
-    <form action={action} className="space-y-8 max-w-3xl">
-      <Section title="Identidad">
-        <Row label="Slug">
-          <Input name="slug" defaultValue={post?.slug} />
-        </Row>
-        <Row label="Título (ES)">
-          <Input name="titleEs" defaultValue={post?.titleEs} />
-        </Row>
-        <Row label="Título (EN)">
-          <Input name="titleEn" defaultValue={post?.titleEn ?? ""} />
-        </Row>
-        <Row label="Autor">
-          <Input name="author" defaultValue={post?.author ?? ""} />
-        </Row>
-        <Row label="Imagen de portada (URL)">
-          <Input name="coverImageUrl" defaultValue={post?.coverImageUrl ?? ""} />
-        </Row>
-      </Section>
+    <form action={action} className="flex flex-col gap-10">
+      <div className="flex flex-col gap-4">
+        <SeccionEtiqueta>Identidad</SeccionEtiqueta>
+        <Campo
+          label="Slug"
+          htmlFor="slug"
+          hint={`Se usa en /blog/${post?.slug ?? "{slug}"}. Cambiarlo rompe enlaces compartidos.`}
+          required
+        >
+          <Input id="slug" name="slug" defaultValue={post?.slug} />
+        </Campo>
+        <Campo label="Título (ES)" htmlFor="titleEs" required>
+          <Input id="titleEs" name="titleEs" defaultValue={post?.titleEs} />
+        </Campo>
+        <Campo label="Título (EN)" htmlFor="titleEn">
+          <Input id="titleEn" name="titleEn" defaultValue={post?.titleEn ?? ""} />
+        </Campo>
+        <Campo label="Autor" htmlFor="author">
+          <Input id="author" name="author" defaultValue={post?.author ?? ""} />
+        </Campo>
+        <Campo
+          label="Imagen de portada"
+          htmlFor="coverImageUrl"
+          hint="URL pública de la imagen que aparece arriba del artículo."
+        >
+          <Input id="coverImageUrl" name="coverImageUrl" type="url" defaultValue={post?.coverImageUrl ?? ""} />
+        </Campo>
+      </div>
 
-      <Section title="Extracto">
-        <Row label="Extracto (ES)">
-          <Textarea name="excerptEs" defaultValue={post?.excerptEs ?? ""} />
-        </Row>
-        <Row label="Extracto (EN)">
-          <Textarea name="excerptEn" defaultValue={post?.excerptEn ?? ""} />
-        </Row>
-      </Section>
+      <div className="flex flex-col gap-4">
+        <SeccionEtiqueta>Extracto</SeccionEtiqueta>
+        <Campo label="Extracto (ES)" htmlFor="excerptEs">
+          <Textarea id="excerptEs" name="excerptEs" rows={3} defaultValue={post?.excerptEs ?? ""} />
+        </Campo>
+        <Campo label="Extracto (EN)" htmlFor="excerptEn">
+          <Textarea id="excerptEn" name="excerptEn" rows={3} defaultValue={post?.excerptEn ?? ""} />
+        </Campo>
+      </div>
 
-      <Section title="Contenido">
-        <Row label="Contenido (ES)">
+      <div className="flex flex-col gap-4">
+        <SeccionEtiqueta>Contenido</SeccionEtiqueta>
+        <Campo
+          label="Contenido (ES)"
+          htmlFor="contentEs"
+          hint="Texto plano o markdown sencillo; se renderiza tal cual en la página."
+          required
+        >
+          <Textarea id="contentEs" name="contentEs" rows={18} defaultValue={contentText(post?.contentEs)} />
+        </Campo>
+        <Campo
+          label="Contenido (EN)"
+          htmlFor="contentEn"
+          hint="Texto plano o markdown sencillo; se renderiza tal cual en la página."
+        >
+          <Textarea id="contentEn" name="contentEn" rows={18} defaultValue={contentText(post?.contentEn)} />
+        </Campo>
+      </div>
+
+      <div className="flex flex-col gap-4">
+        <SeccionEtiqueta>SEO</SeccionEtiqueta>
+        <Campo label="Meta descripción (ES)" htmlFor="metaDescriptionEs">
           <Textarea
-            name="contentEs"
-            rows={10}
-            defaultValue={contentText(post?.contentEs)}
+            id="metaDescriptionEs"
+            name="metaDescriptionEs"
+            rows={2}
+            defaultValue={post?.metaDescriptionEs ?? ""}
           />
-        </Row>
-        <Row label="Contenido (EN)">
+        </Campo>
+        <Campo label="Meta descripción (EN)" htmlFor="metaDescriptionEn">
           <Textarea
-            name="contentEn"
-            rows={10}
-            defaultValue={contentText(post?.contentEn)}
+            id="metaDescriptionEn"
+            name="metaDescriptionEn"
+            rows={2}
+            defaultValue={post?.metaDescriptionEn ?? ""}
           />
-        </Row>
-      </Section>
+        </Campo>
+      </div>
 
-      <Section title="Publicación">
-        <Row label="Status">
-          <Select name="status" defaultValue={post?.status ?? "draft"}>
+      <div className="flex flex-col gap-4">
+        <SeccionEtiqueta>Publicación</SeccionEtiqueta>
+        <Campo
+          label="Status"
+          htmlFor="status"
+          hint="Al publicar por primera vez se fija la fecha de publicación."
+        >
+          <Select id="status" name="status" defaultValue={post?.status ?? "draft"}>
             <option value="draft">Borrador</option>
             <option value="published">Publicado</option>
           </Select>
-        </Row>
-      </Section>
-
-      <div className="flex items-center gap-3 pt-4 border-t border-zinc-200">
-        <AdminPrimaryButton type="submit">
-          {isEdit ? "Guardar cambios" : "Crear post"}
-        </AdminPrimaryButton>
-        <AdminSecondaryButton href="/admin/blog">Cancelar</AdminSecondaryButton>
-        {isEdit && (
-          <Link
-            href={`/es/blog/${post!.slug}`}
-            target="_blank"
-            className="ml-auto inline-flex items-center gap-2 text-sm text-zinc-600 hover:text-zinc-900"
-          >
-            Ver página pública →
-          </Link>
-        )}
+        </Campo>
       </div>
 
-      {isEdit && <DeleteButton slug={post!.slug} />}
+      <div className="flex items-center gap-3">
+        <BotonPendiente pendingLabel={isEdit ? "Guardando…" : "Creando…"}>
+          {isEdit ? "Guardar cambios" : "Crear artículo"}
+        </BotonPendiente>
+        <Boton tone="secundario" href="/admin/blog">
+          Cancelar
+        </Boton>
+      </div>
     </form>
-  );
-}
-
-/** Separate submit button so delete doesn't submit the edit form. */
-function DeleteButton({ slug }: { slug: string }) {
-  return (
-    <div className="pt-4 border-t border-zinc-200">
-      <button
-        formAction={deletePost.bind(null, slug)}
-        className="text-sm text-red-700 hover:text-red-900 hover:underline"
-      >
-        Eliminar post
-      </button>
-    </div>
-  );
-}
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div className="rounded-lg border border-zinc-200 bg-white p-5">
-      <h2 className="text-sm font-medium mb-4">{title}</h2>
-      <div className="space-y-4">{children}</div>
-    </div>
-  );
-}
-
-function Row({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div className="grid grid-cols-[180px_1fr] gap-4 items-start">
-      <label className="text-xs uppercase tracking-[0.14em] text-zinc-500 pt-2">
-        {label}
-      </label>
-      <div>{children}</div>
-    </div>
-  );
-}
-
-function Input({
-  name,
-  defaultValue,
-  type = "text",
-  className = "",
-}: {
-  name: string;
-  defaultValue?: string;
-  type?: string;
-  className?: string;
-}) {
-  return (
-    <input
-      type={type}
-      name={name}
-      defaultValue={defaultValue}
-      className={`w-full rounded border border-zinc-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-zinc-900 ${className}`}
-    />
-  );
-}
-
-function Textarea({
-  name,
-  defaultValue,
-  rows = 4,
-}: {
-  name: string;
-  defaultValue?: string;
-  rows?: number;
-}) {
-  return (
-    <textarea
-      name={name}
-      defaultValue={defaultValue}
-      rows={rows}
-      className="w-full rounded border border-zinc-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-zinc-900"
-    />
-  );
-}
-
-function Select({
-  name,
-  defaultValue,
-  children,
-}: {
-  name: string;
-  defaultValue?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <select
-      name={name}
-      defaultValue={defaultValue}
-      className="w-full rounded border border-zinc-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-zinc-900"
-    >
-      {children}
-    </select>
   );
 }

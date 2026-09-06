@@ -1,133 +1,71 @@
-import {
-  AdminPrimaryButton,
-  AdminSecondaryButton,
-} from "../_components/admin-ui";
-import { createTestimonial } from "./actions";
+import type { Testimonial } from "@/shared/db/schema/testimonials";
+import { Boton, Campo, Checkbox, Input, Select, SeccionEtiqueta, Textarea } from "../_components/ui";
+import { BotonPendiente } from "../_components/client";
+import { actualizarTestimonial, createTestimonial } from "./actions";
 
 /**
- * Create form for a testimonial. The <form action={createTestimonial}> is a real
- * server action, so Save persists to the DB and revalidates the public surfaces.
+ * Shared create/edit form for a testimonial. When `testimonial` is provided
+ * it edits (binds `actualizarTestimonial` with the id); otherwise it creates.
  */
-export function TestimonialForm() {
+export function TestimonialForm({ testimonial }: { testimonial?: Testimonial }) {
+  const isEdit = Boolean(testimonial);
+  const action = isEdit ? actualizarTestimonial.bind(null, testimonial!.id) : createTestimonial;
+
   return (
-    <form action={createTestimonial} className="space-y-8 max-w-3xl">
-      <Section title="Identidad">
-        <Row label="Tipo">
-          <Select name="type" defaultValue="quote_only">
+    <form action={action} className="flex flex-col gap-10">
+      <div className="flex flex-col gap-4">
+        <SeccionEtiqueta>Autor</SeccionEtiqueta>
+        <Campo label="Tipo" htmlFor="type">
+          <Select id="type" name="type" defaultValue={testimonial?.type ?? "quote_only"}>
             <option value="video">Video</option>
-            <option value="photo_quote">Foto + quote</option>
-            <option value="quote_only">Solo quote</option>
+            <option value="photo_quote">Foto + frase</option>
+            <option value="quote_only">Solo frase</option>
             <option value="company_logo">Logo de empresa</option>
           </Select>
-        </Row>
-        <Row label="Nombre del autor">
-          <Input name="authorName" />
-        </Row>
-        <Row label="Rol del autor">
-          <Input name="authorRole" />
-        </Row>
-        <Row label="Empresa">
-          <Input name="companyName" />
-        </Row>
-      </Section>
+        </Campo>
+        <Campo label="Nombre del autor" htmlFor="authorName">
+          <Input id="authorName" name="authorName" defaultValue={testimonial?.authorName ?? ""} />
+        </Campo>
+        <Campo label="Rol del autor" htmlFor="authorRole">
+          <Input id="authorRole" name="authorRole" defaultValue={testimonial?.authorRole ?? ""} />
+        </Campo>
+        <Campo label="Empresa" htmlFor="companyName">
+          <Input id="companyName" name="companyName" defaultValue={testimonial?.companyName ?? ""} />
+        </Campo>
+      </div>
 
-      <Section title="Contenido">
-        <Row label="Quote (ES)">
-          <Textarea name="quoteEs" />
-        </Row>
-        <Row label="Quote (EN)">
-          <Textarea name="quoteEn" />
-        </Row>
-        <Row label="Publicado">
-          <label className="inline-flex items-center gap-2 text-sm text-zinc-700">
-            <input
-              type="checkbox"
-              name="published"
-              className="h-4 w-4 rounded border-zinc-300"
-            />
-            Visible en el sitio público
-          </label>
-        </Row>
-      </Section>
+      <div className="flex flex-col gap-4">
+        <SeccionEtiqueta>Contenido</SeccionEtiqueta>
+        <Campo label="Frase (ES)" htmlFor="quoteEs">
+          <Textarea id="quoteEs" name="quoteEs" rows={5} defaultValue={testimonial?.quoteEs ?? ""} />
+        </Campo>
+        <Campo label="Frase (EN)" htmlFor="quoteEn">
+          <Textarea id="quoteEn" name="quoteEn" rows={5} defaultValue={testimonial?.quoteEn ?? ""} />
+        </Campo>
+        <Campo label="Video (URL)" htmlFor="videoUrl">
+          <Input id="videoUrl" name="videoUrl" type="url" defaultValue={testimonial?.videoUrl ?? ""} />
+        </Campo>
+        <Campo label="Foto (URL)" htmlFor="photoUrl">
+          <Input id="photoUrl" name="photoUrl" type="url" defaultValue={testimonial?.photoUrl ?? ""} />
+        </Campo>
+      </div>
 
-      <div className="flex items-center gap-3 pt-4 border-t border-zinc-200">
-        <AdminPrimaryButton type="submit">Crear testimonial</AdminPrimaryButton>
-        <AdminSecondaryButton href="/admin/testimoniales">
+      <div className="flex flex-col gap-4">
+        <SeccionEtiqueta>Publicación</SeccionEtiqueta>
+        <Checkbox name="published" label="Visible en el sitio" defaultChecked={testimonial?.published} />
+        {isEdit && (
+          <Checkbox name="approvedByAdmin" label="Aprobado" defaultChecked={testimonial?.approvedByAdmin} />
+        )}
+      </div>
+
+      <div className="flex items-center gap-3">
+        <BotonPendiente pendingLabel={isEdit ? "Guardando…" : "Creando…"}>
+          {isEdit ? "Guardar cambios" : "Crear testimonial"}
+        </BotonPendiente>
+        <Boton tone="secundario" href="/admin/testimoniales">
           Cancelar
-        </AdminSecondaryButton>
+        </Boton>
       </div>
     </form>
-  );
-}
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div className="rounded-lg border border-zinc-200 bg-white p-5">
-      <h2 className="text-sm font-medium mb-4">{title}</h2>
-      <div className="space-y-4">{children}</div>
-    </div>
-  );
-}
-
-function Row({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div className="grid grid-cols-[180px_1fr] gap-4 items-start">
-      <label className="text-xs uppercase tracking-[0.14em] text-zinc-500 pt-2">
-        {label}
-      </label>
-      <div>{children}</div>
-    </div>
-  );
-}
-
-function Input({
-  name,
-  defaultValue,
-  type = "text",
-  className = "",
-}: {
-  name: string;
-  defaultValue?: string;
-  type?: string;
-  className?: string;
-}) {
-  return (
-    <input
-      type={type}
-      name={name}
-      defaultValue={defaultValue}
-      className={`w-full rounded border border-zinc-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-zinc-900 ${className}`}
-    />
-  );
-}
-
-function Textarea({ name, defaultValue }: { name: string; defaultValue?: string }) {
-  return (
-    <textarea
-      name={name}
-      defaultValue={defaultValue}
-      rows={4}
-      className="w-full rounded border border-zinc-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-zinc-900"
-    />
-  );
-}
-
-function Select({
-  name,
-  defaultValue,
-  children,
-}: {
-  name: string;
-  defaultValue?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <select
-      name={name}
-      defaultValue={defaultValue}
-      className="w-full rounded border border-zinc-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-zinc-900"
-    >
-      {children}
-    </select>
   );
 }

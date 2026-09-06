@@ -26,23 +26,27 @@ export async function createLogo(fd: FormData) {
     companyName,
     logoUrl,
     websiteUrl: strOrNull(fd, "websiteUrl"),
+    usageAuthorizationUrl: strOrNull(fd, "usageAuthorizationUrl"),
     active: bool(fd, "active"),
   });
   revalidateLogoSurfaces();
   redirect("/admin/logos");
 }
 
-/** Delete a client logo by id. */
-export async function deleteLogo(id: string) {
+/** Delete a client logo. Triggered from `ConfirmarAccion` on the list — no
+ * redirect, the list revalidates and re-renders in place. */
+export async function deleteLogo(fd: FormData) {
   await requireAdmin();
+  const id = str(fd, "id");
   await db.delete(clientLogos).where(eq(clientLogos.id, id));
   revalidateLogoSurfaces();
-  redirect("/admin/logos");
 }
 
 /** Toggle a client logo's active flag inline (no redirect). */
-export async function toggleLogoActive(id: string, next: boolean) {
+export async function toggleLogoActive(fd: FormData) {
   await requireAdmin();
+  const id = str(fd, "id");
+  const next = bool(fd, "next");
   await db.update(clientLogos).set({ active: next }).where(eq(clientLogos.id, id));
   revalidateLogoSurfaces();
 }

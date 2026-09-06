@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Check, AlertCircle, Download } from "lucide-react";
 import { isLocale } from "@/i18n/config";
+import { pageMetadata, ROUTES } from "@/lib/seo";
 import { eq } from "drizzle-orm";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
@@ -18,12 +19,18 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  return {
-    title:
+  if (!isLocale(locale)) return {};
+  // Página post-compra: nunca se indexa.
+  return pageMetadata({
+    locale,
+    route: ROUTES.thanks,
+    title: locale === "en" ? "Thank you" : "Gracias",
+    description:
       locale === "en"
-        ? "Thank you · Elements Method"
-        : "Gracias · Elements Method",
-  };
+        ? "Your request was received. We will be in touch shortly."
+        : "Recibimos tu solicitud. Nos pondremos en contacto contigo en breve.",
+    noIndex: true,
+  });
 }
 
 export default async function ThankYouPage({

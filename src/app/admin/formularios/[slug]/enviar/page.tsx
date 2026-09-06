@@ -2,12 +2,10 @@ import { notFound } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { db } from "@/shared/db/client";
 import { forms } from "@/shared/db/schema/forms";
-import {
-  AdminPageHeader,
-  AdminSecondaryButton,
-  PlaceholderNote,
-} from "../../../_components/admin-ui";
+import { PageHeader, Volver } from "../../../_components/ui";
 import { MintTokenForm } from "./MintTokenForm";
+
+export const dynamic = "force-dynamic";
 
 export default async function MintTokenPage({
   params,
@@ -24,22 +22,18 @@ export default async function MintTokenPage({
       .limit(1);
     f = rows[0] ?? null;
   } catch (e) {
-    console.error("[admin/forms/enviar] DB read failed", e);
+    console.error("[admin/formularios/enviar] DB read failed", e);
   }
   if (!f) notFound();
 
   return (
-    <>
-      <AdminPageHeader
+    <div className="flex flex-col gap-8">
+      <Volver href={`/admin/formularios/${slug}`}>{f.titleEs}</Volver>
+      <PageHeader
         title={`Enviar: ${f.titleEs}`}
-        subtitle={`Genera un enlace de un solo uso para un participante específico.`}
-        action={
-          <AdminSecondaryButton href={`/admin/formularios/${slug}`}>← Volver</AdminSecondaryButton>
-        }
+        subtitle="Genera enlaces de un solo uso para uno o varios participantes."
       />
-      <PlaceholderNote />
-
       <MintTokenForm formSlug={slug} formTitle={f.titleEs} />
-    </>
+    </div>
   );
 }

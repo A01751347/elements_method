@@ -2,19 +2,19 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { eq } from "drizzle-orm";
+import { eq, ne, and } from "drizzle-orm";
 import { db } from "@/shared/db/client";
 import { calendarRetreats } from "@/shared/db/schema";
-import { requireAdmin, str, num, list } from "@/shared/admin/action";
+import { requireAdmin, str, num } from "@/shared/admin/action";
 
 /** Revalidate every surface that shows retreat data after a write. */
 function revalidateRetreatSurfaces(slug?: string) {
   revalidatePath("/admin/retiros");
   revalidatePath("/admin");
-  revalidatePath("/admin/calendario");
   revalidatePath("/es/retiros");
   revalidatePath("/en/retreats");
   if (slug) {
+    revalidatePath(`/admin/retiros/${slug}`);
     revalidatePath(`/es/retiros/${slug}`);
     revalidatePath(`/en/retreats/${slug}`);
   }
@@ -43,20 +43,45 @@ function readForm(fd: FormData) {
     seatsLeft: num(fd, "seatsLeft"),
     investmentLabelEs: str(fd, "investmentLabelEs"),
     investmentLabelEn: str(fd, "investmentLabelEn"),
-    placeholderFields: list(fd, "placeholderFields"),
   };
+}
+
+type RetreatFormValues = ReturnType<typeof readForm>;
+
+/** Shared validation for create and update. Throws with a clear message. */
+async function validate(v: RetreatFormValues, excludeSlug?: string) {
+  if (!v.slug || !v.themeEs) {
+    throw new Error("El slug y el tema (ES) son obligatorios.");
+  }
+  if (v.startDate && v.endDate && v.startDate > v.endDate) {
+    throw new Error("La fecha de inicio no puede ser posterior a la fecha de fin.");
+  }
+  if (v.seatsLeft > v.capacity) {
+    throw new Error("Los lugares disponibles no pueden ser más que el cupo total.");
+  }
+  const existing = await db
+    .select({ slug: calendarRetreats.slug })
+    .from(calendarRetreats)
+    .where(
+      excludeSlug
+        ? and(eq(calendarRetreats.slug, v.slug), ne(calendarRetreats.slug, excludeSlug))
+        : eq(calendarRetreats.slug, v.slug),
+    )
+    .limit(1);
+  if (existing.length > 0) {
+    throw new Error(`Ya existe un retiro con el slug «${v.slug}».`);
+  }
 }
 
 /** Create a new calendar retreat. */
 export async function createRetreat(fd: FormData) {
   await requireAdmin();
   const v = readForm(fd);
-  if (!v.slug || !v.themeEs) {
-    throw new Error("Slug y tema (ES) son obligatorios.");
-  }
+  await validate(v);
   await db.insert(calendarRetreats).values({
     ...v,
-    isPlaceholder: v.placeholderFields.length > 0,
+    isPlaceholder: false,
+    placeholderFields: [],
   });
   revalidateRetreatSurfaces(v.slug);
   redirect("/admin/retiros");
@@ -66,22 +91,26 @@ export async function createRetreat(fd: FormData) {
 export async function updateRetreat(originalSlug: string, fd: FormData) {
   await requireAdmin();
   const v = readForm(fd);
+  await validate(v, originalSlug);
   await db
     .update(calendarRetreats)
     .set({
       ...v,
-      isPlaceholder: v.placeholderFields.length > 0,
+      isPlaceholder: false,
+      placeholderFields: [],
       updatedAt: new Date(),
     })
     .where(eq(calendarRetreats.slug, originalSlug));
   revalidateRetreatSurfaces(v.slug);
-  revalidateRetreatSurfaces(originalSlug);
-  redirect("/admin/retiros");
+  if (v.slug !== originalSlug) revalidateRetreatSurfaces(originalSlug);
+  redirect(`/admin/retiros/${v.slug}`);
 }
 
-/** Delete a calendar retreat by slug. */
-export async function deleteRetreat(slug: string) {
+/** Delete a calendar retreat. Receives FormData (hidden `slug`) so it can be
+ * used directly as the action of a ConfirmarAccion modal. */
+export async function deleteRetreat(fd: FormData) {
   await requireAdmin();
+  const slug = str(fd, "slug");
   await db.delete(calendarRetreats).where(eq(calendarRetreats.slug, slug));
   revalidateRetreatSurfaces(slug);
   redirect("/admin/retiros");

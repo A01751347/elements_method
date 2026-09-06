@@ -5,6 +5,9 @@ import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { CookieBanner } from "@/components/layout/CookieBanner";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { HtmlLang } from "@/components/seo/HtmlLang";
+import { organizationJsonLd, websiteJsonLd } from "@/lib/structuredData";
 import { getTrackingConfig } from "@/shared/integrations/siteConfig";
 import { getContactInfo } from "@/modules/content/contact";
 import { getNextExperience } from "@/data/experiences";
@@ -35,6 +38,10 @@ export default async function LocaleLayout({
 
   return (
     <>
+      {/* Entidad Organization + WebSite para Google (schema.org), en todas
+       *  las páginas públicas. Los eventos y artículos añaden el suyo. */}
+      <JsonLd data={[organizationJsonLd(locale, contact), websiteJsonLd(locale)]} />
+      <HtmlLang locale={locale} />
       {hasBar && <AnnouncementBar locale={locale} />}
       <Header locale={locale} dict={dict} belowBar={hasBar} />
       <main className={hasBar ? "pt-[7.5rem]" : "pt-20"}>{children}</main>

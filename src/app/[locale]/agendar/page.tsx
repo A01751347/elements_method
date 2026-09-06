@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { CalendarClock } from "lucide-react";
 import { isLocale } from "@/i18n/config";
+import { pageMetadata, ROUTES } from "@/lib/seo";
 import { Section, Eyebrow } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
 import { CalEmbed } from "@/components/integrations/CalEmbed";
@@ -13,12 +14,16 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  return {
-    title:
+  if (!isLocale(locale)) return {};
+  return pageMetadata({
+    locale,
+    route: ROUTES.schedule,
+    title: locale === "en" ? "Schedule a call" : "Agendar una llamada",
+    description:
       locale === "en"
-        ? "Schedule · Elements Method"
-        : "Agendar · Elements Method",
-  };
+        ? "Book a discovery call with the Elements Method team and find the right experience for you or your team."
+        : "Agenda una llamada de descubrimiento con el equipo de Elements Method y encuentra la experiencia adecuada para ti o para tu equipo.",
+  });
 }
 
 export default async function ScheduleDiscoveryPage({

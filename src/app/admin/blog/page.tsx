@@ -1,89 +1,138 @@
 import { desc } from "drizzle-orm";
-import Link from "next/link";
 import { db } from "@/shared/db/client";
 import { blogPosts } from "@/shared/db/schema/blog";
 import {
-  AdminPageHeader,
-  AdminTable,
-  AdminPrimaryButton,
-  EmptyState,
-  StatusPill,
+  Boton,
+  Conteo,
+  EnlaceFila,
+  EstadoVacio,
+  FilaEnlace,
+  Filtros,
+  Insignia,
+  PageHeader,
+  Tabla,
   Td,
   Th,
-} from "../_components/admin-ui";
+} from "../_components/ui";
+import { BLOG_STATUS, estado } from "../_lib/status";
+import { fechaCorta } from "../_lib/format";
 
-const STATUS_VARIANT: Record<string, "green" | "amber" | "neutral"> = {
-  published: "green",
-  draft: "amber",
-  archived: "neutral",
-};
+export const dynamic = "force-dynamic";
 
 async function loadPosts() {
   try {
-    return await db.select().from(blogPosts).orderBy(desc(blogPosts.updatedAt)).limit(100);
+    return await db.select().from(blogPosts).orderBy(desc(blogPosts.updatedAt)).limit(300);
   } catch (e) {
     console.error("[admin/blog] DB read failed", e);
     return [];
   }
 }
 
-export default async function AdminBlogPage() {
-  const posts = await loadPosts();
+export default async function AdminBlogPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ estado?: string }>;
+}) {
+  const { estado: estadoFiltro } = await searchParams;
+  const all = await loadPosts();
+
+  const counts = {
+    todos: all.length,
+    published: all.filter((p) => p.status === "published").length,
+    draft: all.filter((p) => p.status === "draft").length,
+  };
+
+  const list =
+    estadoFiltro === "published"
+      ? all.filter((p) => p.status === "published")
+      : estadoFiltro === "draft"
+        ? all.filter((p) => p.status === "draft")
+        : all;
 
   return (
-    <>
-      <AdminPageHeader
+    <div className="flex flex-col gap-6">
+      <PageHeader
         title="Blog"
-        subtitle="Notas del campo — publicaciones bilingües con flujo editorial."
-        count={posts.length}
-        action={
-          <AdminPrimaryButton href="/admin/blog/nuevo">+ Nuevo post</AdminPrimaryButton>
+        subtitle="Notas del campo, bilingües. Cada fila abre el artículo."
+        actions={
+          <Boton tone="primario" href="/admin/blog/nuevo">
+            + Nuevo artículo
+          </Boton>
         }
       />
 
-      {posts.length === 0 ? (
-        <EmptyState
-          title="Sin posts publicados"
-          body="El work plan menciona cadencia bi-semanal. Crea el primer post o conecta tu CMS preferido."
+      <Filtros
+        items={[
+          { href: "/admin/blog", label: "Todos", count: counts.todos, active: !estadoFiltro },
+          {
+            href: "/admin/blog?estado=published",
+            label: "Publicados",
+            count: counts.published,
+            active: estadoFiltro === "published",
+          },
+          {
+            href: "/admin/blog?estado=draft",
+            label: "Borradores",
+            count: counts.draft,
+            active: estadoFiltro === "draft",
+          },
+        ]}
+      />
+
+      <Conteo n={list.length} singular="artículo encontrado" plural="artículos encontrados" />
+
+      {list.length === 0 ? (
+        <EstadoVacio
+          title="Todavía no hay artículos."
+          body="Escribe el primero; se publica en /blog y /journal cuando lo marques como publicado."
+          action={
+            <Boton tone="secundario" href="/admin/blog/nuevo">
+              + Nuevo artículo
+            </Boton>
+          }
         />
       ) : (
-        <AdminTable>
+        <Tabla>
           <thead>
             <tr>
-              <Th>Slug</Th>
-              <Th>Título</Th>
-              <Th>Status</Th>
-              <Th>Última edición</Th>
-              <Th className="text-right">Acciones</Th>
+              <Th>Artículo</Th>
+              <Th>Autor</Th>
+              <Th>Estado</Th>
+              <Th>Publicado</Th>
+              <Th>Editado</Th>
+              <Th>Pública</Th>
             </tr>
           </thead>
           <tbody>
-            {posts.map((p) => (
-              <tr key={p.id} className="hover:bg-zinc-50">
-                <Td className="font-mono text-xs">{p.slug}</Td>
-                <Td className="font-medium">{p.titleEs}</Td>
-                <Td>
-                  <StatusPill
-                    status={p.status}
-                    variant={STATUS_VARIANT[p.status] ?? "neutral"}
-                  />
-                </Td>
-                <Td className="text-xs">{new Date(p.updatedAt).toLocaleDateString("es-MX")}</Td>
-                <Td className="text-right">
-                  <Link
-                    href={`/admin/blog/${p.slug}`}
-                    className="bg-white border border-zinc-300 px-3 py-1.5 text-xs hover:bg-zinc-50"
-                  >
-                    Editar
-                  </Link>
-                </Td>
-              </tr>
-            ))}
+            {list.map((p) => {
+              const e = estado(BLOG_STATUS, p.status);
+              return (
+                <FilaEnlace key={p.id}>
+                  <Td>
+                    <EnlaceFila href={`/admin/blog/${p.slug}`}>{p.titleEs}</EnlaceFila>
+                    <p className="pista">{p.slug}</p>
+                  </Td>
+                  <Td>{p.author ?? "—"}</Td>
+                  <Td>
+                    <Insignia tone={e.tone}>{e.label}</Insignia>
+                  </Td>
+                  <Td>{p.publishedAt ? fechaCorta(p.publishedAt) : "—"}</Td>
+                  <Td>{fechaCorta(p.updatedAt)}</Td>
+                  <Td>
+                    {p.status === "published" ? (
+                      <Boton tone="texto" href={`/es/blog/${p.slug}`} external className="sobre-fila">
+                        Ver
+                      </Boton>
+                    ) : (
+                      "—"
+                    )}
+                  </Td>
+                </FilaEnlace>
+              );
+            })}
           </tbody>
-        </AdminTable>
+        </Tabla>
       )}
-    </>
+    </div>
   );
 }
-
-export const dynamic = "force-dynamic";

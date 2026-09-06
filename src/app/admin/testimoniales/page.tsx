@@ -2,19 +2,34 @@ import { desc } from "drizzle-orm";
 import { db } from "@/shared/db/client";
 import { testimonials } from "@/shared/db/schema/testimonials";
 import {
-  AdminPageHeader,
-  AdminTable,
-  AdminPrimaryButton,
-  EmptyState,
-  StatusPill,
+  Boton,
+  Cifra,
+  CifraGrid,
+  Conteo,
+  EnlaceFila,
+  EstadoVacio,
+  FilaEnlace,
+  Filtros,
+  Insignia,
+  PageHeader,
+  Tabla,
   Td,
   Th,
-} from "../_components/admin-ui";
+} from "../_components/ui";
+import { BotonPendiente, ConfirmarAccion } from "../_components/client";
 import {
-  toggleTestimonialPublished,
   approveTestimonial,
   rejectTestimonial,
+  toggleTestimonialPublished,
 } from "./actions";
+
+export const dynamic = "force-dynamic";
+
+/** Trim a testimonial phrase for the list view. */
+function truncar(texto: string, max: number): string {
+  if (texto.length <= max) return texto;
+  return `${texto.slice(0, max).trimEnd()}…`;
+}
 
 async function loadTestimonials() {
   try {
@@ -22,123 +37,164 @@ async function loadTestimonials() {
       .select()
       .from(testimonials)
       .orderBy(desc(testimonials.createdAt))
-      .limit(100);
+      .limit(300);
   } catch (e) {
     console.error("[admin/testimoniales] DB read failed", e);
     return [];
   }
 }
 
-export default async function AdminTestimonialsPage() {
-  const list = await loadTestimonials();
+export default async function AdminTestimonialsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ estado?: string }>;
+}) {
+  const { estado: estadoFiltro } = await searchParams;
+  const all = await loadTestimonials();
+
+  const counts = {
+    todos: all.length,
+    porAprobar: all.filter((t) => !t.approvedByAdmin).length,
+    publicados: all.filter((t) => t.published).length,
+    sinPublicar: all.filter((t) => !t.published).length,
+  };
+
+  const list =
+    estadoFiltro === "por-aprobar"
+      ? all.filter((t) => !t.approvedByAdmin)
+      : estadoFiltro === "publicados"
+        ? all.filter((t) => t.published)
+        : estadoFiltro === "sin-publicar"
+          ? all.filter((t) => !t.published)
+          : all;
 
   return (
-    <>
-      <AdminPageHeader
+    <div className="flex flex-col gap-6">
+      <PageHeader
         title="Testimoniales"
-        subtitle="Quotes y videos de líderes que pasaron por el programa."
-        count={list.length}
-        action={
-          <AdminPrimaryButton href="/admin/testimoniales/nuevo">+ Nuevo</AdminPrimaryButton>
+        subtitle="Frases de participantes. Las que vienen de cuestionarios esperan tu aprobación; al aprobarlas se publican en el sitio."
+        actions={
+          <Boton tone="primario" href="/admin/testimoniales/nuevo">
+            + Nuevo testimonial
+          </Boton>
         }
       />
 
+      <CifraGrid>
+        <Cifra label="Por aprobar" value={counts.porAprobar} tone="alerta" note="Vienen de cuestionarios" />
+        <Cifra label="Publicados" value={counts.publicados} tone="ok" note="Visibles en el sitio" />
+        <Cifra label="Sin publicar" value={counts.sinPublicar} note="Guardados, no visibles" />
+      </CifraGrid>
+
+      <Filtros
+        items={[
+          { href: "/admin/testimoniales", label: "Todos", count: counts.todos, active: !estadoFiltro },
+          {
+            href: "/admin/testimoniales?estado=por-aprobar",
+            label: "Por aprobar",
+            count: counts.porAprobar,
+            active: estadoFiltro === "por-aprobar",
+          },
+          {
+            href: "/admin/testimoniales?estado=publicados",
+            label: "Publicados",
+            count: counts.publicados,
+            active: estadoFiltro === "publicados",
+          },
+          {
+            href: "/admin/testimoniales?estado=sin-publicar",
+            label: "Sin publicar",
+            count: counts.sinPublicar,
+            active: estadoFiltro === "sin-publicar",
+          },
+        ]}
+      />
+
+      <Conteo n={list.length} singular="testimonial encontrado" plural="testimoniales encontrados" />
+
       {list.length === 0 ? (
-        <EmptyState
-          title="Sin testimoniales"
-          body="Cuando un participante responda la pregunta testimonial de una encuesta (y autorice publicarla), aparecerá aquí como pendiente. Al aceptarla se publica directo en la página principal."
+        <EstadoVacio
+          title="Todavía no hay testimoniales."
+          body="Cuando un participante responda la pregunta testimonial de una encuesta (y autorice publicarla), aparecerá aquí como pendiente. Al aprobarla se publica directo en la página principal."
         />
       ) : (
-        <AdminTable>
+        <Tabla>
           <thead>
             <tr>
-              <Th>Nombre</Th>
+              <Th>Autor</Th>
               <Th>Frase</Th>
               <Th>Origen</Th>
-              <Th>Publicado</Th>
               <Th>Aprobado</Th>
+              <Th>Publicado</Th>
               <Th>Acciones</Th>
             </tr>
           </thead>
           <tbody>
             {list.map((t) => (
-              <tr key={t.id} className="hover:bg-zinc-50">
-                <Td className="font-medium">
-                  {t.authorName ?? <span className="text-zinc-400 italic">Anónimo</span>}
-                  {t.companyName && (
-                    <div className="text-xs text-zinc-500 font-normal">{t.companyName}</div>
+              <FilaEnlace key={t.id}>
+                <Td>
+                  <EnlaceFila href={`/admin/testimoniales/${t.id}`}>
+                    <span style={!t.authorName ? { color: "var(--sutil)" } : undefined}>
+                      {t.authorName ?? "Anónimo"}
+                    </span>
+                  </EnlaceFila>
+                  {(t.companyName || t.authorRole) && (
+                    <p className="pista">{[t.authorRole, t.companyName].filter(Boolean).join(" · ")}</p>
                   )}
                 </Td>
-                <Td className="text-xs max-w-md">
-                  <span className="line-clamp-2 italic" title={t.quoteEs ?? undefined}>
-                    {t.quoteEs ? `“${t.quoteEs}”` : "—"}
+                <Td className="max-w-md italic">
+                  {t.quoteEs ? `“${truncar(t.quoteEs, 140)}”` : "—"}
+                </Td>
+                <Td>
+                  <Insignia tone="contorno">{t.sourceFormResponseId ? "Encuesta" : "Manual"}</Insignia>
+                </Td>
+                <Td>
+                  <span className={`texto-12 ${t.approvedByAdmin ? "texto-ok" : "texto-alerta"}`}>
+                    {t.approvedByAdmin ? "Sí" : "No"}
                   </span>
                 </Td>
                 <Td>
-                  <StatusPill
-                    status={t.sourceFormResponseId ? "Encuesta" : "Manual"}
-                    variant={t.sourceFormResponseId ? "blue" : "neutral"}
-                  />
+                  <Insignia tone={t.published ? "ok" : "neutra"}>
+                    {t.published ? "Publicado" : "Sin publicar"}
+                  </Insignia>
                 </Td>
                 <Td>
-                  <StatusPill
-                    status={t.published ? "Sí" : "No"}
-                    variant={t.published ? "green" : "amber"}
-                  />
-                </Td>
-                <Td>
-                  <StatusPill
-                    status={t.approvedByAdmin ? "Sí" : "No"}
-                    variant={t.approvedByAdmin ? "green" : "amber"}
-                  />
-                </Td>
-                <Td>
-                  <div className="flex items-center gap-3">
-                    <form
-                      action={toggleTestimonialPublished.bind(
-                        null,
-                        t.id,
-                        !t.published
-                      )}
-                    >
-                      <button
-                        type="submit"
-                        className="text-xs text-zinc-700 hover:text-zinc-900 hover:underline"
-                      >
-                        {t.published ? "Despublicar" : "Publicar"}
-                      </button>
-                    </form>
+                  <div className="flex flex-wrap items-center gap-2 sobre-fila">
                     {!t.approvedByAdmin && (
-                      <>
-                        <form action={approveTestimonial.bind(null, t.id)}>
-                          <button
-                            type="submit"
-                            className="text-xs text-emerald-700 hover:text-emerald-900 hover:underline"
-                          >
-                            Aceptar y publicar
-                          </button>
-                        </form>
-                        {t.sourceFormResponseId && (
-                          <form action={rejectTestimonial.bind(null, t.id)}>
-                            <button
-                              type="submit"
-                              className="text-xs text-red-700 hover:text-red-900 hover:underline"
-                            >
-                              Rechazar
-                            </button>
-                          </form>
-                        )}
-                      </>
+                      <form action={approveTestimonial}>
+                        <input type="hidden" name="id" value={t.id} />
+                        <BotonPendiente tone="primario" className="boton-chico" pendingLabel="Aprobando…">
+                          Aprobar y publicar
+                        </BotonPendiente>
+                      </form>
+                    )}
+                    <form action={toggleTestimonialPublished}>
+                      <input type="hidden" name="id" value={t.id} />
+                      <input type="hidden" name="next" value={(!t.published).toString()} />
+                      <BotonPendiente tone="secundario" className="boton-chico" pendingLabel="Guardando…">
+                        {t.published ? "Despublicar" : "Publicar"}
+                      </BotonPendiente>
+                    </form>
+                    {t.sourceFormResponseId && (
+                      <ConfirmarAccion
+                        trigger="Rechazar"
+                        title="Rechazar testimonial"
+                        body="Se borra este testimonial. La frase queda registrada en la respuesta original del cuestionario."
+                        confirmLabel="Sí, rechazar el testimonial"
+                        pendingLabel="Rechazando…"
+                        action={rejectTestimonial}
+                        tone="peligro"
+                        size="chico"
+                        hidden={[{ name: "id", value: t.id }]}
+                      />
                     )}
                   </div>
                 </Td>
-              </tr>
+              </FilaEnlace>
             ))}
           </tbody>
-        </AdminTable>
+        </Tabla>
       )}
-    </>
+    </div>
   );
 }
-
-export const dynamic = "force-dynamic";

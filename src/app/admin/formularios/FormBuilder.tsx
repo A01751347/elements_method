@@ -1,11 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowDown, ArrowUp, Plus, Sparkles, Trash2 } from "lucide-react";
 import {
-  AdminPrimaryButton,
-  AdminSecondaryButton,
-} from "../_components/admin-ui";
+  SeccionEtiqueta,
+  Campo,
+  Input,
+  Textarea,
+  Select,
+  Checkbox,
+  Banner,
+  AntesDeConfirmar,
+  Boton,
+} from "../_components/ui";
+import { BotonPendiente } from "../_components/client";
 
 export type BuilderFieldType =
   | "short_text"
@@ -162,8 +169,7 @@ export function FormBuilder({
         options: CHOICE_TYPES.includes(f.type) ? f.options : undefined,
         scaleMin: SCALE_TYPES.includes(f.type) ? f.scaleMin : undefined,
         scaleMax: SCALE_TYPES.includes(f.type) ? f.scaleMax : undefined,
-        shareablePhrase:
-          TEXT_TYPES.includes(f.type) && f.shareablePhrase ? true : undefined,
+        shareablePhrase: TEXT_TYPES.includes(f.type) && f.shareablePhrase ? true : undefined,
       });
     }
     if (out.length === 0) {
@@ -186,347 +192,261 @@ export function FormBuilder({
           e.preventDefault();
           return;
         }
-        const hidden = e.currentTarget.elements.namedItem(
-          "fieldsJson",
-        ) as HTMLInputElement;
+        const hidden = e.currentTarget.elements.namedItem("fieldsJson") as HTMLInputElement;
         hidden.value = payload;
       }}
-      className="space-y-6 max-w-4xl"
+      className="flex flex-col gap-8"
     >
       <input type="hidden" name="fieldsJson" defaultValue="[]" />
 
       {/* META */}
-      <section className="rounded-lg border border-zinc-200 bg-white p-5 space-y-4">
-        <h2 className="text-sm font-medium">Datos del formulario</h2>
+      <section className="tarjeta flex flex-col gap-4">
+        <SeccionEtiqueta>Datos del formulario</SeccionEtiqueta>
         <div className="grid grid-cols-2 gap-4">
-          <Labeled label="Título (ES) *">
-            <input
-              name="titleEs"
-              required
-              defaultValue={initial?.titleEs}
-              className={inputCls}
-            />
-          </Labeled>
-          <Labeled label="Título (EN)">
-            <input name="titleEn" defaultValue={initial?.titleEn} className={inputCls} />
-          </Labeled>
-          <Labeled label="Descripción (ES)">
-            <textarea
-              name="descriptionEs"
-              rows={2}
-              defaultValue={initial?.descriptionEs}
-              className={inputCls}
-            />
-          </Labeled>
-          <Labeled label="Descripción (EN)">
-            <textarea
-              name="descriptionEn"
-              rows={2}
-              defaultValue={initial?.descriptionEn}
-              className={inputCls}
-            />
-          </Labeled>
-          <Labeled label="Categoría">
-            <select
-              name="category"
-              defaultValue={initial?.category ?? "custom"}
-              className={inputCls}
-            >
+          <Campo label="Título (ES)" htmlFor="fb-titleEs" required>
+            <Input id="fb-titleEs" name="titleEs" required defaultValue={initial?.titleEs} />
+          </Campo>
+          <Campo label="Título (EN)" htmlFor="fb-titleEn">
+            <Input id="fb-titleEn" name="titleEn" defaultValue={initial?.titleEn} />
+          </Campo>
+          <Campo label="Descripción (ES)" htmlFor="fb-descriptionEs">
+            <Textarea id="fb-descriptionEs" name="descriptionEs" rows={2} defaultValue={initial?.descriptionEs} />
+          </Campo>
+          <Campo label="Descripción (EN)" htmlFor="fb-descriptionEn">
+            <Textarea id="fb-descriptionEn" name="descriptionEn" rows={2} defaultValue={initial?.descriptionEn} />
+          </Campo>
+          <Campo label="Categoría" htmlFor="fb-category">
+            <Select id="fb-category" name="category" defaultValue={initial?.category ?? "custom"}>
               <option value="inicio">Inicio</option>
               <option value="durante">Durante</option>
               <option value="cierre">Cierre</option>
-              <option value="custom">Custom</option>
-            </select>
-          </Labeled>
-          <label className="flex items-center gap-2 text-sm text-zinc-700 self-end pb-2">
-            <input
-              type="checkbox"
-              name="isAnonymous"
-              defaultChecked={initial?.isAnonymous}
-              className="h-4 w-4 rounded border-zinc-300"
-            />
-            Respuestas anónimas
-          </label>
+              <option value="custom">Personalizado</option>
+            </Select>
+          </Campo>
+          <div className="flex items-end pb-1">
+            <Checkbox name="isAnonymous" label="Respuestas anónimas" defaultChecked={initial?.isAnonymous} />
+          </div>
         </div>
       </section>
 
       {/* QUESTIONS */}
-      <section className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-sm font-medium">Preguntas ({fields.length})</h2>
-        </div>
+      <section className="flex flex-col gap-4">
+        <SeccionEtiqueta>{`Preguntas (${fields.length})`}</SeccionEtiqueta>
 
         {fields.map((f, i) => (
-          <div key={i} className="rounded-lg border border-zinc-200 bg-white p-5">
-            <div className="flex items-center gap-3 mb-4">
-              <span className="text-zinc-400 tabular-nums text-sm w-6">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <select
-                value={f.type}
-                onChange={(e) => {
-                  const type = e.target.value as BuilderFieldType;
-                  patch(i, {
-                    type,
-                    options: CHOICE_TYPES.includes(type)
-                      ? (f.options ?? ["Opción 1", "Opción 2"])
-                      : undefined,
-                  });
-                }}
-                className="border border-zinc-300 rounded px-2 py-1.5 text-xs bg-white"
-              >
-                {Object.entries(TYPE_LABELS).map(([v, l]) => (
-                  <option key={v} value={v}>
-                    {l}
-                  </option>
-                ))}
-              </select>
-              {f.type !== "section" && (
-                <label className="flex items-center gap-1.5 text-xs text-zinc-600">
-                  <input
-                    type="checkbox"
-                    checked={f.required}
-                    onChange={(e) => patch(i, { required: e.target.checked })}
-                    className="h-3.5 w-3.5 rounded border-zinc-300"
-                  />
-                  Obligatoria
-                </label>
-              )}
-              {TEXT_TYPES.includes(f.type) && (
-                <label
-                  className="flex items-center gap-1.5 text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded px-2 py-1"
-                  title="La respuesta se convierte en un testimonial pendiente de aprobación"
+          <div key={i} className="tarjeta flex gap-4">
+            <span className="paso-numero" aria-hidden="true">
+              {String(i + 1).padStart(2, "0")}
+            </span>
+            <div className="flex flex-1 flex-col gap-4">
+              <div className="flex flex-wrap items-center gap-3">
+                <Select
+                  value={f.type}
+                  onChange={(e) => {
+                    const type = e.target.value as BuilderFieldType;
+                    patch(i, {
+                      type,
+                      options: CHOICE_TYPES.includes(type) ? (f.options ?? ["Opción 1", "Opción 2"]) : undefined,
+                    });
+                  }}
+                  className="max-w-[220px]"
                 >
-                  <input
-                    type="checkbox"
-                    checked={!!f.shareablePhrase}
-                    onChange={(e) => patch(i, { shareablePhrase: e.target.checked })}
-                    className="h-3.5 w-3.5 rounded border-amber-300"
-                  />
-                  <Sparkles className="h-3 w-3" />
-                  Testimonial
-                </label>
-              )}
-              <div className="ml-auto flex items-center gap-1">
-                <IconBtn onClick={() => move(i, -1)} disabled={i === 0} label="Subir">
-                  <ArrowUp className="h-3.5 w-3.5" />
-                </IconBtn>
-                <IconBtn
-                  onClick={() => move(i, 1)}
-                  disabled={i === fields.length - 1}
-                  label="Bajar"
-                >
-                  <ArrowDown className="h-3.5 w-3.5" />
-                </IconBtn>
-                <IconBtn onClick={() => remove(i)} label="Eliminar" danger>
-                  <Trash2 className="h-3.5 w-3.5" />
-                </IconBtn>
+                  {Object.entries(TYPE_LABELS).map(([v, l]) => (
+                    <option key={v} value={v}>
+                      {l}
+                    </option>
+                  ))}
+                </Select>
+
+                {f.type !== "section" && (
+                  <label className="campo-checkbox">
+                    <input
+                      type="checkbox"
+                      checked={f.required}
+                      onChange={(e) => patch(i, { required: e.target.checked })}
+                    />
+                    <span>Obligatoria</span>
+                  </label>
+                )}
+
+                {TEXT_TYPES.includes(f.type) && (
+                  <button
+                    type="button"
+                    className="chip"
+                    aria-pressed={!!f.shareablePhrase}
+                    title="La respuesta se convierte en un testimonial pendiente de aprobación"
+                    onClick={() => patch(i, { shareablePhrase: !f.shareablePhrase })}
+                  >
+                    Testimonial
+                  </button>
+                )}
+
+                <div className="ml-auto flex items-center gap-2">
+                  <button
+                    type="button"
+                    className="boton boton-chico boton-secundario"
+                    onClick={() => move(i, -1)}
+                    disabled={i === 0}
+                    aria-label="Subir pregunta"
+                  >
+                    ↑
+                  </button>
+                  <button
+                    type="button"
+                    className="boton boton-chico boton-secundario"
+                    onClick={() => move(i, 1)}
+                    disabled={i === fields.length - 1}
+                    aria-label="Bajar pregunta"
+                  >
+                    ↓
+                  </button>
+                  <button
+                    type="button"
+                    className="boton boton-chico boton-secundario"
+                    onClick={() => remove(i)}
+                    aria-label="Quitar pregunta"
+                  >
+                    Quitar
+                  </button>
+                </div>
               </div>
-            </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <Labeled
-                label={f.type === "section" ? "Título del bloque (ES) *" : "Pregunta (ES) *"}
-              >
-                <textarea
-                  value={f.labelEs}
-                  onChange={(e) => patch(i, { labelEs: e.target.value })}
-                  rows={f.labelEs.length > 90 ? 4 : 2}
-                  className={inputCls}
-                  placeholder="¿Qué te llevas de la experiencia?"
-                />
-              </Labeled>
-              <Labeled
-                label={f.type === "section" ? "Título del bloque (EN)" : "Pregunta (EN)"}
-              >
-                <textarea
-                  value={f.labelEn}
-                  onChange={(e) => patch(i, { labelEn: e.target.value })}
-                  rows={f.labelEs.length > 90 ? 4 : 2}
-                  className={inputCls}
-                  placeholder="Se usa la versión ES si queda vacío"
-                />
-              </Labeled>
-
-              <Labeled
-                label={
-                  f.type === "section"
-                    ? "Texto introductorio del bloque (ES)"
-                    : "Texto de apoyo bajo la pregunta (ES)"
-                }
-              >
-                <textarea
-                  value={f.helpEs ?? ""}
-                  onChange={(e) => patch(i, { helpEs: e.target.value || undefined })}
-                  rows={2}
-                  className={inputCls}
-                  placeholder="Opcional"
-                />
-              </Labeled>
-              <Labeled label="Texto de apoyo (EN)">
-                <textarea
-                  value={f.helpEn ?? ""}
-                  onChange={(e) => patch(i, { helpEn: e.target.value || undefined })}
-                  rows={2}
-                  className={inputCls}
-                  placeholder="Opcional"
-                />
-              </Labeled>
-
-              {SCALE_TYPES.concat("nps").includes(f.type) && (
-                <>
-                  <Labeled label="Texto del extremo mínimo (ES)">
-                    <input
-                      value={f.minLabelEs ?? ""}
-                      onChange={(e) => patch(i, { minLabelEs: e.target.value || undefined })}
-                      className={inputCls}
-                      placeholder="1 = …"
-                    />
-                  </Labeled>
-                  <Labeled label="Texto del extremo máximo (ES)">
-                    <input
-                      value={f.maxLabelEs ?? ""}
-                      onChange={(e) => patch(i, { maxLabelEs: e.target.value || undefined })}
-                      className={inputCls}
-                      placeholder="10 = …"
-                    />
-                  </Labeled>
-                </>
-              )}
-
-              {CHOICE_TYPES.includes(f.type) && (
-                <Labeled label="Opciones (una por línea)" wide>
-                  <textarea
-                    value={(f.options ?? []).join("\n")}
-                    onChange={(e) =>
-                      patch(i, {
-                        options: e.target.value
-                          .split("\n")
-                          .map((s) => s.trim())
-                          .filter(Boolean),
-                      })
-                    }
-                    rows={3}
-                    className={inputCls}
+              <div className="grid grid-cols-2 gap-4">
+                <Campo label={f.type === "section" ? "Título del bloque (ES)" : "Pregunta (ES)"} required>
+                  <Textarea
+                    value={f.labelEs}
+                    onChange={(e) => patch(i, { labelEs: e.target.value })}
+                    rows={f.labelEs.length > 90 ? 4 : 2}
+                    placeholder="¿Qué te llevas de la experiencia?"
                   />
-                </Labeled>
-              )}
+                </Campo>
+                <Campo label={f.type === "section" ? "Título del bloque (EN)" : "Pregunta (EN)"}>
+                  <Textarea
+                    value={f.labelEn}
+                    onChange={(e) => patch(i, { labelEn: e.target.value })}
+                    rows={f.labelEs.length > 90 ? 4 : 2}
+                    placeholder="Se usa la versión ES si queda vacío"
+                  />
+                </Campo>
 
-              {SCALE_TYPES.includes(f.type) && (
-                <>
-                  <Labeled label="Mínimo">
-                    <input
-                      type="number"
-                      value={f.scaleMin ?? 1}
-                      onChange={(e) => patch(i, { scaleMin: Number(e.target.value) })}
-                      className={inputCls}
-                    />
-                  </Labeled>
-                  <Labeled label="Máximo">
-                    <input
-                      type="number"
-                      value={f.scaleMax ?? 5}
-                      onChange={(e) => patch(i, { scaleMax: Number(e.target.value) })}
-                      className={inputCls}
-                    />
-                  </Labeled>
-                </>
-              )}
+                <Campo
+                  label={f.type === "section" ? "Texto introductorio del bloque (ES)" : "Texto de apoyo bajo la pregunta (ES)"}
+                >
+                  <Textarea
+                    value={f.helpEs ?? ""}
+                    onChange={(e) => patch(i, { helpEs: e.target.value || undefined })}
+                    rows={2}
+                    placeholder="Opcional"
+                  />
+                </Campo>
+                <Campo label="Texto de apoyo (EN)">
+                  <Textarea
+                    value={f.helpEn ?? ""}
+                    onChange={(e) => patch(i, { helpEn: e.target.value || undefined })}
+                    rows={2}
+                    placeholder="Opcional"
+                  />
+                </Campo>
+
+                {SCALE_TYPES.concat("nps").includes(f.type) && (
+                  <>
+                    <Campo label="Texto del extremo mínimo (ES)">
+                      <Input
+                        value={f.minLabelEs ?? ""}
+                        onChange={(e) => patch(i, { minLabelEs: e.target.value || undefined })}
+                        placeholder="1 = …"
+                      />
+                    </Campo>
+                    <Campo label="Texto del extremo máximo (ES)">
+                      <Input
+                        value={f.maxLabelEs ?? ""}
+                        onChange={(e) => patch(i, { maxLabelEs: e.target.value || undefined })}
+                        placeholder="10 = …"
+                      />
+                    </Campo>
+                  </>
+                )}
+
+                {CHOICE_TYPES.includes(f.type) && (
+                  <div className="col-span-2">
+                    <Campo label="Opciones (una por línea)">
+                      <Textarea
+                        value={(f.options ?? []).join("\n")}
+                        onChange={(e) =>
+                          patch(i, {
+                            options: e.target.value
+                              .split("\n")
+                              .map((s) => s.trim())
+                              .filter(Boolean),
+                          })
+                        }
+                        rows={3}
+                      />
+                    </Campo>
+                  </div>
+                )}
+
+                {SCALE_TYPES.includes(f.type) && (
+                  <>
+                    <Campo label="Mínimo">
+                      <Input
+                        type="number"
+                        value={f.scaleMin ?? 1}
+                        onChange={(e) => patch(i, { scaleMin: Number(e.target.value) })}
+                      />
+                    </Campo>
+                    <Campo label="Máximo">
+                      <Input
+                        type="number"
+                        value={f.scaleMax ?? 5}
+                        onChange={(e) => patch(i, { scaleMax: Number(e.target.value) })}
+                      />
+                    </Campo>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         ))}
 
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => setFields((fs) => [...fs, emptyField()])}
-            className="inline-flex items-center gap-1.5 border border-zinc-300 bg-white px-3 py-2 text-xs text-zinc-700 hover:bg-zinc-50 transition-colors rounded"
-          >
-            <Plus className="h-3.5 w-3.5" /> Agregar pregunta
+        <div className="flex flex-wrap items-center gap-3">
+          <button type="button" className="boton boton-secundario" onClick={() => setFields((fs) => [...fs, emptyField()])}>
+            + Agregar pregunta
           </button>
           {hasShareable && !hasConsent && (
             <button
               type="button"
+              className="boton boton-secundario"
               onClick={() => setFields((fs) => [...fs, { ...CONSENT_FIELD }])}
-              className="inline-flex items-center gap-1.5 border border-amber-300 bg-amber-50 px-3 py-2 text-xs text-amber-900 hover:bg-amber-100 transition-colors rounded"
             >
-              <Plus className="h-3.5 w-3.5" /> Agregar pregunta de autorización
+              + Agregar pregunta de autorización
             </button>
           )}
         </div>
 
         {hasShareable && !hasConsent && (
-          <p className="text-xs text-amber-800 bg-amber-50 border-l-2 border-amber-400 px-3 py-2">
-            Tienes una pregunta testimonial sin pregunta de autorización. Sin ella,
-            toda frase se convierte en testimonial pendiente; con ella, el
-            participante decide si se publica y si aparece su nombre.
-          </p>
+          <Banner tone="aviso">
+            Tienes una pregunta testimonial sin pregunta de autorización. Sin ella, toda frase se convierte en
+            testimonial pendiente; con ella, el participante decide si se publica y si aparece su nombre.
+          </Banner>
         )}
       </section>
 
-      {error && (
-        <p className="text-sm text-red-800 bg-red-50 border border-red-200 px-4 py-3">
-          {error}
-        </p>
-      )}
+      {error && <Banner tone="error">{error}</Banner>}
 
-      <div className="flex items-center gap-3 pt-4 border-t border-zinc-200">
-        <AdminPrimaryButton type="submit">{submitLabel}</AdminPrimaryButton>
-        <AdminSecondaryButton href="/admin/formularios">Cancelar</AdminSecondaryButton>
-      </div>
+      <AntesDeConfirmar
+        boton={
+          <div className="flex items-center gap-3">
+            <BotonPendiente pendingLabel="Guardando el formulario…">{submitLabel}</BotonPendiente>
+            <Boton tone="secundario" href="/admin/formularios">
+              Cancelar
+            </Boton>
+          </div>
+        }
+      >
+        Se guarda el formulario. Los enlaces que envíes después usarán estas preguntas; las respuestas ya
+        guardadas no cambian.
+      </AntesDeConfirmar>
     </form>
-  );
-}
-
-const inputCls =
-  "w-full border border-zinc-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-zinc-500";
-
-function Labeled({
-  label,
-  children,
-  wide,
-}: {
-  label: string;
-  children: React.ReactNode;
-  wide?: boolean;
-}) {
-  return (
-    <div className={wide ? "col-span-2" : undefined}>
-      <label className="block text-[0.65rem] uppercase tracking-[0.14em] text-zinc-500 mb-1.5">
-        {label}
-      </label>
-      {children}
-    </div>
-  );
-}
-
-function IconBtn({
-  onClick,
-  disabled,
-  label,
-  danger,
-  children,
-}: {
-  onClick: () => void;
-  disabled?: boolean;
-  label: string;
-  danger?: boolean;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      aria-label={label}
-      title={label}
-      className={`h-7 w-7 inline-flex items-center justify-center rounded border transition-colors disabled:opacity-30 ${
-        danger
-          ? "border-red-200 text-red-700 hover:bg-red-50"
-          : "border-zinc-200 text-zinc-600 hover:bg-zinc-50"
-      }`}
-    >
-      {children}
-    </button>
   );
 }

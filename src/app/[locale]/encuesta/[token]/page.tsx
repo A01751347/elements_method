@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { eq, and, gt, isNull } from "drizzle-orm";
 import { ClipboardList, AlertCircle } from "lucide-react";
 import { isLocale } from "@/i18n/config";
+import { pageMetadata, surveyRoute } from "@/lib/seo";
 import { Section, Eyebrow } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
 import { db } from "@/shared/db/client";
@@ -11,15 +12,21 @@ import { SurveyRenderer, type SurveyDefinition, type FormField } from "@/compone
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ locale: string }>;
+  params: Promise<{ locale: string; token: string }>;
 }) {
-  const { locale } = await params;
-  return {
-    title:
+  const { locale, token } = await params;
+  if (!isLocale(locale)) return {};
+  // Encuesta con token personal: nunca se indexa (robots.txt también lo bloquea).
+  return pageMetadata({
+    locale,
+    route: surveyRoute(token),
+    title: locale === "en" ? "Survey" : "Encuesta",
+    description:
       locale === "en"
-        ? "Survey · Elements Method"
-        : "Encuesta · Elements Method",
-  };
+        ? "Elements Method participant survey."
+        : "Encuesta para participantes de Elements Method.",
+    noIndex: true,
+  });
 }
 
 async function loadFormByToken(token: string) {

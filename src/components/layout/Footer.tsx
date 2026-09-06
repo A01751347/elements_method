@@ -14,6 +14,7 @@ import {
   type ContactInfo,
 } from "@/data/launchData";
 import { experiences } from "@/data/experiences";
+import { SEO_LANDINGS } from "@/data/seoLandings";
 
 export function Footer({
   locale,
@@ -83,6 +84,11 @@ export function Footer({
       href: `${base}/${locale === "es" ? "empresas" : "companies"}`,
       label: locale === "es" ? "A la medida" : "Bespoke",
     },
+    // Landings por tipo de retiro (retiros corporativos, ejecutivos, team building…).
+    ...SEO_LANDINGS.filter((l) => l.key !== "best-corporate-retreats").map((l) => ({
+      href: `${base}/${l.route[locale]}`,
+      label: locale === "es" ? l.serviceType.es : l.serviceType.en,
+    })),
   ];
 
   return (
@@ -250,6 +256,14 @@ export function Footer({
                   className="text-[var(--color-paper)]/90 hover:text-[var(--color-paper)] transition-colors"
                 >
                   {dict.footer.privacy}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={`${base}/${locale === "es" ? "privacidad/arco" : "privacy/arco"}`}
+                  className="text-[var(--color-paper)]/90 hover:text-[var(--color-paper)] transition-colors"
+                >
+                  {dict.footer.arco}
                 </Link>
               </li>
               <li>

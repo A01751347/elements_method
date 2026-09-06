@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { db } from "@/shared/db/client";
 import { siteSettings } from "@/shared/db/schema";
@@ -41,4 +42,5 @@ export async function saveTrackingSettings(fd: FormData) {
   // The pixel config is read in the [locale] layout, so revalidate the site.
   revalidatePath("/", "layout");
   revalidatePath("/admin/analytics");
+  redirect("/admin/analytics?ok=1");
 }

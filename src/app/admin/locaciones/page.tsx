@@ -1,106 +1,117 @@
-import Link from "next/link";
-import { Plus, ExternalLink } from "lucide-react";
-import { venuesInventory as staticVenues } from "@/data/launchData";
 import { getVenues } from "@/modules/content/venues";
 import {
-  AdminPageHeader,
-  AdminPrimaryButton,
-  AdminSecondaryButton,
-  AdminTable,
-  PlaceholderBadge,
-  PlaceholderNote,
-  StatusPill,
-  Td,
+  PageHeader,
+  Boton,
+  Filtros,
+  Conteo,
+  Tabla,
   Th,
-} from "../_components/admin-ui";
+  Td,
+  FilaEnlace,
+  EnlaceFila,
+  Insignia,
+  EstadoVacio,
+} from "../_components/ui";
+import { VENUE_STATE_ADMIN, estado } from "../_lib/status";
 
-const STATE_VARIANT: Record<string, "green" | "amber" | "neutral" | "red" | "blue"> = {
-  confirmed: "green",
-  "cotizacion-en-proceso": "blue",
-  "sin-respuesta": "red",
-  researching: "neutral",
-  "available-2027": "amber",
-};
+export const dynamic = "force-dynamic";
 
-const STATE_LABEL: Record<string, string> = {
-  confirmed: "Confirmada",
-  "cotizacion-en-proceso": "Cotización en proceso",
-  "sin-respuesta": "Sin respuesta",
-  researching: "En búsqueda",
-  "available-2027": "Disponible 2027",
-};
+const FILTROS_ESTADO = [
+  { value: "", label: "Todas" },
+  ...Object.entries(VENUE_STATE_ADMIN).map(([value, s]) => ({ value, label: s.label })),
+];
 
-export default async function AdminVenuesPage() {
-  const dbVenues = await getVenues();
-  const venuesInventory = dbVenues.length > 0 ? dbVenues : staticVenues;
+function truncar(texto: string | null | undefined, max: number): string {
+  if (!texto) return "";
+  return texto.length > max ? `${texto.slice(0, max).trimEnd()}…` : texto;
+}
+
+export default async function AdminVenuesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ estado?: string }>;
+}) {
+  const { estado: estadoFiltro = "" } = await searchParams;
+  const venues = await getVenues();
+  const filtradas = estadoFiltro ? venues.filter((v) => v.state === estadoFiltro) : venues;
+
   return (
     <>
-      <AdminPageHeader
+      <PageHeader
         title="Locaciones"
-        subtitle="Catálogo de sedes candidatas para inmersiones (haciendas, eco-lodges, espacios urbanos)."
-        count={venuesInventory.length}
-        action={
-          <AdminPrimaryButton href="/admin/locaciones/nueva">
-            <Plus className="h-4 w-4" />
-            Nueva locación
-          </AdminPrimaryButton>
+        subtitle="Catálogo de sedes candidatas y confirmadas para las inmersiones. Cada fila abre la ficha."
+        actions={
+          <Boton tone="primario" href="/admin/locaciones/nueva">
+            + Nueva locación
+          </Boton>
         }
       />
-      <PlaceholderNote />
 
-      <AdminTable>
-        <thead>
-          <tr>
-            <Th>Sede</Th>
-            <Th>Ciudad</Th>
-            <Th>Capacidad</Th>
-            <Th>Rango precio</Th>
-            <Th>Estado</Th>
-            <Th>PH</Th>
-            <Th className="text-right">Acciones</Th>
-          </tr>
-        </thead>
-        <tbody>
-          {venuesInventory.map((v) => (
-            <tr key={v.slug} className="hover:bg-zinc-50">
-              <Td>
-                <div className="font-medium">{v.name}</div>
-                <div className="text-xs text-zinc-500 mt-0.5 line-clamp-2 max-w-md">
-                  {v.notesEs}
-                </div>
-              </Td>
-              <Td className="text-xs whitespace-nowrap">{v.city}</Td>
-              <Td className="text-xs">{v.capacity || "—"}</Td>
-              <Td className="text-xs whitespace-nowrap">{v.rangeMxn || "—"}</Td>
-              <Td>
-                <StatusPill
-                  status={STATE_LABEL[v.state] ?? v.state}
-                  variant={STATE_VARIANT[v.state] ?? "neutral"}
-                />
-              </Td>
-              <Td>
-                <PlaceholderBadge fields={v.placeholderFields} />
-              </Td>
-              <Td className="text-right whitespace-nowrap">
-                <div className="flex justify-end gap-1.5">
-                  {v.url && (
-                    <Link
-                      href={v.url}
-                      target="_blank"
-                      className="inline-flex items-center gap-1 bg-white border border-zinc-300 text-zinc-700 px-3 py-1.5 text-xs hover:bg-zinc-50"
-                    >
-                      <ExternalLink className="h-3 w-3" />
-                    </Link>
-                  )}
-                  <AdminSecondaryButton href={`/admin/locaciones/${v.slug}`}>
-                    Editar
-                  </AdminSecondaryButton>
-                </div>
-              </Td>
+      <Filtros
+        items={FILTROS_ESTADO.map((f) => ({
+          href: f.value ? `/admin/locaciones?estado=${f.value}` : "/admin/locaciones",
+          label: f.label,
+          count: f.value ? venues.filter((v) => v.state === f.value).length : venues.length,
+          active: estadoFiltro === f.value,
+        }))}
+      />
+
+      <div className="mb-4">
+        <Conteo n={filtradas.length} singular="locación encontrada" plural="locaciones encontradas" />
+      </div>
+
+      {filtradas.length === 0 ? (
+        <EstadoVacio
+          title="No hay locaciones registradas."
+          body="Crea la primera sede candidata para empezar a planear retiros."
+          action={
+            <Boton tone="secundario" href="/admin/locaciones/nueva">
+              + Nueva locación
+            </Boton>
+          }
+        />
+      ) : (
+        <Tabla>
+          <thead>
+            <tr>
+              <Th>Sede</Th>
+              <Th>Ciudad</Th>
+              <Th>Capacidad</Th>
+              <Th>Rango MXN</Th>
+              <Th>Estado</Th>
+              <Th>Sitio</Th>
             </tr>
-          ))}
-        </tbody>
-      </AdminTable>
+          </thead>
+          <tbody>
+            {filtradas.map((v) => {
+              const est = estado(VENUE_STATE_ADMIN, v.state);
+              return (
+                <FilaEnlace key={v.slug}>
+                  <Td>
+                    <EnlaceFila href={`/admin/locaciones/${v.slug}`}>{v.name}</EnlaceFila>
+                    {v.notesEs && <div className="celda-secundaria">{truncar(v.notesEs, 90)}</div>}
+                  </Td>
+                  <Td>{v.city}</Td>
+                  <Td>{v.capacity || "—"}</Td>
+                  <Td>{v.rangeMxn || "—"}</Td>
+                  <Td>
+                    <Insignia tone={est.tone}>{est.label}</Insignia>
+                  </Td>
+                  <Td>
+                    {v.url ? (
+                      <a href={v.url} target="_blank" rel="noreferrer" className="sobre-fila">
+                        Abrir ↗
+                      </a>
+                    ) : (
+                      "—"
+                    )}
+                  </Td>
+                </FilaEnlace>
+              );
+            })}
+          </tbody>
+        </Tabla>
+      )}
     </>
   );
 }

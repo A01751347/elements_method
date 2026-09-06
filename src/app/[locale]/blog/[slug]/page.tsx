@@ -3,6 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { isLocale } from "@/i18n/config";
+import { pageMetadata, blogPostRoute, localePath, ROUTES } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { blogPostingJsonLd, breadcrumbJsonLd } from "@/lib/structuredData";
 import { Section } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
 import { getBlogPostBySlug } from "@/modules/content/blog";
@@ -27,14 +30,27 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
+  if (!isLocale(locale)) return {};
   const post = await getBlogPostBySlug(slug);
-  if (!post) return { title: "Blog" };
+  if (!post || post.status !== "published") return { title: "Blog" };
   const title = locale === "en" ? (post.titleEn ?? post.titleEs) : post.titleEs;
   const description =
     locale === "en"
-      ? post.metaDescriptionEn ?? post.excerptEn ?? undefined
-      : post.metaDescriptionEs ?? post.excerptEs ?? undefined;
-  return { title: `${title} · Elements Method`, description };
+      ? post.metaDescriptionEn ?? post.excerptEn ?? post.excerptEs ?? ""
+      : post.metaDescriptionEs ?? post.excerptEs ?? "";
+  return pageMetadata({
+    locale,
+    route: blogPostRoute(slug),
+    title,
+    description,
+    image: blogCover(post),
+    imageAlt: title,
+    article: {
+      publishedTime: post.publishedAt?.toISOString(),
+      modifiedTime: post.updatedAt?.toISOString(),
+      authors: post.author ? [post.author] : undefined,
+    },
+  });
 }
 
 export default async function BlogPostPage({
@@ -64,6 +80,28 @@ export default async function BlogPostPage({
 
   return (
     <>
+      <JsonLd
+        data={[
+          blogPostingJsonLd({
+            locale,
+            slug,
+            title,
+            description: excerpt,
+            image: blogCover(post),
+            author: post.author ?? "Elements Method",
+            publishedAt: post.publishedAt,
+            updatedAt: post.updatedAt,
+          }),
+          breadcrumbJsonLd([
+            { name: locale === "en" ? "Home" : "Inicio", path: localePath(locale, ROUTES.home) },
+            {
+              name: locale === "en" ? "Journal" : "Blog",
+              path: localePath(locale, ROUTES.blog),
+            },
+            { name: title, path: localePath(locale, blogPostRoute(slug)) },
+          ]),
+        ]}
+      />
       {/* La portada abre el artículo en banda ancha: antes iba enterrada
        *  debajo del título y de la firma, y el título salía a 112px. */}
       <div className="relative aspect-[16/9] md:aspect-[21/8] overflow-hidden bg-[var(--color-paper-warm)]">

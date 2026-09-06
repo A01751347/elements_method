@@ -1,145 +1,285 @@
-import { desc } from "drizzle-orm";
+import { count, desc, eq, ilike, or, sql } from "drizzle-orm";
 import { db } from "@/shared/db/client";
-import { orders } from "@/shared/db/schema/orders";
+import { orders } from "@/shared/db/schema";
 import {
-  AdminPageHeader,
-  AdminTable,
-  EmptyState,
-  StatusPill,
-  Td,
+  PageHeader,
+  Cifra,
+  CifraGrid,
+  Filtros,
+  Conteo,
+  Tabla,
   Th,
-} from "../_components/admin-ui";
+  Td,
+  FilaEnlace,
+  EnlaceFila,
+  Insignia,
+  Boton,
+  EstadoVacio,
+  Input,
+  Paginacion,
+} from "../_components/ui";
+import { ORDER_STATUS, PAYMENT_METHOD, estado } from "../_lib/status";
+import { mxn, fechaCorta } from "../_lib/format";
 
-const STATUS_VARIANT: Record<string, "green" | "amber" | "neutral" | "red" | "blue"> = {
-  pending_documents: "amber",
-  pending_payment: "amber",
-  pending_transfer_validation: "blue",
-  paid: "green",
-  cancelled: "red",
-  refunded: "neutral",
-};
+export const dynamic = "force-dynamic";
 
-async function loadOrders() {
+const MONO = "ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace";
+const PAGE_SIZE = 50;
+const FETCH_LIMIT = 200;
+
+type EstadoFiltro = "todas" | "pagadas" | "pendientes" | "por-validar" | "canceladas";
+const ESTADOS_VALIDOS: EstadoFiltro[] = ["todas", "pagadas", "pendientes", "por-validar", "canceladas"];
+function esEstadoFiltro(v: string | undefined): v is EstadoFiltro {
+  return !!v && (ESTADOS_VALIDOS as string[]).includes(v);
+}
+
+const ESTADOS_PENDIENTES = ["pending_documents", "pending_payment"];
+const ESTADOS_CANCELADAS = ["cancelled", "refunded"];
+
+/** ¿La orden cae en la pestaña `filtro`? "todas" siempre coincide. */
+function coincideEstado(status: string, filtro: EstadoFiltro): boolean {
+  switch (filtro) {
+    case "pagadas":
+      return status === "paid";
+    case "pendientes":
+      return ESTADOS_PENDIENTES.includes(status);
+    case "por-validar":
+      return status === "pending_transfer_validation";
+    case "canceladas":
+      return ESTADOS_CANCELADAS.includes(status);
+    default:
+      return true;
+  }
+}
+
+function buildHref(base: string, params: Record<string, string | number | undefined>): string {
+  const search = new URLSearchParams();
+  for (const [k, v] of Object.entries(params)) {
+    if (v !== undefined && v !== "") search.set(k, String(v));
+  }
+  const qs = search.toString();
+  return qs ? `${base}?${qs}` : base;
+}
+
+/** KPIs globales — no dependen de la búsqueda ni de la pestaña activa. */
+async function cargarCifras() {
   try {
-    return await db.select().from(orders).orderBy(desc(orders.createdAt)).limit(200);
+    const [[recaudado], [pagadas], [pendientes], [porValidar]] = await Promise.all([
+      db
+        .select({ total: sql<string>`coalesce(sum(${orders.total}), 0)`.mapWith(String) })
+        .from(orders)
+        .where(eq(orders.status, "paid")),
+      db.select({ n: count() }).from(orders).where(eq(orders.status, "paid")),
+      db
+        .select({ n: count() })
+        .from(orders)
+        .where(or(eq(orders.status, "pending_documents"), eq(orders.status, "pending_payment"))),
+      db.select({ n: count() }).from(orders).where(eq(orders.status, "pending_transfer_validation")),
+    ]);
+    return {
+      recaudado: Number(recaudado?.total ?? 0),
+      pagadas: pagadas?.n ?? 0,
+      pendientes: pendientes?.n ?? 0,
+      porValidar: porValidar?.n ?? 0,
+    };
   } catch (e) {
-    console.error("[admin/pagos] DB read failed", e);
+    console.error("[admin/pagos] cifras", e);
+    return { recaudado: 0, pagadas: 0, pendientes: 0, porValidar: 0 };
+  }
+}
+
+/** Hasta 200 órdenes que coinciden con la búsqueda, sin filtrar por pestaña — de aquí salen los conteos de cada pestaña. */
+async function cargarOrdenes(q: string) {
+  try {
+    const condicion = q
+      ? or(
+          ilike(orders.folio, `%${q}%`),
+          ilike(orders.buyerName, `%${q}%`),
+          ilike(orders.buyerEmail, `%${q}%`),
+          ilike(orders.buyerCompany, `%${q}%`),
+        )
+      : undefined;
+    return await db
+      .select()
+      .from(orders)
+      .where(condicion)
+      .orderBy(desc(orders.createdAt))
+      .limit(FETCH_LIMIT);
+  } catch (e) {
+    console.error("[admin/pagos] lista", e);
     return [];
   }
 }
 
-export default async function AdminOrdersPage() {
-  const list = await loadOrders();
+export default async function PagosPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ estado?: string; q?: string; page?: string }>;
+}) {
+  const sp = await searchParams;
+  const estadoFiltro: EstadoFiltro = esEstadoFiltro(sp.estado) ? sp.estado : "todas";
+  const q = (sp.q ?? "").trim();
+  const page = Math.max(1, Number(sp.page) || 1);
 
-  const summary = {
-    total: list.length,
-    paid: list.filter((o) => o.status === "paid").length,
-    pendingPayment: list.filter((o) => o.status === "pending_payment").length,
-    pendingTransfer: list.filter((o) => o.status === "pending_transfer_validation").length,
-    paidMxn: list
-      .filter((o) => o.status === "paid")
-      .reduce((acc, o) => acc + Number(o.total), 0),
+  const [cifras, listaCompleta] = await Promise.all([cargarCifras(), cargarOrdenes(q)]);
+
+  const conteos = {
+    todas: listaCompleta.length,
+    pagadas: listaCompleta.filter((o) => coincideEstado(o.status, "pagadas")).length,
+    pendientes: listaCompleta.filter((o) => coincideEstado(o.status, "pendientes")).length,
+    "por-validar": listaCompleta.filter((o) => coincideEstado(o.status, "por-validar")).length,
+    canceladas: listaCompleta.filter((o) => coincideEstado(o.status, "canceladas")).length,
   };
 
+  const filtrada = listaCompleta.filter((o) => coincideEstado(o.status, estadoFiltro));
+  const pages = Math.max(1, Math.ceil(filtrada.length / PAGE_SIZE));
+  const pageClamped = Math.min(page, pages);
+  const visibles = filtrada.slice((pageClamped - 1) * PAGE_SIZE, pageClamped * PAGE_SIZE);
+
+  const hrefFor = (params: { estado?: EstadoFiltro; page?: number }) =>
+    buildHref("/admin/pagos", {
+      estado: (params.estado ?? estadoFiltro) === "todas" ? undefined : (params.estado ?? estadoFiltro),
+      q: q || undefined,
+      page: params.page && params.page > 1 ? params.page : undefined,
+    });
+
+  const exportHref = buildHref("/api/admin/ordenes/export", {
+    estado: estadoFiltro === "todas" ? undefined : estadoFiltro,
+    q: q || undefined,
+  });
+
   return (
-    <>
-      <AdminPageHeader
-        title="Pagos / Órdenes"
-        subtitle="Todas las órdenes generadas — Stripe y SPEI/transferencia combinados."
-        count={list.length}
+    <div className="flex flex-col gap-8">
+      <PageHeader
+        title="Órdenes"
+        subtitle="Todas las órdenes: Stripe y transferencia. Cada fila abre la ficha."
+        actions={
+          <Boton tone="secundario" href={exportHref} external>
+            Exportar CSV
+          </Boton>
+        }
       />
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-        <Kpi label="Pagadas" value={summary.paid} tone="green" />
-        <Kpi label="Pendientes pago" value={summary.pendingPayment} tone="amber" />
-        <Kpi label="Validando SPEI" value={summary.pendingTransfer} tone="blue" />
-        <Kpi
-          label="Recaudado MXN"
-          value={`$${summary.paidMxn.toLocaleString("es-MX")}`}
-          tone="green"
+      <CifraGrid>
+        <Cifra label="Recaudado" value={mxn(cifras.recaudado)} note="Órdenes pagadas, histórico" tone="ok" />
+        <Cifra label="Pagadas" value={cifras.pagadas} note="Sin canceladas ni reembolsadas" />
+        <Cifra label="Pendientes de pago" value={cifras.pendientes} tone="alerta" />
+        <Cifra
+          label="Por validar"
+          value={cifras.porValidar}
+          note="Comprobantes SPEI recibidos"
+          href="/admin/transferencias"
+          tone="acento"
         />
+      </CifraGrid>
+
+      <div className="flex flex-col gap-4">
+        <Filtros
+          items={[
+            { href: hrefFor({ estado: "todas" }), label: "Todas", count: conteos.todas, active: estadoFiltro === "todas" },
+            { href: hrefFor({ estado: "pagadas" }), label: "Pagadas", count: conteos.pagadas, active: estadoFiltro === "pagadas" },
+            {
+              href: hrefFor({ estado: "pendientes" }),
+              label: "Pendientes",
+              count: conteos.pendientes,
+              active: estadoFiltro === "pendientes",
+            },
+            {
+              href: hrefFor({ estado: "por-validar" }),
+              label: "Por validar",
+              count: conteos["por-validar"],
+              active: estadoFiltro === "por-validar",
+            },
+            {
+              href: hrefFor({ estado: "canceladas" }),
+              label: "Canceladas",
+              count: conteos.canceladas,
+              active: estadoFiltro === "canceladas",
+            },
+          ]}
+        />
+
+        <form action="/admin/pagos" method="get" className="flex flex-wrap items-center gap-2">
+          {estadoFiltro !== "todas" && <input type="hidden" name="estado" value={estadoFiltro} />}
+          <Input
+            type="search"
+            name="q"
+            defaultValue={q}
+            placeholder="Folio, nombre, correo o empresa…"
+            aria-label="Buscar órdenes"
+            className="max-w-xs"
+          />
+          <Boton tone="secundario" type="submit">
+            Buscar
+          </Boton>
+        </form>
       </div>
 
-      {list.length === 0 ? (
-        <EmptyState
-          title="Sin órdenes"
-          body="Cuando alguien pague vía Stripe o suba un comprobante, aparecerá aquí."
+      {listaCompleta.length === 0 ? (
+        <EstadoVacio
+          title="Todavía no hay órdenes."
+          body="Cuando alguien pague con Stripe o suba un comprobante de transferencia, aparecerá aquí."
+        />
+      ) : filtrada.length === 0 ? (
+        <EstadoVacio
+          title="Ninguna orden coincide con este filtro."
+          body="Prueba con otra pestaña o cambia la búsqueda."
         />
       ) : (
-        <AdminTable>
-          <thead>
-            <tr>
-              <Th>Folio</Th>
-              <Th>Fecha</Th>
-              <Th>Comprador</Th>
-              <Th>Total</Th>
-              <Th>Método</Th>
-              <Th>Status</Th>
-              <Th className="text-right">PDF</Th>
-            </tr>
-          </thead>
-          <tbody>
-            {list.map((o) => (
-              <tr key={o.id} className="hover:bg-zinc-50">
-                <Td className="font-mono text-xs">{o.folio}</Td>
-                <Td className="text-xs tabular-nums whitespace-nowrap">
-                  {new Date(o.createdAt).toLocaleDateString("es-MX")}
-                </Td>
-                <Td>
-                  <div className="font-medium">{o.buyerName}</div>
-                  <div className="text-xs text-zinc-500">{o.buyerEmail}</div>
-                </Td>
-                <Td className="tabular-nums text-sm">
-                  ${Number(o.total).toLocaleString("es-MX")} {o.currency}
-                </Td>
-                <Td className="text-xs uppercase tracking-[0.14em]">{o.paymentMethod}</Td>
-                <Td>
-                  <StatusPill
-                    status={o.status}
-                    variant={STATUS_VARIANT[o.status] ?? "neutral"}
-                  />
-                </Td>
-                <Td className="text-right whitespace-nowrap">
-                  <a
-                    href={`/api/comprobante/${o.folio}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-xs text-zinc-600 hover:text-zinc-900 underline underline-offset-2"
-                  >
-                    Comprobante
-                  </a>
-                </Td>
+        <div className="flex flex-col gap-4">
+          <Conteo n={filtrada.length} singular="orden encontrada" plural="órdenes encontradas" />
+          <Tabla>
+            <thead>
+              <tr>
+                <Th>Folio</Th>
+                <Th>Fecha</Th>
+                <Th>Comprador</Th>
+                <Th align="right">Total</Th>
+                <Th>Método</Th>
+                <Th>Estado</Th>
+                <Th align="right">Comprobante</Th>
               </tr>
-            ))}
-          </tbody>
-        </AdminTable>
+            </thead>
+            <tbody>
+              {visibles.map((o) => {
+                const st = estado(ORDER_STATUS, o.status);
+                const pm = estado(PAYMENT_METHOD, o.paymentMethod);
+                return (
+                  <FilaEnlace key={o.id}>
+                    <Td style={{ fontFamily: MONO, fontSize: 12 }}>
+                      <EnlaceFila href={`/admin/pagos/${o.folio}`}>{o.folio}</EnlaceFila>
+                    </Td>
+                    <Td>{fechaCorta(o.createdAt)}</Td>
+                    <Td secondary>
+                      {o.buyerName}
+                      <br />
+                      {o.buyerEmail}
+                    </Td>
+                    <Td numeric>{mxn(o.total, o.currency)}</Td>
+                    <Td>
+                      <Insignia tone="contorno">{pm.label}</Insignia>
+                    </Td>
+                    <Td>
+                      <Insignia tone={st.tone}>{st.label}</Insignia>
+                    </Td>
+                    <Td align="right">
+                      <a
+                        href={`/api/comprobante/${o.folio}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="sobre-fila"
+                      >
+                        PDF ↗
+                      </a>
+                    </Td>
+                  </FilaEnlace>
+                );
+              })}
+            </tbody>
+          </Tabla>
+          <Paginacion page={pageClamped} pages={pages} hrefFor={(p) => hrefFor({ page: p })} />
+        </div>
       )}
-    </>
-  );
-}
-
-function Kpi({
-  label,
-  value,
-  tone,
-}: {
-  label: string;
-  value: number | string;
-  tone: "blue" | "amber" | "green";
-}) {
-  const cls = {
-    blue: "text-blue-700",
-    amber: "text-amber-700",
-    green: "text-emerald-700",
-  }[tone];
-  return (
-    <div className="rounded-lg border border-zinc-200 bg-white p-4">
-      <div className="text-[0.65rem] uppercase tracking-[0.18em] text-zinc-500 mb-1">
-        {label}
-      </div>
-      <div className={`text-2xl font-medium tabular-nums ${cls}`}>{value}</div>
     </div>
   );
 }
-
-export const dynamic = "force-dynamic";

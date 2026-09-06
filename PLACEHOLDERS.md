@@ -4,6 +4,21 @@
 > Lista de cada campo del sitio cuyo valor es placeholder / no confirmado.
 > **TODO lo que aparezca aquí debe reemplazarse antes del retiro inaugural (1 oct 2026)** o explícitamente confirmarse como definitivo.
 
+> **Nota (sep 2026, rediseño del admin — ver [docs/admin/PLAN_ADMIN_2026.md](docs/admin/PLAN_ADMIN_2026.md)):**
+> el panel `/admin` **ya no muestra placeholders de UI**. Se quitó por completo la maquinaria
+> `PlaceholderBadge` / `PlaceholderNote` / columna "PH" de las tablas: cada lista y cada ficha del
+> admin lee y escribe directamente sobre las tablas de Neon (`calendar_retreats`, `providers`,
+> `venues`, `document_templates`, …), sin fallback a `src/data/launchData.ts`. Las columnas
+> `is_placeholder` / `placeholder_fields` **siguen existiendo en el schema** (no se tocó) y las
+> actions de retiros, locaciones y proveedores las escriben en `false` / `[]` en cada alta o edición
+> hecha desde el admin — así una fila deja de ser "dato de lanzamiento sin confirmar" en cuanto
+> alguien la edita a mano. Lo que describe el resto de este documento (retiros sin sede confirmada,
+> proveedores sin contrato, documentos legales en borrador, teléfono/WhatsApp de prueba, etc.) sigue
+> siendo cierto como **estado del negocio**: son datos reales que faltan por confirmar, no un
+> problema de la interfaz. La forma de verlos hoy es abrir la lista correspondiente en el admin
+> (`/admin/retiros`, `/admin/proveedores`, `/admin/locaciones`, `/admin/documentos`) y revisar el
+> contenido fila por fila — ya no hay un contador ni un badge que los señale automáticamente.
+
 ## Totales
 
 | Categoría | Placeholders | Ubicación admin | Surface público |
@@ -163,12 +178,17 @@ Los 3 tiers son una propuesta del workflow basada en el hint "Programas de conti
 
 ## Cómo seguir el avance
 
-1. **Vista al día**: `/admin` dashboard muestra los KPIs en vivo: retiros abiertos, locaciones pendientes, proveedores pendientes, total de placeholders.
-2. **Por entidad**: cada página de detalle (`/admin/retiros/[slug]`, etc.) lista los `placeholderFields` específicos de esa entidad y permite ediarlos (los handlers de form están listos para conectarse a server actions).
-3. **Eliminación de placeholders**:
-   - Cuando reemplaces un valor placeholder, **elimina el field** del array `placeholderFields` en `launchData.ts`.
-   - Re-corre `pnpm db:seed` para sincronizar la DB.
-   - El badge "PH" en las tablas admin desaparece automáticamente cuando el array queda vacío.
+1. **Vista al día**: `/admin` (Resumen) muestra los KPIs reales de la base de datos y "Tu siguiente
+   paso" con las colas pendientes (transferencias por validar, inscripciones nuevas, cotizaciones
+   nuevas, comentarios y testimoniales sin moderar).
+2. **Por entidad**: cada lista del admin (`/admin/retiros`, `/admin/locaciones`, `/admin/proveedores`,
+   `/admin/documentos`, …) y su ficha de detalle muestran el contenido real guardado en Neon —
+   revisa fila por fila cuáles siguen con datos de este documento (sede "Por confirmar", proveedor
+   "Pendiente", etc.) y edítalas ahí mismo.
+3. **Reemplazar un valor placeholder**: edítalo desde el formulario del admin y guarda. La action
+   correspondiente (`src/app/admin/retiros/actions.ts`, `.../locaciones/actions.ts`,
+   `.../proveedores/actions.ts`) marca la fila como `isPlaceholder: false, placeholderFields: []` en
+   cuanto se guarda — no hace falta tocar `launchData.ts` ni volver a correr `pnpm db:seed` para eso.
 
 ---
 

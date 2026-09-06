@@ -1,84 +1,85 @@
-import {
-  AdminPageHeader,
-  AdminPrimaryButton,
-  AdminSecondaryButton,
-} from "../../_components/admin-ui";
-import {
-  FormSection,
-  FormRow,
-  Input,
-  Textarea,
-  Select,
-} from "../../_components/form";
+import { PageHeader, Tarjeta, SeccionEtiqueta, Campo, Input, Textarea, Select, Boton } from "../../_components/ui";
+import { BotonPendiente } from "../../_components/client";
+import { PROVIDER_STATUS } from "../../_lib/status";
 import { createProvider } from "../actions";
+
+export const dynamic = "force-dynamic";
 
 export default function AdminProviderNewPage() {
   return (
     <>
-      <AdminPageHeader
+      <PageHeader
         title="Nuevo proveedor"
-        subtitle="Registra una disciplina o facilitador. Aparecerá en /retiros al guardar."
-        action={
-          <AdminSecondaryButton href="/admin/proveedores">← Volver</AdminSecondaryButton>
-        }
+        subtitle="Registra una disciplina o facilitador para poder asignarlo a un retiro."
       />
 
-      <form action={createProvider} className="space-y-8 max-w-3xl">
-        <FormSection title="Disciplina">
-          <FormRow label="Slug">
-            <Input name="slug" />
-          </FormRow>
-          <FormRow label="Nombre ES">
-            <Input name="disciplineEs" />
-          </FormRow>
-          <FormRow label="Nombre EN">
-            <Input name="disciplineEn" />
-          </FormRow>
-          <FormRow label="Elemento">
-            <Select name="elementAffinity" defaultValue="tierra">
-              <option value="tierra">Tierra</option>
-              <option value="fuego">Fuego</option>
-              <option value="agua">Agua</option>
-              <option value="aire">Aire</option>
-              <option value="eter">Núcleo</option>
-            </Select>
-          </FormRow>
-          <FormRow label="Descripción ES">
-            <Textarea name="descriptionEs" />
-          </FormRow>
-          <FormRow label="Descripción EN">
-            <Textarea name="descriptionEn" />
-          </FormRow>
-        </FormSection>
+      <Tarjeta>
+        <form action={createProvider} className="flex flex-col gap-8" style={{ maxWidth: 640 }}>
+          <div>
+            <SeccionEtiqueta>Disciplina</SeccionEtiqueta>
+            <div className="flex flex-col gap-4">
+              <Campo label="Slug" htmlFor="slug" hint="Minúsculas y guiones, p. ej. caballos." required>
+                <Input id="slug" name="slug" placeholder="caballos" />
+              </Campo>
+              <Campo label="Nombre (ES)" htmlFor="disciplineEs" required>
+                <Input id="disciplineEs" name="disciplineEs" />
+              </Campo>
+              <Campo label="Nombre (EN)" htmlFor="disciplineEn">
+                <Input id="disciplineEn" name="disciplineEn" />
+              </Campo>
+              <Campo label="Elemento" htmlFor="elementAffinity">
+                <Select id="elementAffinity" name="elementAffinity" defaultValue="tierra">
+                  <option value="tierra">Tierra</option>
+                  <option value="fuego">Fuego</option>
+                  <option value="agua">Agua</option>
+                  <option value="aire">Aire</option>
+                  <option value="eter">Núcleo</option>
+                </Select>
+              </Campo>
+              <Campo label="Descripción (ES)" htmlFor="descriptionEs">
+                <Textarea id="descriptionEs" name="descriptionEs" rows={4} />
+              </Campo>
+              <Campo label="Descripción (EN)" htmlFor="descriptionEn">
+                <Textarea id="descriptionEn" name="descriptionEn" rows={4} />
+              </Campo>
+            </div>
+          </div>
 
-        <FormSection title="Proveedor / Facilitador">
-          <FormRow label="Nombre">
-            <Input name="providerName" />
-          </FormRow>
-          <FormRow label="Contacto">
-            <Input name="providerContact" />
-          </FormRow>
-          <FormRow label="Status">
-            <Select name="status" defaultValue="researching">
-              <option value="confirmed">Confirmado</option>
-              <option value="in-contact">En conversación</option>
-              <option value="pending">Pendiente</option>
-              <option value="researching">En búsqueda</option>
-            </Select>
-          </FormRow>
-          <FormRow label="Notas ES">
-            <Textarea name="notesEs" />
-          </FormRow>
-          <FormRow label="Notas EN">
-            <Textarea name="notesEn" />
-          </FormRow>
-        </FormSection>
+          <div>
+            <SeccionEtiqueta>Proveedor / facilitador</SeccionEtiqueta>
+            <div className="flex flex-col gap-4">
+              <Campo label="Nombre" htmlFor="providerName" hint="Se muestra «Por confirmar» mientras esté vacío.">
+                <Input id="providerName" name="providerName" />
+              </Campo>
+              <Campo label="Contacto" htmlFor="providerContact">
+                <Input id="providerContact" name="providerContact" />
+              </Campo>
+              <Campo label="Estado" htmlFor="status">
+                <Select id="status" name="status" defaultValue="researching">
+                  {Object.entries(PROVIDER_STATUS).map(([value, s]) => (
+                    <option key={value} value={value}>
+                      {s.label}
+                    </option>
+                  ))}
+                </Select>
+              </Campo>
+              <Campo label="Notas (ES)" htmlFor="notesEs" hint="Solo lo ve el equipo.">
+                <Textarea id="notesEs" name="notesEs" rows={4} />
+              </Campo>
+              <Campo label="Notas (EN)" htmlFor="notesEn">
+                <Textarea id="notesEn" name="notesEn" rows={4} />
+              </Campo>
+            </div>
+          </div>
 
-        <div className="flex items-center gap-3 pt-4 border-t border-zinc-200">
-          <AdminPrimaryButton type="submit">Crear proveedor</AdminPrimaryButton>
-          <AdminSecondaryButton href="/admin/proveedores">Cancelar</AdminSecondaryButton>
-        </div>
-      </form>
+          <div className="flex items-center gap-3">
+            <BotonPendiente pendingLabel="Creando el proveedor…">Crear proveedor</BotonPendiente>
+            <Boton tone="secundario" href="/admin/proveedores">
+              Cancelar
+            </Boton>
+          </div>
+        </form>
+      </Tarjeta>
     </>
   );
 }

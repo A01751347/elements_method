@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { FileText, PenLine, ShoppingBag } from "lucide-react";
 import { isLocale } from "@/i18n/config";
+import { pageMetadata, legalRoute } from "@/lib/seo";
 import { Section, Eyebrow } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
@@ -23,14 +24,15 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
+  if (!isLocale(locale)) return {};
   const doc = findLegalDocument(slug);
   if (!doc) return { title: "Legal" };
-  return {
-    title:
-      locale === "en"
-        ? `${doc.titleEn} — Elements Method`
-        : `${doc.titleEs} — Elements Method`,
-  };
+  return pageMetadata({
+    locale,
+    route: legalRoute(slug),
+    title: locale === "en" ? doc.titleEn : doc.titleEs,
+    description: locale === "en" ? doc.summaryEn : doc.summaryEs,
+  });
 }
 
 export default async function LegalDocPage({

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { isLocale } from "@/i18n/config";
+import { pageMetadata, ROUTES } from "@/lib/seo";
 import { Container } from "@/components/ui/Container";
 import { ElementTest } from "@/components/forms/ElementTest";
 
@@ -12,15 +13,17 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  if (!isLocale(locale)) return {};
   const es = locale !== "en";
-  return {
-    title: es
-      ? "Descubre tu elemento dominante · Elements Method"
-      : "Find your dominant element · Elements Method",
+  return pageMetadata({
+    locale,
+    route: ROUTES.test,
+    title: es ? "Descubre tu elemento dominante" : "Find your dominant element",
     description: es
       ? "Nueve situaciones de liderazgo real. Al final sabes desde qué elemento lideras hoy, cuál te respalda y cuál te falta trabajar."
       : "Nine real leadership situations. At the end you know which element you lead from today, which one backs you up and which one you still have to work.",
-  };
+    image: "/images/heroes/test.jpg",
+  });
 }
 
 /**

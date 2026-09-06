@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { isLocale } from "@/i18n/config";
+import { pageMetadata, ROUTES } from "@/lib/seo";
 import { Container } from "@/components/ui/Container";
 import { Section, Eyebrow } from "@/components/ui/Section";
 import { getCalculatorConfig } from "@/shared/pricing/enterprise";
@@ -13,9 +14,16 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  return {
+  if (!isLocale(locale)) return {};
+  return pageMetadata({
+    locale,
+    route: ROUTES.quote,
     title: locale === "en" ? "Get a quote" : "Cotiza tu programa",
-  };
+    description:
+      locale === "en"
+        ? "Tell us about your team and receive a tailored leadership program proposal for your organization."
+        : "Cuéntanos sobre tu equipo y recibe una propuesta de programa de liderazgo a la medida para tu organización.",
+  });
 }
 
 export default async function QuotePage({

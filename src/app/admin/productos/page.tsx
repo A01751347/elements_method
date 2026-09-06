@@ -1,25 +1,27 @@
 import { asc } from "drizzle-orm";
-import Link from "next/link";
-import { ExternalLink } from "lucide-react";
 import { db } from "@/shared/db/client";
 import { products } from "@/shared/db/schema/products";
+import { resolveEffectivePriceMxn } from "@/shared/pricing/effectivePrice";
 import {
-  AdminPageHeader,
-  AdminSecondaryButton,
-  AdminTable,
-  EmptyState,
-  StatusPill,
-  Td,
+  PageHeader,
+  Boton,
+  Filtros,
+  Conteo,
+  Tabla,
   Th,
-} from "../_components/admin-ui";
+  Td,
+  FilaEnlace,
+  EnlaceFila,
+  Insignia,
+  EstadoVacio,
+} from "../_components/ui";
+import { ConfirmarAccion } from "../_components/client";
+import { PRODUCT_TYPE, estado } from "../_lib/status";
+import { mxn, fechaCorta } from "../_lib/format";
+import { ELEMENT_LABELS } from "./labels";
+import { alternarActivo } from "./actions";
 
-const TYPE_VARIANT: Record<string, "green" | "amber" | "neutral" | "blue" | "red"> = {
-  elemento: "blue",
-  camino: "green",
-  retiro_inmersivo: "amber",
-  programa_corporativo: "neutral",
-  experiencia: "red",
-};
+export const dynamic = "force-dynamic";
 
 async function loadProducts() {
   try {
@@ -30,95 +32,178 @@ async function loadProducts() {
   }
 }
 
-export default async function AdminProductsPage() {
+function hrefFor(tipo?: string, activo?: string) {
+  const sp = new URLSearchParams();
+  if (tipo) sp.set("tipo", tipo);
+  if (activo) sp.set("activo", activo);
+  const qs = sp.toString();
+  return `/admin/productos${qs ? `?${qs}` : ""}`;
+}
+
+export default async function AdminProductsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ tipo?: string; activo?: string }>;
+}) {
+  const { tipo, activo } = await searchParams;
   const list = await loadProducts();
 
+  const tipoFiltro = tipo && tipo in PRODUCT_TYPE ? tipo : undefined;
+  const activoFiltro = activo === "activos" ? true : activo === "inactivos" ? false : undefined;
+
+  const filtered = list.filter(
+    (p) =>
+      (tipoFiltro ? p.type === tipoFiltro : true) &&
+      (activoFiltro === undefined ? true : p.active === activoFiltro),
+  );
+
+  const now = new Date();
+
   return (
-    <>
-      <AdminPageHeader
+    <div className="flex flex-col gap-6">
+      <PageHeader
         title="Productos"
-        subtitle="Catálogo de elementos, caminos, retiros inmersivos, experiencias y programas corporativos."
-        count={list.length}
-        action={
-          <Link
-            href="/es/los-caminos"
-            target="_blank"
-            className="inline-flex items-center gap-2 text-sm text-zinc-600 hover:text-zinc-900"
-          >
-            <ExternalLink className="h-4 w-4" />
-            Ver público
-          </Link>
+        subtitle="Catálogo que alimenta el checkout: elementos, caminos, retiros, experiencias y programa corporativo."
+        actions={
+          <Boton tone="secundario" href="/es/los-caminos" external>
+            Ver catálogo público
+          </Boton>
         }
       />
 
       {list.length === 0 ? (
-        <EmptyState
-          title="Sin productos en DB"
-          body="Corre pnpm db:seed para sembrar el catálogo de productos."
+        <EstadoVacio
+          title="No hay productos en la base de datos."
+          body="Corre pnpm db:seed en tu terminal para sembrar el catálogo."
         />
       ) : (
-        <AdminTable>
-          <thead>
-            <tr>
-              <Th>Slug</Th>
-              <Th>Tipo</Th>
-              <Th>Elemento</Th>
-              <Th>Nombre</Th>
-              <Th>Precio MXN</Th>
-              <Th>Precio USD</Th>
-              <Th>Stripe MXN</Th>
-              <Th>Activo</Th>
-              <Th className="text-right">Acciones</Th>
-            </tr>
-          </thead>
-          <tbody>
-            {list.map((p) => (
-              <tr key={p.id} className="hover:bg-zinc-50">
-                <Td className="font-mono text-xs">{p.slug}</Td>
-                <Td>
-                  <StatusPill
-                    status={p.type}
-                    variant={TYPE_VARIANT[p.type] ?? "neutral"}
-                  />
-                </Td>
-                <Td className="text-xs uppercase tracking-[0.14em]">{p.element ?? "—"}</Td>
-                <Td>
-                  <div className="font-medium">{p.nameEs}</div>
-                  <div className="text-xs text-zinc-500">{p.nameEn ?? "—"}</div>
-                </Td>
-                <Td className="tabular-nums text-sm">${Number(p.priceMxn).toLocaleString("es-MX")}</Td>
-                <Td className="tabular-nums text-xs text-zinc-500">
-                  {p.priceUsd ? `$${Number(p.priceUsd).toLocaleString("en-US")}` : "—"}
-                </Td>
-                <Td>
-                  {p.stripePriceIdMxn ? (
-                    <code className="font-mono text-[0.65rem] text-zinc-600 bg-zinc-50 px-1.5 py-0.5">
-                      {p.stripePriceIdMxn.slice(0, 12)}…
-                    </code>
-                  ) : (
-                    <span className="text-[0.65rem] uppercase tracking-[0.14em] text-amber-700">
-                      Pendiente
-                    </span>
-                  )}
-                </Td>
-                <Td>
-                  <StatusPill
-                    status={p.active ? "Activo" : "Inactivo"}
-                    variant={p.active ? "green" : "neutral"}
-                  />
-                </Td>
-                <Td className="text-right whitespace-nowrap">
-                  <AdminSecondaryButton href={`/admin/productos/${p.id}`}>
-                    Editar
-                  </AdminSecondaryButton>
-                </Td>
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-3">
+            <Filtros
+              items={[
+                {
+                  href: hrefFor(undefined, activo),
+                  label: "Todos los tipos",
+                  count: list.length,
+                  active: !tipoFiltro,
+                },
+                ...Object.entries(PRODUCT_TYPE).map(([key, info]) => ({
+                  href: hrefFor(key, activo),
+                  label: info.label,
+                  count: list.filter((p) => p.type === key).length,
+                  active: tipoFiltro === key,
+                })),
+              ]}
+            />
+            <Filtros
+              items={[
+                {
+                  href: hrefFor(tipo, undefined),
+                  label: "Todos",
+                  count: list.length,
+                  active: activoFiltro === undefined,
+                },
+                {
+                  href: hrefFor(tipo, "activos"),
+                  label: "Activos",
+                  count: list.filter((p) => p.active).length,
+                  active: activoFiltro === true,
+                },
+                {
+                  href: hrefFor(tipo, "inactivos"),
+                  label: "Inactivos",
+                  count: list.filter((p) => !p.active).length,
+                  active: activoFiltro === false,
+                },
+              ]}
+            />
+          </div>
+
+          <Conteo n={filtered.length} singular="producto encontrado" plural="productos encontrados" />
+
+          <Tabla>
+            <thead>
+              <tr>
+                <Th>Producto</Th>
+                <Th>Tipo</Th>
+                <Th>Elemento</Th>
+                <Th align="right">Precio</Th>
+                <Th>Stripe</Th>
+                <Th>Estado</Th>
+                <Th align="right">Acción</Th>
               </tr>
-            ))}
-          </tbody>
-        </AdminTable>
+            </thead>
+            <tbody>
+              {filtered.map((p) => {
+                const effective = resolveEffectivePriceMxn(p, now);
+                const hasEarlyConfig = p.earlyPriceMxn != null && p.earlyDeadline != null;
+                const tipoInfo = estado(PRODUCT_TYPE, p.type);
+
+                return (
+                  <FilaEnlace key={p.id}>
+                    <Td>
+                      <EnlaceFila href={`/admin/productos/${p.id}`}>{p.nameEs}</EnlaceFila>
+                      <p className="pista">{p.slug}</p>
+                    </Td>
+                    <Td>
+                      <Insignia tone={tipoInfo.tone}>{tipoInfo.label}</Insignia>
+                    </Td>
+                    <Td>{p.element ? (ELEMENT_LABELS[p.element] ?? p.element) : "—"}</Td>
+                    <Td numeric>
+                      {hasEarlyConfig ? (
+                        effective.earlyActive ? (
+                          <>
+                            {mxn(effective.amountMxn)}
+                            <p className="pista">
+                              Early access hasta {fechaCorta(p.earlyDeadline)} · después {mxn(p.priceMxn)}
+                            </p>
+                          </>
+                        ) : (
+                          <>
+                            {mxn(p.priceMxn)}
+                            <p className="pista">Early access venció el {fechaCorta(p.earlyDeadline)}</p>
+                          </>
+                        )
+                      ) : (
+                        mxn(p.priceMxn)
+                      )}
+                    </Td>
+                    <Td>
+                      {p.stripePriceIdMxn ? (
+                        <code className="pista">{p.stripePriceIdMxn.slice(0, 12)}…</code>
+                      ) : (
+                        <span className="pista">Sin price ID</span>
+                      )}
+                    </Td>
+                    <Td>
+                      <Insignia tone={p.active ? "ok" : "neutra"}>{p.active ? "Activo" : "Inactivo"}</Insignia>
+                    </Td>
+                    <Td align="right" className="sobre-fila">
+                      <ConfirmarAccion
+                        trigger={p.active ? "Desactivar" : "Activar"}
+                        title={p.active ? "Desactivar este producto" : "Activar este producto"}
+                        body={
+                          p.active
+                            ? "El producto deja de aparecer en el catálogo público y no se puede comprar. Las órdenes existentes no cambian."
+                            : "El producto vuelve al catálogo público."
+                        }
+                        confirmLabel={p.active ? "Sí, desactivar" : "Sí, activar"}
+                        pendingLabel="Guardando…"
+                        action={alternarActivo}
+                        hidden={[
+                          { name: "id", value: String(p.id) },
+                          { name: "next", value: String(!p.active) },
+                        ]}
+                        size="chico"
+                      />
+                    </Td>
+                  </FilaEnlace>
+                );
+              })}
+            </tbody>
+          </Tabla>
+        </div>
       )}
-    </>
+    </div>
   );
 }
-
-export const dynamic = "force-dynamic";

@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { eq, inArray } from "drizzle-orm";
 import { FileText, ShieldCheck, Check } from "lucide-react";
 import { isLocale } from "@/i18n/config";
+import { pageMetadata, signRoute } from "@/lib/seo";
 import { Section, Eyebrow } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
 import { LegalMarkdown } from "@/components/legal/LegalMarkdown";
@@ -16,15 +17,21 @@ import { SignForm } from "./SignForm";
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ locale: string }>;
+  params: Promise<{ locale: string; token: string }>;
 }) {
-  const { locale } = await params;
-  return {
-    title:
+  const { locale, token } = await params;
+  if (!isLocale(locale)) return {};
+  // Enlace de firma de un solo uso: nunca se indexa (robots.txt también lo bloquea).
+  return pageMetadata({
+    locale,
+    route: signRoute(token),
+    title: locale === "en" ? "Sign document" : "Firmar documento",
+    description:
       locale === "en"
-        ? "Sign document · Elements Method"
-        : "Firmar documento · Elements Method",
-  };
+        ? "Sign your Elements Method participation documents."
+        : "Firma tus documentos de participación de Elements Method.",
+    noIndex: true,
+  });
 }
 
 /**

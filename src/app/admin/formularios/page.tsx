@@ -1,17 +1,22 @@
-import Link from "next/link";
 import { sql } from "drizzle-orm";
 import { db } from "@/shared/db/client";
 import { forms, formTokens, formResponses } from "@/shared/db/schema/forms";
 import {
-  AdminPageHeader,
-  AdminTable,
-  AdminPrimaryButton,
-  AdminSecondaryButton,
-  PlaceholderNote,
-  StatusPill,
-  Td,
+  PageHeader,
+  Boton,
+  Filtros,
+  Conteo,
+  Tabla,
   Th,
-} from "../_components/admin-ui";
+  Td,
+  FilaEnlace,
+  EnlaceFila,
+  Insignia,
+  EstadoVacio,
+} from "../_components/ui";
+import { FORM_CATEGORY_LABEL } from "./labels";
+
+export const dynamic = "force-dynamic";
 
 async function loadForms() {
   try {
@@ -28,19 +33,13 @@ async function loadForms() {
       .from(forms);
 
     const counts = await db
-      .select({
-        formId: formResponses.formId,
-        c: sql<number>`count(*)`.mapWith(Number),
-      })
+      .select({ formId: formResponses.formId, c: sql<number>`count(*)`.mapWith(Number) })
       .from(formResponses)
       .groupBy(formResponses.formId);
     const respMap = new Map(counts.map((c) => [c.formId, c.c]));
 
     const tokenCounts = await db
-      .select({
-        formId: formTokens.formId,
-        c: sql<number>`count(*)`.mapWith(Number),
-      })
+      .select({ formId: formTokens.formId, c: sql<number>`count(*)`.mapWith(Number) })
       .from(formTokens)
       .groupBy(formTokens.formId);
     const tokenMap = new Map(tokenCounts.map((c) => [c.formId, c.c]));
@@ -57,92 +56,105 @@ async function loadForms() {
   }
 }
 
-export default async function AdminFormsPage() {
+function hrefFor(categoria?: string) {
+  const sp = new URLSearchParams();
+  if (categoria) sp.set("categoria", categoria);
+  const qs = sp.toString();
+  return `/admin/formularios${qs ? `?${qs}` : ""}`;
+}
+
+export default async function AdminFormsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ categoria?: string }>;
+}) {
+  const { categoria } = await searchParams;
   const list = await loadForms();
-  const empty = list.length === 0;
+  const categoriaFiltro = categoria && categoria in FORM_CATEGORY_LABEL ? categoria : undefined;
+  const filtered = list.filter((f) => (categoriaFiltro ? (f.category ?? "custom") === categoriaFiltro : true));
 
   return (
-    <>
-      <AdminPageHeader
+    <div className="flex flex-col gap-6">
+      <PageHeader
         title="Formularios"
         subtitle="Cuestionarios que se envían a participantes con un enlace de un solo uso. Crea los que necesites y define sus preguntas."
-        count={list.length}
-        action={
-          <AdminPrimaryButton href="/admin/formularios/nuevo">+ Nuevo</AdminPrimaryButton>
+        actions={
+          <Boton tone="primario" href="/admin/formularios/nuevo">
+            + Nuevo formulario
+          </Boton>
         }
       />
-      {empty && (
-        <div className="mb-6 border-l-2 border-amber-500 bg-amber-50 px-4 py-3 text-xs text-amber-900">
-          <strong>Sin datos en DB.</strong> Corre <code className="font-mono bg-amber-100 px-1">pnpm db:seed</code>{" "}
-          para crear los 3 formularios estándar (inicio · durante · cierre).
+
+      {list.length === 0 ? (
+        <EstadoVacio
+          title="No hay formularios."
+          body="Corre pnpm db:seed para crear los tres estándar (inicio · durante · cierre) o crea uno nuevo."
+          action={
+            <Boton tone="secundario" href="/admin/formularios/nuevo">
+              + Nuevo formulario
+            </Boton>
+          }
+        />
+      ) : (
+        <div className="flex flex-col gap-4">
+          <Filtros
+            items={[
+              { href: hrefFor(undefined), label: "Todas", count: list.length, active: !categoriaFiltro },
+              ...Object.entries(FORM_CATEGORY_LABEL).map(([key, label]) => ({
+                href: hrefFor(key),
+                label,
+                count: list.filter((f) => (f.category ?? "custom") === key).length,
+                active: categoriaFiltro === key,
+              })),
+            ]}
+          />
+          <Conteo n={filtered.length} singular="formulario encontrado" plural="formularios encontrados" />
+          <Tabla>
+            <thead>
+              <tr>
+                <Th>Formulario</Th>
+                <Th>Categoría</Th>
+                <Th align="right">Preguntas</Th>
+                <Th align="right">Enlaces enviados</Th>
+                <Th align="right">Respuestas</Th>
+                <Th>Estado</Th>
+                <Th align="right">Acciones</Th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((f) => (
+                <FilaEnlace key={f.id}>
+                  <Td>
+                    <EnlaceFila href={`/admin/formularios/${f.slug}`}>{f.titleEs}</EnlaceFila>
+                    <p className="pista">{f.isAnonymous ? "Anónimo" : "Nominal"}</p>
+                  </Td>
+                  <Td>
+                    <Insignia tone="contorno">{FORM_CATEGORY_LABEL[f.category ?? "custom"] ?? f.category}</Insignia>
+                  </Td>
+                  <Td numeric>{f.fieldCount}</Td>
+                  <Td numeric>{f.tokenCount}</Td>
+                  <Td numeric>
+                    <strong>{f.responseCount}</strong>
+                  </Td>
+                  <Td>
+                    <Insignia tone={f.active ? "ok" : "neutra"}>{f.active ? "Activo" : "Inactivo"}</Insignia>
+                  </Td>
+                  <Td align="right" className="sobre-fila">
+                    <div className="flex justify-end gap-2">
+                      <Boton tone="secundario" className="boton-chico" href={`/admin/formularios/${f.slug}/editar`}>
+                        Editar
+                      </Boton>
+                      <Boton tone="primario" className="boton-chico" href={`/admin/formularios/${f.slug}/enviar`}>
+                        Enviar
+                      </Boton>
+                    </div>
+                  </Td>
+                </FilaEnlace>
+              ))}
+            </tbody>
+          </Tabla>
         </div>
       )}
-      <PlaceholderNote />
-
-      <AdminTable>
-        <thead>
-          <tr>
-            <Th>Slug</Th>
-            <Th>Título</Th>
-            <Th>Categoría</Th>
-            <Th>Campos</Th>
-            <Th>Tokens emitidos</Th>
-            <Th>Respuestas</Th>
-            <Th>Status</Th>
-            <Th className="text-right">Acciones</Th>
-          </tr>
-        </thead>
-        <tbody>
-          {list.map((f) => (
-            <tr key={f.id} className="hover:bg-zinc-50">
-              <Td className="font-mono text-xs">{f.slug}</Td>
-              <Td>
-                <div className="font-medium">{f.titleEs}</div>
-                <div className="text-xs text-zinc-500">{f.isAnonymous ? "Anónimo" : "Nominal"}</div>
-              </Td>
-              <Td>
-                <StatusPill
-                  status={f.category ?? "—"}
-                  variant={
-                    f.category === "inicio"
-                      ? "blue"
-                      : f.category === "durante"
-                        ? "amber"
-                        : f.category === "cierre"
-                          ? "green"
-                          : "neutral"
-                  }
-                />
-              </Td>
-              <Td className="tabular-nums text-xs">{f.fieldCount}</Td>
-              <Td className="tabular-nums text-xs">{f.tokenCount}</Td>
-              <Td className="tabular-nums text-sm font-medium">{f.responseCount}</Td>
-              <Td>
-                <StatusPill
-                  status={f.active ? "Activo" : "Inactivo"}
-                  variant={f.active ? "green" : "neutral"}
-                />
-              </Td>
-              <Td className="text-right whitespace-nowrap">
-                <div className="flex justify-end gap-1.5">
-                  <AdminSecondaryButton href={`/admin/formularios/${f.slug}`}>
-                    Ver
-                  </AdminSecondaryButton>
-                  <AdminSecondaryButton href={`/admin/formularios/${f.slug}/editar`}>
-                    Editar
-                  </AdminSecondaryButton>
-                  <Link
-                    href={`/admin/formularios/${f.slug}/enviar`}
-                    className="inline-flex items-center gap-1 bg-zinc-900 text-white px-3 py-1.5 text-xs hover:bg-zinc-800 transition-colors"
-                  >
-                    Enviar
-                  </Link>
-                </div>
-              </Td>
-            </tr>
-          ))}
-        </tbody>
-      </AdminTable>
-    </>
+    </div>
   );
 }

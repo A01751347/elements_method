@@ -5,6 +5,7 @@ import { useTransition } from "react";
 import { Globe } from "lucide-react";
 import { locales, type Locale, isLocale } from "@/i18n/config";
 import { cn } from "@/lib/utils";
+import { SEO_LANDINGS } from "@/data/seoLandings";
 
 const routeMap: Record<string, Record<Locale, string>> = {
   // Home
@@ -23,6 +24,11 @@ const routeMap: Record<string, Record<Locale, string>> = {
   blog: { es: "blog", en: "journal" },
   journal: { es: "blog", en: "journal" },
 };
+// Landings SEO (retiros corporativos, ejecutivos…): ambos slugs apuntan al par.
+for (const l of SEO_LANDINGS) {
+  routeMap[l.route.es] = l.route;
+  routeMap[l.route.en] = l.route;
+}
 
 function translatePath(pathname: string, target: Locale): string {
   // Strip leading slash and current locale

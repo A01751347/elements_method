@@ -9,6 +9,7 @@ import {
   Users,
 } from "lucide-react";
 import { isLocale } from "@/i18n/config";
+import { pageMetadata, ROUTES } from "@/lib/seo";
 import { getDictionary } from "@/i18n/dictionaries";
 import { Section, Eyebrow } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
@@ -30,7 +31,17 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  return { title: locale === "en" ? "Upcoming experiences" : "Próximas experiencias" };
+  if (!isLocale(locale)) return {};
+  return pageMetadata({
+    locale,
+    route: ROUTES.retreats,
+    title: locale === "en" ? "Upcoming experiences" : "Próximas experiencias",
+    description:
+      locale === "en"
+        ? "Calendar of Executive Experiences and leadership retreats in nature: EQUINOX, ELEMENTS AWAKENING and SOUL Discovery. Dates, venues and investment."
+        : "Calendario de Executive Experiences y retiros de liderazgo en la naturaleza: EQUINOX, ELEMENTS AWAKENING y SOUL Discovery. Fechas, sedes e inversión.",
+    image: "/images/heroes/retiros.jpg",
+  });
 }
 
 const mxn = (n: number) => `$${n.toLocaleString("es-MX")} MXN`;

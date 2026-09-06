@@ -77,6 +77,7 @@ export interface Dict {
     nav: { explore: string; services: string; legal: string };
     rights: string;
     privacy: string;
+    arco: string;
     cookies: string;
   };
   cookies: {
@@ -207,7 +208,7 @@ export const es: Dict = {
   },
   footer: {
     tagline:
-      "Programas de liderazgo inmersivos en la naturaleza. La naturaleza no gestiona. La naturaleza lidera.",
+      "Retiros corporativos y programas de inmersión de liderazgo en la naturaleza, en México. La naturaleza no gestiona. La naturaleza lidera.",
     newsletterTitle: "Notas del campo",
     newsletterCopy:
       "Casos de éxito de nuestras inmersiones, los datos y estudios que sostienen la metodología, y artículos de neurociencia, PNL y psicología aplicados al liderazgo del ser. Una nota al mes, sin ruido.",
@@ -218,6 +219,7 @@ export const es: Dict = {
     },
     rights: "Todos los derechos reservados",
     privacy: "Aviso de privacidad",
+    arco: "Derechos ARCO",
     cookies: "Preferencias de cookies",
   },
   cookies: {
@@ -353,7 +355,7 @@ export const en: Dict = {
   },
   footer: {
     tagline:
-      "Leadership Immersion Programs. Nature doesn't manage. Nature leads.",
+      "Corporate retreats and leadership immersion programs in nature, in Mexico. Nature doesn't manage. Nature leads.",
     newsletterTitle: "Field notes",
     newsletterCopy:
       "Success stories from our immersions, the data and studies behind the methodology, and articles on neuroscience, NLP and psychology applied to the leadership of the self. One note a month, no noise.",
@@ -364,6 +366,7 @@ export const en: Dict = {
     },
     rights: "All rights reserved",
     privacy: "Privacy notice",
+    arco: "ARCO rights",
     cookies: "Cookie preferences",
   },
   cookies: {

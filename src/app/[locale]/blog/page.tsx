@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BookOpen, Mail } from "lucide-react";
 import { isLocale } from "@/i18n/config";
+import { pageMetadata, ROUTES } from "@/lib/seo";
 import { getDictionary } from "@/i18n/dictionaries";
 import { Section, Eyebrow } from "@/components/ui/Section";
 import { blogCover } from "@/lib/blogCover";
@@ -18,7 +19,25 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  return { title: locale === "en" ? "Articles" : "Artículos" };
+  if (!isLocale(locale)) return {};
+  const meta = pageMetadata({
+    locale,
+    route: ROUTES.blog,
+    title: locale === "en" ? "Articles" : "Artículos",
+    description:
+      locale === "en"
+        ? "Deep dives into the methodology, cases from our immersions, and studies in neuroscience, NLP and psychology applied to the leadership of the self."
+        : "Profundización en la metodología, casos de nuestras inmersiones, estudios de neurociencia, PNL y psicología aplicados al liderazgo del ser.",
+    image: "/images/heroes/blog.jpg",
+  });
+  // El feed RSS vive en /{locale}/blog/rss.xml para ambos idiomas.
+  return {
+    ...meta,
+    alternates: {
+      ...meta.alternates,
+      types: { "application/rss+xml": `/${locale}/blog/rss.xml` },
+    },
+  };
 }
 
 export default async function BlogPage({

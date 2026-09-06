@@ -16,6 +16,13 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { isLocale, type Locale } from "@/i18n/config";
+import { pageMetadata, retreatRoute, localePath, ROUTES } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/JsonLd";
+import {
+  experienceEventJsonLd,
+  retreatEventJsonLd,
+  breadcrumbJsonLd,
+} from "@/lib/structuredData";
 import { Section, Eyebrow } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
@@ -70,20 +77,27 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
+  if (!isLocale(locale)) return {};
+  const route = retreatRoute(slug);
   const exp = findExperienceBySlug(slug);
   if (exp) {
-    return {
-      title: `${exp.title} — Elements Method`,
+    return pageMetadata({
+      locale,
+      route,
+      title: `${exp.title} · ${(locale === "en" ? exp.tagline.en : exp.tagline.es).replace(/\.\s*$/, "")}`,
       description: locale === "en" ? exp.lead.en : exp.lead.es,
-    };
+      image: exp.image,
+      imageAlt: exp.title,
+    });
   }
-  const r = findRetreatBySlug(slug);
-  if (!r) return { title: "Retiro" };
-  return {
-    title:
-      locale === "en" ? `${r.themeEn} — Elements Method` : `${r.themeEs} — Elements Method`,
+  const r = (await getCalendarRetreatBySlug(slug)) ?? findRetreatBySlug(slug);
+  if (!r) return { title: locale === "en" ? "Retreat" : "Retiro" };
+  return pageMetadata({
+    locale,
+    route,
+    title: locale === "en" ? r.themeEn : r.themeEs,
     description: locale === "en" ? r.summaryEn : r.summaryEs,
-  };
+  });
 }
 
 export default async function RetreatDetailPage({
@@ -99,23 +113,49 @@ export default async function RetreatDetailPage({
   // retreat template.
   const experience = findExperienceBySlug(slug);
   if (experience) {
-    const requiredDocs =
-      experience.ctaMode === "checkout" ? await getRequiredDocs("persona") : [];
+    // La fila del calendario (BD, o la estática del mismo slug) aporta fechas
+    // de inicio/fin, sede y estado al Event de schema.org.
+    const [requiredDocs, calendarRow] = await Promise.all([
+      experience.ctaMode === "checkout"
+        ? getRequiredDocs("persona")
+        : Promise.resolve([]),
+      getCalendarRetreatBySlug(slug),
+    ]);
+    const breadcrumb = breadcrumbJsonLd([
+      { name: locale === "en" ? "Home" : "Inicio", path: localePath(locale, ROUTES.home) },
+      {
+        name: locale === "en" ? "Experiences" : "Experiencias",
+        path: localePath(locale, ROUTES.retreats),
+      },
+      { name: experience.title, path: localePath(locale, retreatRoute(slug)) },
+    ]);
     return (
-      <ExperienceLanding
-        experience={experience}
-        locale={locale}
-        paymentMethods={enabledPaymentMethods()}
-        requiredDocs={requiredDocs.map((d) => {
-          const pub = LEGAL_DOCUMENTS.find((l) => l.templateSlug === d.slug);
-          return {
-            slug: d.slug,
-            nameEs: d.nameEs,
-            nameEn: d.nameEn,
-            href: pub ? `/${locale}/legal/${pub.slug}` : undefined,
-          };
-        })}
-      />
+      <>
+        <JsonLd
+          data={[
+            experienceEventJsonLd(
+              experience,
+              calendarRow ?? findRetreatBySlug(slug),
+              locale,
+            ),
+            breadcrumb,
+          ]}
+        />
+        <ExperienceLanding
+          experience={experience}
+          locale={locale}
+          paymentMethods={enabledPaymentMethods()}
+          requiredDocs={requiredDocs.map((d) => {
+            const pub = LEGAL_DOCUMENTS.find((l) => l.templateSlug === d.slug);
+            return {
+              slug: d.slug,
+              nameEs: d.nameEs,
+              nameEn: d.nameEn,
+              href: pub ? `/${locale}/legal/${pub.slug}` : undefined,
+            };
+          })}
+        />
+      </>
     );
   }
 
@@ -136,6 +176,19 @@ export default async function RetreatDetailPage({
 
   return (
     <>
+      <JsonLd
+        data={[
+          retreatEventJsonLd(retreat, locale),
+          breadcrumbJsonLd([
+            { name: locale === "en" ? "Home" : "Inicio", path: localePath(locale, ROUTES.home) },
+            {
+              name: locale === "en" ? "Experiences" : "Experiencias",
+              path: localePath(locale, ROUTES.retreats),
+            },
+            { name: retreat[`theme${localeKey}`], path: localePath(locale, retreatRoute(slug)) },
+          ]),
+        ]}
+      />
       {/* HERO */}
       <section
         className="relative min-h-[92svh] flex items-end overflow-hidden -mt-20 pt-32 md:pt-40 text-[var(--color-paper)]"

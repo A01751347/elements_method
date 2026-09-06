@@ -1,301 +1,436 @@
 import Link from "next/link";
-import { count, eq, desc, sql, gte } from "drizzle-orm";
+import { asc, count, desc, eq, gte, inArray, sql } from "drizzle-orm";
 import { db } from "@/shared/db/client";
 import {
   orders,
   enterpriseQuotes,
   inscriptions,
-  subscribers,
-  calendarRetreats as calendarRetreatsTable,
+  blogComments,
+  testimonials,
+  calendarRetreats,
+  arcoRequests,
 } from "@/shared/db/schema";
-import { AdminPageHeader } from "./_components/admin-ui";
+import { getBankDetails } from "@/shared/payments/bank";
+import { getTrackingConfig } from "@/shared/integrations/siteConfig";
+import {
+  PageHeader,
+  SeccionEtiqueta,
+  CifraGrid,
+  Cifra,
+  Tabla,
+  Th,
+  Td,
+  FilaEnlace,
+  EnlaceFila,
+  Insignia,
+  EstadoVacio,
+  Banner,
+  Boton,
+} from "./_components/ui";
+import { IconoFlecha, IconoAviso } from "./_components/icons";
+import { mxn, fechaCompleta, fechaCorta, fechaIso } from "./_lib/format";
+import { ORDER_STATUS, RETREAT_STATUS, estado } from "./_lib/status";
 
 export const dynamic = "force-dynamic";
 
-/** Business KPIs pulled live from the DB (RF-ADM-03). Degrades to zeros. */
-async function loadKpis() {
-  const startOfMonth = new Date();
-  startOfMonth.setDate(1);
-  startOfMonth.setHours(0, 0, 0, 0);
-  const startOfYear = new Date(startOfMonth.getFullYear(), 0, 1);
+interface Resumen {
+  revenueMonth: number;
+  revenueYear: number;
+  revenueAll: number;
+  paidOrders: number;
+  pendingPayment: number;
+  pendingTransfer: number;
+  inscriptionsMonth: number;
+  inscriptionsTotal: number;
+  inscriptionsNew: number;
+  arcoOpen: number;
+  quotesNew: number;
+  quotesTotal: number;
+  commentsPending: number;
+  testimonialsPending: number;
+}
+
+const RESUMEN_VACIO: Resumen = {
+  revenueMonth: 0,
+  revenueYear: 0,
+  revenueAll: 0,
+  paidOrders: 0,
+  pendingPayment: 0,
+  pendingTransfer: 0,
+  inscriptionsMonth: 0,
+  inscriptionsTotal: 0,
+  inscriptionsNew: 0,
+  arcoOpen: 0,
+  quotesNew: 0,
+  quotesTotal: 0,
+  commentsPending: 0,
+  testimonialsPending: 0,
+};
+
+/** KPIs y colas del día. Todo en un solo try/catch: si la DB falla, todo degrada a 0. */
+async function loadResumen(): Promise<Resumen> {
+  const inicioMes = new Date();
+  inicioMes.setDate(1);
+  inicioMes.setHours(0, 0, 0, 0);
+  const inicioAnio = new Date(inicioMes.getFullYear(), 0, 1);
 
   try {
     const [
-      paidAgg,
-      monthAgg,
-      yearAgg,
-      pendingCount,
-      quotesCount,
-      leadsCount,
-      newLeads,
-      subsCount,
+      mesAgg,
+      anioAgg,
+      totalAgg,
+      pagadasAgg,
+      pendientePagoAgg,
+      pendienteTransferAgg,
+      inscripcionesMesAgg,
+      inscripcionesTotalAgg,
+      inscripcionesNuevasAgg,
+      cotizacionesNuevasAgg,
+      cotizacionesTotalAgg,
+      comentariosAgg,
+      testimonialesAgg,
+      arcoAbiertasAgg,
     ] = await Promise.all([
       db
-        .select({
-          n: count(),
-          sum: sql<string>`COALESCE(SUM(${orders.total}), 0)`,
-        })
+        .select({ sum: sql<string>`COALESCE(SUM(${orders.total}), 0)` })
+        .from(orders)
+        .where(sql`${orders.status} = 'paid' AND ${orders.paidAt} >= ${inicioMes}`),
+      db
+        .select({ sum: sql<string>`COALESCE(SUM(${orders.total}), 0)` })
+        .from(orders)
+        .where(sql`${orders.status} = 'paid' AND ${orders.paidAt} >= ${inicioAnio}`),
+      db
+        .select({ sum: sql<string>`COALESCE(SUM(${orders.total}), 0)` })
         .from(orders)
         .where(eq(orders.status, "paid")),
-      db
-        .select({ sum: sql<string>`COALESCE(SUM(${orders.total}), 0)` })
-        .from(orders)
-        .where(sql`${orders.status} = 'paid' AND ${orders.paidAt} >= ${startOfMonth}`),
-      db
-        .select({ sum: sql<string>`COALESCE(SUM(${orders.total}), 0)` })
-        .from(orders)
-        .where(sql`${orders.status} = 'paid' AND ${orders.paidAt} >= ${startOfYear}`),
-      db
-        .select({ n: count() })
-        .from(orders)
-        .where(sql`${orders.status} IN ('pending_payment','pending_transfer_validation')`),
-      db.select({ n: count() }).from(enterpriseQuotes),
+      db.select({ n: count() }).from(orders).where(eq(orders.status, "paid")),
+      db.select({ n: count() }).from(orders).where(eq(orders.status, "pending_payment")),
+      db.select({ n: count() }).from(orders).where(eq(orders.status, "pending_transfer_validation")),
+      db.select({ n: count() }).from(inscriptions).where(gte(inscriptions.createdAt, inicioMes)),
       db.select({ n: count() }).from(inscriptions),
+      db.select({ n: count() }).from(inscriptions).where(eq(inscriptions.status, "new")),
+      db.select({ n: count() }).from(enterpriseQuotes).where(eq(enterpriseQuotes.status, "nueva")),
+      db.select({ n: count() }).from(enterpriseQuotes),
+      db.select({ n: count() }).from(blogComments).where(eq(blogComments.status, "pending")),
+      db.select({ n: count() }).from(testimonials).where(eq(testimonials.approvedByAdmin, false)),
       db
         .select({ n: count() })
-        .from(inscriptions)
-        .where(gte(inscriptions.createdAt, startOfMonth)),
-      db.select({ n: count() }).from(subscribers),
+        .from(arcoRequests)
+        .where(inArray(arcoRequests.status, ["nueva", "identidad_pendiente", "en_proceso"])),
     ]);
 
-    const paidN = paidAgg[0]?.n ?? 0;
-    const leadsN = leadsCount[0]?.n ?? 0;
-    // Conversion = paid orders / total leads (proxy).
-    const conversion = leadsN > 0 ? Math.round((paidN / leadsN) * 100) : 0;
-
     return {
-      revenueYear: Number(yearAgg[0]?.sum ?? 0),
-      revenueMonth: Number(monthAgg[0]?.sum ?? 0),
-      revenueAll: Number(paidAgg[0]?.sum ?? 0),
-      paidOrders: paidN,
-      pendingOrders: pendingCount[0]?.n ?? 0,
-      quotes: quotesCount[0]?.n ?? 0,
-      leads: leadsN,
-      newLeads: newLeads[0]?.n ?? 0,
-      subscribers: subsCount[0]?.n ?? 0,
-      conversion,
+      revenueMonth: Number(mesAgg[0]?.sum ?? 0),
+      revenueYear: Number(anioAgg[0]?.sum ?? 0),
+      revenueAll: Number(totalAgg[0]?.sum ?? 0),
+      paidOrders: pagadasAgg[0]?.n ?? 0,
+      pendingPayment: pendientePagoAgg[0]?.n ?? 0,
+      pendingTransfer: pendienteTransferAgg[0]?.n ?? 0,
+      inscriptionsMonth: inscripcionesMesAgg[0]?.n ?? 0,
+      inscriptionsTotal: inscripcionesTotalAgg[0]?.n ?? 0,
+      inscriptionsNew: inscripcionesNuevasAgg[0]?.n ?? 0,
+      quotesNew: cotizacionesNuevasAgg[0]?.n ?? 0,
+      quotesTotal: cotizacionesTotalAgg[0]?.n ?? 0,
+      commentsPending: comentariosAgg[0]?.n ?? 0,
+      testimonialsPending: testimonialesAgg[0]?.n ?? 0,
+      arcoOpen: arcoAbiertasAgg[0]?.n ?? 0,
     };
   } catch (e) {
-    console.error("[admin/dashboard] KPI load failed", e);
-    return {
-      revenueYear: 0,
-      revenueMonth: 0,
-      revenueAll: 0,
-      paidOrders: 0,
-      pendingOrders: 0,
-      quotes: 0,
-      leads: 0,
-      newLeads: 0,
-      subscribers: 0,
-      conversion: 0,
-    };
+    console.error("[admin/resumen] carga de KPIs fallida", e);
+    return RESUMEN_VACIO;
   }
 }
 
-async function loadUpcomingRetreats() {
-  try {
-    return await db
-      .select()
-      .from(calendarRetreatsTable)
-      .orderBy(desc(calendarRetreatsTable.orderIdx))
-      .limit(5);
-  } catch {
-    return [];
-  }
-}
-
-async function loadRecentOrders() {
+async function loadOrdenesPorAtender() {
   try {
     return await db
       .select()
       .from(orders)
+      .where(
+        inArray(orders.status, [
+          "pending_documents",
+          "pending_payment",
+          "pending_transfer_validation",
+        ]),
+      )
       .orderBy(desc(orders.createdAt))
       .limit(6);
-  } catch {
+  } catch (e) {
+    console.error("[admin/resumen] órdenes por atender fallida", e);
     return [];
   }
 }
 
-const mxn = (n: number) => `$${n.toLocaleString("es-MX")}`;
+async function loadProximosRetiros() {
+  try {
+    const hoy = fechaIso(new Date());
+    return await db
+      .select()
+      .from(calendarRetreats)
+      .where(gte(calendarRetreats.startDate, hoy))
+      .orderBy(asc(calendarRetreats.startDate))
+      .limit(5);
+  } catch (e) {
+    console.error("[admin/resumen] próximos retiros fallida", e);
+    return [];
+  }
+}
 
-export default async function AdminDashboardPage() {
-  const [kpi, retreats, recentOrders] = await Promise.all([
-    loadKpis(),
-    loadUpcomingRetreats(),
-    loadRecentOrders(),
+interface Prioridad {
+  key: string;
+  n: number;
+  titulo: string;
+  detalle: string;
+  href: string;
+  urgente?: boolean;
+}
+
+export default async function AdminResumenPage() {
+  const [resumen, ordenes, retiros] = await Promise.all([
+    loadResumen(),
+    loadOrdenesPorAtender(),
+    loadProximosRetiros(),
   ]);
 
-  const kpis: { label: string; value: string; detail: string; tone: string }[] = [
+  const banco = getBankDetails();
+  const tieneStripe = Boolean(process.env.STRIPE_SECRET_KEY?.trim());
+  const tracking = await getTrackingConfig();
+  const tieneTracking = Object.values(tracking).some((v) => v.length > 0);
+  const hayBanners = !banco.configured || !tieneStripe || !tieneTracking;
+
+  const candidatas: Prioridad[] = [
     {
-      label: "Ingresos del año",
-      value: mxn(kpi.revenueYear),
-      detail: `Este mes: ${mxn(kpi.revenueMonth)}`,
-      tone: "green",
+      key: "transferencias",
+      n: resumen.pendingTransfer,
+      titulo: `Validar ${resumen.pendingTransfer} comprobante(s) de transferencia`,
+      detalle: "El dinero puede estar en el banco; confírmalo y el comprador recibe su comprobante.",
+      href: "/admin/transferencias",
+      urgente: true,
     },
     {
-      label: "Órdenes pagadas",
-      value: String(kpi.paidOrders),
-      detail: `${kpi.pendingOrders} pendientes de pago/validación`,
-      tone: "neutral",
+      key: "arco",
+      n: resumen.arcoOpen,
+      titulo: `Atender ${resumen.arcoOpen} solicitud(es) de derechos ARCO`,
+      detalle: "Tienen plazo legal de 20 días hábiles; primero acredita la identidad del titular y luego responde.",
+      href: "/admin/arco?estado=abiertas",
+      urgente: true,
     },
     {
-      label: "Tasa de conversión",
-      value: `${kpi.conversion}%`,
-      detail: "Órdenes pagadas / leads totales",
-      tone: kpi.conversion > 0 ? "green" : "neutral",
+      key: "inscripciones",
+      n: resumen.inscriptionsNew,
+      titulo: `Contactar ${resumen.inscriptionsNew} inscripción(es) nueva(s)`,
+      detalle: "Llegaron por los formularios públicos de aplicar o contacto; contáctalas antes de que se enfríen.",
+      href: "/admin/inscripciones?estado=new",
     },
     {
-      label: "Cotizaciones",
-      value: String(kpi.quotes),
-      detail: "Empresas / Origin",
-      tone: "neutral",
+      key: "cotizaciones",
+      n: resumen.quotesNew,
+      titulo: `Dar seguimiento a ${resumen.quotesNew} cotización(es)`,
+      detalle: "Empresas que usaron la calculadora pública y esperan una respuesta.",
+      href: "/admin/empresas?estado=nueva",
     },
     {
-      label: "Leads nuevos (mes)",
-      value: String(kpi.newLeads),
-      detail: `${kpi.leads} leads totales`,
-      tone: "neutral",
+      key: "comentarios",
+      n: resumen.commentsPending,
+      titulo: `Moderar ${resumen.commentsPending} comentario(s)`,
+      detalle: "Están esperando aprobación antes de mostrarse en el blog.",
+      href: "/admin/comentarios",
     },
     {
-      label: "Suscriptores",
-      value: String(kpi.subscribers),
-      detail: "Newsletter",
-      tone: "neutral",
+      key: "testimoniales",
+      n: resumen.testimonialsPending,
+      titulo: `Revisar ${resumen.testimonialsPending} testimonial(es)`,
+      detalle: "No aparecen en el sitio público hasta que los apruebes.",
+      href: "/admin/testimoniales?estado=por-aprobar",
     },
-    {
-      label: "Ingresos totales",
-      value: mxn(kpi.revenueAll),
-      detail: "Histórico (órdenes pagadas)",
-      tone: "green",
-    },
-    {
-      label: "Analytics",
-      value: "GA4 ↗",
-      detail: "Ver métricas de tráfico en Google Analytics",
-      tone: "neutral",
-      href: "https://analytics.google.com/",
-    } as { label: string; value: string; detail: string; tone: string; href?: string },
   ];
+  const prioridades = candidatas.filter((p) => p.n > 0).slice(0, 4);
 
   return (
-    <>
-      <AdminPageHeader
-        title="Dashboard"
-        subtitle="KPIs de negocio en tiempo real desde la base de datos."
-      />
+    <div className="flex flex-col gap-10">
+      <PageHeader title="Resumen del día" subtitle={fechaCompleta(new Date())} />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
-        {kpis.map((k) => {
-          const inner = (
-            <>
-              <p className="text-[0.65rem] uppercase tracking-[0.16em] text-zinc-500 mb-2">
-                {k.label}
-              </p>
-              <p
-                className={`text-2xl font-medium tabular-nums ${
-                  k.tone === "red"
-                    ? "text-red-700"
-                    : k.tone === "amber"
-                      ? "text-amber-800"
-                      : k.tone === "green"
-                        ? "text-emerald-700"
-                        : "text-zinc-900"
-                }`}
+      <CifraGrid>
+        <Cifra
+          label="Ingresos del mes"
+          value={mxn(resumen.revenueMonth)}
+          tone="ok"
+          note={`Este año: ${mxn(resumen.revenueYear)} · histórico ${mxn(resumen.revenueAll)}`}
+        />
+        <Cifra
+          label="Órdenes pagadas"
+          value={resumen.paidOrders}
+          note={`${resumen.pendingPayment + resumen.pendingTransfer} pendientes de pago o validación`}
+          href="/admin/pagos"
+        />
+        <Cifra
+          label="Inscripciones nuevas"
+          value={resumen.inscriptionsMonth}
+          tone={resumen.inscriptionsMonth > 0 ? "alerta" : "neutro"}
+          note={`${resumen.inscriptionsTotal} en total`}
+          href="/admin/inscripciones"
+        />
+        <Cifra
+          label="Cotizaciones nuevas"
+          value={resumen.quotesNew}
+          note={`${resumen.quotesTotal} cotizaciones en total`}
+          href="/admin/empresas"
+        />
+      </CifraGrid>
+
+      <section className="flex flex-col gap-3">
+        <SeccionEtiqueta>Tu siguiente paso</SeccionEtiqueta>
+        {prioridades.length === 0 ? (
+          <EstadoVacio
+            title="Nada pendiente por hoy."
+            body="Las colas de transferencias, inscripciones, cotizaciones, comentarios y testimoniales están al día."
+          />
+        ) : (
+          <div className="flex flex-col">
+            {prioridades.map((p) => (
+              <Link
+                key={p.key}
+                href={p.href}
+                className="detalle flex items-center gap-3"
+                style={{ textDecoration: "none", color: "inherit" }}
               >
-                {k.value}
-              </p>
-              {k.detail && (
-                <p className="mt-2 text-xs text-zinc-500 leading-snug">{k.detail}</p>
-              )}
-            </>
-          );
-          const href = (k as { href?: string }).href;
-          return href ? (
-            <a
-              key={k.label}
-              href={href}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-lg border border-zinc-200 bg-white p-4 hover:border-zinc-300 transition-colors"
-            >
-              {inner}
-            </a>
-          ) : (
-            <div key={k.label} className="rounded-lg border border-zinc-200 bg-white p-4">
-              {inner}
-            </div>
-          );
-        })}
-      </div>
+                <span
+                  aria-hidden="true"
+                  className="flex items-center justify-center shrink-0"
+                  style={{
+                    width: 38,
+                    height: 38,
+                    borderRadius: "var(--radio)",
+                    background: "var(--acento-suave)",
+                    color: "var(--acento-tinta)",
+                  }}
+                >
+                  {p.urgente ? <IconoAviso size={18} /> : <IconoFlecha size={18} />}
+                </span>
+                <span className="flex-1 min-w-0">
+                  <span className="block" style={{ fontSize: 14, fontWeight: 600 }}>
+                    {p.titulo}
+                  </span>
+                  <span className="celda-secundaria texto-tenue">{p.detalle}</span>
+                </span>
+                <span aria-hidden="true" className="texto-sutil texto-13">
+                  →
+                </span>
+              </Link>
+            ))}
+          </div>
+        )}
+      </section>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="rounded-lg border border-zinc-200 bg-white p-5">
-          <h2 className="text-sm font-medium mb-4">Órdenes recientes</h2>
-          {recentOrders.length === 0 ? (
-            <p className="text-sm text-zinc-500">Aún no hay órdenes.</p>
-          ) : (
-            <ul className="divide-y divide-zinc-100">
-              {recentOrders.map((o) => (
-                <li key={o.id} className="py-3 flex items-center justify-between">
-                  <div className="min-w-0">
-                    <div className="text-sm font-medium text-zinc-900 truncate">
-                      {o.buyerName}
-                    </div>
-                    <div className="text-xs text-zinc-500 mt-0.5 font-mono">
-                      {o.folio}
-                    </div>
-                  </div>
-                  <div className="text-right shrink-0 ml-4">
-                    <div className="text-sm tabular-nums">
-                      {mxn(Number(o.total))}
-                    </div>
-                    <div className="text-[0.6rem] uppercase tracking-[0.14em] text-zinc-500 mt-0.5">
-                      {o.status}
-                    </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
+      {hayBanners && (
+        <div className="flex flex-col gap-3">
+          {!banco.configured && (
+            <Banner tone="aviso">
+              Los datos bancarios (BANK_*) no están configurados: las órdenes por transferencia no muestran la
+              CLABE al comprador.
+            </Banner>
           )}
-          <Link
-            href="/admin/pagos"
-            className="mt-4 inline-block text-xs text-zinc-600 hover:text-zinc-900 underline underline-offset-2"
-          >
-            Ver todas las órdenes →
-          </Link>
+          {!tieneStripe && (
+            <Banner tone="aviso">
+              Stripe no tiene llaves configuradas: el checkout con tarjeta no puede cobrar.
+            </Banner>
+          )}
+          {!tieneTracking && (
+            <Banner tone="info">
+              No hay pixeles de analítica configurados. <Link href="/admin/analytics">Ajusta Analytics →</Link>
+            </Banner>
+          )}
         </div>
+      )}
 
-        <div className="rounded-lg border border-zinc-200 bg-white p-5">
-          <h2 className="text-sm font-medium mb-4">Próximos retiros</h2>
-          {retreats.length === 0 ? (
-            <p className="text-sm text-zinc-500">Sin retiros en el calendario.</p>
-          ) : (
-            <ul className="divide-y divide-zinc-100">
-              {retreats.map((r) => (
-                <li key={r.slug} className="py-3 flex items-center justify-between">
-                  <div className="min-w-0">
-                    <Link
-                      href={`/admin/retiros/${r.slug}`}
-                      className="text-sm font-medium text-zinc-900 hover:text-zinc-600 truncate block"
-                    >
-                      {r.themeEs}
-                    </Link>
-                    <div className="text-xs text-zinc-500 mt-0.5">{r.dateLabelEs}</div>
-                  </div>
-                  <div className="text-right shrink-0 ml-4">
-                    <div className="text-xs tabular-nums">
+      <section className="flex flex-col gap-3">
+        <SeccionEtiqueta action={<Boton tone="texto" href="/admin/pagos">Ver todas →</Boton>}>
+          Órdenes por atender
+        </SeccionEtiqueta>
+        {ordenes.length === 0 ? (
+          <EstadoVacio title="Ninguna orden espera atención." />
+        ) : (
+          <Tabla>
+            <thead>
+              <tr>
+                <Th>Folio</Th>
+                <Th>Fecha</Th>
+                <Th>Comprador</Th>
+                <Th align="right">Total</Th>
+                <Th>Estado</Th>
+              </tr>
+            </thead>
+            <tbody>
+              {ordenes.map((o) => {
+                const e = estado(ORDER_STATUS, o.status);
+                return (
+                  <FilaEnlace key={o.id}>
+                    <Td>
+                      <EnlaceFila href={`/admin/pagos/${o.folio}`}>{o.folio}</EnlaceFila>
+                    </Td>
+                    <Td secondary>{fechaCorta(o.createdAt)}</Td>
+                    <Td>{o.buyerName}</Td>
+                    <Td numeric>{mxn(o.total)}</Td>
+                    <Td>
+                      <Insignia tone={e.tone}>{e.label}</Insignia>
+                    </Td>
+                  </FilaEnlace>
+                );
+              })}
+            </tbody>
+          </Tabla>
+        )}
+      </section>
+
+      <section className="flex flex-col gap-3">
+        <SeccionEtiqueta action={<Boton tone="texto" href="/admin/retiros">Ver calendario →</Boton>}>
+          Próximos retiros
+        </SeccionEtiqueta>
+        {retiros.length === 0 ? (
+          <EstadoVacio
+            title="No hay retiros próximos en el calendario."
+            action={<Boton tone="secundario" href="/admin/retiros/nuevo">+ Nuevo retiro</Boton>}
+          />
+        ) : (
+          <Tabla>
+            <thead>
+              <tr>
+                <Th>Retiro</Th>
+                <Th>Fecha</Th>
+                <Th>Sede</Th>
+                <Th align="right">Cupo</Th>
+                <Th>Estado</Th>
+              </tr>
+            </thead>
+            <tbody>
+              {retiros.map((r) => {
+                const e = estado(RETREAT_STATUS, r.status);
+                return (
+                  <FilaEnlace key={r.id}>
+                    <Td>
+                      <EnlaceFila href={`/admin/retiros/${r.slug}`}>{r.themeEs}</EnlaceFila>
+                    </Td>
+                    <Td secondary>{r.dateLabelEs}</Td>
+                    <Td>{r.venueLabelEs}</Td>
+                    <Td numeric>
                       {r.seatsLeft}/{r.capacity}
-                    </div>
-                    <div className="text-[0.6rem] uppercase tracking-[0.14em] text-zinc-500 mt-0.5">
-                      {r.status}
-                    </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </div>
-    </>
+                    </Td>
+                    <Td>
+                      <Insignia tone={e.tone}>{e.label}</Insignia>
+                    </Td>
+                  </FilaEnlace>
+                );
+              })}
+            </tbody>
+          </Tabla>
+        )}
+      </section>
+
+      <p className="pista">
+        <a href="https://analytics.google.com/" target="_blank" rel="noreferrer">
+          Analytics en Google ↗
+        </a>
+      </p>
+    </div>
   );
 }

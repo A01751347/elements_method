@@ -14,6 +14,10 @@ import {
   Quote,
 } from "lucide-react";
 import { isLocale } from "@/i18n/config";
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
+import { pageMetadata, ROUTES, localePath } from "@/lib/seo";
+import { SEO_LANDINGS } from "@/data/seoLandings";
 import { getDictionary } from "@/i18n/dictionaries";
 import { Container } from "@/components/ui/Container";
 import { Section, Eyebrow } from "@/components/ui/Section";
@@ -35,7 +39,17 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  return { title: locale === "en" ? "Organizations" : "Organizaciones" };
+  if (!isLocale(locale)) return {};
+  return pageMetadata({
+    locale,
+    route: ROUTES.companies,
+    title: locale === "en" ? "Organizations" : "Organizaciones",
+    description:
+      locale === "en"
+        ? "Immersive leadership programs for executive teams and organizations: diagnosis, immersion in nature and integration. Get a quote tailored to your company."
+        : "Programas de liderazgo inmersivo para equipos directivos y organizaciones: diagnóstico, inmersión en la naturaleza e integración. Cotiza un programa a la medida de tu empresa.",
+    image: "/images/heroes/empresas.jpg",
+  });
 }
 
 export default async function CompaniesPage({
@@ -404,6 +418,43 @@ export default async function CompaniesPage({
       </Section>
 
       {/* FINAL CTA — discovery process */}
+      {/* TIPOS DE RETIRO — enlaza las landings por intención de búsqueda */}
+      <Section spacing="default" tone="warm" className="paper-grain">
+        <Container>
+          <Eyebrow className="mb-6">
+            {locale === "es" ? "Explora por tipo de retiro" : "Explore by type of retreat"}
+          </Eyebrow>
+          <h2 className="display-2 text-balance mb-10 max-w-3xl">
+            {locale === "es"
+              ? "Retiros corporativos, ejecutivos, de liderazgo, team building y offsites: mismo método, objetivo distinto."
+              : "Corporate, executive, leadership, team-building retreats and offsites: same method, different objective."}
+          </h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {SEO_LANDINGS.map((l) => (
+              <Link
+                key={l.key}
+                href={localePath(locale, l.route)}
+                className="group border border-[var(--color-line)] bg-[var(--color-paper)] p-6 hover:border-[var(--color-ink)] transition-colors flex flex-col gap-3"
+              >
+                <span className="text-[0.65rem] uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                  {locale === "es" ? l.eyebrow.es : l.eyebrow.en}
+                </span>
+                <span className="font-[family-name:var(--font-display)] text-2xl tracking-tight leading-tight">
+                  {locale === "es" ? l.title.es : l.title.en}
+                </span>
+                <span className="text-sm text-[var(--color-ink-soft)] leading-relaxed">
+                  {locale === "es" ? l.metaDescription.es : l.metaDescription.en}
+                </span>
+                <span className="mt-auto inline-flex items-center gap-2 text-[0.7rem] uppercase tracking-[0.16em] pt-2">
+                  {locale === "es" ? "Ver" : "View"}
+                  <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </span>
+              </Link>
+            ))}
+          </div>
+        </Container>
+      </Section>
+
       <Section id="contact" spacing="default" tone="ink">
         <div className="grid lg:grid-cols-12 gap-12 items-end">
           <div className="lg:col-span-8">

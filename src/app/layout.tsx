@@ -1,6 +1,14 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Jost } from "next/font/google";
 import "./globals.css";
+import {
+  SITE_NAME,
+  SITE_TITLE,
+  SITE_DESCRIPTION,
+  DEFAULT_OG_IMAGE,
+  OG_IMAGE_SIZE,
+  metadataBaseUrl,
+} from "@/lib/seo";
 
 /**
  * Typography. Doc maestro spec'd ExtraLight (200) + Light (300) for body —
@@ -25,41 +33,63 @@ const jost = Jost({
   display: "swap",
 });
 
+/**
+ * Verificación de propiedad para Search Console / Bing Webmaster. Solo se
+ * emite la etiqueta si la env var existe; una vez verificado el dominio se
+ * puede dejar (Google la re-comprueba periódicamente).
+ */
+function siteVerification(): Metadata["verification"] {
+  const google = process.env.GOOGLE_SITE_VERIFICATION?.trim();
+  const bing = process.env.BING_SITE_VERIFICATION?.trim();
+  if (!google && !bing) return undefined;
+  return {
+    ...(google ? { google } : {}),
+    ...(bing ? { other: { "msvalidate.01": bing } } : {}),
+  };
+}
+
+/**
+ * Metadata base para todo el sitio. Cada página pública la especializa con
+ * `pageMetadata()` (src/lib/seo.ts): canonical, hreflang, OG y noindex.
+ * Favicon / apple-icon / manifest salen de los archivos convención en
+ * src/app (icon.png, apple-icon.png, favicon.ico, manifest.ts).
+ */
 export const metadata: Metadata = {
-  metadataBase: new URL("https://elementsmethod.com"),
+  metadataBase: metadataBaseUrl(),
+  applicationName: SITE_NAME,
   title: {
-    default: "Elements Method · Leadership Immersion Programs",
-    template: "%s · Elements Method",
+    default: SITE_TITLE.es,
+    template: `%s · ${SITE_NAME}`,
   },
-  description:
-    "La naturaleza no gestiona. La naturaleza lidera. Programas de inmersión de liderazgo anclados en la sabiduría del Agua, el Fuego, el Aire y la Tierra.",
-  icons: {
-    icon: [
-      { url: "/images/elements/elements_logo_nobg.png", type: "image/png" },
-      { url: "/favicon.ico" },
-    ],
-    apple: "/images/elements/elements_logo.jpeg",
-    shortcut: "/images/elements/elements_logo_nobg.png",
-  },
+  description: SITE_DESCRIPTION.es,
   openGraph: {
     type: "website",
-    siteName: "Elements Method",
-    images: [
-      {
-        url: "/images/elements/elements_logo.jpeg",
-        width: 1024,
-        height: 1024,
-        alt: "Elements Method",
-      },
-    ],
+    siteName: SITE_NAME,
+    locale: "es_MX",
+    images: [{ url: DEFAULT_OG_IMAGE, ...OG_IMAGE_SIZE, alt: SITE_NAME }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Elements Method · Leadership Immersion Programs",
-    description:
-      "La naturaleza no gestiona. La naturaleza lidera.",
-    images: ["/images/elements/elements_logo.jpeg"],
+    images: [DEFAULT_OG_IMAGE],
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  verification: siteVerification(),
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#f5f0e8",
 };
 
 export default function RootLayout({

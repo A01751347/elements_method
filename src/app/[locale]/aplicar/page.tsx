@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { isLocale } from "@/i18n/config";
+import { pageMetadata, ROUTES } from "@/lib/seo";
 import { Section, Eyebrow } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
 import { InscriptionForm } from "@/components/forms/InscriptionForm";
@@ -12,7 +13,16 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  return { title: locale === "en" ? "Apply · Elements Method" : "Aplicar · Elements Method" };
+  if (!isLocale(locale)) return {};
+  return pageMetadata({
+    locale,
+    route: ROUTES.apply,
+    title: locale === "en" ? "Apply" : "Aplicar",
+    description:
+      locale === "en"
+        ? "Request your place in an Elements Method Executive Experience. Small groups and a personal admission process."
+        : "Solicita tu lugar en una Executive Experience de Elements Method. Grupos reducidos y un proceso de admisión personal.",
+  });
 }
 
 export default async function ApplyPage({

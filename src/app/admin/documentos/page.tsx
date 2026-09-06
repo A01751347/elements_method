@@ -1,131 +1,132 @@
-import Link from "next/link";
-import { ExternalLink, FileText } from "lucide-react";
 import { asc } from "drizzle-orm";
-import { legalDocs } from "@/data/launchData";
 import { db } from "@/shared/db/client";
 import { documentTemplates } from "@/shared/db/schema";
 import {
-  AdminPageHeader,
-  AdminSecondaryButton,
-  AdminTable,
-  PlaceholderBadge,
-  PlaceholderNote,
-  StatusPill,
-  Td,
+  PageHeader,
+  Banner,
+  Filtros,
+  Conteo,
+  Tabla,
   Th,
-} from "../_components/admin-ui";
+  Td,
+  FilaEnlace,
+  EnlaceFila,
+  Insignia,
+  Boton,
+  EstadoVacio,
+} from "../_components/ui";
+import { APPLIES_TO_LABEL, ACCEPTANCE_TYPE_LABEL } from "./labels";
 
 export const dynamic = "force-dynamic";
 
 async function loadTemplates() {
   try {
-    return await db
-      .select()
-      .from(documentTemplates)
-      .orderBy(asc(documentTemplates.nameEs));
-  } catch {
+    return await db.select().from(documentTemplates).orderBy(asc(documentTemplates.nameEs));
+  } catch (e) {
+    console.error("[admin/documentos] DB read failed", e);
     return [];
   }
 }
 
-export default async function AdminLegalDocsPage() {
-  const templates = await loadTemplates();
+function hrefFor(activo?: string) {
+  const sp = new URLSearchParams();
+  if (activo) sp.set("activo", activo);
+  const qs = sp.toString();
+  return `/admin/documentos${qs ? `?${qs}` : ""}`;
+}
+
+export default async function AdminDocumentTemplatesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ activo?: string }>;
+}) {
+  const { activo } = await searchParams;
+  const list = await loadTemplates();
+  const activoFiltro = activo === "activas" ? true : activo === "inactivas" ? false : undefined;
+  const filtered = list.filter((t) => (activoFiltro === undefined ? true : t.active === activoFiltro));
+
   return (
-    <>
-      <AdminPageHeader
-        title="Documentos legales"
-        subtitle="Términos de compra (se aceptan en el checkout) + Contrato, NDA y Relevo (se firman tras el pago vía /firmar). Fuente: src/data/legalDocuments.ts — correr pnpm db:seed tras editar."
-        count={legalDocs.length}
+    <div className="flex flex-col gap-6">
+      <PageHeader
+        title="Documentos"
+        subtitle="Plantillas legales que el comprador acepta en el checkout y que generan los PDF. Cada fila abre la plantilla."
       />
-      <PlaceholderNote />
 
-      <AdminTable>
-        <thead>
-          <tr>
-            <Th>Slug</Th>
-            <Th>Título</Th>
-            <Th>Resumen</Th>
-            <Th>Tokens</Th>
-            <Th>Status</Th>
-            <Th className="text-right">Acciones</Th>
-          </tr>
-        </thead>
-        <tbody>
-          {legalDocs.map((d) => (
-            <tr key={d.slug} className="hover:bg-zinc-50">
-              <Td className="font-mono text-xs">{d.slug}</Td>
-              <Td className="font-medium">{d.titleEs}</Td>
-              <Td className="text-xs text-zinc-600 max-w-md">{d.summaryEs}</Td>
-              <Td>
-                <PlaceholderBadge fields={d.placeholderFields} />
-              </Td>
-              <Td>
-                <StatusPill status="Vigente" variant="green" />
-              </Td>
-              <Td className="text-right whitespace-nowrap">
-                <div className="flex justify-end gap-1.5">
-                  <Link
-                    href={`/es/legal/${d.slug}`}
-                    target="_blank"
-                    className="inline-flex items-center gap-1 bg-white border border-zinc-300 text-zinc-700 px-3 py-1.5 text-xs hover:bg-zinc-50"
-                  >
-                    <ExternalLink className="h-3 w-3" />
-                    Ver público
-                  </Link>
-                  <AdminSecondaryButton href={`/admin/documentos/${d.slug}`}>
-                    Editar
-                  </AdminSecondaryButton>
-                </div>
-              </Td>
-            </tr>
-          ))}
-        </tbody>
-      </AdminTable>
+      <Banner tone="info">
+        Las páginas públicas /legal/[slug] se sirven desde el código (src/data/legalDocuments.ts); estas
+        plantillas alimentan el checkout y los PDF.
+      </Banner>
 
-      {templates.length > 0 && (
-        <div className="mt-10">
-          <h2 className="text-sm font-medium mb-1 flex items-center gap-2">
-            <FileText className="h-4 w-4 text-zinc-500" strokeWidth={1.5} />
-            Plantillas en base de datos (generación PDF)
-          </h2>
-          <p className="text-xs text-zinc-500 mb-4">
-            Estas plantillas alimentan la generación de PDF con tokens
-            personalizados. Agrega <code className="font-mono">?folio=EM-…</code>{" "}
-            para rellenar con los datos de una orden.
-          </p>
-          <AdminTable>
+      {list.length === 0 ? (
+        <EstadoVacio
+          title="No hay plantillas en la base de datos."
+          body="Corre pnpm db:seed para cargar las plantillas iniciales."
+        />
+      ) : (
+        <div className="flex flex-col gap-4">
+          <Filtros
+            items={[
+              { href: hrefFor(undefined), label: "Todas", count: list.length, active: activoFiltro === undefined },
+              {
+                href: hrefFor("activas"),
+                label: "Activas",
+                count: list.filter((t) => t.active).length,
+                active: activoFiltro === true,
+              },
+              {
+                href: hrefFor("inactivas"),
+                label: "Inactivas",
+                count: list.filter((t) => !t.active).length,
+                active: activoFiltro === false,
+              },
+            ]}
+          />
+          <Conteo n={filtered.length} singular="plantilla encontrada" plural="plantillas encontradas" />
+          <Tabla>
             <thead>
               <tr>
-                <Th>Slug</Th>
-                <Th>Nombre</Th>
+                <Th>Documento</Th>
                 <Th>Aplica a</Th>
-                <Th className="text-right">PDF</Th>
+                <Th>Aceptación</Th>
+                <Th>Requerido</Th>
+                <Th align="right">Versión</Th>
+                <Th>Estado</Th>
+                <Th>PDF</Th>
               </tr>
             </thead>
             <tbody>
-              {templates.map((t) => (
-                <tr key={t.id} className="hover:bg-zinc-50">
-                  <Td className="font-mono text-xs">{t.slug}</Td>
-                  <Td className="font-medium">{t.nameEs}</Td>
-                  <Td className="text-xs uppercase tracking-[0.14em] text-zinc-500">
-                    {t.appliesTo}
+              {filtered.map((t) => (
+                <FilaEnlace key={t.id}>
+                  <Td>
+                    <EnlaceFila href={`/admin/documentos/${t.slug}`}>{t.nameEs}</EnlaceFila>
+                    <p className="pista">{t.slug}</p>
                   </Td>
-                  <Td className="text-right whitespace-nowrap">
-                    <a
-                      href={`/api/documento/${t.slug}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-xs text-zinc-600 hover:text-zinc-900 underline underline-offset-2"
-                    >
+                  <Td>
+                    <Insignia tone="contorno">{APPLIES_TO_LABEL[t.appliesTo] ?? t.appliesTo}</Insignia>
+                  </Td>
+                  <Td>
+                    <span className="pista">{ACCEPTANCE_TYPE_LABEL[t.acceptanceType] ?? t.acceptanceType}</span>
+                  </Td>
+                  <Td>
+                    <span className={`texto-12 ${t.requiredForPurchase ? "texto-ok" : "texto-tenue"}`}>
+                      {t.requiredForPurchase ? "Sí" : "No"}
+                    </span>
+                  </Td>
+                  <Td numeric>v{t.currentVersion}</Td>
+                  <Td>
+                    <Insignia tone={t.active ? "ok" : "neutra"}>{t.active ? "Activa" : "Inactiva"}</Insignia>
+                  </Td>
+                  <Td className="sobre-fila">
+                    <Boton tone="texto" href={`/api/documento/${t.slug}`} external>
                       Ver PDF
-                    </a>
+                    </Boton>
                   </Td>
-                </tr>
+                </FilaEnlace>
               ))}
             </tbody>
-          </AdminTable>
+          </Tabla>
         </div>
       )}
-    </>
+    </div>
   );
 }
