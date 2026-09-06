@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Copy, Loader2, Check, AlertCircle, Upload } from "lucide-react";
+import { Copy, Loader2, Check, AlertCircle, Upload, Lock } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 
 /** Map API error codes to something a buyer can act on. */
@@ -27,7 +27,16 @@ function errorLabel(code: unknown, locale: Locale): string {
   }
 }
 
-export function TransferProofForm({ locale }: { locale: Locale }) {
+export function TransferProofForm({
+  locale,
+  defaultFolio = "",
+  defaultEmail = "",
+}: {
+  locale: Locale;
+  /** Prefilled when the buyer arrives from checkout or the instructions email. */
+  defaultFolio?: string;
+  defaultEmail?: string;
+}) {
   const [state, setState] = useState<"idle" | "uploading" | "submitting" | "success" | "error">(
     "idle",
   );
@@ -39,6 +48,9 @@ export function TransferProofForm({ locale }: { locale: Locale }) {
   const formRef = useRef<HTMLFormElement>(null);
 
   const t = (es: string, en: string) => (locale === "es" ? es : en);
+  // A folio handed over by checkout / the instructions email is authoritative:
+  // editing it would only detach the proof from the reservation.
+  const lockFolio = defaultFolio.length > 0;
 
   /**
    * Two-step upload: ask the server for a presigned S3 PUT (it checks the folio
@@ -177,13 +189,24 @@ export function TransferProofForm({ locale }: { locale: Locale }) {
       <label className="block">
         <span className="block text-[0.65rem] uppercase tracking-[0.2em] text-[var(--color-muted)] mb-2">
           Folio<span className="ml-1 text-[var(--color-fire-ink)]">*</span>
+          {lockFolio && (
+            <span className="ml-2 inline-flex items-center gap-1 normal-case tracking-normal text-[var(--color-muted)]">
+              <Lock className="h-3 w-3" strokeWidth={1.5} />
+              {t("de tu reserva", "from your reservation")}
+            </span>
+          )}
         </span>
         <input
           type="text"
           name="folio"
           required
           placeholder="EM-XXXX-XXXX"
-          className="w-full border-0 border-b border-[var(--color-line)] bg-transparent px-1 py-3 text-sm font-mono focus:outline-none focus:border-[var(--color-ink)]"
+          defaultValue={defaultFolio}
+          readOnly={lockFolio}
+          aria-readonly={lockFolio}
+          className={`w-full border-0 border-b border-[var(--color-line)] bg-transparent px-1 py-3 text-sm font-mono focus:outline-none focus:border-[var(--color-ink)] ${
+            lockFolio ? "text-[var(--color-ink-soft)] cursor-default select-all" : ""
+          }`}
         />
       </label>
       <label className="block">
@@ -194,6 +217,7 @@ export function TransferProofForm({ locale }: { locale: Locale }) {
           type="email"
           name="email"
           required
+          defaultValue={defaultEmail}
           className="w-full border-0 border-b border-[var(--color-line)] bg-transparent px-1 py-3 text-sm focus:outline-none focus:border-[var(--color-ink)]"
         />
       </label>

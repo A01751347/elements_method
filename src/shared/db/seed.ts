@@ -4,6 +4,7 @@ import { db } from "./client";
 import {
   calculatorConfig,
   documentTemplates,
+  documentVersions,
   forms,
   productCombinations,
   products,
@@ -100,10 +101,13 @@ async function seedDiscounts() {
 
 async function seedDocuments() {
   console.log("→ document_templates");
+  let snapshots = 0;
   for (const d of documentSeeds) {
-    await db
+    const { currentVersion, ...row } = d;
+    const version = currentVersion ?? 1;
+    const [tpl] = await db
       .insert(documentTemplates)
-      .values(d)
+      .values({ ...row, currentVersion: version })
       .onConflictDoUpdate({
         target: documentTemplates.slug,
         set: {
@@ -114,11 +118,35 @@ async function seedDocuments() {
           requiredForPurchase: d.requiredForPurchase,
           acceptanceType: d.acceptanceType,
           appliesTo: d.appliesTo,
+          // order_documents pins the version a buyer accepted, so a reworded
+          // template must move the pointer instead of rewriting history.
+          currentVersion: version,
           updatedAt: new Date(),
         },
+      })
+      .returning({ id: documentTemplates.id });
+
+    // Keep an immutable copy of each version's wording.
+    const existing = await db
+      .select({ id: documentVersions.id })
+      .from(documentVersions)
+      .where(
+        sql`${documentVersions.templateId} = ${tpl.id} AND ${documentVersions.versionNumber} = ${version}`,
+      )
+      .limit(1);
+    if (existing.length === 0) {
+      await db.insert(documentVersions).values({
+        templateId: tpl.id,
+        versionNumber: version,
+        templateHtmlEs: d.templateHtmlEs,
+        templateHtmlEn: d.templateHtmlEn ?? null,
       });
+      snapshots++;
+    }
   }
-  console.log(`  ✓ ${documentSeeds.length} document templates upserted`);
+  console.log(
+    `  ✓ ${documentSeeds.length} document templates upserted (${snapshots} new version snapshots)`,
+  );
 }
 
 async function seedForms() {

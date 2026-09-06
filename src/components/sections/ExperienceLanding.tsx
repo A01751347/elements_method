@@ -18,6 +18,7 @@ import {
   CheckoutButton,
   type RequiredDocLite,
 } from "@/components/forms/CheckoutButton";
+import type { PaymentMethod } from "@/shared/payments/methods";
 import { elements } from "@/data/content";
 import {
   isEarlyAccessActive,
@@ -38,10 +39,13 @@ export function ExperienceLanding({
   experience: e,
   locale,
   requiredDocs = [],
+  paymentMethods,
 }: {
   experience: Experience;
   locale: Locale;
   requiredDocs?: RequiredDocLite[];
+  /** Enabled payment methods, resolved on the server (env flags). */
+  paymentMethods?: PaymentMethod[];
 }) {
   const t = (l: L) => (locale === "en" ? l.en : l.es);
   const el = elements.find((x) => x.key === e.elementKey);
@@ -58,6 +62,7 @@ export function ExperienceLanding({
         productSlug={e.productSlug}
         label={t(e.heroCta)}
         requiredDocs={requiredDocs}
+        paymentMethods={paymentMethods}
       />
     ) : (
       <Button
@@ -562,6 +567,7 @@ export function ExperienceLanding({
                   productSlug={e.productSlug}
                   label={t(e.closing.cta)}
                   requiredDocs={requiredDocs}
+                  paymentMethods={paymentMethods}
                 />
               ) : (
                 <Button href={applyHref} size="lg" variant="solidLight" trailingArrow>

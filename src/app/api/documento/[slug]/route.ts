@@ -2,6 +2,7 @@ import { eq, inArray } from "drizzle-orm";
 import { db } from "@/shared/db/client";
 import { documentTemplates, orders, products } from "@/shared/db/schema";
 import { buildLegalDocPdf } from "@/shared/pdf/legalDoc";
+import { legalDocTokens } from "@/shared/pdf/legalTokens";
 
 export const runtime = "nodejs";
 
@@ -11,7 +12,8 @@ export const runtime = "nodejs";
  * Renders a legal template (contrato / nda / relevo …) as a filled PDF. When a
  * `folio` query param is present, the buyer's data from that order fills the
  * {{TOKEN}} placeholders; otherwise the placeholders render as ‹TOKEN› so a
- * blank template is obvious. Organizer/company tokens come from env where set.
+ * blank template is obvious. Token values are built by legalDocTokens — the
+ * same builder the checkout uses for the hashed snapshot.
  */
 export async function GET(
   req: Request,
@@ -59,56 +61,12 @@ export async function GET(
       .join(", ");
   }
 
-  const money = (v: unknown) =>
-    v === undefined || v === null
-      ? undefined
-      : `$${Number(v).toLocaleString("es-MX", { minimumFractionDigits: 2 })}`;
-
-  const tokens: Record<string, string | number | null | undefined> = {
-    // Organizer / company (from env; blank → visible ‹TOKEN›)
-    ORGANIZADOR_RAZON_SOCIAL: process.env.LEGAL_ORG_NAME,
-    ORGANIZADOR_DOMICILIO: process.env.LEGAL_ORG_ADDRESS,
-    ORGANIZADOR_RFC: process.env.LEGAL_ORG_RFC,
-    ORGANIZADOR_REPRESENTANTE: process.env.LEGAL_ORG_REP,
-    EMPRESA_RAZON_SOCIAL: process.env.LEGAL_ORG_NAME,
-    LEY_APLICABLE: process.env.LEGAL_JURISDICTION ?? "México",
-    CIUDAD_JURISDICCION: process.env.LEGAL_CITY ?? "Ciudad de México",
-    CUENTA_BANCARIA: process.env.BANK_CLABE,
-    // Participant (from the order)
-    PARTICIPANTE_NOMBRE: order?.buyerName,
-    PARTICIPANTE_EMAIL: order?.buyerEmail,
-    PARTICIPANTE_DOMICILIO: order?.buyerAddress,
-    PARTICIPANTE_RFC: order?.buyerRfc,
-    // Commercial (from the order)
-    INVERSION_MXN: order ? Number(order.total).toLocaleString("es-MX") : undefined,
-    FECHA_FIRMA: new Date().toLocaleDateString("es-MX", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }),
-    CIUDAD_FIRMA: process.env.LEGAL_CITY ?? "Ciudad de México",
-
-    // Los mismos datos con los nombres que usan las plantillas sembradas
-    // ({{buyer_name}}, {{order_folio}}…). Sin esto salían impresos tal cual
-    // en el PDF que descarga el comprador antes de pagar.
-    buyer_name: order?.buyerName,
-    buyer_email: order?.buyerEmail,
-    buyer_phone: order?.buyerPhone,
-    buyer_company: order?.buyerCompany,
-    buyer_rfc: order?.buyerRfc,
-    buyer_address: order?.buyerAddress,
-    order_folio: order?.folio ?? folio,
-    order_date: order?.createdAt
-      ? new Date(order.createdAt).toLocaleDateString(
-          lang === "en" ? "en-US" : "es-MX",
-          { year: "numeric", month: "long", day: "numeric" },
-        )
-      : undefined,
-    product_names: productNames || undefined,
-    total_amount: money(order?.total),
-    currency: order?.currency ?? "MXN",
-    language: lang === "en" ? "Inglés" : "Español",
-  };
+  const tokens = legalDocTokens({
+    order,
+    lang,
+    productNames,
+    folio,
+  });
 
   const { bytes } = await buildLegalDocPdf({
     name: lang === "en" ? tpl.nameEn ?? tpl.nameEs : tpl.nameEs,

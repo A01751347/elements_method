@@ -1,16 +1,20 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { AlertTriangle, FileText, Printer } from "lucide-react";
+import { FileText, PenLine, ShoppingBag } from "lucide-react";
 import { isLocale } from "@/i18n/config";
 import { Section, Eyebrow } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { LOGO_OPAQUE } from "@/components/brand/Logo";
-import { legalDocs, findLegalDoc, contactInfo } from "@/data/launchData";
+import { LegalMarkdown } from "@/components/legal/LegalMarkdown";
+import { contactInfo } from "@/data/launchData";
+import { LEGAL_DOCUMENTS, findLegalDocument, LEGAL_DOCS_VERSION } from "@/data/legalDocuments";
+import { fillTokens } from "@/shared/pdf/engine";
+import { legalDocTokens } from "@/shared/pdf/legalTokens";
 import { PrintButton } from "./PrintButton";
 
 export function generateStaticParams() {
-  return legalDocs.map((d) => ({ slug: d.slug }));
+  return LEGAL_DOCUMENTS.map((d) => ({ slug: d.slug }));
 }
 
 export async function generateMetadata({
@@ -19,7 +23,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
-  const doc = findLegalDoc(slug);
+  const doc = findLegalDocument(slug);
   if (!doc) return { title: "Legal" };
   return {
     title:
@@ -36,12 +40,17 @@ export default async function LegalDocPage({
 }) {
   const { locale, slug } = await params;
   if (!isLocale(locale)) notFound();
-  const doc = findLegalDoc(slug);
+  const doc = findLegalDocument(slug);
   if (!doc) notFound();
+  const es = locale === "es";
 
-  const titleKey = locale === "es" ? "titleEs" : "titleEn";
-  const summaryKey = locale === "es" ? "summaryEs" : "summaryEn";
-  const bodyKey = locale === "es" ? "bodyEs" : "bodyEn";
+  // Public copy: organizer + policy tokens from env, buyer/order tokens shown
+  // as bracketed labels — the personalized copy goes to each buyer by email.
+  const body = fillTokens(
+    es ? doc.bodyEs : doc.bodyEn,
+    legalDocTokens({ lang: locale, placeholders: "labels" }),
+  );
+  const isCheckout = doc.stage === "checkout";
 
   return (
     <>
@@ -60,7 +69,7 @@ export default async function LegalDocPage({
             </div>
           </div>
           <div style={{ textAlign: "right", fontSize: 10, color: "#5A5752" }}>
-            <div>{doc.titleEs}</div>
+            <div>{es ? doc.titleEs : doc.titleEn}</div>
             <div style={{ marginTop: 4, fontFamily: "monospace" }}>{doc.slug.toUpperCase()}</div>
             <div style={{ marginTop: 4 }}>{contactInfo.addressLabelEs}</div>
           </div>
@@ -68,38 +77,51 @@ export default async function LegalDocPage({
       </div>
 
       {/* HERO */}
-      <section className="print:hidden -mt-20 pt-36 md:pt-44 pb-12 bg-[var(--color-paper-warm)]">
+      <section className="print:hidden -mt-20 pt-32 md:pt-36 pb-10 bg-[var(--color-paper-warm)]">
         <Container>
           <div className="grid lg:grid-cols-12 gap-10">
             <div className="lg:col-span-7">
-              <Eyebrow className="mb-6 flex items-center gap-3">
+              <Eyebrow className="mb-4 flex items-center gap-3">
                 <FileText className="h-3.5 w-3.5" strokeWidth={1.5} />
-                {locale === "es" ? "Documentos legales" : "Legal documents"}
+                {es ? "Documentos legales" : "Legal documents"}
               </Eyebrow>
-              <h1 className="display-2 text-balance">{doc[titleKey]}</h1>
-              <p className="lead mt-6 text-pretty max-w-2xl">{doc[summaryKey]}</p>
+              <h1 className="display-3 text-balance">{es ? doc.titleEs : doc.titleEn}</h1>
+              <p className="mt-4 max-w-2xl text-sm md:text-base leading-relaxed text-[var(--color-ink-soft)] text-pretty">
+                {es ? doc.summaryEs : doc.summaryEn}
+              </p>
             </div>
             <div className="lg:col-span-5 lg:pt-2 space-y-4">
-              <div className="border-l-2 border-amber-500 bg-amber-50 px-5 py-4 text-sm text-amber-900 flex gap-3">
-                <AlertTriangle className="h-5 w-5 mt-0.5 shrink-0" strokeWidth={1.5} />
+              <div className="border border-[var(--color-line)] bg-[var(--color-paper)] px-5 py-4 text-sm text-[var(--color-ink-soft)] flex gap-3">
+                {isCheckout ? (
+                  <ShoppingBag className="h-5 w-5 mt-0.5 shrink-0" strokeWidth={1.5} />
+                ) : (
+                  <PenLine className="h-5 w-5 mt-0.5 shrink-0" strokeWidth={1.5} />
+                )}
                 <div>
-                  <div className="font-medium mb-1">
-                    {locale === "es"
-                      ? "Documento en borrador"
-                      : "Draft document"}
+                  <div className="font-medium mb-1 text-[var(--color-ink)]">
+                    {isCheckout
+                      ? es ? "Se acepta al comprar" : "Accepted at purchase"
+                      : es ? "Se firma después del pago" : "Signed after payment"}
                   </div>
                   <p className="leading-relaxed">
-                    {locale === "es"
-                      ? "Pendiente revisión legal. No usar como base de firma."
-                      : "Pending legal review. Do not use as basis for signature."}
+                    {isCheckout
+                      ? es
+                        ? "Es el contrato de adhesión que aceptas con la casilla al momento de la compra. Recibes por correo tu copia con los datos de tu orden."
+                        : "This is the adhesion contract you accept with the checkbox at purchase. You receive your copy with your order details by email."
+                      : es
+                        ? "Una vez confirmado tu pago recibes por correo un enlace personal para leerlo con tus datos y firmarlo electrónicamente antes del programa."
+                        : "Once your payment is confirmed you receive a personal link by email to read it with your details and sign it electronically before the program."}
+                  </p>
+                  <p className="mt-2 text-xs text-[var(--color-muted)]">
+                    {es ? `Versión ${LEGAL_DOCS_VERSION}.0` : `Version ${LEGAL_DOCS_VERSION}.0`}
+                    {" · "}
+                    {es
+                      ? "Los datos entre corchetes se completan con los de tu orden."
+                      : "Bracketed fields are filled with your order details."}
                   </p>
                 </div>
               </div>
-              <PrintButton
-                label={
-                  locale === "es" ? "Imprimir / Guardar PDF" : "Print / Save PDF"
-                }
-              />
+              <PrintButton label={es ? "Imprimir / Guardar PDF" : "Print / Save PDF"} />
             </div>
           </div>
         </Container>
@@ -108,7 +130,7 @@ export default async function LegalDocPage({
       {/* OTHER LEGAL DOCS NAV */}
       <Section spacing="tight" tone="warm" className="print:hidden">
         <div className="flex flex-wrap gap-2">
-          {legalDocs.map((d) => {
+          {LEGAL_DOCUMENTS.map((d) => {
             const active = d.slug === doc.slug;
             return (
               <Button
@@ -117,7 +139,7 @@ export default async function LegalDocPage({
                 size="sm"
                 variant={active ? "primary" : "secondary"}
               >
-                {d[titleKey]}
+                {es ? d.titleEs : d.titleEn}
               </Button>
             );
           })}
@@ -133,105 +155,10 @@ export default async function LegalDocPage({
             </div>
           </div>
           <article className="lg:col-span-8 print:col-span-12 prose prose-zinc max-w-none prose-headings:font-[family-name:var(--font-display)] prose-headings:tracking-tight prose-p:text-[var(--color-ink-soft)] prose-p:leading-relaxed prose-li:text-[var(--color-ink-soft)]">
-            <LegalMarkdown body={doc[bodyKey]} />
+            <LegalMarkdown body={body} />
           </article>
-          <div className="lg:col-span-2 print:hidden">
-            <div className="sticky top-28 text-xs text-[var(--color-muted)] space-y-3">
-              <div>
-                <div className="uppercase tracking-[0.18em] mb-1">
-                  {locale === "es" ? "Tokens placeholder" : "Placeholder tokens"}
-                </div>
-                <div className="text-[var(--color-ink-soft)] tabular-nums">
-                  {doc.placeholderFields.length}
-                </div>
-              </div>
-              <div className="pt-3 border-t border-[var(--color-line)]">
-                {doc.placeholderFields.map((f) => (
-                  <div
-                    key={f}
-                    className="font-mono text-[0.7rem] text-[var(--color-ink-soft)] break-all"
-                  >
-                    {f}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
         </div>
       </Section>
     </>
   );
-}
-
-/**
- * Minimal markdown renderer for the legal doc body. Supports the small subset
- * used by the workflow output: headings (#, ##, ###), blockquotes (>),
- * unordered lists (-), bold (**), inline code (`), and paragraphs.
- *
- * Intentionally no third-party MD lib — these docs are short skeletons.
- */
-function LegalMarkdown({ body }: { body: string }) {
-  const lines = body.split("\n");
-  const out: React.ReactNode[] = [];
-  let listBuffer: string[] = [];
-  let key = 0;
-
-  const flushList = () => {
-    if (!listBuffer.length) return;
-    out.push(
-      <ul key={key++} className="list-disc pl-6 space-y-1">
-        {listBuffer.map((item, i) => (
-          <li key={i} dangerouslySetInnerHTML={{ __html: inlineMd(item) }} />
-        ))}
-      </ul>,
-    );
-    listBuffer = [];
-  };
-
-  for (const raw of lines) {
-    const line = raw.trim();
-    if (!line) {
-      flushList();
-      continue;
-    }
-    if (line.startsWith("- ")) {
-      listBuffer.push(line.slice(2));
-      continue;
-    }
-    flushList();
-    if (line.startsWith("> ")) {
-      out.push(
-        <blockquote
-          key={key++}
-          className="border-l-4 border-amber-500 bg-amber-50 not-italic px-5 py-3 text-amber-900 text-sm"
-          dangerouslySetInnerHTML={{ __html: inlineMd(line.slice(2)) }}
-        />,
-      );
-    } else if (line.startsWith("### ")) {
-      out.push(
-        <h3 key={key++} className="text-lg" dangerouslySetInnerHTML={{ __html: inlineMd(line.slice(4)) }} />,
-      );
-    } else if (line.startsWith("## ")) {
-      out.push(
-        <h2 key={key++} className="text-2xl" dangerouslySetInnerHTML={{ __html: inlineMd(line.slice(3)) }} />,
-      );
-    } else if (line.startsWith("# ")) {
-      out.push(
-        <h1 key={key++} className="text-3xl" dangerouslySetInnerHTML={{ __html: inlineMd(line.slice(2)) }} />,
-      );
-    } else if (line === "---") {
-      out.push(<hr key={key++} />);
-    } else {
-      out.push(<p key={key++} dangerouslySetInnerHTML={{ __html: inlineMd(line) }} />);
-    }
-  }
-  flushList();
-  return <>{out}</>;
-}
-
-function inlineMd(s: string): string {
-  return s
-    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
-    .replace(/`([^`]+)`/g, '<code class="font-mono text-sm bg-amber-50 text-amber-900 px-1.5 py-0.5">$1</code>')
-    .replace(/\{\{([A-Z_]+)\}\}/g, '<span class="font-mono text-xs bg-amber-100 text-amber-900 px-1.5 py-0.5">{{$1}}</span>');
 }

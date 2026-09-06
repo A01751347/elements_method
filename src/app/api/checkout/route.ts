@@ -7,9 +7,13 @@ import {
   createCheckoutSession,
   shouldUseAutomaticTax,
 } from "@/shared/integrations/stripe";
+import { sendTransferInstructions } from "@/shared/integrations/orderEmails";
 import { buildLegalDocPdf } from "@/shared/pdf/legalDoc";
 import { withFolio } from "@/shared/pricing/folio";
 import { resolveEffectivePriceMxn } from "@/shared/pricing/effectivePrice";
+import { legalDocTokens } from "@/shared/pdf/legalTokens";
+import { isPaymentMethodEnabled } from "@/shared/payments/methods";
+import { getBankDetails } from "@/shared/payments/bank";
 
 export const runtime = "nodejs";
 
@@ -23,8 +27,18 @@ const Schema = z.object({
   retreatSlug: z.string().max(120).optional(),
   email: z.string().email(),
   name: z.string().min(2).max(160),
+  /** Contact phone (WhatsApp) — ops uses it to follow up on deposits. */
+  phone: z.string().trim().min(7).max(30),
+  /** Company paying for or sponsoring the seat, if any. */
+  company: z.string().trim().max(160).optional(),
   locale: z.enum(["es", "en"]).default("es"),
   acceptedDocs: z.array(z.string().max(120)).max(20).optional(),
+  /**
+   * `stripe` redirects to Stripe Checkout. `transferencia` registers the order
+   * as awaiting a deposit / SPEI and emails the bank details (or a promise to
+   * send them) — the purchase is confirmed later from /admin/transferencias.
+   */
+  paymentMethod: z.enum(["stripe", "transferencia"]).default("stripe"),
 });
 
 type CheckoutInput = z.infer<typeof Schema>;
@@ -35,10 +49,17 @@ type CheckoutInput = z.infer<typeof Schema>;
  * a failure here must not undo a payment the buyer already authorized.
  */
 async function recordAcceptedDocs(
-  orderId: string,
+  order: typeof orders.$inferSelect,
   data: CheckoutInput,
-  amountMxn: number,
+  productName: string,
 ) {
+  // Same tokens and reference as /api/documento, so the hash pinned here is
+  // the document the buyer can later download.
+  const tokens = legalDocTokens({
+    order,
+    lang: data.locale,
+    productNames: productName,
+  });
   for (const slug of data.acceptedDocs ?? []) {
     try {
       const tplRows = await db
@@ -61,15 +82,12 @@ async function recordAcceptedDocs(
       const { hash } = await buildLegalDocPdf({
         name: data.locale === "en" ? tpl.nameEn ?? tpl.nameEs : tpl.nameEs,
         templateMarkdown,
-        tokens: {
-          PARTICIPANTE_NOMBRE: data.name,
-          PARTICIPANTE_EMAIL: data.email,
-          INVERSION_MXN: amountMxn.toLocaleString("es-MX"),
-        },
+        tokens,
+        reference: order.folio,
       });
 
       await db.insert(orderDocuments).values({
-        orderId,
+        orderId: order.id,
         documentTemplateId: tpl.id,
         documentVersion: tpl.currentVersion,
         // The PDF is generated on demand from /api/documento; the hash pins the
@@ -81,6 +99,59 @@ async function recordAcceptedDocs(
       });
     } catch (e) {
       console.error(`[checkout] record accepted doc ${slug} failed`, e);
+    }
+  }
+}
+
+/**
+ * Attach the participation documents (contrato / NDA / relevo) to the order
+ * as PENDING signatures. Nothing is accepted here: the payment-confirmation
+ * email turns each row into a one-time /firmar link. The hash pins the exact
+ * wording the participant will be asked to sign.
+ */
+async function attachPostPurchaseDocs(
+  order: typeof orders.$inferSelect,
+  data: CheckoutInput,
+  productName: string,
+) {
+  let templates: (typeof documentTemplates.$inferSelect)[] = [];
+  try {
+    templates = await db
+      .select()
+      .from(documentTemplates)
+      .where(
+        and(
+          eq(documentTemplates.active, true),
+          eq(documentTemplates.acceptanceType, "signature_upload"),
+        ),
+      );
+  } catch (e) {
+    console.error("[checkout] post-purchase docs lookup failed", e);
+    return;
+  }
+  const tokens = legalDocTokens({ order, lang: data.locale, productNames: productName });
+  const buyerType = order.buyerType;
+  for (const tpl of templates) {
+    if (tpl.appliesTo !== "ambos" && tpl.appliesTo !== buyerType) continue;
+    try {
+      const templateMarkdown =
+        data.locale === "en" ? tpl.templateHtmlEn ?? tpl.templateHtmlEs : tpl.templateHtmlEs;
+      const { hash } = await buildLegalDocPdf({
+        name: data.locale === "en" ? tpl.nameEn ?? tpl.nameEs : tpl.nameEs,
+        templateMarkdown,
+        tokens,
+        reference: order.folio,
+      });
+      await db.insert(orderDocuments).values({
+        orderId: order.id,
+        documentTemplateId: tpl.id,
+        documentVersion: tpl.currentVersion,
+        generatedPdfUrl: `/api/documento/${tpl.slug}`,
+        generatedPdfHash: hash,
+        accepted: false,
+      });
+    } catch (e) {
+      console.error(`[checkout] attach post-purchase doc ${tpl.slug} failed`, e);
     }
   }
 }
@@ -101,6 +172,13 @@ export async function POST(req: Request) {
     );
   }
   const data = parsed.data;
+
+  // The public button only shows enabled methods; re-check here so a method
+  // hidden by config (e.g. card while Stripe is still in setup) can't be
+  // reached by hand-crafting the request.
+  if (!isPaymentMethodEnabled(data.paymentMethod)) {
+    return NextResponse.json({ ok: false, error: "METHOD_DISABLED" }, { status: 409 });
+  }
 
   // ── 1. Resolve the real price from the catalog ────────────────────────
   let product;
@@ -136,12 +214,13 @@ export async function POST(req: Request) {
   // computes the real figures from the buyer's address, and the webhook
   // overwrites subtotal/iva/total with Stripe's numbers before the receipt is
   // ever generated. With tax off, this local split is the final word.
-  const automaticTax = await shouldUseAutomaticTax();
+  const isTransfer = data.paymentMethod === "transferencia";
+  const automaticTax = isTransfer ? false : await shouldUseAutomaticTax();
   const ivaRate = Number(process.env.IVA_RATE ?? "0.16");
   const subtotal = amountMxn / (1 + ivaRate);
   const iva = amountMxn - subtotal;
 
-  let order: { id: string; folio: string };
+  let order: typeof orders.$inferSelect;
   try {
     order = await withFolio(async (folio) => {
       const [row] = await db
@@ -151,6 +230,8 @@ export async function POST(req: Request) {
           buyerType: "persona",
           buyerName: data.name,
           buyerEmail: data.email,
+          buyerPhone: data.phone,
+          buyerCompany: data.company || null,
           productIds: [product.id],
           retreatId: null,
           subtotal: subtotal.toFixed(2),
@@ -158,10 +239,13 @@ export async function POST(req: Request) {
           total: amountMxn.toFixed(2),
           currency: "MXN",
           language: data.locale,
-          paymentMethod: "stripe",
+          paymentMethod: data.paymentMethod,
+          // Both methods start here. A transfer order moves to
+          // pending_transfer_validation when the buyer uploads a proof, and to
+          // paid when an admin validates it.
           status: "pending_payment",
         })
-        .returning({ id: orders.id, folio: orders.folio });
+        .returning();
       return row;
     });
   } catch (e) {
@@ -169,7 +253,34 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "ORDER_CREATE_FAILED" }, { status: 500 });
   }
 
-  // ── 3. Create the Stripe session ──────────────────────────────────────
+  // ── 3a. Deposit / SPEI: no payment session, email the instructions ────
+  if (isTransfer) {
+    if (data.acceptedDocs && data.acceptedDocs.length > 0) {
+      await recordAcceptedDocs(order, data, productName);
+    }
+    await attachPostPurchaseDocs(order, data, productName);
+
+    // Email failures are logged inside sendAll; the order is already recorded
+    // and ops can still see it in /admin/transferencias.
+    await sendTransferInstructions(order, {
+      productName,
+      bank: getBankDetails(),
+    });
+
+    const nextUrl =
+      `/${data.locale}/transferencia` +
+      `?folio=${encodeURIComponent(order.folio)}&email=${encodeURIComponent(data.email)}`;
+
+    return NextResponse.json({
+      ok: true,
+      method: "transferencia",
+      url: nextUrl,
+      folio: order.folio,
+      amountMxn,
+    });
+  }
+
+  // ── 3b. Create the Stripe session ─────────────────────────────────────
   const session = await createCheckoutSession({
     customerEmail: data.email,
     retreatSlug: data.retreatSlug,
@@ -232,11 +343,13 @@ export async function POST(req: Request) {
   }
 
   if (data.acceptedDocs && data.acceptedDocs.length > 0) {
-    await recordAcceptedDocs(order.id, data, amountMxn);
+    await recordAcceptedDocs(order, data, productName);
   }
+  await attachPostPurchaseDocs(order, data, productName);
 
   return NextResponse.json({
     ok: true,
+    method: "stripe",
     url: session.url,
     sessionId: session.sessionId,
     folio: order.folio,

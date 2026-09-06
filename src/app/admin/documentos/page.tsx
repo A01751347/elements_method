@@ -34,7 +34,7 @@ export default async function AdminLegalDocsPage() {
     <>
       <AdminPageHeader
         title="Documentos legales"
-        subtitle="Contrato, NDA y Relevo. Todos en borrador pendiente de revisión legal."
+        subtitle="Términos de compra (se aceptan en el checkout) + Contrato, NDA y Relevo (se firman tras el pago vía /firmar). Fuente: src/data/legalDocuments.ts — correr pnpm db:seed tras editar."
         count={legalDocs.length}
       />
       <PlaceholderNote />
@@ -60,7 +60,7 @@ export default async function AdminLegalDocsPage() {
                 <PlaceholderBadge fields={d.placeholderFields} />
               </Td>
               <Td>
-                <StatusPill status="Borrador" variant="amber" />
+                <StatusPill status="Vigente" variant="green" />
               </Td>
               <Td className="text-right whitespace-nowrap">
                 <div className="flex justify-end gap-1.5">

@@ -1,16 +1,19 @@
 /**
- * Placeholder legal documents. Replaced by client once their abogado delivers
- * the real templates (per cronograma Semana 0, P-04).
+ * Legal document templates seeded into `document_templates`.
  *
- * Template engine uses {{placeholder}} syntax. Supported placeholders today:
- *   {{buyer_name}}, {{buyer_email}}, {{buyer_phone}}, {{buyer_company}},
- *   {{buyer_rfc}}, {{buyer_address}}, {{order_folio}}, {{order_date}},
- *   {{product_names}}, {{total_amount}}, {{currency}}, {{language}}
+ * The three documents every buyer accepts at checkout (contrato / NDA /
+ * relevo) come from src/data/legalDocuments.ts — the same source the public
+ * /legal/[slug] pages render — so the text a buyer reads on the site is the
+ * text pinned (with its hash) in order_documents when they accept it.
+ *
+ * Bodies are lightweight markdown with {{TOKENS}}; see
+ * src/shared/pdf/legalTokens.ts for the full token list and defaults.
  */
 
 import type { DocumentTemplate } from "../schema/documents";
+import { LEGAL_DOCUMENTS, LEGAL_DOCS_VERSION } from "../../../data/legalDocuments";
 
-type DocumentSeed = Pick<
+export type DocumentSeed = Pick<
   DocumentTemplate,
   | "slug"
   | "nameEs"
@@ -20,139 +23,61 @@ type DocumentSeed = Pick<
   | "requiredForPurchase"
   | "acceptanceType"
   | "appliesTo"
->;
+> & {
+  /** Version to stamp on the row; the seed snapshots it into document_versions. */
+  currentVersion?: number;
+};
 
-const PLACEHOLDER_NOTE_ES = `
-<p style="background:#fffae6;border-left:3px solid #d4a017;padding:12px;font-size:13px;">
-  Plantilla provisional. El texto definitivo lo entrega el abogado del cliente
-  antes del go-live. Los placeholders <code>{{...}}</code> se rellenan
-  automáticamente con los datos del comprador.
-</p>`;
+const APPLIES: Record<string, DocumentSeed["appliesTo"]> = {
+  terminos: "ambos",
+  contrato: "ambos",
+  nda: "ambos",
+  relevo: "persona",
+};
 
-const PLACEHOLDER_NOTE_EN = `
-<p style="background:#fffae6;border-left:3px solid #d4a017;padding:12px;font-size:13px;">
-  Provisional template. The client's lawyer delivers the definitive text before
-  go-live. <code>{{...}}</code> placeholders are filled in automatically from the
-  buyer's order data.
-</p>`;
+/**
+ * Only the Terms are `requiredForPurchase` (the checkout checkbox). The
+ * contrato / NDA / relevo are `signature_upload`: /api/checkout attaches them
+ * to the order as pending and the payment-confirmation email carries one-time
+ * /firmar links for the participant to sign them.
+ */
+const coreDocuments: DocumentSeed[] = LEGAL_DOCUMENTS.map((d) => ({
+  slug: d.templateSlug,
+  nameEs: d.titleEs,
+  nameEn: d.titleEn,
+  templateHtmlEs: d.bodyEs,
+  templateHtmlEn: d.bodyEn,
+  requiredForPurchase: d.stage === "checkout",
+  acceptanceType: d.stage === "checkout" ? "check_only" : "signature_upload",
+  appliesTo: APPLIES[d.slug] ?? "ambos",
+  currentVersion: LEGAL_DOCS_VERSION,
+}));
 
 export const documentSeeds: DocumentSeed[] = [
-  {
-    slug: "contrato-servicios",
-    nameEs: "Contrato de servicios",
-    nameEn: "Services agreement",
-    templateHtmlEs: `${PLACEHOLDER_NOTE_ES}
-<h1>Contrato de prestación de servicios</h1>
-<p>Entre <strong>Elements Method</strong> y <strong>{{buyer_name}}</strong>
-  ({{buyer_email}}, {{buyer_phone}})
-  {{buyer_company}}
-  con fecha <strong>{{order_date}}</strong> y folio <strong>{{order_folio}}</strong>.</p>
-<h2>Objeto</h2>
-<p>Elements Method presta los servicios correspondientes al producto contratado:
-  <strong>{{product_names}}</strong>, por un total de <strong>{{total_amount}} {{currency}}</strong>
-  (más IVA).</p>
-<h2>Condiciones</h2>
-<p>Las condiciones específicas, calendarios y entregables se rigen por el material
-  de programa entregado al participante. El presente contrato será sustituido por
-  el texto definitivo revisado por el abogado del cliente.</p>
-`,
-    templateHtmlEn: `${PLACEHOLDER_NOTE_EN}
-<h1>Services agreement</h1>
-<p>Between <strong>Elements Method</strong> and <strong>{{buyer_name}}</strong>
-  ({{buyer_email}}, {{buyer_phone}})
-  {{buyer_company}}
-  dated <strong>{{order_date}}</strong> with folio <strong>{{order_folio}}</strong>.</p>
-<h2>Object</h2>
-<p>Elements Method delivers the services for the contracted product:
-  <strong>{{product_names}}</strong>, for a total of <strong>{{total_amount}} {{currency}}</strong>
-  (plus VAT).</p>
-<h2>Conditions</h2>
-<p>Specific conditions, schedules and deliverables are governed by the program
-  materials given to the participant. This agreement will be replaced by the
-  definitive text reviewed by the client's lawyer.</p>
-`,
-    requiredForPurchase: true,
-    acceptanceType: "check_only",
-    appliesTo: "ambos",
-  },
-  {
-    slug: "responsiva",
-    nameEs: "Responsiva de responsabilidad",
-    nameEn: "Liability release",
-    templateHtmlEs: `${PLACEHOLDER_NOTE_ES}
-<h1>Responsiva de responsabilidad</h1>
-<p>El abajo firmante, <strong>{{buyer_name}}</strong>, manifiesta su conformidad
-  con participar en la actividad <strong>{{product_names}}</strong> programada en
-  fecha referida en el folio <strong>{{order_folio}}</strong>.</p>
-<p>El participante reconoce los riesgos inherentes a las actividades en la naturaleza,
-  declara encontrarse en condiciones físicas adecuadas y libera a Elements Method
-  de responsabilidad por cualquier eventualidad que no derive de negligencia comprobable.</p>
-<p>Email de contacto: <strong>{{buyer_email}}</strong>.</p>
-`,
-    templateHtmlEn: `${PLACEHOLDER_NOTE_EN}
-<h1>Liability release</h1>
-<p>The undersigned, <strong>{{buyer_name}}</strong>, agrees to participate in the
-  activity <strong>{{product_names}}</strong> scheduled per folio
-  <strong>{{order_folio}}</strong>.</p>
-<p>The participant acknowledges the inherent risks of nature-based activities,
-  confirms adequate physical condition, and releases Elements Method from
-  responsibility for any eventuality not arising from demonstrable negligence.</p>
-<p>Contact email: <strong>{{buyer_email}}</strong>.</p>
-`,
-    requiredForPurchase: true,
-    acceptanceType: "check_only",
-    appliesTo: "persona",
-  },
-  {
-    slug: "nda",
-    nameEs: "Acuerdo de confidencialidad (NDA)",
-    nameEn: "Non-disclosure agreement (NDA)",
-    templateHtmlEs: `${PLACEHOLDER_NOTE_ES}
-<h1>Acuerdo de confidencialidad</h1>
-<p>Entre <strong>Elements Method</strong> y <strong>{{buyer_name}}</strong>
-  ({{buyer_company}}, {{buyer_email}}), con fecha <strong>{{order_date}}</strong>.</p>
-<h2>Información confidencial</h2>
-<p>Todo material de programa, framework, dinámica grupal, identidad de otros
-  participantes y conversaciones sostenidas durante las sesiones son confidenciales.</p>
-<p>El participante se compromete a no divulgar dicha información a terceros sin
-  autorización expresa por escrito de Elements Method.</p>
-`,
-    templateHtmlEn: `${PLACEHOLDER_NOTE_EN}
-<h1>Non-disclosure agreement</h1>
-<p>Between <strong>Elements Method</strong> and <strong>{{buyer_name}}</strong>
-  ({{buyer_company}}, {{buyer_email}}), dated <strong>{{order_date}}</strong>.</p>
-<h2>Confidential information</h2>
-<p>All program materials, frameworks, group dynamics, identity of other
-  participants, and conversations held during sessions are confidential.</p>
-<p>The participant agrees not to disclose said information to third parties
-  without express written authorization from Elements Method.</p>
-`,
-    requiredForPurchase: true,
-    acceptanceType: "check_only",
-    appliesTo: "ambos",
-  },
+  ...coreDocuments,
   {
     slug: "autorizacion-imagen",
     nameEs: "Autorización de uso de imagen",
     nameEn: "Image use authorization",
-    templateHtmlEs: `${PLACEHOLDER_NOTE_ES}
-<h1>Autorización de uso de imagen</h1>
-<p><strong>{{buyer_name}}</strong> ({{buyer_email}}) autoriza a
-  <strong>Elements Method</strong> el uso de fotografías y video tomados durante
-  la actividad <strong>{{product_names}}</strong> con fines de comunicación
-  institucional, redes sociales y materiales promocionales del programa.</p>
-<p>Esta autorización es revocable por escrito en cualquier momento.</p>
+    templateHtmlEs: `# Autorización de uso de imagen
+
+**{{PARTICIPANTE_NOMBRE}}** ({{PARTICIPANTE_EMAIL}}) autoriza a **{{ORGANIZADOR_RAZON_SOCIAL}}**, en términos del artículo 87 de la Ley Federal del Derecho de Autor, a captar y utilizar su imagen, voz y testimonio obtenidos durante el programa **{{NOMBRE_PROGRAMA}}**, con fines de comunicación institucional, redes sociales y materiales promocionales del programa, sin contraprestación y sin límite territorial.
+
+Esta autorización es voluntaria, no condiciona la participación en el programa y puede revocarse en cualquier momento mediante aviso por escrito al correo {{ORGANIZADOR_EMAIL}}, sin efectos retroactivos sobre materiales ya publicados.
+
+Aceptado en {{CIUDAD_FIRMA}}, el {{FECHA_FIRMA}}. Folio {{FOLIO}}.
 `,
-    templateHtmlEn: `${PLACEHOLDER_NOTE_EN}
-<h1>Image use authorization</h1>
-<p><strong>{{buyer_name}}</strong> ({{buyer_email}}) authorizes
-  <strong>Elements Method</strong> to use photographs and video taken during the
-  activity <strong>{{product_names}}</strong> for institutional communication,
-  social media, and promotional materials of the program.</p>
-<p>This authorization is revocable in writing at any time.</p>
+    templateHtmlEn: `# Image use authorization
+
+**{{PARTICIPANTE_NOMBRE}}** ({{PARTICIPANTE_EMAIL}}) authorizes **{{ORGANIZADOR_RAZON_SOCIAL}}**, under Article 87 of the Mexican Federal Copyright Law, to capture and use their image, voice and testimonial obtained during the program **{{NOMBRE_PROGRAMA}}**, for institutional communication, social media and promotional materials of the program, without compensation and without territorial limit.
+
+This authorization is voluntary, is not a condition of participation and may be revoked at any time by written notice to {{ORGANIZADOR_EMAIL}}, without retroactive effect on materials already published.
+
+Accepted in {{CIUDAD_FIRMA}}, on {{FECHA_FIRMA}}. Folio {{FOLIO}}.
 `,
     requiredForPurchase: false,
     acceptanceType: "check_only",
     appliesTo: "persona",
+    currentVersion: LEGAL_DOCS_VERSION,
   },
 ];

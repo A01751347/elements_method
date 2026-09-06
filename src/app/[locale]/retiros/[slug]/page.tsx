@@ -32,6 +32,8 @@ import {
   getCalendarRetreatBySlug,
 } from "@/modules/content/calendarRetreats";
 import { getRequiredDocs } from "@/modules/content/requiredDocs";
+import { enabledPaymentMethods } from "@/shared/payments/methods";
+import { LEGAL_DOCUMENTS } from "@/data/legalDocuments";
 import { elements, type ElementKey } from "@/data/content";
 import { findExperienceBySlug } from "@/data/experiences";
 import { ExperienceLanding } from "@/components/sections/ExperienceLanding";
@@ -103,11 +105,16 @@ export default async function RetreatDetailPage({
       <ExperienceLanding
         experience={experience}
         locale={locale}
-        requiredDocs={requiredDocs.map((d) => ({
-          slug: d.slug,
-          nameEs: d.nameEs,
-          nameEn: d.nameEn,
-        }))}
+        paymentMethods={enabledPaymentMethods()}
+        requiredDocs={requiredDocs.map((d) => {
+          const pub = LEGAL_DOCUMENTS.find((l) => l.templateSlug === d.slug);
+          return {
+            slug: d.slug,
+            nameEs: d.nameEs,
+            nameEn: d.nameEn,
+            href: pub ? `/${locale}/legal/${pub.slug}` : undefined,
+          };
+        })}
       />
     );
   }

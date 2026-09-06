@@ -251,7 +251,11 @@ export function markdownToBlocks(
 ): { type: "heading" | "para"; text: string }[] {
   const blocks: { type: "heading" | "para"; text: string }[] = [];
   for (const rawLine of md.split("\n")) {
-    const line = rawLine.replace(/\*\*(.+?)\*\*/g, "$1").replace(/^>\s?/, "");
+    const line = rawLine
+      .replace(/\*\*(.+?)\*\*/g, "$1")
+      .replace(/^>\s?/, "")
+      // "- item" list markers become a bullet the PDF font can draw.
+      .replace(/^\s*[-*]\s+/, "\u2022 ");
     const heading = line.match(/^(#{1,6})\s+(.*)$/);
     if (heading) {
       blocks.push({ type: "heading", text: heading[2].trim() });
