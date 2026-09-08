@@ -203,7 +203,7 @@ export const productSeeds: NewProduct[] = [
     priceMxn: "7500.00",
     priceUsd: String(usd(7500)),
     earlyPriceMxn: "5900.00",
-    earlyDeadline: new Date("2026-09-07T05:59:59.999Z"), // 6 sep 23:59 CDMX
+    earlyDeadline: new Date("2026-09-14T05:59:59.999Z"), // 13 sep 23:59 CDMX
     sortOrder: 400,
   },
   {

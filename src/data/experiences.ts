@@ -561,10 +561,10 @@ const equinox: Experience = {
   seats: 20,
   priceMxn: 7500,
   earlyPriceMxn: 5900,
-  earlyDeadlineIso: "2026-09-06",
+  earlyDeadlineIso: "2026-09-13",
   earlyLabel: {
-    es: "Early Access $5,900 MXN hasta el 6 de septiembre",
-    en: "Early Access MX$5,900 through September 6",
+    es: "Early Access $5,900 MXN hasta el 13 de septiembre",
+    en: "Early Access MX$5,900 through September 13",
   },
   includes: {
     es: "Experiencia, journal, materiales, alimentos y 30 días de integración",
@@ -931,8 +931,8 @@ const equinox: Experience = {
     {
       label: { es: "Inversión", en: "Investment" },
       value: {
-        es: "$7,500 MXN · Early Access $5,900 hasta el 6 de septiembre",
-        en: "MX$7,500 · Early Access MX$5,900 through September 6",
+        es: "$7,500 MXN · Early Access $5,900 hasta el 13 de septiembre",
+        en: "MX$7,500 · Early Access MX$5,900 through September 13",
       },
     },
     {
