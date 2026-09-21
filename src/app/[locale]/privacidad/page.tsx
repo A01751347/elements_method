@@ -76,7 +76,7 @@ function contentEs(email: string): { intro: string; blocks: Block[] } {
       {
         h: "6. Uso de cookies y tecnologías de rastreo",
         p: [
-          "Nuestro sitio utiliza cookies y tecnologías similares. Las cookies de analítica y marketing solo se activan con su consentimiento a través del banner de cookies. Puede configurar sus preferencias en cualquier momento.",
+          "Nuestro sitio utiliza cookies y tecnologías similares. Las cookies de analítica y marketing de terceros (Google, Meta, LinkedIn) solo se activan con su consentimiento a través del banner de cookies; puede configurar sus preferencias en cualquier momento. De forma independiente, realizamos una medición propia y agregada del tráfico (páginas vistas, origen de la visita, tipo de dispositivo y país) que no utiliza cookies de identificación, no almacena su dirección IP ni su identidad, y emplea un identificador irreversible que se renueva cada día con el único fin de no contar varias veces a un mismo visitante. Esta medición no permite identificarle ni seguirle entre sitios.",
         ],
       },
       {
@@ -131,7 +131,7 @@ function contentEn(email: string): { intro: string; blocks: Block[] } {
       {
         h: "6. Cookies and tracking",
         p: [
-          "Our site uses cookies and similar technologies. Analytics and marketing cookies only activate with your consent via the cookie banner. You can configure your preferences at any time.",
+          "Our site uses cookies and similar technologies. Third-party analytics and marketing cookies (Google, Meta, LinkedIn) only activate with your consent via the cookie banner; you can configure your preferences at any time. Separately, we keep our own aggregate traffic measurement (pages viewed, visit origin, device type and country) that uses no identifying cookies, stores neither your IP address nor your identity, and relies on an irreversible identifier that rotates daily for the sole purpose of not counting the same visitor twice. This measurement cannot identify you or track you across sites.",
         ],
       },
       {

@@ -100,7 +100,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     {
       titulo: "Ajustes",
       items: [
-        { href: "/admin/analytics", label: "Analytics" },
+        { href: "/admin/analytics", label: "Tráfico" },
+        { href: "/admin/analytics/pixels", label: "Pixels y etiquetas" },
         { href: "/admin/ajustes/contacto", label: "Contacto" },
         { href: "/admin/ayuda", label: "Ayuda" },
       ],

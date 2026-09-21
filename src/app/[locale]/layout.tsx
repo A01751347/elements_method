@@ -5,6 +5,7 @@ import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { CookieBanner } from "@/components/layout/CookieBanner";
+import { PageTracker } from "@/components/layout/PageTracker";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { HtmlLang } from "@/components/seo/HtmlLang";
 import { organizationJsonLd, websiteJsonLd } from "@/lib/structuredData";
@@ -47,6 +48,8 @@ export default async function LocaleLayout({
       <main className={hasBar ? "pt-[7.5rem]" : "pt-20"}>{children}</main>
       <Footer locale={locale} dict={dict} contact={contact ?? undefined} />
       <CookieBanner locale={locale} dict={dict} tracking={tracking} />
+      {/* Analítica propia y agregada: no identifica, no requiere consentimiento. */}
+      <PageTracker locale={locale} />
     </>
   );
 }
