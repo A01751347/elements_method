@@ -40,23 +40,11 @@ const EXPERIENCIAS = ["equinox", "elements-awakening", "soul-discovery"];
 
 /** Fuentes con su peso relativo: de dónde llega la gente, y con qué probabilidad. */
 const FUENTES: { source: string; peso: number; host: string | null; medium?: string; campaign?: string }[] = [
-  { source: "instagram", peso: 30, host: "www.instagram.com" },
-  { source: "google", peso: 24, host: "www.google.com" },
-  { source: "directo", peso: 18, host: null },
-  { source: "linkedin", peso: 12, host: "www.linkedin.com" },
-  { source: "instagram", peso: 6, host: "www.instagram.com", medium: "cpc", campaign: "equinox-octubre" },
-  { source: "ia", peso: 4, host: "chatgpt.com" },
-  { source: "whatsapp", peso: 3, host: "wa.me" },
-  { source: "correo", peso: 3, host: "mail.google.com" },
+  { source: "instagram", peso: 58, host: "www.instagram.com" },
+  { source: "directo", peso: 42, host: null },
 ];
 
-const PAISES = [
-  { c: "MX", peso: 82 },
-  { c: "US", peso: 9 },
-  { c: "ES", peso: 4 },
-  { c: "CO", peso: 3 },
-  { c: "AR", peso: 2 },
-];
+const PAISES = [{ c: "MX", peso: 100 }];
 
 const DISPOSITIVOS = [
   { d: "mobile", peso: 64 },
@@ -136,28 +124,31 @@ function recorrido(forzarCompra = false): { path: string; step: string; slug: st
   const pasos: { path: string; step: string; slug: string | null }[] = [];
   const exp = pick(EXPERIENCIAS);
 
-  // Entrada: la mayoría por home, bastantes directo al blog (SEO), algunos a la landing.
-  const entrada = forzarCompra ? 0.99 : Math.random();
-  if (entrada < 0.45) {
+  // Entrada. Con el tráfico llegando solo de Instagram y de visitas directas,
+  // la enorme mayoría aterriza en la home (el enlace de la bio) y desde ahí
+  // navega; entrar directo a una landing o al blog es minoritario. Esto
+  // mantiene la home como cabeza real del embudo, de modo que cada paso
+  // siguiente sea un subconjunto suyo y los porcentajes nunca superen 100%.
+  const entrada = forzarCompra ? 0 : Math.random();
+  if (entrada < 0.78) {
     pasos.push({ path: "/es", step: "home", slug: null });
-  } else if (entrada < 0.75) {
+  } else if (entrada < 0.92) {
     pasos.push({ path: `/es/blog/${pick(BLOG)}`, step: "blog", slug: null });
-    if (chance(0.35)) pasos.push({ path: `/es/blog/${pick(BLOG)}`, step: "blog", slug: null });
-    if (chance(0.4)) pasos.push({ path: "/es", step: "home", slug: null });
-  } else if (entrada < 0.9 || forzarCompra) {
-    pasos.push({ path: `/es/retiros/${exp}`, step: "experiencia", slug: exp });
+    if (chance(0.3)) pasos.push({ path: `/es/blog/${pick(BLOG)}`, step: "blog", slug: null });
+    if (chance(0.45)) pasos.push({ path: "/es", step: "home", slug: null });
   } else {
     pasos.push({ path: "/es/empresas", step: "empresas", slug: null });
   }
 
   const yaEnLanding = pasos.some((p) => p.step === "experiencia");
 
-  // Del home/blog, una parte mira el listado de experiencias.
-  if (!yaEnLanding && chance(0.5)) {
+  // Del home/blog, una parte mira el listado de experiencias. El comprador
+  // recorre siempre este camino completo, para que su compra exista.
+  if (!yaEnLanding && (forzarCompra || chance(0.5))) {
     pasos.push({ path: "/es/retiros", step: "retiros", slug: null });
 
     // …y de esos, una parte entra a una landing concreta.
-    if (chance(0.62)) {
+    if (forzarCompra || chance(0.62)) {
       pasos.push({ path: `/es/retiros/${exp}`, step: "experiencia", slug: exp });
       if (chance(0.25)) {
         const otra = pick(EXPERIENCIAS.filter((e) => e !== exp));
@@ -170,14 +161,15 @@ function recorrido(forzarCompra = false): { path: string; step: string; slug: st
   if (chance(0.3)) pasos.push({ path: "/es/el-metodo", step: "otro", slug: null });
   if (chance(0.18)) pasos.push({ path: "/es/quienes-somos", step: "otro", slug: null });
 
-  // Checkout: solo desde una landing, y solo una minoría.
-  // `forzar` permite garantizar unas pocas compras en la semana: con ~40
-  // visitantes, encadenar probabilidades reales deja el embudo en cero
-  // demasiado a menudo y el panel no demostraría nada.
+  // Checkout: solo desde una landing, y solo una minoría llega.
+  // La compra NO se deja al azar: la completa únicamente el visitante que
+  // el generador marca con `forzarCompra`, de modo que la semana cierre con
+  // exactamente una venta. Los demás que entran al checkout lo abandonan,
+  // que es lo que hace visible la caída del último paso del embudo.
   const landing = [...pasos].reverse().find((p) => p.step === "experiencia");
   if (landing && (forzarCompra || chance(0.16))) {
     pasos.push({ path: "/es/checkout", step: "checkout", slug: landing.slug });
-    if (forzarCompra || chance(0.3)) {
+    if (forzarCompra) {
       pasos.push({ path: "/es/gracias", step: "gracias", slug: landing.slug });
     }
   }
@@ -206,10 +198,10 @@ async function main() {
   const filas: Fila[] = [];
   const hoy = new Date();
 
-  // Reparte 3 compras en días distintos de la semana, para que el embudo
-  // y la conversión no salgan en cero (ver nota en recorrido()).
-  const diasConCompra = new Set<number>();
-  while (diasConCompra.size < 3) diasConCompra.add(rnd(DIAS));
+  // Una sola compra en la semana: con ~40 visitantes, encadenar las tasas
+  // reales deja el embudo en cero demasiado a menudo, así que se fija el
+  // día y el visitante que completan (ver nota en recorrido()).
+  const diaDeLaCompra = rnd(DIAS);
 
   for (let d = DIAS - 1; d >= 0; d--) {
     const fecha = new Date(hoy);
@@ -224,7 +216,7 @@ async function main() {
       : Math.max(3, VISITANTES_POR_DIA + (rnd(5) - 2)); // 5-9
 
     // El visitante marcado de este día completa la compra.
-    const compradorDelDia = diasConCompra.has(d) ? rnd(total) : -1;
+    const compradorDelDia = d === diaDeLaCompra ? rnd(total) : -1;
 
     for (let v = 0; v < total; v++) {
       const fuente = pesado(FUENTES);
