@@ -15,6 +15,7 @@
     "db:seed": "tsx src/shared/db/seed.ts",
     "db:arco": "tsx scripts/createArcoTable.ts",
     "db:analytics": "tsx scripts/createAnalyticsTable.ts",
+    "demo:trafico": "tsx scripts/seedDemoTraffic.ts",
     "blog:publish": "tsx scripts/publishBlogArticles.ts",
     "testimonials:publish": "tsx scripts/publishTestimonials.ts",
     "db:create-admin": "tsx scripts/createAdmin.ts",

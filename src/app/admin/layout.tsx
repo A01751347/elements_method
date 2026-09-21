@@ -81,8 +81,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       items: [
         { href: "/admin/retiros", label: "Retiros" },
         { href: "/admin/productos", label: "Productos" },
-        { href: "/admin/locaciones", label: "Locaciones" },
-        { href: "/admin/proveedores", label: "Proveedores" },
+        // Ocultas del sidebar a petición del equipo: no se usan por ahora.
+        // Las páginas siguen existiendo y funcionando en /admin/locaciones
+        // y /admin/proveedores; para reactivarlas basta descomentar.
+        // { href: "/admin/locaciones", label: "Locaciones" },
+        // { href: "/admin/proveedores", label: "Proveedores" },
         { href: "/admin/documentos", label: "Documentos" },
         { href: "/admin/formularios", label: "Formularios" },
       ],
