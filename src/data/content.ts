@@ -1770,9 +1770,9 @@ export const faqs = [
     qEs: "¿Qué programas ofrecen?",
     qEn: "What programs do you offer?",
     aEs:
-      "Tres Executive Experiences presenciales para 2026: EQUINOX (22 de septiembre · un día — el arte de la transición interior), ELEMENTS AWAKENING (16–18 de octubre · retiro inmersivo de liderazgo de 2.5 días en Misión del Sol, Morelos) y SOUL Discovery (20 de noviembre · workshop intensivo de un día de identidad y marca personal). Para organizaciones existe Origin — retiros corporativos hechos a la medida.",
+      "Tres Executive Experiences presenciales para 2026: EQUINOX (8 de octubre · un día — el arte de la transición interior), ELEMENTS AWAKENING (16–18 de octubre · retiro inmersivo de liderazgo de 2.5 días en Misión del Sol, Morelos) y SOUL Discovery (20 de noviembre · workshop intensivo de un día de identidad y marca personal). Para organizaciones existe Origin — retiros corporativos hechos a la medida.",
     aEn:
-      "Three in-person Executive Experiences for 2026: EQUINOX (September 22 · one day — the art of inner transition), ELEMENTS AWAKENING (October 16–18 · a 2.5-day immersive leadership retreat at Misión del Sol, Morelos) and SOUL Discovery (November 20 · a one-day intensive workshop on identity and personal branding). For organizations there is Origin — bespoke corporate retreats.",
+      "Three in-person Executive Experiences for 2026: EQUINOX (October 8 · one day — the art of inner transition), ELEMENTS AWAKENING (October 16–18 · a 2.5-day immersive leadership retreat at Misión del Sol, Morelos) and SOUL Discovery (November 20 · a one-day intensive workshop on identity and personal branding). For organizations there is Origin — bespoke corporate retreats.",
   },
   {
     qEs: "¿Qué resultados puedo esperar?",

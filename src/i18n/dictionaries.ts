@@ -191,7 +191,7 @@ export const es: Dict = {
     eyebrow: "Próximas fechas",
     title: "Próximas experiencias.",
     lead:
-      "El calendario 2026 de Elements Method Executive Experiences: EQUINOX en septiembre, Elements Awakening en octubre y SOUL Discovery en noviembre. Experiencias presenciales, de cupo limitado, diseñadas para profundizar sin saturar.",
+      "El calendario 2026 de Elements Method Executive Experiences: EQUINOX y Elements Awakening en octubre y SOUL Discovery en noviembre. Experiencias presenciales, de cupo limitado, diseñadas para profundizar sin saturar.",
     status: {
       open: "Abierto",
       lowSeats: "{n} cupos disponibles",
@@ -338,7 +338,7 @@ export const en: Dict = {
     eyebrow: "Upcoming dates",
     title: "Upcoming experiences.",
     lead:
-      "The 2026 calendar of Elements Method Executive Experiences: EQUINOX in September, Elements Awakening in October and SOUL Discovery in November. In-person experiences with limited seats, designed to go deep without saturating.",
+      "The 2026 calendar of Elements Method Executive Experiences: EQUINOX and Elements Awakening in October and SOUL Discovery in November. In-person experiences with limited seats, designed to go deep without saturating.",
     status: {
       open: "Open",
       lowSeats: "{n} seats left",

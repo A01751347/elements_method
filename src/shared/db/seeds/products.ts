@@ -191,9 +191,9 @@ export const productSeeds: NewProduct[] = [
     nameEs: "EQUINOX · El arte de la transición interior",
     nameEn: "EQUINOX · The art of inner transition",
     descriptionEs:
-      "Experiencia de transformación humana de un día, inspirada en el equinoccio de septiembre. Cinco movimientos —Observa, Suelta, Reconfigura, Realinea, Emerge— que integran neurociencia, coaching, herramientas de NLP, movimiento accesible, naturaleza, arte, reflexión y prácticas contemplativas. 22 de septiembre de 2026 · 9:00–19:00 · Ciudad de México.",
+      "Experiencia de transformación humana de un día, inspirada en el equinoccio de septiembre. Cinco movimientos —Observa, Suelta, Reconfigura, Realinea, Emerge— que integran neurociencia, coaching, herramientas de NLP, movimiento accesible, naturaleza, arte, reflexión y prácticas contemplativas. 8 de octubre de 2026 · 9:00–19:00 · Ciudad de México.",
     descriptionEn:
-      "A one-day human transformation experience inspired by the September equinox. Five movements —Observe, Release, Reconfigure, Realign, Emerge— integrating neuroscience, coaching, NLP tools, accessible movement, nature, art, reflection and contemplative practices. September 22, 2026 · 9:00–19:00 · Mexico City.",
+      "A one-day human transformation experience inspired by the September equinox. Five movements —Observe, Release, Reconfigure, Realign, Emerge— integrating neuroscience, coaching, NLP tools, accessible movement, nature, art, reflection and contemplative practices. October 8, 2026 · 9:00–19:00 · Mexico City.",
     includesEs:
       "Experiencia completa · EQUINOX Transformation Journal · Materiales · Alimentos · Mapa “My Next Season” · Carta del Yo Futuro · Sistema guiado de integración durante 30 días",
     includesEn:

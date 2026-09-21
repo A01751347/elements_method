@@ -525,7 +525,7 @@ const elementsAwakening: Experience = {
 };
 
 // ────────────────────────────────────────────────────────────────────────────
-// EQUINOX — el arte de la transición interior · 22 septiembre 2026
+// EQUINOX — el arte de la transición interior · 8 octubre 2026
 // ────────────────────────────────────────────────────────────────────────────
 
 const equinox: Experience = {
@@ -533,7 +533,7 @@ const equinox: Experience = {
   image: "/images/heroes/equinox.jpg",
   productSlug: "equinox",
   ctaMode: "checkout",
-  startDateIso: "2026-09-22",
+  startDateIso: "2026-10-08",
   elementKey: "agua",
   brand: {
     es: "An Elements Method Executive Experience",
@@ -549,8 +549,8 @@ const equinox: Experience = {
     en: "Your life has seasons too. A human transformation experience to observe, release, reconfigure, realign and emerge.",
   },
   dateLabel: {
-    es: "22 de septiembre de 2026 · 9:00–19:00",
-    en: "September 22, 2026 · 9:00–19:00",
+    es: "8 de octubre de 2026 · 9:00–19:00",
+    en: "October 8, 2026 · 9:00–19:00",
   },
   duration: { es: "Un día", en: "One day" },
   location: {
@@ -561,10 +561,10 @@ const equinox: Experience = {
   seats: 20,
   priceMxn: 7500,
   earlyPriceMxn: 5900,
-  earlyDeadlineIso: "2026-09-13",
+  earlyDeadlineIso: "2026-09-30",
   earlyLabel: {
-    es: "Early Access $5,900 MXN hasta el 13 de septiembre",
-    en: "Early Access MX$5,900 through September 13",
+    es: "Early Access $5,900 MXN hasta el 30 de septiembre",
+    en: "Early Access MX$5,900 through September 30",
   },
   includes: {
     es: "Experiencia, journal, materiales, alimentos y 30 días de integración",
@@ -912,8 +912,8 @@ const equinox: Experience = {
     {
       label: { es: "Fecha", en: "Date" },
       value: {
-        es: "22 de septiembre de 2026 · 9:00–19:00",
-        en: "September 22, 2026 · 9:00–19:00",
+        es: "8 de octubre de 2026 · 9:00–19:00",
+        en: "October 8, 2026 · 9:00–19:00",
       },
     },
     { label: { es: "Duración", en: "Duration" }, value: { es: "Un día", en: "One day" } },
@@ -931,8 +931,8 @@ const equinox: Experience = {
     {
       label: { es: "Inversión", en: "Investment" },
       value: {
-        es: "$7,500 MXN · Early Access $5,900 hasta el 13 de septiembre",
-        en: "MX$7,500 · Early Access MX$5,900 through September 13",
+        es: "$7,500 MXN · Early Access $5,900 hasta el 30 de septiembre",
+        en: "MX$7,500 · Early Access MX$5,900 through September 30",
       },
     },
     {
@@ -1005,8 +1005,8 @@ const equinox: Experience = {
       },
     ],
     metaLine: {
-      es: "22 de septiembre de 2026 · Ciudad de México · 9:00–19:00 · Cupo limitado",
-      en: "September 22, 2026 · Mexico City · 9:00–19:00 · Limited seats",
+      es: "8 de octubre de 2026 · Ciudad de México · 9:00–19:00 · Cupo limitado",
+      en: "October 8, 2026 · Mexico City · 9:00–19:00 · Limited seats",
     },
     cta: { es: "Reserva tu lugar", en: "Reserve your seat" },
   },
